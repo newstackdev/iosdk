@@ -32,7 +32,7 @@ npm i @newcoin-foundation/iosdk --save
 You will likely want to use parts of the SDK in such scenario, see Usage below.
 
 ### API Clients only
-For existing condebases you might be interested in lower-level components only. This involves lower level work and  Consider `@newcoin-foundation/newcoin-sdk` and/or `@newcoin-foundation/newgraph-api-client` depending on your plan.
+For existing condebases you might be interested in lower-level components only. This involves lower level work and  Consider `@newcoin-foundation/newcoin-sdk` and/or `@newcoin-foundation/newgraph-api-client` depending on your implementation plan.
 
 ### Other languages/technologies
 Newgraph API (see below) is described as a Swagger and can be used to generate a client in any language. We welcome contributions in this space.
@@ -56,7 +56,7 @@ Some routes and pages are provided as part of the SDK. Add more routes and pages
 ```
 
 #### Extending state management
-iOSDK manages state and provides actions to interact with it. However each use case is unique, and you will likely want to add more actions.
+iOSDK manages state and provides actions to interact with it and the underlying API libraries. However your use case is unique, and you will likely need to add more state, actions and effects.
 Note `src/overmind/app.ts`. It provides an example for setting up a simple counter state. This state is included in the larger state provided by the SDK so you can add your logic on top of what's already provided:
 
 ```
