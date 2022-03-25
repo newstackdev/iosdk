@@ -1,0 +1,1 @@
+{"version":3,"file":"state.js","sourceRoot":"","sources":["../../../src/overmind/newcoin/state.ts"],"names":[],"mappings":";;AAyBA,kBAAe;IACX,OAAO,EAAE,EAAS;IAClB,KAAK,EAAE,EAAS;IAChB,KAAK,EAAE;QACH,cAAc,EAAE,EAA4C;QAC5D,KAAK,EAAE;YACH,MAAM,EAAE,EAAiC;YACzC,OAAO,EAAE,EAAiC;SAC7C;KACJ;CACJ,CAAA"}

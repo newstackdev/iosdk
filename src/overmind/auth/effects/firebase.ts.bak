@@ -1,0 +1,66 @@
+// import '../App.css';
+import { Auth, ConfirmationResult, getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../../../config";
+
+
+// Initialize Firebase
+
+
+export const Firebase = (() => {
+  let auth: Auth;
+  let recaptcaVerifier: RecaptchaVerifier | null = null;
+  let confirmationResult: ConfirmationResult;
+
+  const getRecaptchaVerifier = (containerOrId: string | HTMLElement = 'sign-in-button') => {
+    return recaptcaVerifier || (
+      recaptcaVerifier = new RecaptchaVerifier(containerOrId, {
+        'size': 'invisible',
+        'callback': (response: any) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          //alert(response);
+          // signInWithPhoneNumber
+          // onSignInSubmit()
+        }
+      }, auth));
+  }
+
+  const clearRecaptchaVerifier = () => {
+    if(!recaptcaVerifier)
+      return;
+
+    recaptcaVerifier.clear();
+    recaptcaVerifier = null;
+  }
+
+  return {
+      initialize() {
+        initializeApp(firebaseConfig);
+        auth = getAuth();
+        return auth;
+      },
+      refreshToken() {
+      },
+      initRecaptchaVerifier(containerOrId: string | HTMLElement = 'sign-in-button') {
+        clearRecaptchaVerifier();
+        getRecaptchaVerifier(containerOrId);
+      },
+      clearRecaptchaVerifier,
+      async requestPhoneAuthCode (v: { phone: string }) {
+        return confirmationResult = await signInWithPhoneNumber(auth, v.phone, getRecaptchaVerifier());
+      },
+      async submitPhonVerificationCode (v: { phoneVerificationCode: string }) {
+        try {
+          await confirmationResult.confirm(v.phoneVerificationCode);
+          clearRecaptchaVerifier();
+        } catch(ex) {
+          console.log((ex as any).message)
+        }
+      },
+      async logout() {
+        auth && (await auth.signOut());
+        clearRecaptchaVerifier();
+      }
+  }
+})();
+

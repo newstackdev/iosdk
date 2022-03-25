@@ -1,0 +1,295 @@
+import { Action } from "../../types";
+import { pipe, debounce, filter, json, derived } from "overmind";
+import { Context } from "../overmind";
+import {
+	MoodReadResponse,
+	UserPagedListReadPublicResponse,
+	UserReadPublicResponse,
+	PostReadResponse,
+} from "@newlife/newlife-creator-client-api";
+
+type CreativeSearchHits = any; //NonNullable<SearchCreativeSearchResponse["hits"]>[0];
+type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
+
+const prepareQuery = (q?: string) =>
+	q
+		? q
+				.split(/,/)
+				.map((t) => t.replace(/\s+/g, "."))
+				.join(",")
+		: "";
+
+const ITEMS_PER_PAGE = 20;
+
+const SEARCH_CREATIVE_LOCATION = /^\/search-creative\/?/;
+const routingReaction: Action<string> = ({ state, actions }) => {
+	(state.lists.creativeSearch.isActive =
+		SEARCH_CREATIVE_LOCATION.test(state.routing.location) &&
+		state.auth.authorized) &&
+		actions.lists.creativeSearch({ startItem: 0 });
+};
+const creativeSearch: Action<{
+	query?: string;
+	aestetics?: string;
+	startItem?: number;
+}> = pipe(
+	debounce(500),
+	filter(({ state }, { startItem }) => {
+		const l = state.routing.location;
+		if (!state.lists.creativeSearch.isActive) return false;
+		const query = l.replace(SEARCH_CREATIVE_LOCATION, "");
+		startItem = startItem || 0;
+		return (
+			query != state.lists.creativeSearch.lastQueried ||
+			(startItem > 0 &&
+				startItem >= state.lists.creativeSearch.items.length - 1)
+		); // a bit arbitrary but shouldnt be more per row.
+	}),
+	async ({ state, effects, actions }: Context, { aestetics, startItem }) => {
+		if (!state.auth.authorized) return;
+
+		const l = state.routing.location;
+
+		const query = l.replace(SEARCH_CREATIVE_LOCATION, "");
+
+		const newQuery = query != state.lists.creativeSearch.lastQueried;
+
+		const page = newQuery
+			? 0
+			: Math.floor((startItem || 0) / ITEMS_PER_PAGE) + 1;
+
+		if (!newQuery && page <= state.lists.creativeSearch.page) return;
+
+		state.lists.creativeSearch.lastQueried = query; // should be before async call
+		state.lists.creativeSearch.page = page;
+		// if (newQuery)
+		//     state.lists.creativeSearch.items = [];
+
+		const m = await state.api.client.search.creativeList({
+			tags: prepareQuery(query),
+			aestetics: prepareQuery(aestetics),
+			page: page.toString(),
+		});
+		const newdata = (m?.data?.hits || []).map((h) => h._source || {});
+		if (newQuery) state.lists.creativeSearch.items = newdata;
+		else state.lists.creativeSearch.items.push(...newdata);
+	}
+);
+
+const onInitializeOvermind: Action = ({ reaction, actions }, location) => {
+<<<<<<< HEAD
+    reaction(
+        (st) => {
+            return st.auth.authorized && SEARCH_CREATIVE_LOCATION.test(st.routing.location) ? st.routing.location : ""
+        },
+        actions.lists.routingReaction
+    )
+}
+
+const listTopMoods: Action =
+    pipe(
+        debounce(300),
+        async ({ state, actions, effects }: Context) => {
+            const page = state.lists.top.moods.page ?? 0;
+            const r = await state.api.client.mood.listTopList({ page: page.toString() }); // Math.floor(20 + (Math.random() * 20)).toString()
+            const moods = r.data?.value || [];
+            actions.api.mood.cache({ moods });
+            moods.forEach(v =>{
+                // state.api.cache.moods[v.id || ""] = v;
+                state.lists.top.moods.items.push({ ...v });
+            });
+            state.lists.top.moods.page++;
+            
+        }
+    );
+
+export const listTopUsers: Action =
+    pipe(
+        debounce(300),
+        async ({ state, actions, effects }: Context) => {
+            const page = state.lists.top.users.page ? state.lists.top.users.page + 1 : 0;
+            const r = await state.api.client.user.listTopList({ page: page.toString() });
+            r.data.value?.forEach(v => {
+                state.api.cache.users.byId[v.id || ""] = v;
+                state.api.cache.users.byUsername[v.username || ""] = v;
+                state.lists.top.users.items.push(v);
+            });
+            state.lists.top.users.page++;
+            
+        }
+    );
+
+export const listTopPosts: Action =
+    pipe(
+        debounce(300),
+        async ({ state, actions, effects }: Context) => {
+            const page = state.lists.top.posts.page ? state.lists.top.posts.page + 1 : 0;
+            const r = await state.api.client.post.listTopList({ page: page.toString() });
+            r.data.value?.forEach(v => {
+                state.api.cache.posts[v.id || ""] = v;
+                state.lists.top.posts.items.push(v);
+            });
+            state.lists.top.posts.page++;
+            
+        }
+    );
+
+export const searchUsers: Action<{ query: string }> =
+    pipe(
+        debounce(1000),
+        async ({ state, actions, effects }: Context, { query }) => {
+            // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
+            state.lists.search.users.results = null;
+
+            const r = await state.api.client.user.listSearchList({ q: query });
+
+            r.data.value?.forEach(v => {
+                state.api.cache.users.byId[v.id || ""] = v;
+                state.lists.top.users.items.push(v);
+            });
+            state.lists.search.users.results = r.data;
+            
+        }
+    ); 
+=======
+	reaction((st) => {
+		return st.auth.authorized &&
+			SEARCH_CREATIVE_LOCATION.test(st.routing.location)
+			? st.routing.location
+			: "";
+	}, actions.lists.routingReaction);
+};
+
+const listTopMoods: Action = pipe(
+	debounce(300),
+	async ({ state, actions, effects }: Context) => {
+		const page = state.lists.top.moods.page ?? 0;
+		const r = await state.api.client.mood.listTopList({
+			page: page.toString(),
+		}); // Math.floor(20 + (Math.random() * 20)).toString()
+		actions.api.mood.cache({ moods: r.data?.value });
+		(r.data?.value || []).forEach((v) => {
+			// state.api.cache.moods[v.id || ""] = v;
+			state.lists.top.moods.items.push({ ...v });
+		});
+		state.lists.top.moods.page++;
+	}
+);
+
+export const listTopUsers: Action = pipe(
+	debounce(300),
+	async ({ state, actions, effects }: Context) => {
+		const page = state.lists.top.users.page
+			? state.lists.top.users.page + 1
+			: 0;
+		const r = await state.api.client.user.listTopList({
+			page: page.toString(),
+		});
+		r.data.value?.forEach((v) => {
+			state.api.cache.users.byId[v.id || ""] = v;
+			state.api.cache.users.byUsername[v.username || ""] = v;
+			state.lists.top.users.items.push(v);
+		});
+		state.lists.top.users.page++;
+	}
+);
+
+export const listTopPosts: Action = pipe(
+	debounce(300),
+	async ({ state, actions, effects }: Context) => {
+		const page = state.lists.top.posts.page
+			? state.lists.top.posts.page + 1
+			: 0;
+		const r = await state.api.client.post.listTopList({
+			page: page.toString(),
+		});
+		r.data.value?.forEach((v) => {
+			state.api.cache.posts[v.id || ""] = v;
+			state.lists.top.posts.items.push(v);
+		});
+		state.lists.top.posts.page++;
+	}
+);
+
+export const searchUsers: Action<{ query: string }> = pipe(
+	debounce(1000),
+	async ({ state, actions, effects }: Context, { query }) => {
+		// const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
+		state.lists.search.users.results = null;
+
+		const r = await state.api.client.user.listSearchList({ q: query });
+
+		r.data.value?.forEach((v) => {
+			state.api.cache.users.byId[v.id || ""] = v;
+			state.lists.top.users.items.push(v);
+		});
+		state.lists.search.users.results = r.data;
+	}
+);
+>>>>>>> feature/design
+const actions = {
+	onInitializeOvermind,
+	routingReaction,
+	creativeSearch,
+	searchUsers,
+	top: {
+		moods: listTopMoods,
+		users: listTopUsers,
+		posts: listTopPosts,
+	},
+};
+
+type ListState<T> = {
+	_items: Record<string, T>;
+	items: T[];
+	sortKey: string;
+	page: number;
+	isActive: boolean;
+	lastQueried: string; // just guesswork
+};
+
+const newListState = <T>(
+	{ sortKey }: { sortKey: string } = { sortKey: "updated" }
+) =>
+	({
+		_items: {} as Record<string, T>,
+		sortKey: sortKey,
+		items: [],
+		startItem: 0,
+		page: 0,
+		isActive: false,
+		lastQueried: "",
+	} as ListState<T>);
+
+type State = {
+	state: {
+		creativeSearch: ListState<any>;
+		top: {
+			users: ListState<UserReadPublicResponse>;
+			moods: ListState<MoodReadResponse>;
+		};
+	};
+	actions: typeof actions;
+	effects: {};
+};
+
+export default {
+	state: {
+		creativeSearch: newListState<CreativeSearchItem>(),
+		top: {
+			moods: newListState<MoodReadResponse>(),
+			users: newListState<UserReadPublicResponse>(),
+			posts: newListState<PostReadResponse>(),
+		},
+		search: {
+			users: {
+				query: "",
+				results: null as UserPagedListReadPublicResponse | null,
+			},
+		},
+	},
+	actions,
+	effects: {
+		// wss://wsapi-eu-sit.newlife.io/creator?token=${token}`)
+	},
+};

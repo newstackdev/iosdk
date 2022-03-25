@@ -1,0 +1,68 @@
+/* Font Face */
+// WorkSans
+@font-face {
+  font-family: "WorkSansLight";
+  src: local("WorkSansLight"),
+    url(work_sans/WorkSans-Light.ttf) format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "WorkSansRegular";
+  src: local("WorkSansRegular"),
+    url(work_sans/WorkSans-Regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "WorkSansMedium";
+  src: local("WorkSansMedium"),
+    url(work_sans/WorkSans-Medium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "WorkSansBold";
+  src: local("WorkSansBold"),
+    url(work_sans/WorkSans-Bold.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+// Favorit
+@font-face {
+  font-family: "FavoritLight";
+  src: local("FavoritLight"),
+    url(favorit/Favorit-Light.otf) format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "FavoritRegular";
+  src: local("FavoritRegular"),
+    url(favorit/Favorit-Regular.otf) format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "FavoritMedium";
+  src: local("FavoritMedium"),
+    url(favorit/Favorit-Medium.otf) format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "FavoritBold";
+  src: local("FavoritBold"), url(favorit/Favorit-Bold.otf) format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Font Family */
+$nlui-fontfam-worksans-light: "WorkSansLight", Helvetica, Arial, sans-serif;
+$nlui-fontfam-worksans-regular: "WorkSansRegular", Helvetica, Arial, sans-serif;
+$nlui-fontfam-worksans-medium: "WorkSansMedium", Helvetica, Arial, sans-serif;
+$nlui-fontfam-worksans-bold: "WorkSansBold", Helvetica, Arial, sans-serif;
+$nlui-fontfam-favorit-light: "FavoritLight", Helvetica, Arial, sans-serif;
+$nlui-fontfam-favorit-regular: "FavoritRegular", Helvetica, Arial, sans-serif;
+$nlui-fontfam-favorit-medium: "FavoritMedium", Helvetica, Arial, sans-serif;
+$nlui-fontfam-favorit-bold: "FavoritBold", Helvetica, Arial, sans-serif;
