@@ -16,7 +16,7 @@ Blockchain development is hard. Managing authorization, users, content and relat
 Use this if starting a project from scratch. This stage involves 
 
 ```
-    curl ... | bash <project name>
+    curl https://raw.githubusercontent.com/Newcoin-Foundation/iosdk/main/scripts/create.sh | bash -s <project-name>
 ```
 
 This will generate a demo [craco](https://github.com/gsoft-inc/craco)-based project. (craco is a layer on top of create-react-app that allows easier customization of webpack, among other things overriding lesscss variables used by ant-design styles).
@@ -82,6 +82,8 @@ export const app = {
 
 export default app;
 ```
+
+Check the overmind docs for [namespaced](https://overmindjs.org/api-1/namespaced) to see how you can nest state and actions to implement complex use cases.
 
 ### Creating pages
 
