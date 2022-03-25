@@ -38,13 +38,12 @@ For existing condebases you might be interested in lower-level components only. 
 Newgraph API (see below) is described as a Swagger and can be used to generate a client in any language. We welcome contributions in this space.
 
 ## Usage
-### Full sdk
+### Full SDK
 Following the Project Starter section under Installation above, you should by now have an installed project that shows a default landing page for the user.
-Checking `src/index.tsx`, you will find out the App 
 
 #### Application
 Check `src/index.tsx` for the basic setup.
-Note the single <App /> component representing the whole application which you will extend as described in the following sections.
+Note the single <App /> component representing a full application which you will extend as described in the following sections.
 
 #### Adding routes
 Some routes and pages are provided as part of the SDK. Add more routes and pages using the built in `react-router` as shown in `src/index.tsx`:
@@ -122,8 +121,17 @@ const GoodbyeIO: NLView = () => <>
 The state management part of the SDK is currently the best source of examples for using the Newgraph and Newcoin apis. We are also working on more materials to cover this space. 
 
 ## Newgraph 
-Newgraph is a managed API service providing a generic backend for applications built to interact with Newcoin.
-It exposes a REST api 
+Newgraph is a fully serverless managed API service providing a generic backend for creative economy applications built to interact with Newcoin.
+By large, newgraph features:
+* a REST api
+* a websockets server
+* firebase authentication
+* an advanced filesystem-like content management system with media processing capability
+* Newcoin cloud wallet (testnet phase)
+* analytics and search 
+* data sharing and security features
+
+
 
 ## Stack
 
@@ -150,6 +158,10 @@ This is a very early release and should not be considered stable. We are working
 
 ## Contributions
 This project is under very active development. Submit a pull request or an issue to make it better. 
+
+## See also
+* [Newcoin Foundation](https://newcoin.org)
+* [Newcoin Economy](https://docs.newcoin.org/)
 
 ## License
 MIT
