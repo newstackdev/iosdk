@@ -1,0 +1,155 @@
+// import { action } from "overmind/lib/operator";
+import { CreatorApi, Link, UserInfo } from "../types";
+import { History } from "history";
+import { User, UserCredential } from "@firebase/auth";
+import { getActionsByName } from "overmind/lib/utils";
+import { NONPOSTAUTHLOCATIONS } from "../constants";
+import { newAuth } from "./state";
+import { Action } from "../types";
+
+
+export const onInitializeOvermind: Action<undefined> = async ({
+    effects, state, actions
+  }) => {
+    const auth = effects.Firebase.initialize();
+    auth.onAuthStateChanged(async (fbUser)  => {
+        // actions.setAuthState(fbUser)
+        if(fbUser) {
+            actions.setFbUser({ user: fbUser })
+            // effects.Api.updateToken(await fbUser?.getIdToken() || "");
+            // actions.newlifeAuthorize();
+        } 
+        else {
+            // if(state.auth.user.id)
+            actions.logout();
+        }
+    });
+
+    state.api = effects.Api.initialize();
+  }
+
+export const setHistory: Action<{ history: History}> = async ({ state,  actions,  effects }, { history }) => {
+    state.routing.history = history;
+}
+
+export const historyPush:  Action<{ location : string, force?: boolean }> = async ({ state }, { location, force }) => {
+    if(force)
+        state.routing.location = "";
+
+    state.routing.location = location;
+}
+
+
+export const logout:  Action<undefined> = async ({ state,  actions,  effects }) => {
+    state.auth.status.authenticated =
+        state.auth.status.authorized =
+        state.auth.status.authenticating = 
+            false;
+    effects.Api.updateToken("");
+
+    state.auth.user = {};
+    state.auth.fbUser = {};
+
+    await effects.Firebase.logout();
+
+    actions.setPreloginRoute();
+    actions.historyPush({ location: "/auth" });
+}
+
+
+export const firebaseRequestToken: Action<{ phone: string }> = async ({ state,  actions,  effects }, { phone }) => {
+    state.auth.status.authenticating = true;
+    state.auth.status.phoneVerification = "REQUESTED";
+
+    effects.Firebase.initRecaptchaVerifier(); // ok unless we want another name for recaptcha invoking button
+
+    await effects.Firebase.requestPhoneAuthCode({ phone });
+
+    state.auth.status.phoneVerification = "RECEIVED";
+}
+export const firebaseVerifyPhone: Action<{ phoneVerificationCode: string }> = async ({ state,  actions,  effects }, { phoneVerificationCode }) => {
+    state.auth.status.phoneVerification = "SUBMITTED";
+    const r = await effects.Firebase.submitPhonVerificationCode({ phoneVerificationCode });
+    if(!r)
+        throw new Error("No token returned from Firebase. Find a better way to handle this");
+
+    // effects.Api.updateToken(await r?.user.getIdToken());
+
+    state.auth.status.phoneVerification = "";
+
+    // actions.setFbUser({ user : r })
+}
+
+export const initRecaptchaVerifier: Action<{ containerOrId?: string | HTMLElement }> = ({ effects }, { containerOrId }) => {
+    effects.Firebase.initRecaptchaVerifier(containerOrId);
+}
+
+export const setFbUser: Action<{ user: User }> = async ({ state,  actions,  effects }, { user }) => {
+    state.auth.fbUser = user;
+
+    state.auth.status.authenticated = !!user;
+    state.auth.status.authenticating = false;
+
+    effects.Firebase.clearRecaptchaVerifier();
+
+    effects.Api.updateToken(await user?.getIdToken() || "");
+
+    if(user)
+        actions.newlifeAuthorize();
+}
+
+export const newlifeAuthorize: Action<undefined> = async ({ state, actions, effects }) => {
+    state.auth.status.authorized = false;
+    state.auth.status.authorizing = true;
+
+    state.auth.user = await effects.Api.authorize();
+
+    state.auth.status.authorizing = false;
+    state.auth.status.authorized = true;
+
+    actions.routeAfterAuth();
+}
+
+export const routeAfterAuth: Action<undefined> = async ({ state, actions }) => {
+    const p = state.routing.location;
+    const nextRoute = 
+        !state.auth.user.id ? "/user-create" : 
+            state.routing.preLoginRoute || 
+            (NONPOSTAUTHLOCATIONS.includes(p) ? 
+                "/explore" : p);
+
+    state.routing.preLoginRoute = "";
+    
+    (nextRoute != p) && actions.historyPush({ location: nextRoute });
+}
+
+export const onRouteChange:  Action<{ location: { pathname: string } }> = async ({ state, actions }, { location: { pathname } }) => {
+    const isAuthPath = NONPOSTAUTHLOCATIONS.includes(pathname);
+    if(state.auth.status.authenticated && isAuthPath)
+        return actions.historyPush({ location: "/explore" });
+
+    if(!state.auth.status.authenticated && !isAuthPath)
+        return actions.historyPush({ location: "/auth", force: true });
+}
+
+export const setApi: Action<{ userInfo: UserInfo, api: CreatorApi }> = ({ state,  actions,  effects }, { userInfo, api }) => {
+    // state.userInfo = userInfo;
+    state.api = api;
+};
+
+export const setPreloginRoute: Action<undefined> = ({ state,  actions,  effects }) => {
+    const p = window.location.pathname;
+    state.routing.preLoginRoute = p === "/auth" ? "" : p;
+};
+
+export const setBreadcrumbs: Action<Link[]> = ({ state,  actions,  effects }, value) => {
+    state.routing.breadcrumbs = value;
+};
+
+export const wrapPromise: Action<Promise<unknown>> = ({ state,  actions,  effects }, value) => {
+    state.indicators._inProgressCounter++;
+    value
+        .finally(() => state.indicators._inProgressCounter--);
+
+    return value;
+};

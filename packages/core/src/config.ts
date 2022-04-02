@@ -1,8 +1,6 @@
-import { ReactElement } from "react";
-import { PartialDeep } from "type-fest";
-import Logo from "./Components/Icons/Logo";
-import { Layout, TopMenu } from "./Layout";
-import { AuthWidget } from "./Pages/AuthWidget";
+// import Logo from "./Components/Icons/Logo";
+// import { Layout, TopMenu } from "./Layout";
+// import { AuthWidget } from "./Pages/AuthWidget";
 import { FirebaseConfig, GenericComponent } from "./types";
 
 const currentHost =
@@ -96,17 +94,14 @@ export const config = {
   },
   components: {
     layout: {
-      Layout: Layout as GenericComponent,
-      TopMenu: TopMenu as GenericComponent,
+      // Layout: Layout as GenericComponent,
+      // TopMenu: TopMenu as GenericComponent,
     },
     auth: {
-      AuthWidget: AuthWidget as GenericComponent,
+      // AuthWidget: AuthWidget as GenericComponent,
     },
     icons: {
-      Logo: Logo as GenericComponent,
+      // Logo: Logo as GenericComponent,
     },
   },
 };
-
-export type Configuration<T = {}> = typeof config & T;
-export type PartialConfiguration<T = {}> = PartialDeep<Configuration<T>>;

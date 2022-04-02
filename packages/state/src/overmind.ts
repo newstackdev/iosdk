@@ -22,7 +22,7 @@ import {
   config as defaultConfig,
   Configuration,
   PartialConfiguration,
-} from "../config";
+} from "@newcoin-foundation/core";
 
 // import { app } from "overmind/app";
 // type AppType = typeof import("overmind/app").app;

@@ -1,0 +1,18 @@
+{
+  "name": "@newcoin-foundation/hooks",
+  "version": "0.0.0",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "init": "npm i",
+    "generate:barrels": "barrelsby --delete"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "lodash": ">=4.17.21"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

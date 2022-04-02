@@ -1,17 +1,27 @@
 {
 	"name": "@newcoin-foundation/iosdk",
-	"version": "0.1.107",
-	"private": false,
+	"version": "0.0.0",
 	"main": "dist/iosdk.js",
 	"types": "dist/iosdk.d.ts",
+	"private": true,
+	"workspaces": [
+		"./packages/*"
+	],
+	"scripts": {
+		"build": "turbo run build",
+		"init": "npm install --package-lock-only --no-package-lock --prefix",
+		"dev": "turbo run dev --parallel",
+		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\""
+	},
 	"dependencies": {
 		"@babel/plugin-syntax-jsx": "^7.14.5",
 		"@babel/preset-env": "^7.15.8",
 		"@babel/preset-react": "^7.14.5",
-		"@craco/craco": "^6.3.0",
+		"@craco/craco": "7.0.0-alpha.3",
 		"@jackwilsdon/craco-use-babelrc": "^1.0.0",
 		"@newcoin-foundation/newcoin-sdk": "^1.0.31",
-		"@newlife/newlife-creator-client-api": "^0.9.23",
+		"@newlife/newlife-creator-client-api": "*",
 		"@stripe/react-stripe-js": "^1.6.0",
 		"@stripe/stripe-js": "^1.20.3",
 		"@testing-library/jest-dom": "^5.11.4",
@@ -89,7 +99,9 @@
 		"awesome-typescript-loader": "^5.2.1",
 		"barrelsby": "^2.3.3",
 		"figma-react-icons": "^0.1.0-alpha.2",
+		"prettier": "^2.6.1",
 		"ts-loader": "^9.2.6",
+		"turbo": "^1.1.10",
 		"uglifyjs-webpack-plugin": "^2.2.0",
 		"webpack-cli": "^4.9.2"
 	},

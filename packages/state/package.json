@@ -1,0 +1,17 @@
+{
+  "name": "@newcoin-foundation/state",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "init": "npm i",
+    "prepare": "tsc -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@newcoin-foundation/core": "*",
+    "overmind": "^28.0.1"
+  }
+}

@@ -1,0 +1,29 @@
+{
+	// "extends": "./tsconfig.base.json",
+	"include": [
+		"src/*/src",
+		"src/*/demos",
+		"./types",
+		"./docs/src",
+		"./scripts",
+		"./configuration",
+		"./tests"
+	],
+	"exclude": [
+		"public",
+		".cache",
+		"configuration/jest",
+		"configuration/storybook/main.js",
+		"node_modules",
+		"src/*/esm/**/*",
+		"src/*/lib/**/*",
+		"src/*/cjs/**/*"
+	],
+	"compilerOptions": {
+		"paths": {
+			"@newcoin-foundation/*": [
+				"./packages/*/src"
+			],
+		}
+	}
+}
