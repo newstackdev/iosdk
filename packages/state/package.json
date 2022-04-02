@@ -2,16 +2,25 @@
   "name": "@newcoin-foundation/state",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./lib/*": "./dist/src/*"
+  },
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "./dist",
+    "!**/*.tsbuildinfo"
+  ],
   "scripts": {
     "init": "npm i",
-    "prepare": "tsc -d",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --build tsconfig.json"
   },
   "author": "",
   "license": "ISC",
-  "peerDependencies": {
-    "@newcoin-foundation/core": "*",
+  "dependencies": {
     "overmind": "^28.0.1"
+  },
+  "peerDependencies": {
+    "@newcoin-foundation/core": "*"
   }
 }

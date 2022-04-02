@@ -1,10 +1,8 @@
 import {
   MoodCreateRequest,
   MoodReadResponse,
-  PostReadResponse,
 } from "@newlife/newlife-creator-client-api";
 import { Action } from "@newcoin-foundation/core";
-import { uniq, uniqBy } from "lodash";
 
 export const cache: Action<{
   moods?: (MoodReadResponse & { promise?: Promise<any> })[];
@@ -80,6 +78,7 @@ export const getPosts: Action<MoodReadResponse> = async (
   // state.api.cache.moods[id] = { ...state.api.cache.moods[id], posts: uniqBy(r.data.value, p => p.id) };
   actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });
   r.data.value?.forEach(
+    // @ts-ignore
     (p) =>
       p.id &&
       (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p })

@@ -1,10 +1,9 @@
 import * as mood from "./actions/mood";
 import * as user from "./actions/user";
 import * as post from "./actions/post";
-import { namespaced } from "overmind/lib/config";
-import { Action } from "@newcoin-foundation/core";
 import { AUTH_FLOW_STATUS } from "../auth/state";
 import * as auth from "./actions/auth";
+import { Action } from "@newcoin-foundation/core";
 
 const onInitializeOvermind: Action<undefined> = async ({
   effects,
@@ -22,6 +21,7 @@ const onInitializeOvermind: Action<undefined> = async ({
   //     });
 
   reaction(
+    // @ts-ignore
     (state) => state.api.auth.authorized,
     async () => {
       if (

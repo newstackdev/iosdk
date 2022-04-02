@@ -13,7 +13,7 @@ export const onInitializeOvermind: Action<undefined> = async ({
   );
 
   setTimeout(() => (state.auth.initialized = true), 700);
-
+  // @ts-ignore
   auth.onAuthStateChanged((u) => actions.firebase.handleAuthChange(u));
 };
 

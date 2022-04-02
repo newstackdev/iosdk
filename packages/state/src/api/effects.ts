@@ -2,11 +2,7 @@ import { CreatorApi, newlifeBaseUrl } from "@newcoin-foundation/core";
 import {
   ErrorResponse,
   UserReadPrivateResponse,
-  UserReadPublicResponse,
 } from "@newlife/newlife-creator-client-api";
-// import { newlifeBaseUrl } from "../../config";
-// import { CreatorApi } from "../../types";
-// import { CreatorApi } from "../../types";
 
 const baseUrl = newlifeBaseUrl; //"https://api-eu-sit.newlife.io/creator";
 

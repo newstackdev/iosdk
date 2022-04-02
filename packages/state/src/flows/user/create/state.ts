@@ -2,7 +2,6 @@ import {
   UserCreateRequest,
   ErrorResponse,
 } from "@newlife/newlife-creator-client-api";
-import { derived } from "overmind";
 import { Wizard } from "./wizardStateMachine";
 
 export enum DOMAIN_PRESALE_STEPS {

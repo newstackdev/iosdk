@@ -7,4 +7,4 @@ node_modules/
 /cypress/screenshots
 /cypress/videos
 /postgres-data
-
+packages/newlife-creator-client-api

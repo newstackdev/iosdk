@@ -2,7 +2,6 @@ import React from "react";
 import { FirebaseConfig } from "@newcoin-foundation/core";
 
 type OptionalElement = React.ReactElement | null;
-type Elements = Record<string, React.ReactElement>;
 
 export const state = {
   settings: {

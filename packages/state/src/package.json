@@ -8,6 +8,7 @@
     "init": "npm i",
     "generate:barrels": "barrelsby --delete"
   },
+  "peerDependencies": {},
   "dependencies": {
     "@newcoin-foundation/core": "*"
   },

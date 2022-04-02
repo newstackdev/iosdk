@@ -21,11 +21,6 @@
     "strict": true,
     "noEmit": false
   },
-  // "references": [
-  //   {
-  //     "path": "../../src/overmind"
-  //   },
-  // ],
   "exclude": [
     "./dist",
     "./build",

@@ -1,9 +1,8 @@
 import { Api } from "@newlife/newlife-creator-client-api";
 import React from "react";
-// import { Context } from "@app/overmind";
+import { Context } from "@newcoin-foundation/state";
 // import { Context } from "../../state/src/overmind";
 
-import { ReactElement } from "react";
 import { PartialDeep } from "type-fest";
 import { config } from "./config";
 // import { Context } from "@app/overmind/overmind";
@@ -15,8 +14,8 @@ export type NLView<T = {}> = React.FC<React.PropsWithChildren<T>>;
 export type GenericComponent = NLView<any> | React.FC<any>;
 
 export type Action<T = undefined, R = void> = (
-  context: any,
-  // context: Context,
+  // context: any,
+  context: Context,
   value: T
 ) => R | Promise<R>;
 

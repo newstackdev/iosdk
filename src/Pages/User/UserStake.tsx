@@ -7,171 +7,162 @@ import { useParams } from "react-router";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { UserWidgetHeading } from "../../Components/UserWidget";
 import { useCachedUser } from "../../hooks/useCached";
-import { useActions, useAppState } from "../../overmind";
+import { useActions, useAppState } from "../state";
 import { NLView } from "../../types";
 
 const pad = (s: string, n: number, where: "right" | "left") =>
-	(where == "left" ? s : "") +
-	"0".repeat(n - s.length) +
-	(where == "left" ? "" : s);
+  (where == "left" ? s : "") +
+  "0".repeat(n - s.length) +
+  (where == "left" ? "" : s);
 const fixValue = (v: string) =>
-	v
-		.replace(/[^\d\.]/g, "")
-		.replace(/^(\d+)\.(\d+)?(.*)$/, (_: string, m1: string, m2: string) => {
-			return `${m1.slice(0, 6)}.${pad(
-				(m2 || "").slice(0, 4),
-				4,
-				"left"
-			)}`;
-		});
+  v
+    .replace(/[^\d\.]/g, "")
+    .replace(/^(\d+)\.(\d+)?(.*)$/, (_: string, m1: string, m2: string) => {
+      return `${m1.slice(0, 6)}.${pad((m2 || "").slice(0, 4), 4, "left")}`;
+    });
 
 export const UserStakeButton: NLView<{ user: UserReadPublicResponse }> = ({
-	user,
+  user,
 }) => {
-	const actions = useActions();
-	const u = useCachedUser(user, true);
-	const [staking, setStaking] = useState<Boolean>(false);
-	const [staked, setStaked] = useState<Boolean>(false);
+  const actions = useActions();
+  const u = useCachedUser(user, true);
+  const [staking, setStaking] = useState<Boolean>(false);
+  const [staked, setStaked] = useState<Boolean>(false);
 
-	const doStake = async () => {
-		setStaking(true);
-		await actions.api.user.stake({
-			user: u,
-			amount: "1000.0000 NCO",
-		});
-		setStaking(false);
-		setStaked(true);
-	};
+  const doStake = async () => {
+    setStaking(true);
+    await actions.api.user.stake({
+      user: u,
+      amount: "1000.0000 NCO",
+    });
+    setStaking(false);
+    setStaked(true);
+  };
 
-	if (staking || staked) return <></>;
+  if (staking || staked) return <></>;
 
-	return (
-		<Button
-			disabled={!!staking}
-			className="nl-button-primary text-bold"
-			type="primary"
-			onClick={doStake}
-		>
-			{staking ? <>In progress</> : <>Stake</>}
-		</Button>
-	);
+  return (
+    <Button
+      disabled={!!staking}
+      className="nl-button-primary text-bold"
+      type="primary"
+      onClick={doStake}
+    >
+      {staking ? <>In progress</> : <>Stake</>}
+    </Button>
+  );
 };
 
 export const UserStake: NLView<{ user: UserReadPublicResponse }> = ({
-	user: _user,
+  user: _user,
 }) => {
-	const [activeKey, setActiveKey] = useState<string>("0");
-	const actions = useActions();
-	const state = useAppState();
-	const [form] = useForm<{ amount: string }>();
+  const [activeKey, setActiveKey] = useState<string>("0");
+  const actions = useActions();
+  const state = useAppState();
+  const [form] = useForm<{ amount: string }>();
 
-	const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
 
-	// const [form, setForm] = useState<{ amount: string }>({ amount: "100.0000" });
-	// const user = id ? state.api.cache.users[id] || {} : _user;
+  // const [form, setForm] = useState<{ amount: string }>({ amount: "100.0000" });
+  // const user = id ? state.api.cache.users[id] || {} : _user;
 
-	const user = useCachedUser(id ? { id } : _user);
+  const user = useCachedUser(id ? { id } : _user);
 
-	// useEffect(() => (actions.api.user.read({ id: user.id || "" }) && undefined), [state.auth.authenticated]);
+  // useEffect(() => (actions.api.user.read({ id: user.id || "" }) && undefined), [state.auth.authenticated]);
 
-	const stake = async (f: { amount: string }) => {
-		if (/\d{1,6}.\d{4}/.test(f.amount)) {
-			actions.api.user.stake({ user, amount: f.amount });
-		} else form.setFieldsValue({ amount: fixValue(f.amount) });
-	};
+  const stake = async (f: { amount: string }) => {
+    if (/\d{1,6}.\d{4}/.test(f.amount)) {
+      actions.api.user.stake({ user, amount: f.amount });
+    } else form.setFieldsValue({ amount: fixValue(f.amount) });
+  };
 
-	// if(state.auth)
-	if (!user) return <Spin />;
+  // if(state.auth)
+  if (!user) return <Spin />;
 
-	if (!/\.(io|nco)/.test(user.username || ""))
-		return (
-			<p>
-				At the moment can only stake on .io and .nco accounts at the
-				moment (got ~{id} {user.username})
-			</p>
-		);
+  if (!/\.(io|nco)/.test(user.username || ""))
+    return (
+      <p>
+        At the moment can only stake on .io and .nco accounts at the moment (got
+        ~{id} {user.username})
+      </p>
+    );
 
-	// if (state.api.stakeHistory.find(e => e.user.id === user.id))
-	// if ()p
-	//     return <div>
-	//         <h2>
-	//             Thank you
-	//         </h2>
-	//         <h3>you just staked on {user.username}. Reload the page to stake again.</h3>
-	//     </div>
+  // if (state.api.stakeHistory.find(e => e.user.id === user.id))
+  // if ()p
+  //     return <div>
+  //         <h2>
+  //             Thank you
+  //         </h2>
+  //         <h3>you just staked on {user.username}. Reload the page to stake again.</h3>
+  //     </div>
 
-	const recentlyStaked = state.websockets.messages.newcoin.filter((msg) => {
-		return (
-			msg.original.recipient === user.id &&
-			msg.original.payload.message == "stake_sent"
-		);
-	});
+  const recentlyStaked = state.websockets.messages.newcoin.filter((msg) => {
+    return (
+      msg.original.recipient === user.id &&
+      msg.original.payload.message == "stake_sent"
+    );
+  });
 
-	return (
-		<ContentLayout
-			header={"Support " + user.username}
-			info={<UserWidgetHeading user={user} setActiveKey={setActiveKey} />}
-		>
-			{recentlyStaked.length ? (
-				<>
-					<h2 className="header-2">Thanks for your support!</h2>
-					<p>
-						{" "}
-						You recently staked on {user.username}{" "}
-						{recentlyStaked.length} times:{" "}
-						{recentlyStaked
-							.map((m) => m.original.updated)
-							.join(", ")}
-					</p>
-					<p>You are welcome to stake again.</p>
-				</>
-			) : (
-				""
-			)}
-			<Form
-				form={form}
-				onFinish={stake}
-				// onFinishFailed={onFinishFailed}
-				autoComplete="off"
-			>
-				<Form.Item
-					name="amount"
-					rules={[{ required: true, message: "Enter amount please" }]}
-				>
-					<MaskedInput
-						style={{ fontSize: 100, textAlign: "center" }}
-						size="large"
-						mask="xxxxxxxxxxx"
-						placeholderChar="&zwnj;"
-						placeholder="100.0000"
-						// value={form.amount}
-						onChange={(
-							v: SyntheticEvent & { target: { value: string } }
-						) => {
-							const amount = fixValue(v.target.value);
-							console.log({ amount });
-							form.setFieldsValue({ amount });
-						}}
-						formatCharacters={{
-							x: {
-								validate: function (char: string) {
-									return /[\d\.]/.test(char);
-								},
-								transform: function (char: string) {
-									return char.toLowerCase();
-								},
-							},
-						}}
-					/>
+  return (
+    <ContentLayout
+      header={"Support " + user.username}
+      info={<UserWidgetHeading user={user} setActiveKey={setActiveKey} />}
+    >
+      {recentlyStaked.length ? (
+        <>
+          <h2 className="header-2">Thanks for your support!</h2>
+          <p>
+            {" "}
+            You recently staked on {user.username} {recentlyStaked.length}{" "}
+            times: {recentlyStaked.map((m) => m.original.updated).join(", ")}
+          </p>
+          <p>You are welcome to stake again.</p>
+        </>
+      ) : (
+        ""
+      )}
+      <Form
+        form={form}
+        onFinish={stake}
+        // onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Form.Item
+          name="amount"
+          rules={[{ required: true, message: "Enter amount please" }]}
+        >
+          <MaskedInput
+            style={{ fontSize: 100, textAlign: "center" }}
+            size="large"
+            mask="xxxxxxxxxxx"
+            placeholderChar="&zwnj;"
+            placeholder="100.0000"
+            // value={form.amount}
+            onChange={(v: SyntheticEvent & { target: { value: string } }) => {
+              const amount = fixValue(v.target.value);
+              console.log({ amount });
+              form.setFieldsValue({ amount });
+            }}
+            formatCharacters={{
+              x: {
+                validate: function (char: string) {
+                  return /[\d\.]/.test(char);
+                },
+                transform: function (char: string) {
+                  return char.toLowerCase();
+                },
+              },
+            }}
+          />
 
-					{/* <Input size="large" placeholder="amount" width="3ch" type="number" prefix="NCO" /> */}
-				</Form.Item>
-				<Form.Item className="text-center">
-					<Button size="large" type="primary" htmlType="submit">
-						Stake
-					</Button>
-				</Form.Item>
-			</Form>
-		</ContentLayout>
-	);
+          {/* <Input size="large" placeholder="amount" width="3ch" type="number" prefix="NCO" /> */}
+        </Form.Item>
+        <Form.Item className="text-center">
+          <Button size="large" type="primary" htmlType="submit">
+            Stake
+          </Button>
+        </Form.Item>
+      </Form>
+    </ContentLayout>
+  );
 };

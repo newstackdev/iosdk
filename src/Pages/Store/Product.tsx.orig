@@ -11,11 +11,11 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import { Button, Col, Form, Radio, Row } from "antd";
 import { useEffect, useState } from "react";
-import { useActions, useAppState, useEffects } from "../../overmind";
+import { useActions, useAppState, useEffects } from "../state";
 import { PaymentStripePaymentIntentCreateResponse } from "@newlife/newlife-creator-client-api";
 import { EmbeddableControl } from "../../types";
 import { useForm } from "antd/lib/form/Form";
-import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
+import { AUTH_FLOW_STATUS } from "../../state/auth/state";
 import { Checkbox } from "antd";
 import { CheckboxValueType } from "antd/lib/checkbox/Group";
 import {

@@ -1,6 +1,5 @@
 import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
 import { statemachine } from "overmind";
-import user from "..";
 
 type States =
   | {

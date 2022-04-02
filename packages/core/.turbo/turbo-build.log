@@ -1,0 +1,60 @@
+[32m@newcoin-foundation/core:build: [0mcache hit, replaying output [2m22258f55a80020b9[0m
+[32m@newcoin-foundation/core:build: [0m
+[32m@newcoin-foundation/core:build: [0m> @newcoin-foundation/core@0.0.0 build
+[32m@newcoin-foundation/core:build: [0m> tsc --build tsconfig-build.json
+[32m@newcoin-foundation/core:build: [0m
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'babel__generator'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'babel__generator'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'babel__template'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'babel__template'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'babel__traverse'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'babel__traverse'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'body-parser'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'body-parser'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'eslint'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'eslint'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'filesystem'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'filesystem'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'har-format'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'har-format'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'istanbul-lib-report'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'istanbul-lib-report'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'prop-types'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'prop-types'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'qs'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'qs'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'range-parser'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'range-parser'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'react-router'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'react-router'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'scheduler'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'scheduler'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'serve-static'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'serve-static'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'uglify-js'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'uglify-js'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'webpack-sources'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'webpack-sources'
+[32m@newcoin-foundation/core:build: [0merror TS2688: Cannot find type definition file for 'yargs-parser'.
+[32m@newcoin-foundation/core:build: [0m  The file is in the program because:
+[32m@newcoin-foundation/core:build: [0m    Entry point for implicit type library 'yargs-parser'
+[32m@newcoin-foundation/core:build: [0mnpm ERR! Lifecycle script `build` failed with error: 
+[32m@newcoin-foundation/core:build: [0mnpm ERR! Error: command failed 
+[32m@newcoin-foundation/core:build: [0mnpm ERR!   in workspace: @newcoin-foundation/core@0.0.0 
+[32m@newcoin-foundation/core:build: [0mnpm ERR!   at location: /Users/rusakov/future/iosdk/packages/core 

@@ -1,8 +1,7 @@
 import { Action } from "@newcoin-foundation/core";
 import { UserCreateRequest } from "@newlife/newlife-creator-client-api";
-import { get } from "lodash";
-import { debounce, filter, pipe, throttle } from "overmind";
-import { Context, State } from "../../../overmind";
+import { debounce, pipe } from "overmind";
+import { Context, State } from "../../../state";
 import { WizardInput } from "./wizardStateMachine";
 // import { IReaction } from "overmind";
 
@@ -56,7 +55,9 @@ export const onInitializeOvermind: Action<any> = async ({
   reaction(reduceState, actions.flows.user.create._wizardReact);
 
   reaction(
+    // @ts-ignore
     (s) => ({ auth: s.api.auth, username: s.flows.user.create.form.username }),
+    // @ts-ignore
     ({ username, auth }) => {
       if (username && !auth.authorized)
         actions.flows.user.create.checkAvailability({ username });

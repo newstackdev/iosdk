@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import { assert } from "console";
 import { get } from "lodash";
 import { EmbeddableControl, NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../../overmind";
+import { useActions, useAppState, useEffects } from "../state";
 import { User } from "@firebase/auth";
 import { FieldData } from "rc-field-form/lib/interface";
 import { useForm } from "antd/lib/form/Form";

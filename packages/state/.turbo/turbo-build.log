@@ -1,0 +1,5 @@
+[35m@newcoin-foundation/state:build: [0mcache hit, replaying output [2m9e8df10a3dfd9ed7[0m
+[35m@newcoin-foundation/state:build: [0m
+[35m@newcoin-foundation/state:build: [0m> @newcoin-foundation/state@0.0.1 build
+[35m@newcoin-foundation/state:build: [0m> tsc --build tsconfig.json
+[35m@newcoin-foundation/state:build: [0m

@@ -22,7 +22,7 @@ import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { get } from "lodash";
 import { NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../../overmind";
+import { useActions, useAppState, useEffects } from "../state";
 import { PicturesWall } from "../../Components/PicturesWall";
 
 import { MoodWidget } from "../../Components/MoodWidget";
