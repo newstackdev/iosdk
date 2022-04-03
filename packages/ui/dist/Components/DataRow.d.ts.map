@@ -1,0 +1,1 @@
+{"version":3,"file":"DataRow.d.ts","sourceRoot":"","sources":["../../src/Components/DataRow.tsx"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,OAAO,CAAC;AAErC,eAAO,MAAM,OAAO;YAMV,YAAY,GAAG,MAAM;YACrB,YAAY,GAAG,MAAM;WACtB,MAAM;aACJ,MAAM;iBA2Bd,CAAC"}
