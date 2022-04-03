@@ -1,5 +1,5 @@
+import { Action } from "../state";
 import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse } from "@newlife/newlife-creator-client-api";
-import { Action } from "@newcoin-foundation/core";
 export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse["hits"]>[number];
 export declare type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
 export declare const listTopUsers: Action;

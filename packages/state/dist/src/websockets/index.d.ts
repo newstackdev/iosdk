@@ -1,5 +1,5 @@
+import { Action } from "../state";
 import { WSState } from "./effects";
-import { Action } from "@newcoin-foundation/core";
 declare type WsEvent = {
     type: "modelUpdated";
     model: "user" | "post" | "mood";

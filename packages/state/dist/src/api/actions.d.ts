@@ -2,7 +2,7 @@ import * as mood from "./actions/mood";
 import * as user from "./actions/user";
 import * as post from "./actions/post";
 import * as auth from "./actions/auth";
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 declare const _default: {
     onInitializeOvermind: Action<undefined, void>;
     auth: typeof auth;

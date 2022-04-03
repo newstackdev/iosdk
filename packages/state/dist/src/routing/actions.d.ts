@@ -1,5 +1,6 @@
-import { Action, Link } from "@newcoin-foundation/core";
+import { Link } from "@newcoin-foundation/core";
 import { History } from "history";
+import { Action } from "../state";
 export declare const routeAfterAuth: Action<unknown>;
 export declare const goBack: Action;
 export declare const onRouteChange: Action<{

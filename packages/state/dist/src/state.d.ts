@@ -178,7 +178,9 @@ export declare const config: (cfg: PartialConfiguration) => {
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
                 create: {
-                    form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                    form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest & {
+                        displayName?: string;
+                    }>;
                     justCreated: boolean;
                     legacyToken: string;
                     formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
@@ -332,11 +334,11 @@ export declare const config: (cfg: PartialConfiguration) => {
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         indicators: {
-            isWorking: import("@newcoin-foundation/core").Action<{
+            isWorking: Action<{
                 actionName: string;
                 n: number;
             }, void>;
-            isWorkingActionDebounced: import("@newcoin-foundation/core").Action<{
+            isWorkingActionDebounced: Action<{
                 actionName: string;
             }, void>;
         };
@@ -344,24 +346,24 @@ export declare const config: (cfg: PartialConfiguration) => {
         routing: typeof import("./routing/actions");
         firebase: typeof import("./firebase/actions");
         websockets: {
-            toggleWebSocket: import("@newcoin-foundation/core").Action<undefined, void>;
-            processIncoming: import("@newcoin-foundation/core").Action<{
+            toggleWebSocket: Action<undefined, void>;
+            processIncoming: Action<{
                 msg: any;
             }, void>;
-            processIncomingModelUpdated: import("@newcoin-foundation/core").Action<{
+            processIncomingModelUpdated: Action<{
                 event: {
                     type: "modelUpdated";
-                    model: "mood" | "user" | "post";
+                    model: "user" | "mood" | "post";
                     payload: any;
                     updated: string;
                 } & {
                     type: "modelUpdated";
                 };
             }, void>;
-            processIncomingNewcoin: import("@newcoin-foundation/core").Action<{
+            processIncomingNewcoin: Action<{
                 event: {
                     type: "modelUpdated";
-                    model: "mood" | "user" | "post";
+                    model: "user" | "mood" | "post";
                     payload: any;
                     updated: string;
                 } | {
@@ -375,14 +377,14 @@ export declare const config: (cfg: PartialConfiguration) => {
             }, void>;
         };
         payments: {
-            pay: import("@newcoin-foundation/core").Action<{
+            pay: Action<{
                 stripe?: import("@stripe/stripe-js").Stripe;
                 elements?: import("@stripe/stripe-js").StripeElements;
             }, void>;
         };
         evm: typeof import("./evm/actions");
         ux: {
-            showNotification: import("@newcoin-foundation/core").Action<{
+            showNotification: Action<{
                 message: string;
                 duration?: number;
             }, void>;
@@ -390,24 +392,24 @@ export declare const config: (cfg: PartialConfiguration) => {
         chromeext: typeof import("./chromeext/actions");
         config: unknown;
         api: {
-            onInitializeOvermind: import("@newcoin-foundation/core").Action<undefined, void>;
+            onInitializeOvermind: Action<undefined, void>;
             auth: typeof import("./api/actions/auth");
             user: typeof import("./api/actions/user");
             mood: typeof import("./api/actions/mood");
             post: typeof import("./api/actions/post");
         };
         lists: {
-            creativeSearch: import("@newcoin-foundation/core").Action<{
+            creativeSearch: Action<{
                 tags: string;
                 aesthetics: string;
             }, void>;
-            searchUsers: import("@newcoin-foundation/core").Action<{
+            searchUsers: Action<{
                 query: string;
             }, void>;
             top: {
-                moods: import("@newcoin-foundation/core").Action<undefined, void>;
-                users: import("@newcoin-foundation/core").Action<undefined, void>;
-                posts: import("@newcoin-foundation/core").Action<undefined, void>;
+                moods: Action<undefined, void>;
+                users: Action<undefined, void>;
+                posts: Action<undefined, void>;
             };
         };
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -415,13 +417,13 @@ export declare const config: (cfg: PartialConfiguration) => {
                 create: typeof import("./flows/user/create/actions");
             }, object>;
             rating: {
-                deepLikeInit: import("@newcoin-foundation/core").Action<undefined, void>;
-                deepLikeStart: import("@newcoin-foundation/core").Action<{
+                deepLikeInit: Action<undefined, void>;
+                deepLikeStart: Action<{
                     event?: Event;
                 }, void>;
-                deepLikeStep: import("@newcoin-foundation/core").Action<undefined, void>;
-                deepLikeStop: import("@newcoin-foundation/core").Action<undefined, void>;
-                onInitializeOvermind: import("@newcoin-foundation/core").Action<undefined, void>;
+                deepLikeStep: Action<undefined, void>;
+                deepLikeStop: Action<undefined, void>;
+                onInitializeOvermind: Action<undefined, void>;
             };
         }, object>;
         newcoin: typeof import("./newcoin/actions");
@@ -429,4 +431,5 @@ export declare const config: (cfg: PartialConfiguration) => {
 };
 export declare type State = ReturnType<typeof config>["state"];
 export declare type Context = IContext<ReturnType<typeof config>>;
+export declare type Action<T = undefined, R = void> = (context: Context, value: T) => R | Promise<R>;
 //# sourceMappingURL=state.d.ts.map

@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 import { User } from "firebase/auth";
 export declare const onInitializeOvermind: Action<undefined>;
 export declare const logout: Action;

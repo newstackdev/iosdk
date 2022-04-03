@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../../state";
 export declare const authorize: Action<undefined>;
 export declare const logout: Action<{
     keepFbUser?: boolean;

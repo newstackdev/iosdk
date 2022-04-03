@@ -3,7 +3,9 @@ declare const _default: {
     actions: typeof actions;
     effects: {};
     state: {
-        form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+        form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest & {
+            displayName?: string;
+        }>;
         justCreated: boolean;
         legacyToken: string;
         formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";

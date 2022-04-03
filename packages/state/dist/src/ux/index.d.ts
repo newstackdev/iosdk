@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 declare const _default: {
     actions: {
         showNotification: Action<{

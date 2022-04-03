@@ -6,7 +6,9 @@ export declare enum DOMAIN_PRESALE_STEPS {
     DONE = 3
 }
 export declare const state: {
-    form: Partial<UserCreateRequest>;
+    form: Partial<UserCreateRequest & {
+        displayName?: string;
+    }>;
     justCreated: boolean;
     legacyToken: string;
     formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";

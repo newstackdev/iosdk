@@ -178,7 +178,9 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
                 create: {
-                    form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                    form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest & {
+                        displayName?: string;
+                    }>;
                     justCreated: boolean;
                     legacyToken: string;
                     formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
@@ -332,11 +334,11 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         indicators: {
-            isWorking: import("@newcoin-foundation/core").Action<{
+            isWorking: import("./state").Action<{
                 actionName: string;
                 n: number;
             }, void>;
-            isWorkingActionDebounced: import("@newcoin-foundation/core").Action<{
+            isWorkingActionDebounced: import("./state").Action<{
                 actionName: string;
             }, void>;
         };
@@ -344,24 +346,24 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         routing: typeof import("./routing/actions");
         firebase: typeof import("./firebase/actions");
         websockets: {
-            toggleWebSocket: import("@newcoin-foundation/core").Action<undefined, void>;
-            processIncoming: import("@newcoin-foundation/core").Action<{
+            toggleWebSocket: import("./state").Action<undefined, void>;
+            processIncoming: import("./state").Action<{
                 msg: any;
             }, void>;
-            processIncomingModelUpdated: import("@newcoin-foundation/core").Action<{
+            processIncomingModelUpdated: import("./state").Action<{
                 event: {
                     type: "modelUpdated";
-                    model: "mood" | "user" | "post";
+                    model: "user" | "mood" | "post";
                     payload: any;
                     updated: string;
                 } & {
                     type: "modelUpdated";
                 };
             }, void>;
-            processIncomingNewcoin: import("@newcoin-foundation/core").Action<{
+            processIncomingNewcoin: import("./state").Action<{
                 event: {
                     type: "modelUpdated";
-                    model: "mood" | "user" | "post";
+                    model: "user" | "mood" | "post";
                     payload: any;
                     updated: string;
                 } | {
@@ -375,14 +377,14 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             }, void>;
         };
         payments: {
-            pay: import("@newcoin-foundation/core").Action<{
+            pay: import("./state").Action<{
                 stripe?: import("@stripe/stripe-js").Stripe;
                 elements?: import("@stripe/stripe-js").StripeElements;
             }, void>;
         };
         evm: typeof import("./evm/actions");
         ux: {
-            showNotification: import("@newcoin-foundation/core").Action<{
+            showNotification: import("./state").Action<{
                 message: string;
                 duration?: number;
             }, void>;
@@ -390,24 +392,24 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         chromeext: typeof import("./chromeext/actions");
         config: unknown;
         api: {
-            onInitializeOvermind: import("@newcoin-foundation/core").Action<undefined, void>;
+            onInitializeOvermind: import("./state").Action<undefined, void>;
             auth: typeof import("./api/actions/auth");
             user: typeof import("./api/actions/user");
             mood: typeof import("./api/actions/mood");
             post: typeof import("./api/actions/post");
         };
         lists: {
-            creativeSearch: import("@newcoin-foundation/core").Action<{
+            creativeSearch: import("./state").Action<{
                 tags: string;
                 aesthetics: string;
             }, void>;
-            searchUsers: import("@newcoin-foundation/core").Action<{
+            searchUsers: import("./state").Action<{
                 query: string;
             }, void>;
             top: {
-                moods: import("@newcoin-foundation/core").Action<undefined, void>;
-                users: import("@newcoin-foundation/core").Action<undefined, void>;
-                posts: import("@newcoin-foundation/core").Action<undefined, void>;
+                moods: import("./state").Action<undefined, void>;
+                users: import("./state").Action<undefined, void>;
+                posts: import("./state").Action<undefined, void>;
             };
         };
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -415,13 +417,13 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 create: typeof import("./flows/user/create/actions");
             }, object>;
             rating: {
-                deepLikeInit: import("@newcoin-foundation/core").Action<undefined, void>;
-                deepLikeStart: import("@newcoin-foundation/core").Action<{
+                deepLikeInit: import("./state").Action<undefined, void>;
+                deepLikeStart: import("./state").Action<{
                     event?: Event;
                 }, void>;
-                deepLikeStep: import("@newcoin-foundation/core").Action<undefined, void>;
-                deepLikeStop: import("@newcoin-foundation/core").Action<undefined, void>;
-                onInitializeOvermind: import("@newcoin-foundation/core").Action<undefined, void>;
+                deepLikeStep: import("./state").Action<undefined, void>;
+                deepLikeStop: import("./state").Action<undefined, void>;
+                onInitializeOvermind: import("./state").Action<undefined, void>;
             };
         }, object>;
         newcoin: typeof import("./newcoin/actions");
@@ -499,7 +501,7 @@ export declare const useActions: () => {
         processIncomingModelUpdated: (payload?: {
             event: {
                 type: "modelUpdated";
-                model: "mood" | "user" | "post";
+                model: "user" | "mood" | "post";
                 payload: any;
                 updated: string;
             } & {
@@ -509,7 +511,7 @@ export declare const useActions: () => {
         processIncomingNewcoin: (payload?: {
             event: {
                 type: "modelUpdated";
-                model: "mood" | "user" | "post";
+                model: "user" | "mood" | "post";
                 payload: any;
                 updated: string;
             } | {

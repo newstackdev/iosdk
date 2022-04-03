@@ -1,5 +1,5 @@
 import { UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newlife/newlife-creator-client-api";
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../../state";
 export declare const cache: Action<{
     user: UserReadPublicResponse;
 }>;

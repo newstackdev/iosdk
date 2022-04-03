@@ -1,5 +1,5 @@
 import { MoodReadResponse, PostCreateRequest, PostReadResponse } from "@newlife/newlife-creator-client-api";
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../../state";
 export declare const read: Action<{
     id: string;
 }>;

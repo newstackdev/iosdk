@@ -1,4 +1,5 @@
-import { Action, EventHandler } from "@newcoin-foundation/core";
+import { EventHandler } from "@newcoin-foundation/core";
+import { Action } from "../../state";
 export declare const deepLikeInit: Action;
 export declare const deepLikeStart: Action<{
     event?: Event;

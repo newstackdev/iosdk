@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 import { Stripe, StripeElements } from "@stripe/stripe-js";
 declare const _default: {
     actions: {

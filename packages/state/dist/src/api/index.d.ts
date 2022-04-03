@@ -1,6 +1,6 @@
 declare const _default: {
     actions: {
-        onInitializeOvermind: import("@newcoin-foundation/core").Action<undefined, void>;
+        onInitializeOvermind: import("..").Action<undefined, void>;
         auth: typeof import("./actions/auth");
         user: typeof import("./actions/user");
         mood: typeof import("./actions/mood");

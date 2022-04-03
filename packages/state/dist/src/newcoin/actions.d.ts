@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 export declare const getAccountBalance: Action<{
     user: {
         username?: string;

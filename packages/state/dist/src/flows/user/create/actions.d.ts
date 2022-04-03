@@ -1,5 +1,5 @@
-import { Action } from "@newcoin-foundation/core";
 import { UserCreateRequest } from "@newlife/newlife-creator-client-api";
+import { Action } from "../../../state";
 import { WizardInput } from "./wizardStateMachine";
 export declare const onInitializeOvermind: Action<any>;
 export declare const updateForm: Action<Partial<UserCreateRequest>>;

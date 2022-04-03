@@ -2,7 +2,9 @@ declare const _default: {
     state: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
             create: {
-                form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest & {
+                    displayName?: string;
+                }>;
                 justCreated: boolean;
                 legacyToken: string;
                 formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
@@ -108,13 +110,13 @@ declare const _default: {
             create: typeof import("./user/create/actions");
         }, object>;
         rating: {
-            deepLikeInit: import("@newcoin-foundation/core").Action<undefined, void>;
-            deepLikeStart: import("@newcoin-foundation/core").Action<{
+            deepLikeInit: import("..").Action<undefined, void>;
+            deepLikeStart: import("..").Action<{
                 event?: Event;
             }, void>;
-            deepLikeStep: import("@newcoin-foundation/core").Action<undefined, void>;
-            deepLikeStop: import("@newcoin-foundation/core").Action<undefined, void>;
-            onInitializeOvermind: import("@newcoin-foundation/core").Action<undefined, void>;
+            deepLikeStep: import("..").Action<undefined, void>;
+            deepLikeStop: import("..").Action<undefined, void>;
+            onInitializeOvermind: import("..").Action<undefined, void>;
         };
     }, object>;
 };
