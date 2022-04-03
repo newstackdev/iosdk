@@ -1,6 +1,6 @@
 import { Action } from "../../../../types"
 import { DOMAIN_PRESALE_STEPS } from "./state";
-import { Context } from "../../../../overmind/overmind";
+import { Context } from "../../../../state/overmind";
 
 type StepProcessorsCollection<STEPSENUM extends number | string, T> = Record<STEPSENUM, T>;
 

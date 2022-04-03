@@ -1,0 +1,26 @@
+{
+  "name": "@newcoin-foundation/state",
+  "version": "0.0.1",
+  "description": "",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./lib/*": "./dist/src/*"
+  },
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "./dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "scripts": {
+    "init": "npm i",
+    "build": "tsc --build tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "overmind": "^28.0.1"
+  },
+  "peerDependencies": {
+    "@newcoin-foundation/core": "*"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "compilerOptions": {
+    "paths": {
+      "@newcoin-foundation/*": [
+        "packages/*/src"
+      ],
+      "@app/overmind": [
+        "../../src/overmind"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../../src/overmind"
+    }
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

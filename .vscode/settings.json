@@ -1,0 +1,5 @@
+{
+	"exportall.config.relExclusion": [
+		"/packages/core/src/index.ts"
+	]
+}

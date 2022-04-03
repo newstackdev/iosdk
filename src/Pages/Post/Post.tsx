@@ -2,21 +2,21 @@ import { useParams } from "react-router";
 import { NLView } from "../../types";
 import { Button, Col, Form, Modal, Progress, Row, Tag } from "antd";
 import {
-	useCachedMood,
-	useCachedPost,
-	useCachedUser,
+  useCachedMood,
+  useCachedPost,
+  useCachedUser,
 } from "../../hooks/useCached";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useActions, useAppState } from "../../overmind";
+import { useActions, useAppState } from "../state";
 import { SelectMood, SelectMoodForm } from "../../Components/SelectMood";
 import { MoodCreateModal } from "../Mood/MoodCreate";
 import { Spin } from "../../Components/Spin";
 import useForm from "antd/lib/form/hooks/useForm";
 // import { ContentImage, contentImageUrl } from "../../Components/Image";
 import {
-	MoodReadResponse,
-	PostReadResponse,
+  MoodReadResponse,
+  PostReadResponse,
 } from "@newlife/newlife-creator-client-api";
 import { Ebene } from "../../Components/Icons/Ebene";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
@@ -28,232 +28,232 @@ import { ShareButton } from "../../Components/Share";
 import { json } from "overmind";
 
 const useVotingStreamMood = () => {
-	const { moodId, postId, id } =
-		useParams<{ moodId: string; postId: string; id: string }>();
-	const currPost = useCachedPost({ id: postId || id }, true);
-	const currMood = useCachedMood({ id: moodId }, true);
-	const [index, setIndex] = useState<number>(-1);
-	const actions = useActions();
-	const state = useAppState();
-	const moodPosts = currMood.posts || [];
+  const { moodId, postId, id } = useParams<{
+    moodId: string;
+    postId: string;
+    id: string;
+  }>();
+  const currPost = useCachedPost({ id: postId || id }, true);
+  const currMood = useCachedMood({ id: moodId }, true);
+  const [index, setIndex] = useState<number>(-1);
+  const actions = useActions();
+  const state = useAppState();
+  const moodPosts = currMood.posts || [];
 
-	const getIndex = () => {
-		if (!currMood?.id) return;
+  const getIndex = () => {
+    if (!currMood?.id) return;
 
-		// actions.flows.rating.deepLikeInit();
+    // actions.flows.rating.deepLikeInit();
 
-		if (index && moodPosts[index]?.id == currPost.id) return;
+    if (index && moodPosts[index]?.id == currPost.id) return;
 
-		console.log("mp:", currMood.id, currPost.id);
+    console.log("mp:", currMood.id, currPost.id);
 
-		const ix = moodPosts.findIndex((p) => p.id === postId);
-		setIndex(ix > 0 ? ix : 0);
-	};
+    const ix = moodPosts.findIndex((p) => p.id === postId);
+    setIndex(ix > 0 ? ix : 0);
+  };
 
-	useEffect(() => getIndex(), [state.routing.location, currPost]);
+  useEffect(() => getIndex(), [state.routing.location, currPost]);
 
-	// useEffect(() => {
-	// 	if (!currMood?.id) return;
+  // useEffect(() => {
+  // 	if (!currMood?.id) return;
 
-	// 	actions.flows.rating.deepLikeInit();
+  // 	actions.flows.rating.deepLikeInit();
 
-	// 	if (index && moodPosts[index]?.id == currPost.id) return;
+  // 	if (index && moodPosts[index]?.id == currPost.id) return;
 
-	// 	console.log("mp:", currMood.id, currPost.id);
+  // 	console.log("mp:", currMood.id, currPost.id);
 
-	// 	const ix = moodPosts.findIndex((p: PostReadResponse) => p.id === currPost.id);
-	// 	setIndex(ix > 0 ? ix : 0);
-	// }, [currMood?.id, currPost?.id]);
+  // 	const ix = moodPosts.findIndex((p: PostReadResponse) => p.id === currPost.id);
+  // 	setIndex(ix > 0 ? ix : 0);
+  // }, [currMood?.id, currPost?.id]);
 
-	// const moodPosts = currMood.posts || [];
+  // const moodPosts = currMood.posts || [];
 
-	const getPosts = (m?: MoodReadResponse) => {
-		const cm = state.api.cache.moods[m?.id || ""];
-		return cm && cm.posts ? cm.posts : [];
-	};
+  const getPosts = (m?: MoodReadResponse) => {
+    const cm = state.api.cache.moods[m?.id || ""];
+    return cm && cm.posts ? cm.posts : [];
+  };
 
+  const nextPath = () => {
+    const _nextPostId = moodPosts[index + 1]?.id;
+    const nextMood = _nextPostId
+      ? currMood
+      : currPost.moods?.find(
+          (md) => currMood.id != md.id && getPosts(md).length
+        ) ||
+        state.lists.top.moods.items.find(
+          (md) => currMood.id !== md.id && getPosts(md).length
+        );
+    const _moodPosts = getPosts(nextMood) || [];
+    const nextPost =
+      _nextPostId || (_moodPosts && _moodPosts[0] && _moodPosts[0].id);
 
-	const nextPath = () => {
-		const _nextPostId = moodPosts[index + 1]?.id;
-		const nextMood = _nextPostId
-			? currMood
-			: currPost.moods?.find(
-				(md) => currMood.id != md.id && getPosts(md).length
-			) ||
-			state.lists.top.moods.items.find(
-				(md) => currMood.id !== md.id && getPosts(md).length
-			);
-		const _moodPosts = getPosts(nextMood) || [];
-		const nextPost =
-			_nextPostId || (_moodPosts && _moodPosts[0] && _moodPosts[0].id);
+    const nextPath = `/folder/${nextMood?.id}/${nextPost}`; //(index != null) && moodPosts[index + 1]?.id ?
+    return nextPath;
+  };
 
-		const nextPath = `/folder/${nextMood?.id}/${nextPost}`; //(index != null) && moodPosts[index + 1]?.id ?
-		return nextPath;
-	};
-
-
-
-	return { nextPath, currMood, currPost, index, isInMood: !!moodId, moodId };
+  return { nextPath, currMood, currPost, index, isInMood: !!moodId, moodId };
 };
 
 export const Post: NLView = () => {
-	const state = useAppState();
-	const actions = useActions();
+  const state = useAppState();
+  const actions = useActions();
 
-	const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
+  const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
 
-	const { moodId, currMood, currPost, nextPath, index, isInMood } = useVotingStreamMood();
+  const { moodId, currMood, currPost, nextPath, index, isInMood } =
+    useVotingStreamMood();
 
-	const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
-	const username = author?.username || author?.displayName;
-	const [selectMoodsForm] = useForm();
-	const navigateToNext = () => {
-		const location = nextPath();
-		if (!location)
-			return;
-		actions.routing.historyPush({ location });
-	};
+  const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
+  const username = author?.username || author?.displayName;
+  const [selectMoodsForm] = useForm();
+  const navigateToNext = () => {
+    const location = nextPath();
+    if (!location) return;
+    actions.routing.historyPush({ location });
+  };
 
-	const addToMoods = async (form?: { moods: { id: string }[] }) => {
-		console.log("attachToMoods: Calling...")
+  const addToMoods = async (form?: { moods: { id: string }[] }) => {
+    console.log("attachToMoods: Calling...");
 
-		if (form?.moods?.length)
-			await actions.api.post.attachToMoods({
-				post: currPost,
-				moods: form?.moods || [],
-			});
-		console.log("attachToMoods: done Attaching to moods...")
-		navigateToNext()
-	};
+    if (form?.moods?.length)
+      await actions.api.post.attachToMoods({
+        post: currPost,
+        moods: form?.moods || [],
+      });
+    console.log("attachToMoods: done Attaching to moods...");
+    navigateToNext();
+  };
 
-	const doneVoting = (rating: number) => {
-		if (rating > 0)
-			actions.api.post.rate({
-				post: currPost,
-				amount: rating,
-			});
+  const doneVoting = (rating: number) => {
+    if (rating > 0)
+      actions.api.post.rate({
+        post: currPost,
+        amount: rating,
+      });
 
-		if (rating < 100) return navigateToNext();
+    if (rating < 100) return navigateToNext();
 
-		// if at 100 the mood will show itself
-	};
-	// else either at 100% or stopped rating
-	if (currMood.id && index === -1) return <Spin />;
+    // if at 100 the mood will show itself
+  };
+  // else either at 100% or stopped rating
+  if (currMood.id && index === -1) return <Spin />;
 
-	return (
-		<>
-			<Vote
-				// useVotingStream={useVotingStreamMood}
-				votingEnabled={isInMood}
-				onDoneVoting={doneVoting}
-				onLongDoneVoting={() => {
-					const eh = (e) => {
-						if (e.which !== 32) return;
+  return (
+    <>
+      <Vote
+        // useVotingStream={useVotingStreamMood}
+        votingEnabled={isInMood}
+        onDoneVoting={doneVoting}
+        onLongDoneVoting={() => {
+          const eh = (e) => {
+            if (e.which !== 32) return;
 
-						window.removeEventListener('keyup', eh);
+            window.removeEventListener("keyup", eh);
 
-						e.preventDefault();
-						navigateToNext();
-					}
-					window.addEventListener('keyup', eh);
-					return () => {
-						window.removeEventListener('keyup', eh);
-					}
-				}}
-				info={
-					<div className="post-info-column">
-						<h2
-							className="header-2"
-							hidden={currPost.title === null ? true : false}
-						>
-							{currPost.title}
-						</h2>
-						<div
-							style={{
-								textAlign: "right",
-							}}
-						>
-							<div style={{ textAlign: "left" }}>
-								<Link
-									to={`/user/${username}`}
-									style={{
-										wordBreak: "break-all",
-										maxWidth: "100%",
-										minHeight: "1.5em",
-										textAlign: "right",
-									}}
-								>
-									<span className="paragraph-2b">
-										{username}{" "}
-									</span>
-									<span className="paragraph-2r">
-										{currPost.content}
-									</span>
-								</Link>
-							</div>
-						</div>
-						{currPost.author?.newcoinPoolTx ? (
-							<Row className="paragraph-2u" align="bottom">
-								<a
-									href={
-										"https://explorer.newcoin.org/account/" +
-										currPost.author?.username
-									}
-									target="_blank"
-									rel="noreferrer"
-								>
-									Creator pool
-								</a>
-								<Ebene />
-							</Row>
-						) : (
-							""
-						)}
+            e.preventDefault();
+            navigateToNext();
+          };
+          window.addEventListener("keyup", eh);
+          return () => {
+            window.removeEventListener("keyup", eh);
+          };
+        }}
+        info={
+          <div className="post-info-column">
+            <h2
+              className="header-2"
+              hidden={currPost.title === null ? true : false}
+            >
+              {currPost.title}
+            </h2>
+            <div
+              style={{
+                textAlign: "right",
+              }}
+            >
+              <div style={{ textAlign: "left" }}>
+                <Link
+                  to={`/user/${username}`}
+                  style={{
+                    wordBreak: "break-all",
+                    maxWidth: "100%",
+                    minHeight: "1.5em",
+                    textAlign: "right",
+                  }}
+                >
+                  <span className="paragraph-2b">{username} </span>
+                  <span className="paragraph-2r">{currPost.content}</span>
+                </Link>
+              </div>
+            </div>
+            {currPost.author?.newcoinPoolTx ? (
+              <Row className="paragraph-2u" align="bottom">
+                <a
+                  href={
+                    "https://explorer.newcoin.org/account/" +
+                    currPost.author?.username
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Creator pool
+                </a>
+                <Ebene />
+              </Row>
+            ) : (
+              ""
+            )}
 
-						<Row className="paragraph-2u" align="bottom">
-							{!currPost.newcoinMintTx ? (
-								""
-							) : ["REQUESTED", "FAILED"].includes(
-								currPost.newcoinMintTx.toString()
-							) ? (
-								"Mint status: " + currPost.newcoinMintTx || ""
-							) : (
-								<>
-									<NewcoinLink tx={currPost.newcoinMintTx}>
-										See minted NFT
-									</NewcoinLink>
-									<NFTIcon />
-								</>
-							)}
-						</Row>
-						<br />
-						<br />
-						<div>
-							<ShareButton />
-						</div>
-						<br />
-						<br />
-						{ currPost.tags?.length ? "Tags:" : "" }
-						{ ((json(currPost.tags || [])))
-							?.sort((a,b) => b["_rel"].score - a["_rel"].score)
-							?.slice(0, 10)
-							?.map(t => {
-								return <>
-									<div className="text-small">{t.value}</div>
-									<Progress strokeColor="#c1fa50" percent={t["_rel"].score * 100} />
-								</>
+            <Row className="paragraph-2u" align="bottom">
+              {!currPost.newcoinMintTx ? (
+                ""
+              ) : ["REQUESTED", "FAILED"].includes(
+                  currPost.newcoinMintTx.toString()
+                ) ? (
+                "Mint status: " + currPost.newcoinMintTx || ""
+              ) : (
+                <>
+                  <NewcoinLink tx={currPost.newcoinMintTx}>
+                    See minted NFT
+                  </NewcoinLink>
+                  <NFTIcon />
+                </>
+              )}
+            </Row>
+            <br />
+            <br />
+            <div>
+              <ShareButton />
+            </div>
+            <br />
+            <br />
+            {currPost.tags?.length ? "Tags:" : ""}
+            {json(currPost.tags || [])
+              ?.sort((a, b) => b["_rel"].score - a["_rel"].score)
+              ?.slice(0, 10)
+              ?.map((t) => {
+                return (
+                  <>
+                    <div className="text-small">{t.value}</div>
+                    <Progress
+                      strokeColor="#c1fa50"
+                      percent={t["_rel"].score * 100}
+                    />
+                  </>
+                );
+              })}
+          </div>
+        }
+      >
+        {/PROCESSING/i.test(currPost.contentUrl || "") ? (
+          <Spin title="Processing media..." />
+        ) : (
+          <ContentImage {...currPost} thumbnail={false} />
+        )}
 
-							}) }
-					</div>
-				}
-			>
-				{/PROCESSING/i.test(currPost.contentUrl || "") ? (
-					<Spin title="Processing media..." />
-				) : (
-					<ContentImage {...currPost} thumbnail={false} />
-				)}
-
-				{/* <Modal
+        {/* <Modal
 					cancelButtonProps={{ hidden: true }}
 					footer={false}
 					okText="Done"
@@ -279,17 +279,23 @@ export const Post: NLView = () => {
 						</Row>
 					</Form>
 				</Modal> */}
-			</Vote>
-			<div className="text-right app-main-full-width">
-				<PostReportModal />
-			</div>
-			{
-				<div hidden={state.flows.rating.value !== 100} className="app-main-full-width">
-					<SelectMoodForm onFinish={addToMoods} title="Select a folder to share to" />
-				</div>
-			}
-		</>
-	);
+      </Vote>
+      <div className="text-right app-main-full-width">
+        <PostReportModal />
+      </div>
+      {
+        <div
+          hidden={state.flows.rating.value !== 100}
+          className="app-main-full-width"
+        >
+          <SelectMoodForm
+            onFinish={addToMoods}
+            title="Select a folder to share to"
+          />
+        </div>
+      }
+    </>
+  );
 };
 
 // export const Post2: NLView = () => {

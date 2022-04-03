@@ -1,0 +1,33 @@
+{
+  "extends": "tsconfig/base.json",
+  "include": [
+    "./src", "src/..overmind.ts",
+  ],
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": false,
+    "noImplicitAny": false,
+  },
+  "exclude": [
+    "./dist",
+    "./build",
+    "./node_modules"
+  ]
+}
