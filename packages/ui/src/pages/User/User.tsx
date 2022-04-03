@@ -1,35 +1,28 @@
+import { NLView } from "@newcoin-foundation/core";
+import {
+  useCachedUser,
+  useSetTitle,
+  useCachedPowerups,
+  useCachedPool,
+} from "@newcoin-foundation/hooks";
+import { useAppState, useActions } from "@newcoin-foundation/state";
+import { PowerupsCacheItem } from "@newcoin-foundation/state/dist/src/api/state";
 import { Tabs } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
 import { ActivityStream } from "../../Components/ActivityStream";
 import { ContentLayout } from "../../Components/ContentLayout";
 import Creators from "../../Components/Creators";
-import { DataRow } from "../../Components/DataRow";
 import Deferred from "../../Components/Deferred";
-import { ItemGrid } from "../../Components/ItemGrid";
-import { MoodWidget } from "../../Components/MoodWidget";
-import { NewcoinWidget } from "../../Components/NewcoinWidgets";
 import { Spin } from "../../Components/Spin";
 import TopFolders from "../../Components/TopFolders";
 import {
   UserNewcoinInfo,
   UserNewcoinPoolsParticipation,
-  UsersList,
   UserSocialInfo,
   UserStake,
   UserWidgetHeading,
 } from "../../Components/UserWidget";
-import {
-  useCachedPool,
-  useCachedPost,
-  useCachedPowerups,
-  useCachedUser,
-} from "../../hooks/useCached";
-import { useSetTitle } from "../../hooks/useSetTitle";
-import { useActions, useAppState } from "../state";
-import { PowerupsCacheItem } from "../../state/api/state";
-import { ActiveKey, NLView } from "../../types";
-import { MoodsGrid } from "../Mood/MoodsGrid";
 
 export const User: NLView = () => {
   const [activeKey, setActiveKey] = useState<string>("0");

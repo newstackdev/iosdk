@@ -1,27 +1,16 @@
-import {
-  UserCreateRequest,
-  ErrorResponse,
-} from "@newlife/newlife-creator-client-api";
-import { Button, Checkbox, Input, notification, Row } from "antd";
+import { UserCreateRequest } from "@newlife/newlife-creator-client-api";
+import { Input } from "antd";
 import Form from "antd/lib/form";
-import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 // import { logout } from "./Auth";
-import { useHistory } from "react-router-dom";
-import { assert } from "console";
-import { get } from "lodash";
-import { EmbeddableControl, NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../state";
-import { User } from "@firebase/auth";
 import { FieldData } from "rc-field-form/lib/interface";
 import { useForm } from "antd/lib/form/Form";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { CrossCircle } from "../../Components/Icons/CrossCircle";
-import {
-  IndeterminateProgress,
-  IndeterminateProgressAction,
-} from "../../Components/IndeterminateProgress";
+import { NLView, EmbeddableControl } from "@newcoin-foundation/core";
+import { useAppState, useActions, useEffects } from "@newcoin-foundation/state";
 // ({ embedded, setNext } : React.PropsWithChildren<EmbeddableControl>) => {
 
 export const CrossCircleErr: NLView<{ children?: JSX.Element }> = ({

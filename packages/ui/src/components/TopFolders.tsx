@@ -4,7 +4,7 @@ import { useAppState } from "@newcoin-foundation/state";
 import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import Title from "../pages/Explore/Title";
+import Title from "../Pages/Explore/Title";
 import { ContentLayout } from "./ContentLayout";
 import FolderClosed from "./Icons/Folder/Closed";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";

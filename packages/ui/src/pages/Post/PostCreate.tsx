@@ -4,39 +4,14 @@ import {
   PostReadResponse,
   UserReadPrivateResponse,
 } from "@newlife/newlife-creator-client-api";
-import {
-  Button,
-  Checkbox,
-  Col,
-  Input,
-  notification,
-  Progress,
-  Radio,
-  Row,
-  Select,
-  Tooltip,
-  Upload,
-} from "antd";
+import { Col, Input, Row, Tooltip } from "antd";
 import Form from "antd/lib/form";
-import { useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { get } from "lodash";
-import { NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../state";
-import { PicturesWall } from "../../Components/PicturesWall";
 
-import { MoodWidget } from "../../Components/MoodWidget";
-
-import { LICENSES } from "../../constants";
 import { SelectMood } from "../../Components/SelectMood";
-import { RowCheckbox } from "../../Components/RowCheckbox";
 import { ContentLayout } from "../../Components/ContentLayout";
-import { IndeterminateProgress } from "../../Components/IndeterminateProgress";
 import { ProgressButton } from "../../Components/ProgressButton";
-import { MoodCreateModal } from "../Mood/MoodCreate";
-import { MoodsGrid } from "../Mood/MoodsGrid";
-import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
-import TextArea from "antd/lib/input/TextArea";
 import { AddButton } from "../../Components/Icons/AddButton";
 import Switch from "react-switch";
 import { Info } from "../../Components/Icons/Info";
@@ -44,13 +19,13 @@ import { useForm } from "antd/lib/form/Form";
 import PostCreateHeader from "./PostCreateHeader";
 import PostCreateInfo, { LicenseProps } from "./PostCreateInfo";
 import { ExitButton } from "../../Components/Icons/ExitButton";
-import { AddFolder } from "../../Components/Icons/AddFolder";
 import Modal from "antd/lib/modal/Modal";
 import { CrossCircle } from "../../Components/Icons/CrossCircle";
-import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import { NFTLargeIcon } from "../../Components/Icons/NFTLargeIcon";
 import Avatar from "antd/lib/avatar/avatar";
-import { ContentImage } from "../../Components/Image";
+import { LICENSES, NLView } from "@newcoin-foundation/core";
+import { useAppState, useActions, useEffects } from "@newcoin-foundation/state";
+import { MediaComponent } from "src/Components/MediaComponents";
 
 const initialLicense = { name: LICENSES[0][0], value: LICENSES[0][1] };
 
@@ -353,7 +328,7 @@ export const PostCreate: NLView = (props) => {
         <Row style={{ width: "100%" }}>
           <Col style={{ marginRight: "20px" }}>
             <Avatar
-              src={<ContentImage {...user} />}
+              src={<MediaComponent {...user} />}
               className="avatar-image-top-creators"
             />
           </Col>

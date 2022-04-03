@@ -1,7 +1,7 @@
 import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import Title from "../pages/Explore/Title";
+import Title from "../Pages/Explore/Title";
 import { PostWidget } from "./PostWidget";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { max } from "lodash";

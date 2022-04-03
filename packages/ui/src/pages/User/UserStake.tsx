@@ -1,14 +1,14 @@
+import { NLView } from "@newcoin-foundation/core";
+import { useCachedUser } from "@newcoin-foundation/hooks";
+import { useActions, useAppState } from "@newcoin-foundation/state";
 import { UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
-import { Space, Input, Button, Form, Spin, Result } from "antd";
+import { Button, Form, Spin } from "antd";
 import { MaskedInput } from "antd-mask-input";
 import { useForm } from "antd/lib/form/Form";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { useParams } from "react-router";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { UserWidgetHeading } from "../../Components/UserWidget";
-import { useCachedUser } from "../../hooks/useCached";
-import { useActions, useAppState } from "../state";
-import { NLView } from "../../types";
 
 const pad = (s: string, n: number, where: "right" | "left") =>
   (where == "left" ? s : "") +

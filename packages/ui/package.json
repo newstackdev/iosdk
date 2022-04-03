@@ -1,11 +1,12 @@
 {
   "name": "@newcoin-foundation/ui",
   "version": "0.0.0",
-  "main": "./index.tsx",
-  "types": "./index.tsx",
+  "main": "./dist/index.ts",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "init": "npm i",
+    "build": "tsc --build tsconfig.json",
     "generate:barrels": "barrelsby --delete"
   },
   "peerDependencies": {

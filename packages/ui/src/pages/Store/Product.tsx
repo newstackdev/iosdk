@@ -11,18 +11,14 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import { Button, Col, Form, Radio, Row } from "antd";
 import { useEffect, useState } from "react";
-import { useActions, useAppState, useEffects } from "../state";
 import { PaymentStripePaymentIntentCreateResponse } from "@newlife/newlife-creator-client-api";
-import { EmbeddableControl } from "../../types";
 import { useForm } from "antd/lib/form/Form";
-import { AUTH_FLOW_STATUS } from "../../state/auth/state";
 import { Checkbox } from "antd";
-import { CheckboxValueType } from "antd/lib/checkbox/Group";
-import {
-  IndeterminateProgress,
-  IndeterminateProgressAction,
-} from "../../Components/IndeterminateProgress";
+import { IndeterminateProgress } from "../../Components/IndeterminateProgress";
 import { ProgressButton } from "../../Components/ProgressButton";
+import { EmbeddableControl } from "@newcoin-foundation/core";
+import { useAppState, useActions, useEffects } from "@newcoin-foundation/state";
+import { AUTH_FLOW_STATUS } from "@newcoin-foundation/state/dist/src/auth/state";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.

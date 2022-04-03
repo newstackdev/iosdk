@@ -1,5 +1,5 @@
-import { NLView } from "../../types";
-import { useActions, useAppState } from "../state";
+import { NLView } from "@newcoin-foundation/core";
+import { useActions, useAppState } from "@newcoin-foundation/state";
 import { MoodsGrid } from "./MoodsGrid";
 
 export const MyMoods: NLView = () => {

@@ -1,9 +1,9 @@
+import { NLView } from "@newcoin-foundation/core";
+import { useActions } from "@newcoin-foundation/state";
 import { Input, Form } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { ProgressButton } from "../../Components/ProgressButton";
-import { useActions } from "../state";
-import { NLView } from "../../types";
 
 export const UserInvite: NLView = () => {
   const [form] = useForm();

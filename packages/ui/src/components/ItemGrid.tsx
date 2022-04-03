@@ -3,8 +3,8 @@ import useVisibility from "@newcoin-foundation/hooks/dist/src/useVisibility";
 import { useAppState } from "@newcoin-foundation/state";
 import { Col, Result, Row } from "antd";
 import { ReactElement, useEffect } from "react";
-import Title from "../pages/Explore/Title";
-import { MoodCreateModal } from "../pages/Mood/MoodCreate";
+import Title from "../Pages/Explore/Title";
+import { MoodCreateModal } from "../Pages/Mood/MoodCreate";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { Spin } from "./Spin";
 

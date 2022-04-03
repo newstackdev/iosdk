@@ -1,3 +1,5 @@
+import { NLView, capFirst } from "@newcoin-foundation/core";
+import { useActions, useAppState } from "@newcoin-foundation/state";
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useEffect, useState } from "react";
@@ -6,9 +8,6 @@ import { ContentLayout } from "../../Components/ContentLayout";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { Spin } from "../../Components/Spin";
 import SupportBox from "../../Components/SupportBox";
-import { useActions, useAppState } from "../state";
-import { NLView } from "../../types";
-import { capFirst } from "../../utils/capFirst";
 
 const STATUS = {
   NONE: 0,
@@ -148,8 +147,11 @@ export const LegacyLogin: NLView = () => {
               <div className="section-divider" />
               <h2>
                 Hi{" "}
-                {state.api.auth.user?.username ||
-                  state.api.auth.user?.displayName}
+                {
+                  state.api.auth.user?.username
+                  // TODO: investigate model
+                  //  || state.api.auth.user?.displayName
+                }
                 , we've been missing you!
               </h2>
               <div className="section-divider" />

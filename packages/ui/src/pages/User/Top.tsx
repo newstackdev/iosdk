@@ -1,11 +1,7 @@
 // import '../App.css';
+import { NLView } from "@newcoin-foundation/core";
+import { useAppState, useActions } from "@newcoin-foundation/state";
 import { useEffect } from "react";
-import { NLView } from "../../types";
-import { useActions, useAppState } from "../state";
-import { UsersList } from "../../Components/UserWidget";
-// import { ItemGrid } from "../Components/ItemGrid";
-// import FolderClosed from '../Components/Icons/Folder/Closed';
-// import { MoodsGrid } from './Mood/MoodsGrid';
 
 export const UserTop: NLView = () => {
   const state = useAppState();

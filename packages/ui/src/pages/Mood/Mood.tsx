@@ -1,20 +1,19 @@
+import { NLView } from "@newcoin-foundation/core";
+import {
+  useCachedMoodPosts,
+  useCachedUser,
+  useCachedMood,
+} from "@newcoin-foundation/hooks";
+import { useAppState } from "@newcoin-foundation/state";
 import { Col, Row } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { ContentLayout } from "../../Components/ContentLayout";
-import { SmallArrowBack } from "../../Components/Icons/SmallArrowBack";
+import { ContentLayout } from "src/Components";
+import { SmallArrowBack } from "src/Components/Icons";
+import { MediaComponent } from "src/Components/MediaComponents";
 import { ThreeDots } from "../../Components/Icons/ThreeDots";
-import { ContentImage } from "../../Components/Image";
 import { TopFoldersGrid } from "../../Components/TopFolders";
-import { UserWidgetHeading } from "../../Components/UserWidget";
-import {
-  useCachedMood,
-  useCachedMoodPosts,
-  useCachedUser,
-} from "../../hooks/useCached";
-import { useAppState } from "../state";
-import { NLView } from "../../types";
 import { MoodsGridRow } from "./MoodsGrid";
 
 export const Mood: NLView = () => {
@@ -48,7 +47,7 @@ export const Mood: NLView = () => {
                   style={{ marginLeft: "10px" }}
                 >
                   <Avatar
-                    src={<ContentImage {...user} />}
+                    src={<MediaComponent {...user} />}
                     className="avatar-image-header"
                   />
                 </Link>

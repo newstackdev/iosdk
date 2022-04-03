@@ -1,36 +1,19 @@
 import {
-  PostCreateRequest,
   MoodReadResponse,
   PostReadResponse,
   MoodCreateRequest,
 } from "@newlife/newlife-creator-client-api";
-import {
-  Button,
-  Checkbox,
-  Col,
-  Input,
-  Modal,
-  notification,
-  Row,
-  Select,
-  Upload,
-} from "antd";
+import { Input, Modal, Select } from "antd";
 import Form from "antd/lib/form";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { get } from "lodash";
-import { Callback, NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../state";
-import { FileOutlined } from "@ant-design/icons";
-import { PicturesWall } from "../../Components/PicturesWall";
 
-import { MoodWidget } from "../../Components/MoodWidget";
-
-import { LICENSES } from "../../constants";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { AddFolder } from "../../Components/Icons/AddFolder";
-import { Addfolderv2 } from "../../Components/Icons/Addfolderv2";
+import { Callback, LICENSES, NLView } from "@newcoin-foundation/core";
+import { useAppState, useActions } from "@newcoin-foundation/state";
 
 export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
   const state = useAppState();

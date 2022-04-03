@@ -1,4 +1,4 @@
-import { useActions } from "../state";
+import { useActions } from "@newcoin-foundation/state";
 
 export const LargeArrowBack = () => {
   const actions = useActions();

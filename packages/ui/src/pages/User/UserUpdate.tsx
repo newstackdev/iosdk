@@ -1,20 +1,15 @@
-import {
-  UserCreateRequest,
-  UserUpdateRequest,
-} from "@newlife/newlife-creator-client-api";
-import { Button, Checkbox, Col, Input, Row } from "antd";
+import { UserUpdateRequest } from "@newlife/newlife-creator-client-api";
+import { Col, Input, Row } from "antd";
 import Form from "antd/lib/form";
-import { EmbeddableControl, NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../state";
-import { FieldData } from "rc-field-form/lib/interface";
 import { useForm } from "antd/lib/form/Form";
 import { PictureWallFormItem } from "../../Components/PicturesWall";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { omit } from "lodash";
 import { useEffect } from "react";
-import { ContentImage } from "../../Components/Image";
-import { ProgressButton } from "../../Components/ProgressButton";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { NLView, EmbeddableControl } from "@newcoin-foundation/core";
+import { useAppState, useActions, useEffects } from "@newcoin-foundation/state";
+import { MediaComponent } from "src/Components/MediaComponents";
 
 export const UserUpdate: NLView<
   EmbeddableControl & { hideUsername?: boolean; noRouing?: boolean }
@@ -66,7 +61,7 @@ export const UserUpdate: NLView<
         <Row justify="center" gutter={12} className="full-width-only">
           <Col span={8}>
             <Form.Item>
-              <ContentImage {...sf} neverHide={true} />
+              <MediaComponent {...sf} neverHide={true} />
             </Form.Item>
           </Col>
           <Col span={14}>

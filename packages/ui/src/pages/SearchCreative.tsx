@@ -1,20 +1,11 @@
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Space,
-  Tag,
-  List,
-} from "antd";
+import { Button, Col, Form, Input, Row, Space, Tag, List } from "antd";
 import { Spin } from "../Components/Spin";
 import React, { useEffect } from "react";
-import { NLView } from "../types";
-import { useActions, useAppState } from "../overmind";
 import { useLocation } from "react-router-dom";
 import { SearchItemWidget } from "../Components/SearchItemWidget";
 import { ItemGrid } from "../Components/ItemGrid";
+import { NLView } from "@newcoin-foundation/core";
+import { useAppState, useActions } from "@newcoin-foundation/state";
 
 // TODO: Maybe move to utils or something
 function useQuery() {
@@ -28,7 +19,7 @@ export const useCreativeSearchQuery = () => {
   const index: number = Number(query.get("index") ?? 0);
   const aesthetics = query.get("aesthetics") ?? "";
   return { tags, aesthetics, index };
-}
+};
 
 export const SearchCreative: NLView = () => {
   const state = useAppState();
@@ -107,11 +98,7 @@ export const SearchCreative: NLView = () => {
               <Col md={3}>
                 <Form.Item name="aestetics"></Form.Item>
                 <Form.Item wrapperCol={{}}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    size="large"
-                  >
+                  <Button type="primary" htmlType="submit" size="large">
                     Submit
                   </Button>
                 </Form.Item>
@@ -145,7 +132,7 @@ export const SearchCreative: NLView = () => {
         render={(m, index) => <SearchItemWidget item={m} index={index} />}
         loadMore={maybeLoadMore}
       />
-      
+
       {state.indicators.isWorking ? (
         <Spin />
       ) : !items.length && lastQueried ? (

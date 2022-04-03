@@ -1,22 +1,11 @@
 // import '../App.css';
 import { useEffect } from "react";
-import { NLView } from "../../types";
-import { useActions, useAppState } from "../state";
-import { MoodWidget } from "../../Components/MoodWidget";
-import { ItemGrid } from "../../Components/ItemGrid";
-import FolderClosed from "../../Components/Icons/Folder/Closed";
-import { MoodsGrid } from "../Mood/MoodsGrid";
 import { ContentLayout } from "../../Components/ContentLayout";
-import {
-  UsersGrid,
-  UsersHorizontalScroller,
-  UsersList,
-} from "../../Components/UserWidget";
 import Spotlights from "../../Components/Spotlights";
 import TopFolders from "../../Components/TopFolders";
 import Creators from "../../Components/Creators";
-import { Header } from "antd/lib/layout/layout";
-import { Col, Row } from "antd";
+import { NLView } from "@newcoin-foundation/core";
+import { useAppState, useActions } from "@newcoin-foundation/state";
 
 export const Explore: NLView = () => {
   const state = useAppState();

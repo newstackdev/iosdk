@@ -1,44 +1,19 @@
-import {
-  Steps,
-  Button,
-  message,
-  Form,
-  InputProps,
-  Tag,
-  Row,
-  Col,
-  Space,
-  Tooltip,
-} from "antd";
-import {
-  ReactElement,
-  RefObject,
-  SyntheticEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Steps, Button, Tag, Tooltip } from "antd";
+import { RefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { MaskedInput } from "antd-mask-input";
 
 import { ContentLayout } from "../../Components/ContentLayout";
-import { STAKE_STEPS } from "../../Components/UserWidget";
-import { useActions, useAppState } from "../state";
-import { state } from "../../state/auth/state";
 import Paragraph from "antd/lib/typography/Paragraph";
-import {
-  EmbeddableControl,
-  EmbeddableControlNextCommand,
-  NLView,
-} from "../../types";
 import { Auth } from "../Auth";
-import { Product } from "../Store/Product";
 import { UserCreate } from "../User/UserCreate";
-import { UserStake } from "../../Components/UserWidget";
-import { JoinDao } from "../JoinDao";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { Link } from "react-router-dom";
 import { AppearingComponent } from "../../Components/Appearing";
 import { Spin } from "../../Components/Spin";
+import { EmbeddableControlNextCommand } from "@newcoin-foundation/core";
+import { useActions, useAppState } from "@newcoin-foundation/state";
+import { JoinDao } from "../JoinDao";
+import { Product } from "../Store/Product";
 
 const { Step } = Steps;
 

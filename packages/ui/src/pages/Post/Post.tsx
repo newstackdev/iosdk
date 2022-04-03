@@ -1,31 +1,27 @@
 import { useParams } from "react-router";
-import { NLView } from "../../types";
-import { Button, Col, Form, Modal, Progress, Row, Tag } from "antd";
-import {
-  useCachedMood,
-  useCachedPost,
-  useCachedUser,
-} from "../../hooks/useCached";
+import { Progress, Row } from "antd";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useActions, useAppState } from "../state";
-import { SelectMood, SelectMoodForm } from "../../Components/SelectMood";
-import { MoodCreateModal } from "../Mood/MoodCreate";
+import { SelectMoodForm } from "../../Components/SelectMood";
 import { Spin } from "../../Components/Spin";
 import useForm from "antd/lib/form/hooks/useForm";
 // import { ContentImage, contentImageUrl } from "../../Components/Image";
-import {
-  MoodReadResponse,
-  PostReadResponse,
-} from "@newlife/newlife-creator-client-api";
+import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
 import { Ebene } from "../../Components/Icons/Ebene";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import PostReportModal from "./PostModal";
 import { NewcoinLink } from "../Profile";
-import { ContentImage } from "../../Components/Image";
 import { Vote } from "../../Components/Vote";
 import { ShareButton } from "../../Components/Share";
 import { json } from "overmind";
+import { NLView } from "@newcoin-foundation/core";
+import {
+  useCachedPost,
+  useCachedMood,
+  useCachedUser,
+} from "@newcoin-foundation/hooks";
+import { useActions, useAppState } from "@newcoin-foundation/state";
+import { MediaComponent } from "src/Components/MediaComponents";
 
 const useVotingStreamMood = () => {
   const { moodId, postId, id } = useParams<{
@@ -106,7 +102,9 @@ export const Post: NLView = () => {
     useVotingStreamMood();
 
   const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
-  const username = author?.username || author?.displayName;
+  const username = author?.username;
+  // TODO: investigate model
+  // || author?.displayName;
   const [selectMoodsForm] = useForm();
   const navigateToNext = () => {
     const location = nextPath();
@@ -250,7 +248,7 @@ export const Post: NLView = () => {
         {/PROCESSING/i.test(currPost.contentUrl || "") ? (
           <Spin title="Processing media..." />
         ) : (
-          <ContentImage {...currPost} thumbnail={false} />
+          <MediaComponent {...currPost} thumbnail={false} />
         )}
 
         {/* <Modal

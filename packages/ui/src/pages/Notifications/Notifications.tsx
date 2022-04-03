@@ -1,13 +1,13 @@
+import { NLView } from "@newcoin-foundation/core";
+import { useAppState } from "@newcoin-foundation/state";
 import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
 import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
 import { Col, Row } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
+import { MediaComponent } from "src/Components/MediaComponents";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
-import { ContentImage } from "../../Components/Image";
 import { PostWidget } from "../../Components/PostWidget";
-import { useAppState } from "../state";
-import { NLView } from "../../types";
 
 const NotificationBox: NLView<{
   user: UserReadPrivateResponse;
@@ -22,7 +22,7 @@ const NotificationBox: NLView<{
       <Row className="notification-box__inside-left">
         <Col sm={11} md={7} lg={7} xl={6} xxl={6}>
           <Avatar
-            src={<ContentImage {...user} />}
+            src={<MediaComponent {...user} />}
             className="avatar-image-header"
           />
         </Col>

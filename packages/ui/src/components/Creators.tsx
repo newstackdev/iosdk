@@ -2,7 +2,7 @@ import { UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { Avatar, Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import { useAppState } from "@newcoin-foundation/state";
-import Title from "../pages/Explore/Title";
+import Title from "../Pages/Explore/Title";
 import { NLView } from "@newcoin-foundation/core";
 import { ContentLayout } from "./ContentLayout";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";

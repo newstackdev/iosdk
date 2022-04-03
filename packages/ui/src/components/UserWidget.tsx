@@ -867,8 +867,8 @@ export const UserNewcoinPoolsParticipation: NLView<{
 
 export const UserNewcoinInfo: NLView<{
   user?: UserReadPrivateResponse & {
-    newcoinPublisherPrivateKey: string;
-    newcoinPublisherPublicKey: string;
+    newcoinPublisherPrivateKey?: string;
+    newcoinPublisherPublicKey?: string;
   };
 }> = ({ user = {} }) => {
   const state = useAppState();

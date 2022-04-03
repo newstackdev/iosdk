@@ -1,13 +1,12 @@
 import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
-import { Button, Col, Dropdown, Input, Row } from "antd";
+import { Col, Dropdown, Input, Row } from "antd";
 
 import { useEffect, useState } from "react";
-import { NLView } from "../../types";
 import OutsideClickHandler from "react-outside-click-handler";
-import { useActions, useAppState } from "../state";
 import { UsersList } from "../../Components/UserWidget";
-import { divide } from "lodash";
 import { Searchicon } from "../../Components/Icons/Searchicon";
+import { NLView } from "@newcoin-foundation/core";
+import { useAppState, useActions } from "@newcoin-foundation/state";
 
 export const SearchResultsWidget: NLView<{ query: string }> = ({ query }) => {
   const state = useAppState();
