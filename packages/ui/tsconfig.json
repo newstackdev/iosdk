@@ -7,7 +7,7 @@
     "rootDir": "src",
     "baseUrl": ".",
     "jsx": "react-jsx",
-    "composite": true,
+    "composite": false,
     "outDir": "dist",
     "declaration": true,
     "declarationMap": true,
