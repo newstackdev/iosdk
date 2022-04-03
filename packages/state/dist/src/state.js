@@ -14,7 +14,7 @@ var ux_1 = __importDefault(require("./ux"));
 var flows_1 = __importDefault(require("./flows"));
 var indicators_1 = __importDefault(require("./indicators"));
 var websockets_1 = __importDefault(require("./websockets"));
-var lists_1 = __importDefault(require("./lists"));
+var state_1 = __importDefault(require("./lists/state"));
 var newcoin_1 = __importDefault(require("./newcoin"));
 var chromeext_1 = __importDefault(require("./chromeext"));
 var payments_1 = __importDefault(require("./payments"));
@@ -38,7 +38,7 @@ var config = function (cfg) {
         chromeext: chromeext_1["default"],
         config: { state: (0, lodash_1.merge)({}, core_1.config, cfg) },
         api: api_1["default"],
-        lists: lists_1["default"],
+        lists: state_1["default"],
         flows: flows_1["default"],
         newcoin: newcoin_1["default"]
     });

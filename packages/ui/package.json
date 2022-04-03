@@ -10,7 +10,8 @@
   },
   "peerDependencies": {
     "@newcoin-foundation/core": "*",
-    "@newcoin-foundation/state": "*"
+    "@newcoin-foundation/state": "*",
+    "@newcoin-foundation/hooks": "*"
   },
   "devDependencies": {
     "@types/react": "^17.0.37",

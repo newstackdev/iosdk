@@ -11,7 +11,7 @@ import ux from "./ux";
 import flows from "./flows";
 import indicators from "./indicators";
 import websockets from "./websockets";
-import lists from "./lists";
+import lists from "./lists/state";
 import newcoin from "./newcoin";
 import chromeext from "./chromeext";
 import payments from "./payments";
