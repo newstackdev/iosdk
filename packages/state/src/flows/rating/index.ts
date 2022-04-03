@@ -74,7 +74,6 @@ export const onInitializeOvermind: Action = ({ actions, state }) => {
   const nextValue = () => {};
 
   state.flows.rating.keyBinding.setEventHandlers({
-    // @ts-ignore
     onKeyDown: (event) => actions.flows.rating.deepLikeStart({ event }),
     onKeyUp: () => {
       actions.flows.rating.deepLikeStop();

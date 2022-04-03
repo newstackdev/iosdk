@@ -101,7 +101,7 @@ export const create: Action<{
         ? await state.api.client.user.preregisterCreate(user)
         : await state.api.client.user.userCreate({
             ...user,
-            // @ts-ignore
+
             legacyToken: state.flows.user.create.legacyToken,
           });
 
@@ -280,9 +280,9 @@ export const getCurrent: Action<undefined> = async ({
     state.routing.simpleHistory[0].search
       .slice(1)
       .split(/&/)
-      // @ts-ignore
+
       .map((kv) => kv.split(/=/))
-      // @ts-ignore
+
       .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 
     state.api.auth.user = (await state.api.client.user.currentList()).data;

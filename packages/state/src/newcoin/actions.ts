@@ -15,7 +15,7 @@ export const getAccountBalance: Action<{ user: { username?: string } }, any> =
       owner: user.username || "",
       contract: "pools.nco",
     });
-    // @ts-ignore
+
     state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
       const [total, symbol] = c.split(/ /);
       return { ...r, [symbol]: total };

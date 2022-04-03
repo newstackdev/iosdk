@@ -21,7 +21,6 @@ const onInitializeOvermind: Action<undefined> = async ({
   //     });
 
   reaction(
-    // @ts-ignore
     (state) => state.api.auth.authorized,
     async () => {
       if (

@@ -55,9 +55,8 @@ export const onInitializeOvermind: Action<any> = async ({
   reaction(reduceState, actions.flows.user.create._wizardReact);
 
   reaction(
-    // @ts-ignore
     (s) => ({ auth: s.api.auth, username: s.flows.user.create.form.username }),
-    // @ts-ignore
+
     ({ username, auth }) => {
       if (username && !auth.authorized)
         actions.flows.user.create.checkAvailability({ username });

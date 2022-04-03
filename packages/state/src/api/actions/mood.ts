@@ -78,7 +78,6 @@ export const getPosts: Action<MoodReadResponse> = async (
   // state.api.cache.moods[id] = { ...state.api.cache.moods[id], posts: uniqBy(r.data.value, p => p.id) };
   actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });
   r.data.value?.forEach(
-    // @ts-ignore
     (p) =>
       p.id &&
       (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p })

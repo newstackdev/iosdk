@@ -33,11 +33,10 @@ export const create: Action<
   PostReadResponse | void
 > = async ({ state, actions, effects }, { postForm }) => {
   // await state.api.client.post.postCreate(post);
-  // @ts-ignore
+
   const shouldUpload = !postForm.contentType;
 
   if (!shouldUpload) {
-    // @ts-ignore
     if (!postForm.content)
       return effects.ux.notification.open({
         message: "Write something smart here.",
