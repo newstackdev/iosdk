@@ -12,7 +12,8 @@ export const logout: Action<{ noRouting?: boolean } | undefined> = async (
 
   await actions.api.auth.logout();
 
-  Object.values(state.auth.tokens).forEach((t) => t.logout());
+  // @ts-ignore
+  Object.values(state.auth.tokens).map((t) => t.logout());
 
   // await effects.firebase.logout();
 

@@ -4,29 +4,26 @@
     "./src",
   ],
   "compilerOptions": {
-    "target": "ES2015",
-    "lib": [
-      "DOM",
-      "ESNext"
-    ],
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "jsx": "react",
-    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "noEmitOnError": true,
-    "allowJs": true,
-    "baseUrl": ".",
-    "paths": {
-      "@app/overmind": [
-        "../../src/overmind"
-      ]
-    }
+    "strict": true,
+    "noEmit": false
   },
   "exclude": [
-    "dist",
-    "build",
-    "node_modules"
-  ],
+    "./dist",
+    "./build",
+    "./node_modules"
+  ]
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"newlife.d.ts","sourceRoot":"","sources":["../../../../src/auth/effects/newlife.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAkB,MAAM,0BAA0B,CAAC;AACtE,OAAO,EAEL,sBAAsB,EACvB,MAAM,qCAAqC,CAAC;AAI7C,eAAO,MAAM,SAAS;YAIV,SAAS,GAAG,IAAI;kBACV,MAAM,KAAK,IAAI;CAWhC,CAAC;AAEF,eAAO,MAAM,GAAG;;uBAeO,MAAM;iBAGN,QAAQ,sBAAsB,CAAC;CAclD,CAAC"}

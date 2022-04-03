@@ -60,7 +60,8 @@ export const read: Action<
 
   const ur: any = await (known
     ? Promise.resolve({ data: known })
-    : state.api.client.user.userList({ ...(id ? { id } : {}), username }));
+    : // @ts-ignore
+      state.api.client.user.userList({ ...(id ? { id } : {}), username }));
 
   id = id || ur.data.id || "";
 
@@ -102,7 +103,7 @@ export const create: Action<{
         : await state.api.client.user.userCreate({
             ...user,
 
-            legacyToken: state.flows.user.create.legacyToken,
+            // legacyToken: state.flows.user.create.legacyToken,
           });
 
       !preregisterCreate &&

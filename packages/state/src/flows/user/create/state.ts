@@ -14,7 +14,7 @@ export enum DOMAIN_PRESALE_STEPS {
 export const state = {
   form: {} as Partial<UserCreateRequest>,
   justCreated: false as boolean,
-  legacyToken: "",
+  legacyToken: "" as string,
   formUsernameIsAvailable: "" as "available" | "checking" | "unavailable" | "",
   wizard: Wizard.create(
     { current: "SELECT_DOMAIN", hasNext: false, hasPrev: false },

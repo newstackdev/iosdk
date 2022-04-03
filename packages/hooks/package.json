@@ -1,17 +1,26 @@
 {
   "name": "@newcoin-foundation/hooks",
   "version": "0.0.0",
-  "main": "cjs/index.js",
-  "module": "esm/index.js",
-  "types": "lib/index.d.ts",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./lib/*": "./dist/src/*"
+  },
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "./dist",
+    "!**/*.tsbuildinfo"
+  ],
   "license": "MIT",
   "scripts": {
     "init": "npm i",
+    "build": "tsc --build tsconfig.json",
     "generate:barrels": "barrelsby --delete"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "lodash": ">=4.17.21"
+    "lodash": ">=4.17.21",
+    "@newcoin-foundation/core": "*",
+    "@newcoin-foundation/state": "*"
   },
   "dependencies": {},
   "devDependencies": {}

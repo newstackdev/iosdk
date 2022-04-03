@@ -8,6 +8,10 @@
     "init": "npm i",
     "generate:barrels": "barrelsby --delete"
   },
+  "peerDependencies": {
+    "@newcoin-foundation/core": "*",
+    "@newcoin-foundation/state": "*"
+  },
   "devDependencies": {
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",

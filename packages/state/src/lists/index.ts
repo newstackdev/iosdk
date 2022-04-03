@@ -51,7 +51,7 @@ const creativeSearch: Action<{ tags: string; aesthetics: string }> = pipe(
 
     const response = await state.api.client.search.creativeList({
       tags: query.tags,
-
+      // @ts-ignore
       aesthetics: query.aesthetics,
       page: page.toString(),
     });
@@ -129,7 +129,7 @@ export const searchUsers: Action<{ query: string }> = pipe(
   async ({ state, actions, effects }: Context, { query }) => {
     // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
     state.lists.search.users.results = null;
-
+    // @ts-ignore
     const r = await state.api.client.user.listSearchList({ q: query });
 
     r.data.value?.forEach((v) => {

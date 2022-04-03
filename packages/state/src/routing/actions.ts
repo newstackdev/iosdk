@@ -65,6 +65,7 @@ export const onRouteChange: Action<{
 
   const lastBh = last(state.routing.backHistory);
   if (lastBh) {
+    // @ts-ignore
     const prevPath = (lastBh.pathname || "").split(/\//);
     const currPath = pathname.split(/\//);
 
