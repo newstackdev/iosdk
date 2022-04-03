@@ -1,6 +1,5 @@
-import { Action } from "@newcoin-foundation/core";
 import { AUTH_FLOW_STATUS } from "../../auth/state";
-
+import { Action } from "../../state";
 export const authorize: Action<undefined> = async ({
   state,
   actions,

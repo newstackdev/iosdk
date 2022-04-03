@@ -8,9 +8,8 @@ import {
 } from "@newlife/newlife-creator-client-api";
 import { get } from "lodash";
 import { debounce, pipe, throttle } from "overmind";
-import { Action } from "@newcoin-foundation/core";
 import { AUTH_FLOW_STATUS } from "../../auth/state";
-import { Context } from "../../state";
+import { Context, Action } from "../../state";
 
 export const cache: Action<{ user: UserReadPublicResponse }> = async (
   { state, actions, effects },

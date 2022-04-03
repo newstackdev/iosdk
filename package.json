@@ -5,7 +5,10 @@
 	"types": "dist/iosdk.d.ts",
 	"private": true,
 	"workspaces": [
-		"./packages/*"
+		"./packages/state",
+		"./packages/core",
+		"./packages/hooks",
+		"./packages/ui"
 	],
 	"scripts": {
 		"build": "turbo run build",

@@ -137,13 +137,13 @@ By large, newgraph features:
 
 These awesome underlying technologies and their dependencies are used to make the imlementation possible with reasonable effort:
 
-|  | Technology | Notes |  |
-|---|---|---|---|
-| Language | Typescript | A Bhai-lang implementation is considered |  |
-| Authorization | Firebase | More is underway |  |
-| Component framework | React | Implementations for vue, angular, svetle and others are under consideration |  |
-| State management | Overmindjs | See [overmindjs](https://overmindjs.org/). |  |
-| Component library | Ant design | See [https://ant.design/](antd) |  |
+|                     | Technology | Notes                                                                       |     |
+| ------------------- | ---------- | --------------------------------------------------------------------------- | --- |
+| Language            | Typescript | A Bhai-lang implementation is considered                                    |     |
+| Authorization       | Firebase   | More is underway                                                            |     |
+| Component framework | React      | Implementations for vue, angular, svetle and others are under consideration |     |
+| State management    | Overmindjs | See [overmindjs](https://overmindjs.org/).                                  |     |
+| Component library   | Ant design | See [https://ant.design/](antd)                                             |     |
 
 
 There are more opensource technologies we all know and love than we can enumerate here, see package.json for an overview or follow along with the docs.

@@ -2,7 +2,7 @@ import {
   MoodCreateRequest,
   MoodReadResponse,
 } from "@newlife/newlife-creator-client-api";
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../../state";
 
 export const cache: Action<{
   moods?: (MoodReadResponse & { promise?: Promise<any> })[];

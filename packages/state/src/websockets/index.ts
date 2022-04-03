@@ -1,16 +1,12 @@
 import { pipe, debounce, filter } from "overmind";
-import { Context } from "../state";
+import { Context, Action } from "../state";
 import websocket, { WSState } from "./effects";
 import { uniq } from "lodash";
 import {
   PostReadResponse,
   UserReadPrivateResponse,
 } from "@newlife/newlife-creator-client-api";
-import {
-  Action,
-  capFirst,
-  newlifeWebsocketsServer,
-} from "@newcoin-foundation/core";
+import { capFirst, newlifeWebsocketsServer } from "@newcoin-foundation/core";
 
 const toggleWebSocket: Action = pipe(
   debounce(500),

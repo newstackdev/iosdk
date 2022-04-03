@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 import { User } from "firebase/auth";
 import { AUTH_FLOW_STATUS } from "../auth/state";
 

@@ -1,7 +1,7 @@
 // import { NONPOSTAUTHLOCATIONS } from "../.co./constants";
-import { Action } from "@newcoin-foundation/core";
+
 import { debounce, pipe } from "overmind";
-import { Context } from "../state";
+import { Context, Action } from "../state";
 
 export const getAccountBalance: Action<{ user: { username?: string } }, any> =
   // pipe(

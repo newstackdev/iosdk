@@ -1,15 +1,15 @@
 import { Api } from "@newlife/newlife-creator-client-api";
 import React from "react";
-import { Context } from "@newcoin-foundation/state";
 import { PartialDeep } from "type-fest";
 import { config } from "./config";
+import { IContext } from "overmind";
 export declare class CreatorApi extends Api<{
     token: string;
 }> {
 }
 export declare type NLView<T = {}> = React.FC<React.PropsWithChildren<T>>;
 export declare type GenericComponent = NLView<any> | React.FC<any>;
-export declare type Action<T = undefined, R = void> = (context: Context, value: T) => R | Promise<R>;
+export declare type Action<C extends IContext<C>, T = undefined, R = void> = (context: C, value: T) => R | Promise<R>;
 export interface Link {
     url?: string;
     text: string;

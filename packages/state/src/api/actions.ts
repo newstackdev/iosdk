@@ -3,7 +3,7 @@ import * as user from "./actions/user";
 import * as post from "./actions/post";
 import { AUTH_FLOW_STATUS } from "../auth/state";
 import * as auth from "./actions/auth";
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 
 const onInitializeOvermind: Action<undefined> = async ({
   effects,

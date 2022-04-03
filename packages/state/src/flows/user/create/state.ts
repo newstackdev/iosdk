@@ -12,7 +12,7 @@ export enum DOMAIN_PRESALE_STEPS {
 }
 
 export const state = {
-  form: {} as Partial<UserCreateRequest>,
+  form: {} as Partial<UserCreateRequest & { displayName?: string }>,
   justCreated: false as boolean,
   legacyToken: "" as string,
   formUsernameIsAvailable: "" as "available" | "checking" | "unavailable" | "",

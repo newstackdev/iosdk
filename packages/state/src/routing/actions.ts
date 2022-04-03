@@ -1,6 +1,7 @@
 // import { NONPOSTAUTHLOCATIONS } from "../../constants";
-import { Action, Link } from "@newcoin-foundation/core";
+import { Link } from "@newcoin-foundation/core";
 import { History } from "history";
+import { Action } from "../state";
 
 const naiveQSDecode = (search: string = ""): Record<string, string> =>
   search

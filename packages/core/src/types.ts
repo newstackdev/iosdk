@@ -5,6 +5,7 @@ import { Context } from "@newcoin-foundation/state";
 
 import { PartialDeep } from "type-fest";
 import { config } from "./config";
+import { IContext } from "overmind";
 // import { Context } from "@app/overmind/overmind";
 // import  from "@app/overmind";
 
@@ -12,13 +13,6 @@ export class CreatorApi extends Api<{ token: string }> {}
 
 export type NLView<T = {}> = React.FC<React.PropsWithChildren<T>>;
 export type GenericComponent = NLView<any> | React.FC<any>;
-
-export type Action<T = undefined, R = void> = (
-  // context: any,
-  context: Context,
-  value: T
-) => R | Promise<R>;
-
 export interface Link {
   url?: string;
   text: string;

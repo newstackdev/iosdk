@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 
 export const sendMessage: Action<
   { user: { username?: string } },

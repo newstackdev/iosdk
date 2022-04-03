@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 import { notification, message } from "antd";
 // import { ArgsProps } from "antd/lib/notification";
 

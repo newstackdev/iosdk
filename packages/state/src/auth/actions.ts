@@ -1,4 +1,4 @@
-import { Action } from "@newcoin-foundation/core";
+import { Action } from "../state";
 import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
 import { AUTH_FLOW_STATUS } from "./state";
 

@@ -1,4 +1,5 @@
-import { Action, EventHandler, Timer } from "@newcoin-foundation/core";
+import { EventHandler, Timer } from "@newcoin-foundation/core";
+import { Action } from "../../state";
 
 const VOTE_POLLING_INTERVAL = 50;
 const VOTE_STEP = 4;

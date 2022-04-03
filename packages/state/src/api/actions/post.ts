@@ -6,8 +6,7 @@ import {
 } from "@newlife/newlife-creator-client-api";
 import { omit } from "lodash";
 import { debounce, pipe } from "overmind";
-import { Action } from "@newcoin-foundation/core";
-import { Context } from "../../state";
+import { Context, Action } from "../../state";
 
 export const read: Action<{ id: string }> = async (
   { state, actions, effects },

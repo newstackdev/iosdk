@@ -1,7 +1,6 @@
-import { Action } from "@newcoin-foundation/core";
 import { UserCreateRequest } from "@newlife/newlife-creator-client-api";
 import { debounce, pipe } from "overmind";
-import { Context, State } from "../../../state";
+import { Context, State, Action } from "../../../state";
 import { WizardInput } from "./wizardStateMachine";
 // import { IReaction } from "overmind";
 

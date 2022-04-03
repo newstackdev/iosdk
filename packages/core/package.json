@@ -20,7 +20,8 @@
     "@newlife/newlife-creator-client-api": "*",
     "@newcoin-foundation/state": "*",
     "type-fest": ">=2.12.0",
-    "react": "^17.0.2"
+    "react": "^17.0.2",
+    "overmind": "^28.0.1"
   },
   "devDependencies": {
     "@types/history": "5.0.0",

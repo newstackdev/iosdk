@@ -1,5 +1,5 @@
 import { pipe, debounce } from "overmind";
-import { Context } from "../state";
+import { Context, Action } from "../state";
 import {
   MoodReadResponse,
   UserPagedListReadPublicResponse,
@@ -9,7 +9,7 @@ import {
 } from "@newlife/newlife-creator-client-api";
 import { aestheticList } from "./SearchCreative/aestheticList";
 import _ from "lodash";
-import { Action, fischerYates } from "@newcoin-foundation/core";
+import { fischerYates } from "@newcoin-foundation/core";
 
 export type CreativeSearchHits = NonNullable<
   CreativeSearchResponse["hits"]

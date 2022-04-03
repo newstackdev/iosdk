@@ -56,7 +56,13 @@ export const config = (cfg: PartialConfiguration) => {
 };
 
 export type State = ReturnType<typeof config>["state"];
+
 export type Context = IContext<ReturnType<typeof config>>;
+
+export type Action<T = undefined, R = void> = (
+  context: Context,
+  value: T
+) => R | Promise<R>;
 
 // export const xconfig = {
 //     state,
