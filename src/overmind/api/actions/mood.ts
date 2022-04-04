@@ -16,13 +16,15 @@ export const cache: Action<{ moods?: (MoodReadResponse & { promise?: Promise<any
             {
                 m.posts?.forEach(p => p.id && (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p }));
             }
-            if(
-                !curr?.id ||
-                overwrite || 
-                ((curr.posts && curr.posts.length) || 0) < (m && m.posts?.length || 0)
-            ) {
+            // if(
+            //     !curr?.id ||
+            //     curr.promise ||
+            //     new Date(curr.updated || "").getDate() < new Date(m.updated || "").getDate() 
+            //     // overwrite || 
+            //     // ((curr.posts && curr.posts.length) || 0) < (m && m.posts?.length || 0)
+            // ) {
                 state.api.cache.moods[id] = { ...state.api.cache.moods[id], ...m, promise: m.promise || null };
-            }
+            // }
 
         });
     }

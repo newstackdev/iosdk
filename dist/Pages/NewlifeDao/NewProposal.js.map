@@ -1,1 +1,1 @@
-{"version":3,"file":"NewProposal.js","sourceRoot":"","sources":["../../../src/Pages/NewlifeDao/NewProposal.tsx"],"names":[],"mappings":";;;AAAA,IAAM,SAAS,GAAG;IACjB,OAAO,0CACN,oDAAe,GACV,CAAA;AACP,CAAC,CAAC;AAEF,kBAAe,SAAS,CAAC"}
+{"version":3,"file":"NewProposal.js","sourceRoot":"","sources":["../../../src/Pages/NewlifeDao/NewProposal.tsx"],"names":[],"mappings":";;;AAAA,MAAM,SAAS,GAAG,GAAG,EAAE;IACtB,OAAO,0CACN,oDAAe,GACV,CAAA;AACP,CAAC,CAAC;AAEF,kBAAe,SAAS,CAAC"}

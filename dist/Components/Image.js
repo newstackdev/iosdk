@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContentImage = exports.contentImageUrl = void 0;
-var MediaComponent_1 = require("./MediaComponents/MediaComponent");
+const MediaComponent_1 = require("./MediaComponents/MediaComponent");
 /*
     To be depreciated, we should be using MediaComponent directly
 */

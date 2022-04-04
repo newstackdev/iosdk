@@ -23,12 +23,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions = __importStar(require("./actions"));
-var effects = __importStar(require("./effects"));
+const actions = __importStar(require("./actions"));
+const effects = __importStar(require("./effects"));
 // import state from "./state";
 exports.default = {
-    actions: actions,
-    effects: effects,
+    actions,
+    effects,
     // state
 };
 //# sourceMappingURL=index.js.map

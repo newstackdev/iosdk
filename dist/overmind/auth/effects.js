@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // import { Firebase } from './effects/firebase.ts.bak';
 // import { Api } from './effects/newlife';
-var fetch_1 = require("./effects/fetch");
+const fetch_1 = require("./effects/fetch");
 exports.default = {
     // Firebase,
     // Api,

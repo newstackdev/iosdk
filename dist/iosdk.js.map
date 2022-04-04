@@ -1,1 +1,1 @@
-{"version":3,"file":"iosdk.js","sourceRoot":"","sources":["../src/iosdk.ts"],"names":[],"mappings":";;;AAAA,6BAA4B;AAGnB,oFAHA,SAAG,OAGA;AAFZ,uCAAsC;AAG7B,yFAHA,mBAAQ,OAGA;AAEjB,kBAAe;IACX,GAAG,WAAA;IACH,QAAQ,qBAAA;CACX,CAAA"}
+{"version":3,"file":"iosdk.js","sourceRoot":"","sources":["../src/iosdk.ts"],"names":[],"mappings":";;;AAAA,+BAA4B;AAGnB,oFAHA,SAAG,OAGA;AAFZ,yCAAsC;AAG7B,yFAHA,mBAAQ,OAGA;AAEjB,kBAAe;IACX,GAAG,EAAH,SAAG;IACH,QAAQ,EAAR,mBAAQ;CACX,CAAA"}

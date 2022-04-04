@@ -1,13 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = (function (_a) {
-    var url = _a.url, key = _a.key;
-    var state = {
+exports.default = ({ url, key }) => {
+    const state = {
         socket: null
     };
     return {
-        query: function (q) {
+        query(q) {
         }
     };
-});
+};
 //# sourceMappingURL=effects.js.map

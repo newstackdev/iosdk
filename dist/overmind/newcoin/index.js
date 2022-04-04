@@ -26,12 +26,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions = __importStar(require("./actions"));
-var effects = __importStar(require("./effects"));
-var state_1 = __importDefault(require("./state"));
+const actions = __importStar(require("./actions"));
+const effects = __importStar(require("./effects"));
+const state_1 = __importDefault(require("./state"));
 exports.default = {
-    actions: actions,
-    effects: effects,
+    actions,
+    effects,
     state: state_1.default
 };
 //# sourceMappingURL=index.js.map

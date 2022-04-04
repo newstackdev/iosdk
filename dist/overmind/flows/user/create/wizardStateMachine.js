@@ -1,40 +1,22 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Wizard = void 0;
-var overmind_1 = require("overmind");
+const overmind_1 = require("overmind");
 // const forwAuthorized = (authorized: boolean, step: States): States => authorized ? { current: 'DONE', hasNext: false, hasPrev: false } : step;
 // const forwAuthenticated = (authenticated: boolean, step: States): States => authenticated ? { current: 'CREATE_USER', hasNext: false, hasPrev: true } : step;
-var defaults = {
-    SELECT_DOMAIN: function () { return ({ current: "SELECT_DOMAIN", hasNext: false, hasPrev: false }); },
-    DONE: function () { return ({ current: "DONE", hasNext: false, hasPrev: false }); },
-    CREATE_USER: function (d) { return ({ current: "CREATE_USER", hasNext: !!(d === null || d === void 0 ? void 0 : d.hasNext), hasPrev: true }); },
-    SUBSCRIBE: function () { return ({ current: "SUBSCRIBE", hasNext: false, hasPrev: true }); },
-    AUTHENTICATE: function () { return ({ current: "AUTHENTICATE", hasNext: false, hasPrev: true }); }
+const defaults = {
+    SELECT_DOMAIN: () => ({ current: "SELECT_DOMAIN", hasNext: false, hasPrev: false }),
+    DONE: () => ({ current: "DONE", hasNext: false, hasPrev: false }),
+    CREATE_USER: (d) => ({ current: "CREATE_USER", hasNext: !!d?.hasNext, hasPrev: true }),
+    SUBSCRIBE: () => ({ current: "SUBSCRIBE", hasNext: false, hasPrev: true }),
+    AUTHENTICATE: () => ({ current: "AUTHENTICATE", hasNext: false, hasPrev: true })
 };
 // export type WizardMachine = statemachine<States, Events, BaseState>;
 exports.Wizard = (0, overmind_1.statemachine)({
     SUBSCRIBE: {
-        NEXT: function (_a) {
-            var subscribed = _a.subscribed;
-            return subscribed ? defaults.CREATE_USER() : defaults.SUBSCRIBE();
-        },
-        PREV: function (_a) {
-            var formUsername = _a.formUsername;
-            return (__assign(__assign({}, defaults.SELECT_DOMAIN()), { hasNext: !!formUsername }));
-        },
-        UPDATE: function (_a) {
-            var authorized = _a.authorized, authenticated = _a.authenticated, subscribed = _a.subscribed, user = _a.user, formUsername = _a.formUsername;
+        NEXT: ({ subscribed }) => subscribed ? defaults.CREATE_USER() : defaults.SUBSCRIBE(),
+        PREV: ({ formUsername }) => ({ ...defaults.SELECT_DOMAIN(), hasNext: !!formUsername }),
+        UPDATE: ({ authorized, authenticated, subscribed, user, formUsername }) => {
             return (authorized ?
                 defaults.DONE() :
                 (subscribed || user || (formUsername.length <= 5)) ?
@@ -45,35 +27,29 @@ exports.Wizard = (0, overmind_1.statemachine)({
         }
     },
     SELECT_DOMAIN: {
-        NEXT: function (_a) {
-            var authenticated = _a.authenticated, subscribed = _a.subscribed, user = _a.user, legacyToken = _a.legacyToken;
+        NEXT: ({ authenticated, subscribed, user, legacyToken }) => {
             return authenticated ?
                 (subscribed || legacyToken) ?
                     defaults.CREATE_USER()
                     : defaults.SUBSCRIBE()
                 : defaults.AUTHENTICATE();
         },
-        UPDATE: function (_a) {
-            var authorized = _a.authorized, formUsername = _a.formUsername, formUsernameIsAvailable = _a.formUsernameIsAvailable, user = _a.user;
-            return authorized && !["imported"].includes((user === null || user === void 0 ? void 0 : user.status) || "") ?
+        UPDATE: ({ authorized, formUsername, formUsernameIsAvailable, user }) => {
+            return authorized && !["imported"].includes(user?.status || "") ?
                 defaults.DONE() :
-                __assign(__assign({}, defaults.SELECT_DOMAIN()), { hasNext: 
+                {
+                    ...defaults.SELECT_DOMAIN(),
+                    hasNext: 
                     // (formUsername.length === 12) && 
                     (formUsername.replace(/\.io$/, "").length >= 5) &&
-                        (formUsernameIsAvailable === "available") });
+                        (formUsernameIsAvailable === "available")
+                };
         }
     },
     AUTHENTICATE: {
-        NEXT: function (_a) {
-            var user = _a.user, legacyToken = _a.legacyToken;
-            return legacyToken ? defaults.CREATE_USER() : defaults.SUBSCRIBE();
-        },
-        PREV: function (_a) {
-            var formUsername = _a.formUsername;
-            return (__assign(__assign({}, defaults.SELECT_DOMAIN()), { hasNext: !!formUsername }));
-        },
-        UPDATE: function (_a) {
-            var authorized = _a.authorized, authenticated = _a.authenticated, legacyToken = _a.legacyToken;
+        NEXT: ({ user, legacyToken }) => legacyToken ? defaults.CREATE_USER() : defaults.SUBSCRIBE(),
+        PREV: ({ formUsername }) => ({ ...defaults.SELECT_DOMAIN(), hasNext: !!formUsername }),
+        UPDATE: ({ authorized, authenticated, legacyToken }) => {
             return (authorized && !legacyToken
                 ? defaults.DONE() :
                 authenticated ?
@@ -84,23 +60,20 @@ exports.Wizard = (0, overmind_1.statemachine)({
         }
     },
     CREATE_USER: {
-        NEXT: function () { return defaults.DONE(); },
-        PREV: function (_a) {
-            var authenticated = _a.authenticated, formUsername = _a.formUsername;
+        NEXT: () => defaults.DONE(),
+        PREV: ({ authenticated, formUsername }) => {
             return (authenticated ?
-                (__assign(__assign({}, defaults.SELECT_DOMAIN()), { hasNext: !!formUsername })) :
-                (__assign(__assign({}, defaults.AUTHENTICATE()), { hasNext: false })));
+                ({ ...defaults.SELECT_DOMAIN(), hasNext: !!formUsername }) :
+                ({ ...defaults.AUTHENTICATE(), hasNext: false }));
         },
-        UPDATE: function (_a) {
-            var authorized = _a.authorized, authenticated = _a.authenticated, user = _a.user, formUsername = _a.formUsername;
+        UPDATE: ({ authorized, authenticated, user, formUsername }) => {
             return !authenticated ? defaults.SELECT_DOMAIN() :
-                (authorized && (["registered", "admitted"].includes((user === null || user === void 0 ? void 0 : user.status) || "")))
+                (authorized && (["registered", "admitted"].includes(user?.status || "")))
                     ? defaults.DONE() : defaults.CREATE_USER({ hasNext: !!formUsername });
         }
     },
     DONE: {
-        UPDATE: function (_a) {
-            var authorized = _a.authorized;
+        UPDATE: ({ authorized }) => {
             return authorized ? defaults.DONE() : defaults.SELECT_DOMAIN();
         }
     },

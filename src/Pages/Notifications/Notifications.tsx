@@ -83,9 +83,9 @@ export const Notifications: NLView = () => {
 	return (
 		<ContentLayout>
 			<Row style={{ width: "100%", margin: "20px 0" }}>
-				<LargeArrowBack />
+				{/* <LargeArrowBack /> */}
 			</Row>
-			<div className="notifications-wrapper scrollable-content">
+			<div className="notifications-wrapper ">
 				{postsList?.slice(0, 20).map((p: any, i: number) => (
 					<NotificationBox
 						user={user}

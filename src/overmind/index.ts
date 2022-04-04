@@ -3,7 +3,7 @@ import { createOvermind } from 'overmind';
 import { createStateHook, createActionsHook, createEffectsHook, createReactionHook } from 'overmind-react';
 import { EventType, Execution } from 'overmind/lib/internalTypes';
 import { config as omConfig, Context } from './overmind';
-import { config as defaultConfig, PartialConfiguration } from "../config";
+import { PartialConfiguration } from "../config";
 
 export const overmind = (cfg?: PartialConfiguration) => {
     // const appConfig = { state: cfg };

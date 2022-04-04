@@ -4,7 +4,7 @@ exports.routing = void 0;
 exports.routing = {
     preLoginRoute: "",
     breadcrumbs: [],
-    history: history,
+    history,
     location: ""
 };
 //# sourceMappingURL=state.js.map

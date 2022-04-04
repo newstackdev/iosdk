@@ -1,1 +1,1 @@
-{"version":3,"file":"fetch.js","sourceRoot":"","sources":["../../../../src/overmind/auth/effects/fetch.ts"],"names":[],"mappings":";;;AAAA,IAAM,CAAC,GAAG,KAAK,CAAC;AACF,kBAAK"}
+{"version":3,"file":"fetch.js","sourceRoot":"","sources":["../../../../src/overmind/auth/effects/fetch.ts"],"names":[],"mappings":";;;AAAA,MAAM,CAAC,GAAG,KAAK,CAAC;AACF,kBAAK"}

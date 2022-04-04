@@ -88,6 +88,7 @@ export const UserInvite: NLView = () => {
 						<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
 							<ProgressButton
 								actionName="api.user.invite"
+								progressText="Inviting user..."
 								type="primary"
 								htmlType="submit"
 							>

@@ -6,13 +6,14 @@ import { Col, Row } from "antd";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCachedMood } from "../hooks/useCached";
-import { useAppState } from "../overmind";
+import { useActions, useAppState } from "../overmind";
 import Title from "../Pages/Explore/Title";
 import { NLView } from "../types";
 import { ContentLayout } from "./ContentLayout";
 import { Ebene } from "./Icons/Ebene";
 import FolderClosed from "./Icons/Folder/Closed";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";
+import { LoadMore } from "./LoadMore";
 import { PostWidget } from "./PostWidget";
 
 export const TopFoldersGrid: NLView<{
@@ -35,7 +36,7 @@ export const TopFoldersGrid: NLView<{
 	return (
 		<div
 			style={{ width: "100%" }}
-			className={title === "Moods" ? "scrollable-content" : ""}
+			// className={title === "Moods" ? "" : ""}
 		>
 			<Row
 				style={{
@@ -54,28 +55,30 @@ export const TopFoldersGrid: NLView<{
 			>
 				{/* // folder */}
 				{!noFolder && (
-					<Col
-						style={{
-							justifyContent: "center",
-							flexDirection: "column",
-							aspectRatio: "1/1",
-							height: "100%",
-						}}
-						className="bg-hover"
-					>
-						<Link to={`/folder/${mood.id}`}>
-							<FolderClosed className="text-center folder" />
-						</Link>
-						<small
-							className="folder-name"
-							style={{ paddingTop: "5px" }}
+					<Link to={`/folder/${mood.id}`} className="ant-col">
+						<Col
+							className="bg-hover"
+							style={{
+								justifyContent: "center",
+								flexDirection: "column",
+								aspectRatio: "1/1",
+								height: "100%",
+								flex: 1,
+							}}
 						>
-							{/* @ts-ignore */}
-							{m.title?.length > 10
-								? m.title?.substring(0, 3) + "..."
-								: m?.title || ""}
-						</small>
-					</Col>
+							<FolderClosed className="text-center folder" />
+
+							<small
+								className="folder-name"
+								style={{ paddingTop: "5px" }}
+							>
+								{/* @ts-ignore */}
+								{m.title?.length > 10
+									? m.title?.substring(0, 3) + "..."
+									: m?.title || ""}
+							</small>
+						</Col>
+					</Link>
 				)}
 
 				{/* // image */}
@@ -105,51 +108,52 @@ const TopFolders: NLView<{
 }> = ({ maxItems, title, posts, userMoods, skipItems }) => {
 	const state = useAppState();
 	const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
+	const actions = useActions();
+	maxItems = maxItems || 100;
 
 	return (
-		<ContentLayout>
+		<>
 			{title === undefined && (
-				<Row style={{ width: "100%", marginTop: "20px" }}>
-					<LargeArrowBack />
-					<p className="header-2" style={{ marginLeft: "40px" }}>
+				<Row style={{ width: "100%" }}>
+					{/* <LargeArrowBack /> */}
+					<p className="header-2 u-margin-bottom-medium">
 						Explore folders
 					</p>
 				</Row>
 			)}
 
-			<div
-				className={
-					maxItems === undefined && !userMoods
-						? "section-divider scrollable-content"
-						: "section-divider"
-				}
-			>
+			<div>
 				{title ? <Title title={title} href="/top/folders" /> : ""}
-				{moods?.slice(skipItems || 0, (skipItems || 0) + (maxItems || 3)).map((m, i) => (
-					<Row
-						className="nl-mood-grid-row"
-						style={
-							posts === "full"
-								? {
-										justifyContent: "space-between",
-										alignItems: "center",
-								  }
-								: {
-										justifyContent: "start",
-										alignItems: "center",
-								  }
-						}
-					>
-						<TopFoldersGrid
-							mood={m}
-							postNumber={i}
-							title={title}
-							posts={posts}
-						/>
-					</Row>
-				))}
+				{moods
+					?.slice(skipItems || 0, (skipItems || 0) + (maxItems || 3))
+					.map((m, i) => (
+						<Row
+							className="nl-mood-grid-row"
+							style={
+								posts === "full"
+									? {
+											justifyContent: "space-between",
+											alignItems: "center",
+									  }
+									: {
+											justifyContent: "start",
+											alignItems: "center",
+									  }
+							}
+						>
+							<TopFoldersGrid
+								mood={m}
+								postNumber={i}
+								title={title}
+								posts={posts}
+							/>
+						</Row>
+					))}
 			</div>
-		</ContentLayout>
+			{!userMoods && ((moods?.length || 0) < maxItems) && (
+				<LoadMore loadMore={() => actions.lists.top.moods()} />
+			)}
+		</>
 	);
 };
 

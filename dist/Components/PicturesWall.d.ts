@@ -7,6 +7,7 @@ export declare class PicturesWall extends React.Component<React.ComponentPropsWi
     setContentType: React.Dispatch<React.SetStateAction<string>>;
     contentType: string;
     children: ReactElement;
+    name: string;
 }>> {
     state: {
         previewVisible: boolean;

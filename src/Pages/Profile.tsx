@@ -139,7 +139,7 @@ const ActivityStream: NLView<{}> = () => {
 	const postsList = moods.map((m) => m.posts)[0];
 
 	return (
-		<div className="notifications-wrapper scrollable-content">
+		<div className="notifications-wrapper ">
 			{/* {postsList?.slice(0, 20).map((p: any, i: number) => (
 				<NotificationBox
 					user={p.author}
@@ -191,7 +191,7 @@ export const Profile: NLView = () => {
 							<Col span={12}>{user.username}</Col>
 						</Row>
 						<ProfileDetails />
-						{/* <div className="notifications-wrapper scrollable-content">
+						{/* <div className="notifications-wrapper ">
 							<Col span={12}>{user.id}</Col>
 						</Row>
 						<Row>

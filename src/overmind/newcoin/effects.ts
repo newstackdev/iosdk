@@ -3,8 +3,8 @@ import { NCO_BlockchainAPI } from "@newcoin-foundation/newcoin-sdk";
 // import t from "@newcoin-foundation/newcoin-sdk";
 
 const conns = {
-	bc_url: "http://testnet.newcoin.org",
-	hyp_url: "http://hyperion.newcoin.org",
+	bc_url: "http://nodeos-dev.newcoin.org",
+	hyp_url: "https://hyperion-dev.newcoin.org",
 };
 
 console.log(NCO_BlockchainAPI);

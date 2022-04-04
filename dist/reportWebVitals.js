@@ -23,10 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var reportWebVitals = function (onPerfEntry) {
+const reportWebVitals = (onPerfEntry) => {
     if (onPerfEntry && onPerfEntry instanceof Function) {
-        Promise.resolve().then(function () { return __importStar(require('web-vitals')); }).then(function (_a) {
-            var getCLS = _a.getCLS, getFID = _a.getFID, getFCP = _a.getFCP, getLCP = _a.getLCP, getTTFB = _a.getTTFB;
+        Promise.resolve().then(() => __importStar(require('web-vitals'))).then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
             getCLS(onPerfEntry);
             getFID(onPerfEntry);
             getFCP(onPerfEntry);

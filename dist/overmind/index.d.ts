@@ -42,6 +42,14 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             mediaBucket: any;
             websocketsServer: any;
         };
+        routing: {
+            routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+        };
+    };
+    routes: {
+        useDefaultRoutes: boolean;
+        overrides: {};
+        noBackButton: string[];
     };
     components: {
         layout: {
@@ -57,8 +65,35 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
     };
 }> | undefined) => import("overmind").Overmind<{
     state: import("overmind/lib/internalTypes").SubType<{
-        custom: {
-            info: string;
+        config: {
+            settings: {
+                firebaseConfig: import("../types").FirebaseConfig;
+                newlife: {
+                    baseUrl: string;
+                    mediaBucket: any;
+                    websocketsServer: any;
+                };
+                routing: {
+                    routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+                };
+            };
+            routes: {
+                useDefaultRoutes: boolean;
+                overrides: {};
+                noBackButton: string[];
+            };
+            components: {
+                layout: {
+                    Layout: import("../types").GenericComponent;
+                    TopMenu: import("../types").GenericComponent;
+                };
+                auth: {
+                    AuthWidget: import("../types").GenericComponent;
+                };
+                icons: {
+                    Logo: import("../types").GenericComponent;
+                };
+            };
         };
         indicators: {
             _isWorking: number;
@@ -80,7 +115,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 search: string;
             }[];
             location: string;
-            isAllowed: boolean;
+            isAllowed: any;
         };
         firebase: {
             token: string;
@@ -114,28 +149,6 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         evm: unknown;
         ux: unknown;
         chromeext: unknown;
-        config: {
-            settings: {
-                firebaseConfig: import("../types").FirebaseConfig;
-                newlife: {
-                    baseUrl: string;
-                    mediaBucket: any;
-                    websocketsServer: any;
-                };
-            };
-            components: {
-                layout: {
-                    Layout: import("../types").GenericComponent;
-                    TopMenu: import("../types").GenericComponent;
-                };
-                auth: {
-                    AuthWidget: import("../types").GenericComponent;
-                };
-                icons: {
-                    Logo: import("../types").GenericComponent;
-                };
-            };
-        };
         api: {
             client: import("../types").CreatorApi;
             auth: {
@@ -325,6 +338,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                     }) => void;
                 };
             };
+            userJourney: {
+                flags: Record<string, string>;
+            };
         }, object>;
         newcoin: {
             account: any;
@@ -339,9 +355,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
-        custom: {
-            info: () => void;
-        };
+        config: unknown;
         indicators: unknown;
         auth: typeof import("./auth/effects");
         routing: {};
@@ -371,7 +385,6 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             message: import("antd/lib/message").MessageApi;
         };
         chromeext: {};
-        config: unknown;
         api: {
             initialize(): import("../types").CreatorApi;
             updateToken(token: string): void;
@@ -395,13 +408,12 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                     }) => void;
                 };
             };
+            userJourney: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
-        custom: {
-            info: () => void;
-        };
+        config: unknown;
         indicators: {
             isWorking: import("../types").Action<{
                 actionName: string;
@@ -459,7 +471,6 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             }, void>;
         };
         chromeext: typeof import("./chromeext/actions");
-        config: unknown;
         api: {
             onInitializeOvermind: import("../types").Action<undefined, void>;
             auth: typeof import("./api/actions/auth");
@@ -494,12 +505,27 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 deepLikeStop: import("../types").Action<undefined, void>;
                 onInitializeOvermind: import("../types").Action<undefined, void>;
             };
+            userJourney: {
+                setFlag: import("../types").Action<{
+                    flag: string;
+                    value: string;
+                }, void>;
+                onInitializeOvermind: import("../types").Action<undefined, void>;
+            };
         }, object>;
         newcoin: typeof import("./newcoin/actions");
     }, object>;
 }>;
 export declare const useAppState: import("overmind-react").StateHook<Context>;
 export declare const useActions: () => {
+    auth: {
+        readonly logout: (payload?: {
+            noRouting?: boolean | undefined;
+        } | undefined) => void | Promise<void>;
+        readonly resetAuthTimer: (payload?: undefined) => void | Promise<void>;
+        readonly reduceTimer: (payload?: undefined) => void | Promise<void>;
+        readonly fakeUserUpdate: (payload: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse) => void | Promise<void>;
+    };
     indicators: {
         isWorking: (payload: {
             actionName: string;
@@ -508,14 +534,6 @@ export declare const useActions: () => {
         isWorkingActionDebounced: (payload: {
             actionName: string;
         }) => void | Promise<void>;
-    };
-    auth: {
-        readonly logout: (payload?: {
-            noRouting?: boolean | undefined;
-        } | undefined) => void | Promise<void>;
-        readonly resetAuthTimer: (payload?: undefined) => void | Promise<void>;
-        readonly reduceTimer: (payload?: undefined) => void | Promise<void>;
-        readonly fakeUserUpdate: (payload: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse) => void | Promise<void>;
     };
     routing: {
         readonly routeAfterAuth: (payload?: undefined) => void | Promise<void>;
@@ -691,6 +709,7 @@ export declare const useActions: () => {
             readonly rate: (payload: {
                 post: import("@newlife/newlife-creator-client-api").PostReadResponse;
                 amount: number;
+                mood?: import("@newlife/newlife-creator-client-api").MoodReadResponse | undefined;
             }) => void | Promise<void>;
         };
     };
@@ -742,6 +761,13 @@ export declare const useActions: () => {
             deepLikeStop: (payload?: undefined) => void | Promise<void>;
             onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
         };
+        userJourney: {
+            setFlag: (payload: {
+                flag: string;
+                value: string;
+            }) => void | Promise<void>;
+            onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
+        };
     };
     newcoin: {
         readonly getAccountBalance: (payload: {
@@ -762,14 +788,9 @@ export declare const useActions: () => {
             force?: boolean | undefined;
         }) => any;
     };
-    custom: {
-        info: () => void;
-    };
 };
 export declare const useEffects: () => import("overmind/lib/internalTypes").SubType<{
-    custom: {
-        info: () => void;
-    };
+    config: unknown;
     indicators: unknown;
     auth: typeof import("./auth/effects");
     routing: {};
@@ -799,7 +820,6 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
         message: import("antd/lib/message").MessageApi;
     };
     chromeext: {};
-    config: unknown;
     api: {
         initialize(): import("../types").CreatorApi;
         updateToken(token: string): void;
@@ -823,6 +843,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
                 }) => void;
             };
         };
+        userJourney: unknown;
     }, object>;
     newcoin: typeof import("./newcoin/effects");
 }, object>;

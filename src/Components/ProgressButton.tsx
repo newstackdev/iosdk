@@ -18,6 +18,7 @@ export const ProgressButton: NLView<{
 	onClick?: Callback;
 	disabled?: boolean;
 	isErrorSubmit?: boolean;
+	progressText?: string;
 }> = ({
 	actionName,
 	type,
@@ -27,6 +28,7 @@ export const ProgressButton: NLView<{
 	onClick,
 	disabled,
 	isErrorSubmit,
+	progressText,
 }) => {
 	const state = useAppState();
 	const ival = !!state.indicators.specific[actionName];
@@ -53,7 +55,7 @@ export const ProgressButton: NLView<{
 					type="primary"
 					style={{ color: "black", borderColor: "black" }}
 				>
-					Sharing...
+					{progressText || ""}
 				</Button>
 			)}
 		</>

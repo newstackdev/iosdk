@@ -19,7 +19,9 @@ export declare type EmbeddableControlNextCommand = (args?: {
 export declare type EmbeddableControl = {
     embedded?: boolean;
     setNext?: EmbeddableControlNextCommand;
+    handleCallBack?: (value: any) => any;
     setIsErrorSubmit?: React.Dispatch<React.SetStateAction<boolean>>;
+    isErrorSubmit?: boolean;
 };
 export declare type Timer = ReturnType<typeof setInterval>;
 export declare type EventHandler = (e?: KeyboardEvent | MouseEvent) => void;

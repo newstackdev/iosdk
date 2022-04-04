@@ -68,10 +68,12 @@ export const PostCreate: NLView = (props) => {
 
 	const [form] = useForm();
 
-	const [mintConfirmationOpen, setMintConfirmationOpen] = useState<boolean>(false);
-	const [selectedLicense, setSelectedLicense] = useState<LicenseProps>(
-		{ name: LICENSES[0][0], value: LICENSES[0][1] }
-	);
+	const [mintConfirmationOpen, setMintConfirmationOpen] =
+		useState<boolean>(false);
+	const [selectedLicense, setSelectedLicense] = useState<LicenseProps>({
+		name: LICENSES[0][0],
+		value: LICENSES[0][1],
+	});
 	const [isLicense, setIsLicense] = useState<boolean>(false);
 	const [errMsg, setErrMsg] = useState("");
 	const [moodMode, setMoodMode] = useState(false);
@@ -117,7 +119,12 @@ export const PostCreate: NLView = (props) => {
 				}
 			}
 
-			const postForm =  { ...values, contentType, doMint: mintNFTswitch ? "true" : "", license: selectedLicense.value };
+			const postForm = {
+				...values,
+				contentType,
+				doMint: mintNFTswitch ? "true" : "",
+				license: selectedLicense.value,
+			};
 
 			const p = await actions.api.post.create({ postForm });
 			if (!p) return;
@@ -127,8 +134,8 @@ export const PostCreate: NLView = (props) => {
 		} catch (ex) {
 			setErrMsg(
 				get(ex, "error.errorMessage.details") ||
-				get(ex, "message") ||
-				"unknown error"
+					get(ex, "message") ||
+					"unknown error"
 			);
 		}
 	};
@@ -158,8 +165,6 @@ export const PostCreate: NLView = (props) => {
 					isPost={true}
 					header={
 						<PostCreateHeader
-							selectedLicense={selectedLicense}
-							ncoBalance={ncoBalance}
 							contentType={contentType}
 							setContentType={setContentType}
 						/>
@@ -292,13 +297,7 @@ export const PostCreate: NLView = (props) => {
 								disabled={ncoBalance === 0 ? true : false}
 							/>
 						</Form.Item>
-						<Form.Item
-							name="license"
-							style={{
-								marginBottom: "40px",
-								height: "15vh",
-							}}
-						>
+						<Form.Item name="license">
 							<Row
 								align="middle"
 								style={{
@@ -319,7 +318,7 @@ export const PostCreate: NLView = (props) => {
 								<Row className="licence-box">
 									<p
 										className="paragraph-2b"
-										style={{ width: "200px" }}
+										style={{ width: "90%" }}
 									>
 										{selectedLicense.name}
 									</p>
@@ -328,6 +327,7 @@ export const PostCreate: NLView = (props) => {
 											// setSelectedLicense({ name: "");
 											setIsLicense(true);
 										}}
+										style={{ display: "flex" }}
 									>
 										<ExitButton />
 									</span>
@@ -338,13 +338,11 @@ export const PostCreate: NLView = (props) => {
 										setSelectedLicense(initialLicense);
 										setIsLicense(true);
 									}}
+									style={{ display: "flex" }}
 								>
 									<AddButton />
 								</span>
 							)}
-						</Form.Item>
-						<Form.Item label="" className="text-center">
-
 						</Form.Item>
 					</div>
 				</ContentLayout>
@@ -371,34 +369,23 @@ export const PostCreate: NLView = (props) => {
 					</Col>
 					<Col>
 						<p className="paragraph-1r">your NFT</p>
-						<p className="paragraph-1b">
-							{user?.username}
-						</p>
+						<p className="paragraph-1b">{user?.username}</p>
 					</Col>
 				</Row>
 				<Row>
 					<Col style={{ marginBottom: "20px" }}>
-						<p className="header-3">
-							Ready to mint!
-						</p>
+						<p className="header-3">Ready to mint!</p>
 					</Col>
 					<Col style={{ marginBottom: "20px" }}>
 						<p className="paragraph-2r">
-							You are about to mint your NFT on
-							Newcoin Protocol!
+							You are about to mint your NFT on Newcoin Protocol!
 						</p>
 					</Col>
 					<Col>
 						<p className="paragraph-2r">Summary:</p>
-						<p className="paragraph-2r">
-							1087 $NCO
-						</p>
-						<p className="paragraph-2r">
-							— 5% creator fee
-						</p>
-						<p className="paragraph-2r">
-							— 3% DAO fee
-						</p>
+						<p className="paragraph-2r">1087 $NCO</p>
+						<p className="paragraph-2r">— 5% creator fee</p>
+						<p className="paragraph-2r">— 3% DAO fee</p>
 					</Col>
 				</Row>
 				<Row justify="space-between">
@@ -407,19 +394,14 @@ export const PostCreate: NLView = (props) => {
 				<ProgressButton
 					actionName="api.post.create"
 					type="primary"
+					progressText="Creating post..."
 					// htmlType="submit"
 					onClick={() => {
-						form.submit()
+						form.submit();
 					}}
-					className={
-						!selectedLicense
-							? "disabled-submit-button"
-							: ""
-					}
+					className={!selectedLicense ? "disabled-submit-button" : ""}
 					disabled={
-						!selectedLicense || ncoBalance === 0
-							? true
-							: false
+						!selectedLicense || ncoBalance === 0 ? true : false
 					}
 				>
 					Mint
@@ -431,9 +413,6 @@ export const PostCreate: NLView = (props) => {
 				hidden={!moodMode}
 				onFinish={gtfooh}
 			>
-				<p className="header-5" style={{ marginBottom: "40px" }}>
-					Share to your folders
-				</p>
 				<Form.Item name="moods" style={{ marginBottom: "40px" }}>
 					<SelectMood moods={moods} />
 				</Form.Item>
@@ -447,6 +426,7 @@ export const PostCreate: NLView = (props) => {
 						actionName="api.post.create"
 						type="primary"
 						htmlType="submit"
+						progressText="Creating post..."
 					>
 						Share
 					</ProgressButton>

@@ -119,17 +119,18 @@ export const attachToMoods: Action<{
 	return Promise.resolve();
 };
 
-export const rate: Action<{ post: PostReadResponse; amount: number }> = pipe(
+export const rate: Action<{ post: PostReadResponse; amount: number, mood?: MoodReadResponse }> = pipe(
 	debounce(300),
-	async ({ state, actions, effects }: Context, { post, amount }) => {
+	async ({ state, actions, effects }: Context, { post, amount, mood }) => {
 		const t = post.title || post.content || "";
 		const mt = t.length <= 30 ? t : t.substring(0, 30) + "...";
 		try {
 			const res = await state.api.client.post.rateCreate({
 				targetId: post.id,
 				value: amount || 1,
-				//@ts-ignore
-				contextType: "tag", contextValue: "shoes" 
+				...(mood?.id ? (
+					{ contextType: "mood", contextValue: mood.id }
+				) : {})
 			});
 			effects.ux.message.info(`You voted ${amount}`);
 		} catch (ex) {

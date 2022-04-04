@@ -84,6 +84,9 @@ declare const _default: {
                 }) => void;
             };
         };
+        userJourney: {
+            flags: Record<string, string>;
+        };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
@@ -102,6 +105,7 @@ declare const _default: {
                 }) => void;
             };
         };
+        userJourney: unknown;
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
@@ -114,6 +118,13 @@ declare const _default: {
             }, void>;
             deepLikeStep: import("../../types").Action<undefined, void>;
             deepLikeStop: import("../../types").Action<undefined, void>;
+            onInitializeOvermind: import("../../types").Action<undefined, void>;
+        };
+        userJourney: {
+            setFlag: import("../../types").Action<{
+                flag: string;
+                value: string;
+            }, void>;
             onInitializeOvermind: import("../../types").Action<undefined, void>;
         };
     }, object>;

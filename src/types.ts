@@ -1,14 +1,11 @@
-import {
-	Api,
-} from "@newlife/newlife-creator-client-api";
+import { Api } from "@newlife/newlife-creator-client-api";
 import React from "react";
 import { Context } from "./overmind/overmind";
 
-export class CreatorApi extends Api<{ token: string }> { }
+export class CreatorApi extends Api<{ token: string }> {}
 
 export type NLView<T = {}> = React.FC<React.PropsWithChildren<T>>;
 export type GenericComponent = NLView<any> | React.FC<any>;
-
 
 export type Action<T = undefined, R = void> = (
 	context: Context,
@@ -27,7 +24,9 @@ export type EmbeddableControlNextCommand = (args?: {
 export type EmbeddableControl = {
 	embedded?: boolean;
 	setNext?: EmbeddableControlNextCommand;
+	handleCallBack?: (value: any) => any;
 	setIsErrorSubmit?: React.Dispatch<React.SetStateAction<boolean>>;
+	isErrorSubmit?: boolean;
 };
 
 export type Timer = ReturnType<typeof setInterval>;
@@ -35,7 +34,6 @@ export type EventHandler = (e?: KeyboardEvent | MouseEvent) => void;
 export type Callback = (e?: any) => void;
 
 export type ActiveKey = "0" | "1" | "2" | "3";
-
 
 export type FirebaseConfig = {
 	apiKey: string;
@@ -45,7 +43,7 @@ export type FirebaseConfig = {
 	messagingSenderId: string;
 	appId: string;
 	measurementId: string;
-}
+};
 
 // export interface UserInfo {
 // 	status?: string;

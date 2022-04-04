@@ -1,32 +1,24 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onInitializeOvermind = exports.deepLikeStop = exports.deepLikeStep = exports.deepLikeStart = exports.deepLikeInit = void 0;
-var VOTE_POLLING_INTERVAL = 50;
-var VOTE_STEP = 4;
-var PREVOTE_DELAY = 400;
-var deepLikeInit = function (_a) {
-    var state = _a.state, effects = _a.effects;
+const VOTE_POLLING_INTERVAL = 50;
+const VOTE_STEP = 4;
+const PREVOTE_DELAY = 400;
+const deepLikeInit = ({ state, effects }) => {
     if (state.flows.rating.isRating)
         return;
     console.log("Starting vote");
-    state.flows.rating = __assign(__assign({}, state.flows.rating), { startTime: Date.now(), isRating: true, rated: false, value: 0 });
+    state.flows.rating = {
+        ...state.flows.rating,
+        startTime: Date.now(),
+        isRating: true,
+        rated: false,
+        value: 0
+    };
 };
 exports.deepLikeInit = deepLikeInit;
-var deepLikeStart = function (_a, _b) {
-    var actions = _a.actions, state = _a.state, effects = _a.effects;
-    var event = _b.event;
-    var rs = state.flows.rating;
+const deepLikeStart = ({ actions, state, effects }, { event }) => {
+    const rs = state.flows.rating;
     if (!rs.isRating)
         return;
     if (event) {
@@ -39,11 +31,10 @@ var deepLikeStart = function (_a, _b) {
     rs.rated = false;
     rs.value = 1;
     rs.startTime = Date.now();
-    rs.interval.start(function () { return actions.flows.rating.deepLikeStep(); });
+    rs.interval.start(() => actions.flows.rating.deepLikeStep());
 };
 exports.deepLikeStart = deepLikeStart;
-var deepLikeStep = function (_a) {
-    var actions = _a.actions, state = _a.state, effects = _a.effects;
+const deepLikeStep = ({ actions, state, effects }) => {
     if (Date.now() - state.flows.rating.startTime < PREVOTE_DELAY)
         return;
     if (!state.flows.rating.isRating)
@@ -55,85 +46,86 @@ var deepLikeStep = function (_a) {
     }
 };
 exports.deepLikeStep = deepLikeStep;
-var deepLikeStop = function (_a) {
-    var state = _a.state, effects = _a.effects;
+const deepLikeStop = ({ state, effects }) => {
     console.log("Stopping vote vote");
-    state.flows.rating = __assign(__assign({}, state.flows.rating), { isRating: false, rated: !!state.flows.rating });
+    state.flows.rating = {
+        ...state.flows.rating,
+        isRating: false,
+        rated: !!state.flows.rating,
+    };
     state.flows.rating.interval.stop();
 };
 exports.deepLikeStop = deepLikeStop;
-var onInitializeOvermind = function (_a) {
-    var actions = _a.actions, state = _a.state;
-    var nextValue = function () {
+const onInitializeOvermind = ({ actions, state }) => {
+    const nextValue = () => {
     };
     state.flows.rating.keyBinding.setEventHandlers({
-        onKeyDown: function (event) { return actions.flows.rating.deepLikeStart({ event: event }); },
-        onKeyUp: function () {
+        onKeyDown: (event) => actions.flows.rating.deepLikeStart({ event }),
+        onKeyUp: () => {
             actions.flows.rating.deepLikeStop();
         }
     });
 };
 exports.onInitializeOvermind = onInitializeOvermind;
-var effects = {
-    initInterval: function (ms) {
-        var interval = null;
-        var stop = function () {
+const effects = {
+    initInterval: (ms) => {
+        let interval = null;
+        const stop = () => {
             (interval !== null && clearInterval(interval));
             interval = null;
             console.log("cleared interval");
         };
-        var start = function (f) {
+        const start = (f) => {
             interval === null && f && (interval = setInterval(f, ms));
             console.log("created interval");
         };
         return {
-            start: start,
-            stop: stop,
+            start,
+            stop,
         };
     },
-    onceKeyBinding: function (keyCodes) {
-        var onKeyUp;
-        var onKeyDown;
-        var keyUp = function (e) {
-            var kbdEvent = e;
+    onceKeyBinding: (keyCodes) => {
+        let onKeyUp;
+        let onKeyDown;
+        const keyUp = (e) => {
+            const kbdEvent = e;
             if (!onKeyUp || !keyCodes.includes(kbdEvent.which || -1))
                 return;
-            var repeat = kbdEvent.repeat;
+            const repeat = kbdEvent.repeat;
             if (!onKeyUp || repeat)
                 return;
             onKeyUp && onKeyUp();
         };
-        var keyDown = function (e) {
-            var kbdEvent = e;
+        const keyDown = (e) => {
+            const kbdEvent = e;
             if (!onKeyDown || !keyCodes.includes(kbdEvent.which || -1))
                 return;
             // const repeat = kbdEvent.repeat;
             // if (repeat)
             //     return;
-            console.log("keydown, repeat: " + (kbdEvent === null || kbdEvent === void 0 ? void 0 : kbdEvent.repeat));
+            console.log("keydown, repeat: " + kbdEvent?.repeat);
             onKeyDown(e);
         };
         document.addEventListener('keydown', keyDown);
         document.addEventListener('keyup', keyUp);
-        var remove = function () {
+        const remove = () => {
             onKeyUp = undefined;
             onKeyDown = undefined;
         };
-        var setEventHandlers = function (_a) {
-            var oku = _a.onKeyUp, okd = _a.onKeyDown;
+        const setEventHandlers = ({ onKeyUp: oku, onKeyDown: okd }) => {
             remove();
             onKeyUp = oku;
             onKeyDown = okd;
         };
         return {
             // add,
-            remove: remove,
-            setEventHandlers: setEventHandlers
+            remove,
+            setEventHandlers
             // bindTouchClick
         };
     }
 };
-var state = {
+const state = {
     _value: 0,
     value: 0,
     startTime: 0,
@@ -142,7 +134,7 @@ var state = {
     interval: effects.initInterval(VOTE_POLLING_INTERVAL),
     keyBinding: effects.onceKeyBinding([32])
 };
-var actions = {
+const actions = {
     deepLikeInit: exports.deepLikeInit,
     deepLikeStart: exports.deepLikeStart,
     deepLikeStep: exports.deepLikeStep,
@@ -150,8 +142,8 @@ var actions = {
     onInitializeOvermind: exports.onInitializeOvermind
 };
 exports.default = {
-    state: state,
-    actions: actions,
-    effects: effects
+    state,
+    actions,
+    effects
 };
 //# sourceMappingURL=index.js.map

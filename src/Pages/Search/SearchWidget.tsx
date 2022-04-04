@@ -84,8 +84,14 @@ export const SearchWidget: NLView<{
 										}
 										style={
 											query === ""
-												? { opacity: "80%" }
-												: { opacity: "100%" }
+												? {
+														opacity: "80%",
+														width: "100%",
+												  }
+												: {
+														opacity: "100%",
+														width: "100%",
+												  }
 										}
 										value={query}
 									/>

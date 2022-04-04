@@ -36,6 +36,9 @@ export const LegacyLogin: NLView = () => {
 	//     .find(n => indicators[n]);
 	const oobCode = new URLSearchParams(window.location.search).get("oobCode");
 
+	const regexEmail =
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 	const signIn = async (email: string) => {
 		try {
 			await actions.firebase.signInWithEmailLink({ email });
@@ -150,8 +153,13 @@ export const LegacyLogin: NLView = () => {
 						<>
 							<div className="section-divider" />
 							<h2>
-								Hi {state.api.auth.user?.username || state.api.auth.user?.displayName}, we've been
-								missing you!
+								Hi{" "}
+								{state.api.auth.user?.username ||
+									state.api.auth.user?.displayName}
+								, we've been
+								{state.api.auth.user?.username ||
+									state.api.auth.user?.displayName}
+								, we've been missing you!
 							</h2>
 							<div className="section-divider" />
 							<p>
@@ -238,17 +246,32 @@ export const LegacyLogin: NLView = () => {
 			) : (
 				<></>
 			)}
-			{status == STATUS.LINK_REQUESTED ? (
-				<>Please check your inbox at {email}</>
-			) : (
-				<></>
-			)}
-			{status === STATUS.NONE && !state.api.auth.user?.id ? (
+			{status === STATUS.LINK_REQUESTED && (
 				<>
 					<p className="super-size font-variant-none">
-						join NewLife.IO
+						check your inbox
 					</p>
+					<br />
+					<br />
+					<br />
+					<br />
+					<br />
+					<div style={{ width: "30%" }}>
+						<SupportBox />
+					</div>
 					<div className="section-divider" />
+
+					<p className="paragraph-3b text-center">
+						<Link to="#">I don't have an account yet!</Link>
+					</p>
+				</>
+			)}
+			{status === STATUS.NONE && !state.api.auth.user?.id ? (
+				<ContentLayout customClass="app-content-layout">
+					<p className="super-size font-variant-none">
+						join newlife.IO
+					</p>
+
 					<Form
 						form={form}
 						name="basic"
@@ -260,7 +283,10 @@ export const LegacyLogin: NLView = () => {
 						<Form.Item
 							name="email"
 							rules={[
-								{ required: true, message: "Enter your email" },
+								{
+									pattern: new RegExp(regexEmail),
+									message: "Please input valid email.",
+								},
 							]}
 						>
 							<Input placeholder="email" />
@@ -271,18 +297,19 @@ export const LegacyLogin: NLView = () => {
 									actionName="auth.firebaseRequestEmailLink"
 									type="primary"
 									htmlType="submit"
+									progressText="Connecting..."
 								>
 									Connect my account
 								</ProgressButton>
 							</div>
 						</Form.Item>
-						<p className="paragraph-2r text-center">
+						<p className="paragraph-2b text-center">
 							<Link to="/">I don't have an account yet!</Link>
 						</p>
 						<div className="section-divider" />
 						<SupportBox />
 					</Form>
-				</>
+				</ContentLayout>
 			) : (
 				<></>
 			)}

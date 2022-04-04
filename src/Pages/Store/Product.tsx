@@ -198,6 +198,7 @@ const CheckoutForm = ({
 			</Form.Item> */}
 			<Form.Item hidden={embedded}>
 				<ProgressButton
+					progressText="Processing payment..."
 					type="primary"
 					actionName="payments.pay"
 					htmlType="submit"
@@ -310,7 +311,6 @@ export const Product = ({
 			)}
 			<br />
 			<div style={{ maxWidth: 600, minHeight: 380 }}>
-
 				{options.clientSecret && (
 					<Elements stripe={stripePromise} options={options}>
 						<CheckoutForm embedded={embedded} setNext={setNext} />

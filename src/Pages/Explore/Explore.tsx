@@ -14,9 +14,7 @@ import {
 } from "../../Components/UserWidget";
 import Spotlights from "../../Components/Spotlights";
 import TopFolders from "../../Components/TopFolders";
-import Creators from "../../Components/Creators";
-import { Header } from "antd/lib/layout/layout";
-import { Col, Row } from "antd";
+import Creators, { TopCreators } from "../../Components/Creators";
 
 export const Explore: NLView = () => {
 	const state = useAppState();
@@ -36,18 +34,14 @@ export const Explore: NLView = () => {
 
 	// return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
 	return (
-		<ContentLayout>
+		<div className="explore-page-wrapper">
 			{/* <UsersHorizontalScroller
 				users={users}
 				powerUp={false}
 				layout="vertical"
 				title={users?.length ? "Spotlights" : ""}
 			/> */}
-			<Spotlights
-				title={"Spotlights"}
-				maxRows={1}
-				maxItems={3}
-			/>
+			<Spotlights title={"Spotlights"} maxRows={1} maxItems={3} />
 			<TopFolders
 				title={"Explore top folders"}
 				maxItems={3}
@@ -58,7 +52,7 @@ export const Explore: NLView = () => {
 				loadMore={actions.lists.top.moods}
 				title={moods?.length ? "Top moods today" : ""}
 			/> */}
-			<Creators
+			<TopCreators
 				maxItems={3}
 				title={"Explore top creators"}
 				users={users}
@@ -68,7 +62,7 @@ export const Explore: NLView = () => {
 				maxItems={3}
 				skipItems={3}
 			/>
-		</ContentLayout>
+		</div>
 	);
 };
 

@@ -1,1 +1,1 @@
-{"version":3,"file":"effects.js","sourceRoot":"","sources":["../../../src/overmind/auth/effects.ts"],"names":[],"mappings":";;AAAA,wDAAwD;AACxD,2CAA2C;AAC3C,yCAAwC;AAExC,kBAAe;IACX,YAAY;IACZ,OAAO;IACP,KAAK,eAAA;CACR,CAAA;AAED,oBAAoB"}
+{"version":3,"file":"effects.js","sourceRoot":"","sources":["../../../src/overmind/auth/effects.ts"],"names":[],"mappings":";;AAAA,wDAAwD;AACxD,2CAA2C;AAC3C,2CAAwC;AAExC,kBAAe;IACX,YAAY;IACZ,OAAO;IACP,KAAK,EAAL,aAAK;CACR,CAAA;AAED,oBAAoB"}

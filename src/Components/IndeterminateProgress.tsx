@@ -3,8 +3,40 @@ import EventEmitter from "events";
 import { useEffect, useState } from "react";
 import { useAppState } from "../overmind";
 import { clock } from "../utils/clock";
+import { SpinLogo } from "./Icons/SpinLogo";
 
 export const IndeterminateProgress = ({
+	inProgress,
+}: {
+	inProgress: boolean;
+}) => {
+	const [p, setP] = useState(0);
+
+	useEffect(() => {
+		clock.on("tick", setP);
+		return () => {
+			clock.off("tick", setP);
+		};
+	}, []);
+	return inProgress ? (
+		<div className="rotating" style={{ fontSize: 41 }}>
+			<SpinLogo />
+		</div>
+	) : (
+		<></>
+	);
+};
+export const IndeterminateProgressAction = ({
+	actionName,
+}: {
+	actionName: string;
+}) => {
+	const state = useAppState();
+	const ival = !!state.indicators.specific[actionName];
+
+	return <IndeterminateProgress inProgress={ival} />;
+};
+export const IndeterminateProgressBar = ({
 	inProgress,
 }: {
 	inProgress: boolean;
@@ -22,14 +54,4 @@ export const IndeterminateProgress = ({
 	) : (
 		<></>
 	);
-};
-export const IndeterminateProgressAction = ({
-	actionName,
-}: {
-	actionName: string;
-}) => {
-	const state = useAppState();
-	const ival = !!state.indicators.specific[actionName];
-
-	return <IndeterminateProgress inProgress={ival} />;
 };

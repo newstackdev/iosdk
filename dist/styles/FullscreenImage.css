@@ -1,0 +1,13 @@
+.nl-fullsize-image .ant-image-size {
+  margin-bottom: 4px;
+}
+@media screen and (min-width: 720px) {
+  .nl-fullsize-image .ant-image-size {
+    margin-bottom: 14px;
+  }
+}
+.nl-fullsize-image .ant-image,
+.nl-fullsize-image .ant-image-size,
+.nl-fullsize-image .ant-image-img {
+  overflow: hidden;
+}

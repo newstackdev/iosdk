@@ -15,4 +15,5 @@ export declare const attachToMoods: Action<{
 export declare const rate: Action<{
     post: PostReadResponse;
     amount: number;
+    mood?: MoodReadResponse;
 }>;

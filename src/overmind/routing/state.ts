@@ -24,7 +24,7 @@ const state = {
     location: "",
     isAllowed: derived(
         (st: any, gst: any) => {
-            const specificAccess = ROUTE_ACCESS_LEVELS[st.location.split(/\?/)[0]];
+            const specificAccess = gst.config.settings.routing.routeAccessLevels[st.location.split(/\?/)[0]];
             const isAllowed = 
                 (!specificAccess && gst.api.auth.authorized)
                 || (specificAccess && specificAccess(gst.auth.status));

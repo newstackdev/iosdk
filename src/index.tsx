@@ -4,10 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './App.less';
+import { overmind } from "./overmind";
+import { config } from "./config";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App overmind={overmind(config)} />
   </React.StrictMode>,
   document.getElementById('root')
 );

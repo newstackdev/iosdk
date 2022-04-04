@@ -4,29 +4,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ROUTE_ACCESS_LEVELS = void 0;
-var overmind_1 = require("overmind");
-var history_1 = __importDefault(require("../../history"));
-var state_1 = require("../auth/state");
+const overmind_1 = require("overmind");
+const history_1 = __importDefault(require("../../history"));
+const state_1 = require("../auth/state");
 exports.ROUTE_ACCESS_LEVELS = {
-    "/": function (_st) { return true; },
-    "/profile": function (st) { return st > state_1.AUTH_FLOW_STATUS.ANONYMOUS; },
-    "/auth": function (st) { return true; },
-    "/auth/legacy": function (st) { return true; },
-    "/create-user": function (st) { return (state_1.AUTH_FLOW_STATUS.AUTHORIZED) <= st && (st < state_1.AUTH_FLOW_STATUS.AUTHENTICATED); },
-    "/DomainPresale": function (st) { return st < state_1.AUTH_FLOW_STATUS.AUTHENTICATED; },
-    "/terms_of_service": function () { return true; },
-    "/privacy_policy": function () { return true; }
+    "/": (_st) => true,
+    "/profile": (st) => st > state_1.AUTH_FLOW_STATUS.ANONYMOUS,
+    "/auth": (st) => true,
+    "/auth/legacy": (st) => true,
+    "/create-user": (st) => (state_1.AUTH_FLOW_STATUS.AUTHORIZED) <= st && (st < state_1.AUTH_FLOW_STATUS.AUTHENTICATED),
+    "/DomainPresale": (st) => st < state_1.AUTH_FLOW_STATUS.AUTHENTICATED,
+    "/terms_of_service": () => true,
+    "/privacy_policy": () => true
 };
-var state = {
+const state = {
     preLoginRoute: "",
     breadcrumbs: [],
     history: history_1.default,
     backHistory: [],
     simpleHistory: [],
     location: "",
-    isAllowed: (0, overmind_1.derived)(function (st, gst) {
-        var specificAccess = exports.ROUTE_ACCESS_LEVELS[st.location.split(/\?/)[0]];
-        var isAllowed = (!specificAccess && gst.api.auth.authorized)
+    isAllowed: (0, overmind_1.derived)((st, gst) => {
+        const specificAccess = gst.config.settings.routing.routeAccessLevels[st.location.split(/\?/)[0]];
+        const isAllowed = (!specificAccess && gst.api.auth.authorized)
             || (specificAccess && specificAccess(gst.auth.status));
         console.log("isAllowed", isAllowed);
         return isAllowed;

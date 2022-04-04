@@ -15,6 +15,6 @@ declare const state: {
         search: string;
     }[];
     location: string;
-    isAllowed: boolean;
+    isAllowed: any;
 };
 export default state;

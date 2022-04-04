@@ -51,7 +51,7 @@ export const MoodsGridRow: NLView<{
 		<Row
 			ref={currentElement}
 			wrap={wrap}
-			className={`nl-mood-grid-row scrollable-content ${
+			className={`nl-mood-grid-row  ${
 				noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"
 			} ${wrap ? "wrap" : ""}`}
 			justify={wrap ? "start" : "start"}

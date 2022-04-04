@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/firebase/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,wCAAwC;AACxC,sDAAgC;AAChC,kDAA4B;AAC5B,iDAAqC;AAErC,kBAAe;IACX,OAAO,SAAA;IACP,OAAO,mBAAA;IACP,KAAK,iBAAA;CACR,CAAA"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/firebase/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,wCAAwC;AACxC,wDAAgC;AAChC,oDAA4B;AAC5B,mDAAqC;AAErC,kBAAe;IACX,OAAO;IACP,OAAO,EAAP,iBAAO;IACP,KAAK,EAAL,eAAK;CACR,CAAA"}

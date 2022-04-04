@@ -1,15 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = require("antd");
+const antd_1 = require("antd");
 // import { ArgsProps } from "antd/lib/notification";
-var showNotification = function (_a, _b) {
-    var effects = _a.effects;
-    var message = _b.message, duration = _b.duration;
+const showNotification = ({ effects }, { message, duration }) => {
     effects.ux.message.info(message, duration);
 };
 exports.default = {
     actions: {
-        showNotification: showNotification,
+        showNotification,
     },
     effects: {
         notification: antd_1.notification,

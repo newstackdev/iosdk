@@ -1,54 +1,49 @@
 import { UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { Avatar, Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import { useAppState } from "../overmind";
+import { useActions, useAppState } from "../overmind";
 import Title from "../Pages/Explore/Title";
 import { NLView } from "../types";
 import { ContentLayout } from "./ContentLayout";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { ContentImage } from "./Image";
+import { LoadMore } from "./LoadMore";
 import { UserPowerup } from "./UserWidget";
 
 type ICreators = {
 	title?: string;
 	maxItems?: number;
-	users?: UserReadPublicResponse[] | UserReadPublicResponse[];
+	users?: UserReadPublicResponse[];
 };
 
-const Creators: NLView<ICreators> = ({ title, maxItems, users }) => {
+export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users }) => {
 	const state = useAppState();
-
-	const maxUsers = maxItems
+	maxItems = maxItems || 100;
+	users = maxItems
 		? users?.slice(0, Math.min(users?.length, maxItems))
 		: users;
 
-	const creators =
-		users === undefined ? state.lists.top.users.items : maxUsers;
+	// const creators =
+	// 	!users ? state.lists.top.users.items : maxUsers;
 
 	return (
-		<ContentLayout>
+		<>
 			{title === undefined && (
-				<Row style={{ width: "100%", marginTop: "20px" }}>
-					<LargeArrowBack />
-					<p className="header-2" style={{ marginLeft: "40px" }}>
+				<Row style={{ width: "100%" }}>
+					{/* <LargeArrowBack /> */}
+					<p className="header-2 u-margin-bottom-medium">
 						Explore top creators
 					</p>
 				</Row>
 			)}
-			<div
-				className={
-					maxItems === undefined
-						? "section-divider scrollable-content app-main-full-width"
-						: "section-divider app-main-full-width"
-				}
-			>
-				{maxItems ? (
+			<div>
+				{maxItems && maxItems !== 100 ? (
 					<Title title={title} href="/top/creators" />
 				) : (
 					<></>
 				)}
 				<div className="top-creators-wrapper">
-					{creators?.map((creator) => (
+					{users?.map((creator) => (
 						<Row
 							className="bg-hover  app-full-width"
 							style={{ alignItems: "center" }}
@@ -97,9 +92,29 @@ const Creators: NLView<ICreators> = ({ title, maxItems, users }) => {
 						</Row>
 					))}
 				</div>
+
 			</div>
-		</ContentLayout>
+		</>
 	);
 };
+
+export const Creators: NLView<ICreators> = (props) => {
+	return <CreatorsList {...props} />
+}
+
+
+export const TopCreators: NLView<ICreators> = ({ maxItems }) => {
+	const state = useAppState();
+	const actions = useActions();
+
+	const creators = maxItems ? state.lists.top.users.items.slice(0, maxItems) : state.lists.top.users.items;
+
+	return <>
+		<CreatorsList users={creators as UserReadPublicResponse[]} maxItems={maxItems} />
+		{creators && (creators?.length || 0) < (maxItems ||	 100) && (
+			<LoadMore loadMore={() => actions.lists.top.users()} />
+		)}
+	</>
+}
 
 export default Creators;

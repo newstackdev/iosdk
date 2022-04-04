@@ -3,7 +3,7 @@ import { ProgressButton } from "../../Components/ProgressButton";
 import { LICENSES } from "../../constants";
 import { NLView } from "../../types";
 
-export type LicenseProps = { name: string, value: string };
+export type LicenseProps = { name: string; value: string };
 
 const PostCreateInfo: NLView<{
 	selectedLicense: LicenseProps;
@@ -41,27 +41,25 @@ const PostCreateInfo: NLView<{
 			) : (
 				<></>
 			)}
-			<div style={{ marginTop: "20px" }}>
+			<>
 				<span hidden={mintConfirmationOpen || isLicense}>
 					<ProgressButton
 						actionName="api.post.create"
 						type="primary"
+						progressText="Creating post..."
 						htmlType="submit"
 						className={
 							!selectedLicense ? "disabled-submit-button" : ""
 						}
-						disabled={
-							!selectedLicense 
-						}
+						disabled={!selectedLicense}
 					>
 						Share
 					</ProgressButton>
 				</span>
-			</div>
+			</>
 		</div>
 	);
 };
-
 
 const AddLicense: NLView<{
 	selectedLicense: LicenseProps;
@@ -70,7 +68,7 @@ const AddLicense: NLView<{
 	isLicense: boolean;
 }> = ({ selectedLicense, setSelectedLicense, isLicense, setIsLicense }) => {
 	return (
-		<div style={{ width: "100%", marginTop: "20px" }}>
+		<>
 			<p
 				className="header-5"
 				style={{
@@ -80,14 +78,7 @@ const AddLicense: NLView<{
 			>
 				Add license
 			</p>
-			<div
-				style={{
-					height: "60vh",
-					overflow: "auto",
-					paddingRight: "20px",
-					textAlign: "initial",
-				}}
-			>
+			<div className="scrollable-licences">
 				<Checkbox.Group value={[selectedLicense.value]}>
 					{LICENSES.map((license) => (
 						<LicenceContent
@@ -102,7 +93,7 @@ const AddLicense: NLView<{
 					))}
 				</Checkbox.Group>
 			</div>
-		</div>
+		</>
 	);
 };
 

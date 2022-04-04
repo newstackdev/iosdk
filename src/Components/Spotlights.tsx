@@ -82,28 +82,15 @@ const Spotlights: NLView<{
 	const moods = state.lists.top.moods.items;
 
 	return (
-		<ContentLayout>
+		<>
 			{title === undefined && (
-				<Row
-					style={{
-						width: "100%",
-						marginTop: "20px",
-						marginBottom: "20px",
-					}}
-				>
-					<LargeArrowBack />
-					<p className="header-2" style={{ marginLeft: "40px" }}>
+				<Row>
+					<p className="header-2 u-margin-bottom-medium">
 						Spotlights
 					</p>
 				</Row>
 			)}
-			<div
-				className={
-					title === undefined
-						? "scrollable-content section-divider"
-						: " section-divider"
-				}
-			>
+			<div>
 				{title ? <Title title={title} href="/spotlights" /> : <></>}
 				<div className="spotlight-flex-container">
 					{moods?.slice(0, maxRows || moods.length).map((m) => (
@@ -113,7 +100,7 @@ const Spotlights: NLView<{
 					))}
 				</div>
 			</div>
-		</ContentLayout>
+		</>
 	);
 };
 

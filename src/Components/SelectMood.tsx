@@ -42,7 +42,7 @@ export const SelectMood: NLView<{
 			items={checkMoods}
 			limit={limit}
 			// titleLink="/save-folder"
-			title={"Select a folder to share"} 
+			title={"Select a folder to share"}
 			setSelectedFolder={setSelectedFolder}
 			selectedFolder={selectedFolder}
 			render={(m) => (
@@ -71,7 +71,10 @@ export const SelectMood: NLView<{
 	// </ScrollMenu>
 };
 
-export const SelectMoodForm: NLView<{ title?: string, onFinish: Callback }> = ({ title, onFinish }) => (
+export const SelectMoodForm: NLView<{ title?: string; onFinish: Callback }> = ({
+	title,
+	onFinish,
+}) => (
 	<Form className="app-main-full-width" onFinish={onFinish}>
 		<Form.Item name="moods" style={{ marginBottom: "40px" }}>
 			{title ? <SelectMood title={title} /> : <SelectMood />}
@@ -86,6 +89,7 @@ export const SelectMoodForm: NLView<{ title?: string, onFinish: Callback }> = ({
 				actionName="api.post.attachToMoods"
 				type="primary"
 				htmlType="submit"
+				progressText="Adding to moods..."
 			>
 				Share
 			</ProgressButton>

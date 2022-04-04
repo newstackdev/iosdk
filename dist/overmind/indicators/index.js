@@ -1,32 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var overmind_1 = require("overmind");
-var exposeIndicators = function (_a, _b) {
-    var state = _a.state;
-    var actionName = _b.actionName;
-    var st = state.indicators;
+const overmind_1 = require("overmind");
+const exposeIndicators = ({ state }, { actionName }) => {
+    const st = state.indicators;
     st.isWorking = st._isWorking > 0;
-    var sp = st._specific[actionName];
+    const sp = st._specific[actionName];
     // if(actionName == "api.post.attachToMoods")
-    console.log("indicators.".concat(actionName), sp);
+    console.log(`indicators.${actionName}`, sp);
     st.specific[actionName] = sp;
     // console.log(`indicators.specific ${actionName} ${st._specific[actionName]}`)
 };
-var isWorkingActionDebounced = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), exposeIndicators);
-var isWorkingAction = function (_a, _b) {
-    var actions = _a.actions, state = _a.state;
-    var actionName = _b.actionName, n = _b.n;
-    var st = state.indicators;
-    var __isWorking = st._isWorking + ((n > 0) ? 1 : -1);
-    var _isWorking = Math.max(__isWorking, 0);
-    var isWorking = _isWorking > 0;
-    var ___specific = (st._specific[actionName] || 0) + ((n > 0) ? 1 : -1);
-    var _specific = Math.max(___specific, 0);
+const isWorkingActionDebounced = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), exposeIndicators);
+const isWorkingAction = ({ actions, state }, { actionName, n }) => {
+    const st = state.indicators;
+    const __isWorking = st._isWorking + ((n > 0) ? 1 : -1);
+    const _isWorking = Math.max(__isWorking, 0);
+    const isWorking = _isWorking > 0;
+    const ___specific = (st._specific[actionName] || 0) + ((n > 0) ? 1 : -1);
+    const _specific = Math.max(___specific, 0);
     // const isWorkingSpecific = _specific > 0;
     st.isWorking = isWorking;
     st._isWorking = _isWorking;
     st._specific[actionName] = _specific;
-    exposeIndicators({ state: state }, { actionName: actionName });
+    exposeIndicators({ state }, { actionName });
     // if(_isWorking > 0 || _specific > 0)
     //     exposeIndicators({ state }, { actionName })
     // else
@@ -69,7 +65,7 @@ exports.default = {
     actions: {
         // onInitializeOvermind,
         isWorking: isWorkingAction,
-        isWorkingActionDebounced: isWorkingActionDebounced
+        isWorkingActionDebounced
     }
 };
 //# sourceMappingURL=index.js.map

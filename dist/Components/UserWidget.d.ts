@@ -32,6 +32,7 @@ export declare const UserWidgetTopFixed: NLView<{
 export declare const UserWidgetHeading: NLView<{
     user?: UserReadPrivateResponse;
     setActiveKey: React.Dispatch<React.SetStateAction<string>>;
+    setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
 }>;
 export declare const UserSocialInfo: NLView<{
     user?: UserReadPrivateResponse;

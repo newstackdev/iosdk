@@ -13,6 +13,14 @@ export declare const config: {
             mediaBucket: any;
             websocketsServer: any;
         };
+        routing: {
+            routeAccessLevels: Record<string, (st: import("./overmind/auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+        };
+    };
+    routes: {
+        useDefaultRoutes: boolean;
+        overrides: {};
+        noBackButton: string[];
     };
     components: {
         layout: {

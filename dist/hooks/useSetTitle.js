@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useSetTitle = void 0;
-var react_1 = require("react");
-var overmind_1 = require("../overmind");
-var useSetTitle = function (title) {
-    var actions = (0, overmind_1.useActions)();
-    (0, react_1.useEffect)(function () {
+const react_1 = require("react");
+const overmind_1 = require("../overmind");
+const useSetTitle = (title) => {
+    const actions = (0, overmind_1.useActions)();
+    (0, react_1.useEffect)(() => {
         actions.routing.setTitle(title);
     }, [title]);
 };

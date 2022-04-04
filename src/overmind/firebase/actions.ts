@@ -34,7 +34,7 @@ export const refreshApiToken: Action = async ({ state, actions, effects }) => {
 
 export const handleAuthChange: Action<User | null> = async ({ actions, state, effects }, fbUser) => {
     const userChanged = state.firebase.user?.uid !== fbUser?.uid;
-    
+
     if (fbUser) {
         await actions.firebase.setFbUser({ user: fbUser });
 
@@ -109,7 +109,7 @@ export const verifyPhone: Action<{ phoneVerificationCode: string }> = async ({ s
     effects.firebase.clearRecaptchaVerifier();
 
     actions.auth.resetAuthTimer();
-    
+
     if (r)
         state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED
     else {

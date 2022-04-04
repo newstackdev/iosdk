@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.state = exports.DOMAIN_PRESALE_STEPS = void 0;
-var wizardStateMachine_1 = require("./wizardStateMachine");
+const wizardStateMachine_1 = require("./wizardStateMachine");
 var DOMAIN_PRESALE_STEPS;
 (function (DOMAIN_PRESALE_STEPS) {
     DOMAIN_PRESALE_STEPS[DOMAIN_PRESALE_STEPS["SELECT_DOMAIN"] = 0] = "SELECT_DOMAIN";

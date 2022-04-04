@@ -15,7 +15,7 @@ declare const _default: {
             search: string;
         }[];
         location: string;
-        isAllowed: boolean;
+        isAllowed: any;
     };
 };
 export default _default;

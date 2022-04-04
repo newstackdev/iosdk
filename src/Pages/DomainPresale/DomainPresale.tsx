@@ -1,46 +1,19 @@
-import {
-	Steps,
-	Button,
-	message,
-	Form,
-	InputProps,
-	Tag,
-	Row,
-	Col,
-	Space,
-	Tooltip,
-} from "antd";
-import {
-	ReactElement,
-	RefObject,
-	SyntheticEvent,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { Button, Row, Tag, Tooltip } from "antd";
+import { RefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { MaskedInput } from "antd-mask-input";
-
 import { ContentLayout } from "../../Components/ContentLayout";
-import { STAKE_STEPS } from "../../Components/UserWidget";
 import { useActions, useAppState } from "../../overmind";
-import { state } from "../../overmind/auth/state";
 import Paragraph from "antd/lib/typography/Paragraph";
-import {
-	EmbeddableControl,
-	EmbeddableControlNextCommand,
-	NLView,
-} from "../../types";
-import { Auth } from "../Auth";
+import { EmbeddableControlNextCommand, NLView } from "../../types";
+import { Auth } from "../Auth/Auth";
 import { Product } from "../Store/Product";
 import { UserCreate } from "../User/UserCreate";
-import { UserStake } from "../../Components/UserWidget";
 import { JoinDao } from "../JoinDao";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { Link } from "react-router-dom";
 import { AppearingComponent } from "../../Components/Appearing";
-import { Spin } from "../../Components/Spin";
-
-const { Step } = Steps;
+import { SpaceSpin, Spin } from "../../Components/Spin";
+import SupportBox from "../../Components/SupportBox";
 
 // const InputWithPostfix:  NLView<InputProps & { postFix: string }>= ({ postFix, ...props }) => {
 //     const [val, setVal] = useState<string>(postFix);
@@ -56,8 +29,6 @@ const DomainSelector = () => {
 	const fuia = state.flows.user.create.formUsernameIsAvailable;
 	const el: RefObject<typeof MaskedInput> = useRef({} as typeof MaskedInput);
 
-	console.log(actions);
-
 	// useEffect(() => {
 	// 	if(["imported", "known"].includes(state.api.auth.user?.status || "") && !state.flows.user.create.form.username) {
 	// 		actions.flows.user.create.startLegacyImport();
@@ -70,10 +41,11 @@ const DomainSelector = () => {
 	//  }, [state.api.auth.user]);
 
 	const username = state.flows.user.create.form.username || "";
-	const isPaidUsername = username.length && (username.replace(/\.io/, "").length < 5);
+	const isPaidUsername =
+		username.length && username.replace(/\.io/, "").length < 5;
 
 	return (
-		<>
+		<ContentLayout>
 			<MaskedInput
 				ref={el as any}
 				style={{
@@ -81,13 +53,13 @@ const DomainSelector = () => {
 					textAlign: "center",
 					width: "70%",
 					height: "auto",
-					marginBottom: "80px",
-					paddingTop: "15vh",
+					marginTop: "80px",
+					borderBottomWidth: "13px",
 				}}
 				className={
 					fuia === "unavailable"
-						? "masked-input masked-input-error font-variant-none"
-						: "masked-input font-variant-none"
+						? "masked-input masked-input-error font-variant-none paragraph-2b"
+						: "masked-input font-variant-none paragraph-2b"
 				}
 				defaultValue={
 					state.flows.user.create.form.username?.replace(
@@ -110,7 +82,7 @@ const DomainSelector = () => {
 				formatCharacters={{
 					x: {
 						validate: function (char: string) {
-							return /[\w1-5\.]/.test(char);
+							return /^[a-z1-5\.]$/.test(char);
 						},
 						transform: function (char: string) {
 							return char.toLowerCase();
@@ -118,123 +90,128 @@ const DomainSelector = () => {
 					},
 				}}
 			/>
-			{fuia === "checking" &&
-				<div style={{ position: "absolute" }}><Spin /></div>
-			}
+			<SpaceSpin isRotating={fuia === "checking"} />
 			{fuia === "unavailable" && (
 				<Tag style={{ marginTop: "20px" }}>Name is {fuia}</Tag>
 			)}
+
 			<Paragraph
 				className="paragraph-2r nl-footer-paragraph"
-				style={{ marginTop: 48, width: "60%" }}
+				style={{ width: "60%" }}
 			>
 				{/* {(state.api.auth.user.status === 'imported').toString()} {(state.api.auth.user.username !== state.flows.user.create.form.username).toString()} */}
 
-				{isPaidUsername ?
+				{isPaidUsername ? (
 					<AppearingComponent seconds={1}>
 						<br />
-						Premium usernames shorter than 5 characters will soon be available.<br />For early access please contact&nbsp;
-						<a href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ" target="_new">
+						Premium usernames shorter than 5 characters will soon be
+						available.
+						<br />
+						For early access please contact&nbsp;
+						<a
+							href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ"
+							target="_new"
+						>
 							our support team
-						</a>.
+						</a>
+						.
 					</AppearingComponent>
-					: ""
-				}
-				<br />
-				<br />
+				) : (
+					""
+				)}
 
 				{state.flows.user.create.legacyToken &&
-					((state.flows.user.create.form.displayName !== state.flows.user.create.form.username) || fuia === "unavailable")
-					? (
-						<>
-							<Tooltip
-								title={
-									<>
-										Your Newlife identity is now a part of the
-										Newcoin ecosystem and provides access to
-										many exciting services. You may keep your
-										current username as the display name on
-										Newlife on the next dialog.
-									</>
-								}
-							>
-								<span>Why is my username changing?</span>
-							</Tooltip>
-							&nbsp;
-							<a
-								href="/"
-								onClick={() =>
-									actions.flows.user.create.stopLegacyImport()
-								}
-							>
-								I am not{" "}
-								{state.flows.user.create.form.displayName ||
-									state.flows.user.create.form.username}
-							</a>
-						</>
-					) : (
-						""
-					)}
-
-				{!state.flows.user.create.legacyToken && !state.auth.authenticated ? (
-					<Link to="/auth/legacy" className="paragraph-3b">
-						<b>I'm an early Newlife user!</b>
-					</Link>
+				(state.flows.user.create.form.displayName !==
+					state.flows.user.create.form.username ||
+					fuia === "unavailable") ? (
+					<>
+						<Tooltip
+							title={
+								<>
+									Your Newlife identity is now a part of the
+									Newcoin ecosystem and provides access to
+									many exciting services. You may keep your
+									current username as the display name on
+									Newlife on the next dialog.
+								</>
+							}
+						>
+							<span>Why is my username changing?</span>
+						</Tooltip>
+						&nbsp;
+						<a
+							href="/"
+							onClick={() =>
+								actions.flows.user.create.stopLegacyImport()
+							}
+						>
+							I am not{" "}
+							{state.flows.user.create.form.displayName ||
+								state.flows.user.create.form.username}
+						</a>
+					</>
 				) : (
 					""
 				)}
 			</Paragraph>
-		</>
+		</ContentLayout>
 	);
-};
-
-const SELECT_DOMAIN = {
-	title: "",
-	content: <DomainSelector />,
-	action: "",
 };
 
 //: Record<string, { title: string, content: ReactElement | EmbeddableControl }>
 const InitSteps = (
 	setNext: EmbeddableControlNextCommand,
+	isErrorSubmit: boolean,
 	setIsErrorSubmit: React.Dispatch<React.SetStateAction<boolean>>
-) => ({
-	SELECT_DOMAIN,
-	AUTHENTICATE: {
-		title: "",
-		content: (
-			<Auth
-				embedded={true}
-				setNext={setNext}
-				setIsErrorSubmit={setIsErrorSubmit}
-			/>
-		),
-		action: "",
-	},
-	SUBSCRIBE: {
-		title: "",
-		action: "payments.pay",
-		content: <Product embedded={true} setNext={setNext} />,
-	},
-	CREATE_USER: {
-		title: "",
-		action: "api.user.create",
-		content: (
-			<UserCreate
-				embedded={true}
-				setNext={setNext}
-				hideUsername={true}
-				noRouing={true}
-				setIsErrorSubmit={setIsErrorSubmit}
-			/>
-		),
-	},
-	DONE: {
-		title: "",
-		content: <JoinDao />,
-		action: "",
-	},
-});
+) => {
+	let buffer: any;
+	const handleCallBack = (value: any) => (buffer = value);
+	console.log(buffer);
+	return {
+		SELECT_DOMAIN: {
+			title: "Choose your permanent domain name. This cannot be changed or deleted, and you own it.",
+			content: <DomainSelector />,
+			action: "",
+		},
+		AUTHENTICATE: {
+			title: "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS",
+			content: (
+				<Auth
+					embedded={true}
+					setNext={setNext}
+					handleCallBack={handleCallBack}
+					setIsErrorSubmit={setIsErrorSubmit}
+					isErrorSubmit={isErrorSubmit}
+				/>
+			),
+			action: "",
+			buffer: buffer,
+		},
+		SUBSCRIBE: {
+			title: "",
+			action: "payments.pay",
+			content: <Product embedded={true} setNext={setNext} />,
+		},
+		CREATE_USER: {
+			title: "",
+			action: "api.user.create",
+			content: (
+				<UserCreate
+					embedded={true}
+					setNext={setNext}
+					hideUsername={true}
+					noRouing={true}
+					setIsErrorSubmit={setIsErrorSubmit}
+				/>
+			),
+		},
+		DONE: {
+			title: "",
+			content: <JoinDao />,
+			action: "",
+		},
+	};
+};
 
 export const DomainPresale = () => {
 	const actions = useActions();
@@ -242,7 +219,9 @@ export const DomainPresale = () => {
 	const [isErrorSubmit, setIsErrorSubmit] = useState<boolean>(false);
 
 	const [_next, setNext] = useState<{ command: () => void; text: string }>();
-	const [steps] = useState(InitSteps(setNext, setIsErrorSubmit));
+	const [steps] = useState(
+		InitSteps(setNext, isErrorSubmit, setIsErrorSubmit)
+	);
 
 	const wizard = state.flows.user.create.wizard;
 	const next = _next;
@@ -254,23 +233,28 @@ export const DomainPresale = () => {
 
 	const isMember = (state.newcoin.pools || {})["CGY"] > 1087;
 	useEffect(() => {
-		if (isMember)
-			actions.routing.historyPush({ location: "/explore" });
+		if (isMember) actions.routing.historyPush({ location: "/explore" });
 	}, [isMember]);
 
+	// if(!state.api.auth.attempted && state.firebase.token)
+	// 	return <></>;
+
+	const footerTitle = steps[wizard.current].title;
+
 	if (
-		isMember || (
-			state.indicators.isWorking &&
+		isMember ||
+		(state.indicators.isWorking &&
 			!state.flows.user.create.form.username &&
 			!state.api.auth.authorized &&
-			(!state.api.auth.attempted && state.firebase.token)
-		)
+			!state.api.auth.attempted &&
+			state.firebase.token)
 	)
 		return <></>;
 
 	return (
-		<ContentLayout customClass="app-content-layout-domain-presale">
-			{/* {["SELECT_DOMAIN", "DONE"].includes(wizard.current) ? (
+		<>
+			<ContentLayout customClass="app-content-layout">
+				{/* {["SELECT_DOMAIN", "DONE"].includes(wizard.current) ? (
 				""
 			) : (
 				<>
@@ -281,14 +265,13 @@ export const DomainPresale = () => {
 					</h2>
 				</>
 			)} */}
-			{/* prev: {wizard.hasPrev}<br />
+				{/* prev: {wizard.hasPrev}<br />
             curr: {wizard.current}<br />
             next: {wizard.hasNext}<br />
             {JSON.stringify(wizard)} */}
 
-			<>{currentSlide.content}</>
-			{/* <div>authenticated: { JSON.stringify(state.auth.authenticated) }  -&gt; authorized: { JSON.stringify(state.auth.authorized) }</div> */}
-			<div className={"app-control-surface"}>
+				{/* <div>authenticated: { JSON.stringify(state.auth.authenticated) }  -&gt; authorized: { JSON.stringify(state.auth.authorized) }</div> */}
+
 				{/* {wizard.hasPrev && (
 					<Button
 						className="ant-btn"
@@ -302,68 +285,82 @@ export const DomainPresale = () => {
 				)} */}
 				{/* {JSON.stringify(next)} */}
 
-				{next || wizard.hasNext ? (
-					currentSlide.action ? (
-						<ProgressButton
-							type="primary"
-							actionName={currentSlide.action}
-							onClick={() => {
-								return next
-									? next.command()
-									: actions.flows.user.create.wizardStepNext()
-							}
-							}
-							isErrorSubmit={isErrorSubmit}
-						>
-							{next ? next.text : "Next"}
-						</ProgressButton>
+				{currentSlide.content}
+				<div className="app-control-surface">
+					{next || wizard.hasNext ? (
+						currentSlide.action ? (
+							<ProgressButton
+								type="primary"
+								progressText="Processing..."
+								actionName={currentSlide.action}
+								onClick={() => {
+									return next
+										? next.command()
+										: actions.flows.user.create.wizardStepNext();
+								}}
+								isErrorSubmit={isErrorSubmit}
+							>
+								{next ? next.text : "Next"}
+							</ProgressButton>
+						) : (
+							<Button
+								type="primary"
+								disabled={isErrorSubmit}
+								onClick={() =>
+									next
+										? next.command()
+										: actions.flows.user.create.wizardStepNext()
+								}
+								className={
+									isErrorSubmit
+										? "disabled-submit-button"
+										: ""
+								}
+							>
+								{next ? next.text : "Next"}
+							</Button>
+						)
 					) : (
-						<Button
-							type="primary"
-							onClick={() =>
-								next
-									? next.command()
-									: actions.flows.user.create.wizardStepNext()
-							}
-							className={
-								isErrorSubmit ? "disabled-submit-button" : ""
-							}
-						>
-							{next ? next.text : "Next"}
-						</Button>
-					)
-				) : (
-					<></>
-				)}
+						<></>
+					)}
+				</div>
+
 				{/* {wizard.matches("DONE") && (
                 )} */}
 				{/* {JSON.stringify(next || wizard.hasNext)} {JSON.stringify(next)} */}
-			</div>
-
+				{!state.flows.user.create.legacyToken &&
+					!state.auth.authenticated &&
+					wizard.matches("SELECT_DOMAIN") && (
+						<div className="u-margin-top-medium">
+							<Link to="/auth/legacy" className="paragraph-2b">
+								<b>I'm an early Newlife member!</b>
+							</Link>
+						</div>
+					)}
+				<div className="u-margin-top-large">
+					<SupportBox />
+				</div>
+			</ContentLayout>
+			{/* TODO add dynamic text above footer */}
 			<div
-				hidden={!wizard.matches("SELECT_DOMAIN")}
-				style={{
-					position: "relative",
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "end",
-					flex: "1",
-				}}
+				// hidden={!wizard.matches("SELECT_DOMAIN")}
+				style={{ width: "50%", margin: "0 auto" }}
 			>
 				<Paragraph
 					className="paragraph-2r nl-footer-paragraph"
 					style={{ marginTop: 48, width: "60%" }}
 				>
-					This will be your permanent domain and it cannot be changed
-					or deleted.
+					{footerTitle}
 				</Paragraph>
-				<Paragraph
-					style={{ width: "100%" }}
-					className="nl-footer-paragraph paragraph-2r"
-				>
-					9 characters max: a-z and 1-5
-				</Paragraph>
+				{wizard.matches("SELECT_DOMAIN") && (
+					<Paragraph
+						style={{ width: "100%" }}
+						className="nl-footer-paragraph paragraph-2r"
+					>
+						9 characters max: a-z and 1-5
+					</Paragraph>
+				)}
 			</div>
-		</ContentLayout>
+		</>
 	);
 };

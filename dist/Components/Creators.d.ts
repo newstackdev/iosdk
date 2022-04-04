@@ -3,7 +3,9 @@ import { NLView } from "../types";
 declare type ICreators = {
     title?: string;
     maxItems?: number;
-    users?: UserReadPublicResponse[] | UserReadPublicResponse[];
+    users?: UserReadPublicResponse[];
 };
-declare const Creators: NLView<ICreators>;
+export declare const CreatorsList: NLView<ICreators>;
+export declare const Creators: NLView<ICreators>;
+export declare const TopCreators: NLView<ICreators>;
 export default Creators;

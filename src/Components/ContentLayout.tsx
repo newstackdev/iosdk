@@ -73,7 +73,7 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<
 		<Row
 			justify="space-between"
 			gutter={16}
-			className="app-main-full-width"
+			className="app-main-full-width app-content-layout"
 			style={{ margin: 0, height: "100%" }}
 		>
 			{header ? (

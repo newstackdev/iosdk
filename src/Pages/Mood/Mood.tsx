@@ -3,19 +3,25 @@ import Avatar from "antd/lib/avatar/avatar";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { ContentLayout } from "../../Components/ContentLayout";
-import { SmallArrowBack } from "../../Components/Icons/SmallArrowBack";
 import { ThreeDots } from "../../Components/Icons/ThreeDots";
 import { ContentImage } from "../../Components/Image";
 import { TopFoldersGrid } from "../../Components/TopFolders";
 import { UserWidgetHeading } from "../../Components/UserWidget";
-import { useCachedMood, useCachedMoodPosts, useCachedUser } from "../../hooks/useCached";
+import {
+	useCachedMood,
+	useCachedMoodPosts,
+	useCachedUser,
+} from "../../hooks/useCached";
 import { useAppState } from "../../overmind";
 import { NLView } from "../../types";
 import { MoodsGridRow } from "./MoodsGrid";
 
 export const Mood: NLView = () => {
 	const { moodId: id } = useParams<{ moodId: string }>();
+
 	const mood = useCachedMoodPosts({ id }, true);
+	const moodDetails = useCachedMood({ id }, true);
+
 	const user = useCachedUser(mood.author);
 	const state = useAppState();
 
@@ -38,7 +44,14 @@ export const Mood: NLView = () => {
 									display: "flex",
 								}}
 							>
-								<SmallArrowBack />
+								<span
+									style={{
+										marginRight: "10px",
+										display: "flex",
+									}}
+								>
+									{/* <LargeArrowBack /> */}
+								</span>
 								<Link
 									to={`/user/${state.api.auth.user?.username}`}
 									style={{ marginLeft: "10px" }}
@@ -66,10 +79,11 @@ export const Mood: NLView = () => {
 							</Col>
 						</Row>
 						<Row style={{ marginBottom: "40px" }}>
-							<p className="paragraph-2b">{mood.title}</p>
+							<p className="paragraph-2b">{moodDetails.title}</p> 
 							<p className="paragraph-2r">
-								{ mood.description || "" }
+								{ moodDetails.description || "" }
 							</p>
+							{/* {moodDetails.stakeToAccess} */}
 						</Row>
 					</>
 				}

@@ -57,13 +57,14 @@ export const UserCreate: NLView<
 	}, []);
 
 	const setNextEmbedded = () => {
-		(!state.api.auth.user?.username || state.flows.user.create.legacyToken) && //["invited", "imported", "known"].includes(state.api.auth.user.status || "") &&
+		(!state.api.auth.user?.username ||
+			state.flows.user.create.legacyToken) && //["invited", "imported", "known"].includes(state.api.auth.user.status || "") &&
 			setNext &&
 			setNext({
 				text: "Next",
 				command: () => form.submit(),
 			});
-			
+
 		return () => setNext && setNext(undefined);
 	};
 
@@ -73,7 +74,7 @@ export const UserCreate: NLView<
 
 	const onFinish = async (values: UserCreateRequest) => {
 		console.log("Creating:", values);
-		
+
 		try {
 			await form.validateFields();
 			setIsErrorSubmit(false);
@@ -81,8 +82,8 @@ export const UserCreate: NLView<
 			console.log(e.errorFields.length);
 			setIsErrorSubmit(true);
 			return;
-		};
-		
+		}
+
 		actions.flows.user.create.create({
 			noRouting: !!noRouing,
 			user: values,
@@ -93,7 +94,7 @@ export const UserCreate: NLView<
 	//     console.log('Failed:', errorInfo);
 	//     effects.ux.message.error(JSON.stringify(errorInfo))
 	// };
-	
+
 	const re =
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -264,6 +265,7 @@ export const UserCreate: NLView<
 						actionName="api.user.create"
 						type="primary"
 						htmlType="submit"
+						progressText="Creating user..."
 					>
 						Submit
 					</ProgressButton>

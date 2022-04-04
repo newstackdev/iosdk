@@ -11,6 +11,8 @@ import { EventHandler, NLView } from "../types";
 import { Video } from "./Icons/Video";
 import { Image } from "./Icons/Image";
 import { Text } from "./Icons/Text";
+import { Edit } from "./Icons/Edit";
+import { CrossCircle } from "./Icons/CrossCircle";
 
 // type File = { status: UploadFileStatus, originFileObj: Blob, preview: string, url: string, name: string } & UploadFile;
 // type FileList = File[];
@@ -33,7 +35,8 @@ export class PicturesWall extends React.Component<
 			uploadText: string;
 			setContentType: React.Dispatch<React.SetStateAction<string>>;
 			contentType: string;
-			children: ReactElement
+			children: ReactElement;
+			name: string;
 		}
 	>
 > {
@@ -72,11 +75,7 @@ export class PicturesWall extends React.Component<
 			this.state;
 		const uploadButton = (
 			<Row style={{ alignItems: "flex-start" }} justify="space-between">
-				{
-					this.props.children ?
-						this.props.children :
-						<Image />
-				}
+				{this.props.children ? this.props.children : <Image />}
 
 				{/* <div style={{ marginTop: 8 }}>{this.props.uploadText || "Upload"}</div> */}
 			</Row>
@@ -99,9 +98,17 @@ export class PicturesWall extends React.Component<
 
 					// }}
 				>
-					{fileList.length > 0 ? null : uploadButton}
+					{fileList.length > 0 ? null : this.props.name ===
+					  "avatar" ? (
+						<Row>
+							<Edit />
+						</Row>
+					) : (
+						uploadButton
+					)}
 				</Upload>
 				<Modal
+					closeIcon={<CrossCircle />}
 					visible={previewVisible}
 					title={previewTitle}
 					footer={null}
@@ -123,20 +130,14 @@ export const PictureWallFormItem: NLView<{
 	uploadText?: string;
 }> = ({ onChange, uploadText }) => {
 	return (
-		<div style={{ margin: "auto" }}>
+		<div style={{ margin: "auto" }} className="upload-profile-update-icon">
 			<PicturesWall
 				name="avatar"
 				listType="picture-card"
-				className="avatar-uploader"
 				showUploadList={false}
 				onChange={onChange}
 				uploadText={uploadText}
-			>
-				<div>
-					<FileOutlined />
-					<div style={{ marginTop: 8 }}></div>
-				</div>
-			</PicturesWall>
+			/>
 		</div>
 	);
 };

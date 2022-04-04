@@ -10,7 +10,7 @@ import { Spin } from "./Spin";
 
 export type ItemGridParams<T> = {
 	title?: string;
-	titleLink?: string,
+	titleLink?: string;
 	items?: T[];
 	limit?: number;
 	render: (item: object, index: number) => ReactElement;
@@ -47,16 +47,17 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
 	return (
 		<>
 			{/* See All page */}
-			{title === undefined ?
+			{title === undefined ? (
 				<Row style={{ width: "100%", marginTop: "20px" }}>
-					<LargeArrowBack />
+					{/* <LargeArrowBack /> */}
 					<p className="header-2" style={{ marginLeft: "40px" }}>
 						{title}
 					</p>
-				</Row> :
+				</Row>
+			) : (
 				<Title title={title} href={titleLink} />
-			}
-			
+			)}
+
 			{items.length ? (
 				<Row
 					wrap={true}

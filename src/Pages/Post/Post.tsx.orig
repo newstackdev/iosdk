@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { NLView } from "../../types";
-import { Button, Col, Form, Modal, Progress, Row, Tag } from "antd";
+import { Button, Col, Form, Modal, Progress, Row, Tag, Tooltip } from "antd";
 import {
 	useCachedMood,
 	useCachedPost,
@@ -26,6 +26,8 @@ import { ContentImage } from "../../Components/Image";
 import { Vote } from "../../Components/Vote";
 import { ShareButton } from "../../Components/Share";
 import { json } from "overmind";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Edit } from "../../Components/Icons/Edit";
 
 const useVotingStreamMood = () => {
 	const { moodId, postId, id } =
@@ -72,17 +74,16 @@ const useVotingStreamMood = () => {
 		return cm && cm.posts ? cm.posts : [];
 	};
 
-
 	const nextPath = () => {
 		const _nextPostId = moodPosts[index + 1]?.id;
 		const nextMood = _nextPostId
 			? currMood
 			: currPost.moods?.find(
-				(md) => currMood.id != md.id && getPosts(md).length
-			) ||
-			state.lists.top.moods.items.find(
-				(md) => currMood.id !== md.id && getPosts(md).length
-			);
+					(md) => currMood.id != md.id && getPosts(md).length
+			  ) ||
+			  state.lists.top.moods.items.find(
+					(md) => currMood.id !== md.id && getPosts(md).length
+			  );
 		const _moodPosts = getPosts(nextMood) || [];
 		const nextPost =
 			_nextPostId || (_moodPosts && _moodPosts[0] && _moodPosts[0].id);
@@ -91,39 +92,46 @@ const useVotingStreamMood = () => {
 		return nextPath;
 	};
 
-
-
 	return { nextPath, currMood, currPost, index, isInMood: !!moodId, moodId };
 };
+
+const round = (n) => Math.round(n * 10000)/10000;
+const sumScore = (tagRels: {score: number}[]) => {
+	if(!(tagRels instanceof Array))
+		return round((tagRels as any).score as number);
+	const w = 1/tagRels.length;
+	return round(tagRels.reduce((r, c) => r + w * c.score, 0));
+}
 
 export const Post: NLView = () => {
 	const state = useAppState();
 	const actions = useActions();
+	const [copyToClipboard, setCopyToClipboard] = useState<boolean>(false);
 
-	const moodsToAttach = (state.auth.moods || []).filter((m) => m.id); // current users's moods
+	const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
 
-	const { moodId, currMood, currPost, nextPath, index, isInMood } = useVotingStreamMood();
+	const { moodId, currMood, currPost, nextPath, index, isInMood } =
+		useVotingStreamMood();
 
 	const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
 	const username = author?.username || author?.displayName;
 	const [selectMoodsForm] = useForm();
 	const navigateToNext = () => {
 		const location = nextPath();
-		if (!location)
-			return;
+		if (!location) return;
 		actions.routing.historyPush({ location });
 	};
 
 	const addToMoods = async (form?: { moods: { id: string }[] }) => {
-		console.log("attachToMoods: Calling...")
+		console.log("attachToMoods: Calling...");
 
 		if (form?.moods?.length)
 			await actions.api.post.attachToMoods({
 				post: currPost,
 				moods: form?.moods || [],
 			});
-		console.log("attachToMoods: done Attaching to moods...")
-		navigateToNext()
+		console.log("attachToMoods: done Attaching to moods...");
+		navigateToNext();
 	};
 
 	const doneVoting = (rating: number) => {
@@ -140,6 +148,13 @@ export const Post: NLView = () => {
 	// else either at 100% or stopped rating
 	if (currMood.id && index === -1) return <Spin />;
 
+	const url = [
+		window.location.protocol,
+		"//",
+		window.location.host,
+		state.routing.location,
+	].join("");
+
 	return (
 		<>
 			<Vote
@@ -150,19 +165,15 @@ export const Post: NLView = () => {
 					const eh = (e) => {
 						if (e.which !== 32) return;
 
-						window.removeEventListener('keyup', eh);
+						window.removeEventListener("keyup", eh);
 
 						e.preventDefault();
 						navigateToNext();
-					}
-					window.addEventListener('keyup', eh);
+					};
+					window.addEventListener("keyup", eh);
 					return () => {
-<<<<<<< HEAD
-						window.removeEventListener('keyup', eh);
-=======
-						window.removeEventListener('keypress', eh);
->>>>>>> f3d4e52880ff6e91d35c19d57602fefb620f0947
-					}
+						window.removeEventListener("keyup", eh);
+					};
 				}}
 				info={
 					<div className="post-info-column">
@@ -191,13 +202,17 @@ export const Post: NLView = () => {
 										{username}{" "}
 									</span>
 									<span className="paragraph-2r">
-										{currPost.content}
+										{currPost.description}
 									</span>
 								</Link>
 							</div>
 						</div>
 						{currPost.author?.newcoinPoolTx ? (
-							<Row className="paragraph-2u" align="bottom">
+							<Row
+								className="paragraph-2u"
+								align="bottom"
+								style={{ marginTop: "20px" }}
+							>
 								<a
 									href={
 										"https://explorer.newcoin.org/account/" +
@@ -214,13 +229,17 @@ export const Post: NLView = () => {
 							""
 						)}
 
-						<Row className="paragraph-2u" align="bottom">
+						<Row
+							className="paragraph-2b"
+							align="bottom"
+							style={{ marginTop: "10px" }}
+						>
 							{!currPost.newcoinMintTx ? (
 								""
 							) : ["REQUESTED", "FAILED"].includes(
-								currPost.newcoinMintTx.toString()
-							) ? (
-								"Mint status: " + currPost.newcoinMintTx || ""
+									currPost.newcoinMintTx.toString()
+							  ) ? (
+								"Minting NFT..." /* + currPost.newcoinMintTx || ""*/
 							) : (
 								<>
 									<NewcoinLink tx={currPost.newcoinMintTx}>
@@ -232,22 +251,61 @@ export const Post: NLView = () => {
 						</Row>
 						<br />
 						<br />
-						<div>
-							<ShareButton />
-						</div>
+						<CopyToClipboard text={url}>
+							<Tooltip
+								title={
+									!copyToClipboard
+										? ""
+										: "copied to clipboard"
+								}
+								placement="right"
+							>
+								<button
+									className="copy-to-clipboard-button"
+									onClick={() => {
+										setCopyToClipboard(true);
+										setTimeout(() => {
+											setCopyToClipboard(false);
+										}, 2000);
+									}}
+								>
+									<Edit />
+								</button>
+							</Tooltip>
+						</CopyToClipboard>
 						<br />
-						<br />
+<<<<<<< HEAD
+						{currPost.tags?.length ? "Tags:" : ""}
+						{json(currPost.tags || [])
+							?.sort((a, b) => b["_rel"].score - a["_rel"].score)
+							?.slice(0, 10)
+							?.map((t) => {
+								return (
+									<>
+										<div className="text-small">
+											{t.value}
+										</div>
+										<Progress
+											strokeColor="#c1fa50"
+											percent={t["_rel"].score * 100}
+										/>
+									</>
+								);
+							})}
+=======
 						{ currPost.tags?.length ? "Tags:" : "" }
+						{/* { JSON.stringify(currPost.tags) } */}
 						{ ((json(currPost.tags || [])))
-							?.sort((a,b) => b["_rel"].score - a["_rel"].score)
+							?.sort((a,b) => sumScore(b["_rel"]) - sumScore(a["_rel"]))
 							?.slice(0, 10)
 							?.map(t => {
 								return <>
-									<div className="text-small">{t.value}</div>
-									<Progress strokeColor="#c1fa50" percent={t["_rel"].score * 100} />
+									<div className="text-small">{t.value} [{sumScore(t["_rel"]) * 100}]</div>
+									<Progress strokeColor="#c1fa50" showInfo={false} percent={sumScore(t["_rel"]) * 100} />
 								</>
 
 							}) }
+>>>>>>> master
 					</div>
 				}
 			>
@@ -288,8 +346,14 @@ export const Post: NLView = () => {
 				<PostReportModal />
 			</div>
 			{
-				<div hidden={state.flows.rating.value !== 100} className="app-main-full-width">
-					<SelectMoodForm onFinish={addToMoods} title="Select a folder to share to" />
+				<div
+					hidden={state.flows.rating.value !== 100}
+					className="app-main-full-width"
+				>
+					<SelectMoodForm
+						onFinish={addToMoods}
+						title="Select a folder to share to"
+					/>
 				</div>
 			}
 		</>
@@ -366,7 +430,7 @@ export const Post: NLView = () => {
 // 				header={
 // 					<>
 // 						<div className="post-back-arrow">
-// 							<LargeArrowBack />
+// 							{/* <LargeArrowBack /> */}
 // 						</div>
 // 						<div
 // 							ref={divMessage}
@@ -648,7 +712,7 @@ export const Post: NLView = () => {
 // 				header={
 // 					<>
 // 						<div className="post-back-arrow">
-// 							<LargeArrowBack />
+// 							{/* <LargeArrowBack /> */}
 // 						</div>
 // 						<div
 // 							ref={divMessage}

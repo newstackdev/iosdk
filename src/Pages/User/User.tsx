@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ActivityStream } from "../../Components/ActivityStream";
 import { ContentLayout } from "../../Components/ContentLayout";
-import Creators from "../../Components/Creators";
+import Creators, { CreatorsList } from "../../Components/Creators";
 import { DataRow } from "../../Components/DataRow";
 import Deferred from "../../Components/Deferred";
 import { ItemGrid } from "../../Components/ItemGrid";
@@ -46,7 +46,7 @@ export const User: NLView = () => {
 
 	const moodList = user.moods || [];
 
-	const powerups = useCachedPowerups(user) as PowerupsCacheItem;
+	const powerups = useCachedPowerups(user, true) as PowerupsCacheItem;
 	const powering = powerups?.out?.value?.length || "";
 	const powered = powerups?.in?.value?.length || "";
 
@@ -82,7 +82,8 @@ export const User: NLView = () => {
 				)}
 			</Deferred>
 		);
-
+	// if(true)
+	// 	return <>boo</>
 	return (
 		<ContentLayout>
 			{/* <NewcoinWidget user={user} /> */}
@@ -93,8 +94,8 @@ export const User: NLView = () => {
 				activeKey={activeKey}
 				onChange={(key) => setActiveKey(key)}
 			>
-				<Tabs.TabPane tab="Social" key="0">
-					<UserSocialInfo user={user} />
+				<Tabs.TabPane tab="Folders" key="0">
+					{/* <UserSocialInfo user={user} /> */}
 					<TopFolders userMoods={moodList} title="" />
 				</Tabs.TabPane>
 				<Tabs.TabPane
@@ -106,7 +107,7 @@ export const User: NLView = () => {
 							?.sort(
 								(a, b) => (b.powered || 0) - (a.powered || 0)
 							)
-							.slice(0, 20)}
+							.slice(0, 20) || []}
 						title=""
 					/>
 					{/* {
@@ -119,12 +120,12 @@ export const User: NLView = () => {
 					tab={`Powering ${powering ? `(${powering})` : ""}`}
 					key="2"
 				>
-					<Creators
+					<CreatorsList
 						users={powerups?.out?.value
 							?.sort(
 								(a, b) => (b.powered || 0) - (a.powered || 0)
 							)
-							.slice(0, 20)}
+							.slice(0, 20) || []}
 						title=""
 					/>
 				</Tabs.TabPane>

@@ -8,7 +8,9 @@ export const AppearingComponent: NLView<{
 }> = ({ seconds, children, onShow }) => {
 	const [p, setP] = useState(Date.now());
 	const [diff, setDiff] = useState(0);
-	const [onRemove, setOnRemove] = useState<{ cb?: () => any }>({ cb: undefined });
+	const [onRemove, setOnRemove] = useState<{ cb?: () => any }>({
+		cb: undefined,
+	});
 
 	const [visible, setVisible] = useState<boolean>(false);
 
@@ -33,5 +35,5 @@ export const AppearingComponent: NLView<{
 		}
 	}, [visible]);
 
-	return <>{visible ? children : <></>}</>;
+	return <>{visible ? children : <div style={{ height: "69px" }}></div>}</>;
 };

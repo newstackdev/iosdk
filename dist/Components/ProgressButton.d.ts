@@ -7,4 +7,5 @@ export declare const ProgressButton: NLView<{
     onClick?: Callback;
     disabled?: boolean;
     isErrorSubmit?: boolean;
+    progressText?: string;
 }>;

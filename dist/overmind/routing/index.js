@@ -26,11 +26,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var actions = __importStar(require("./actions"));
-var effects_1 = __importDefault(require("./effects"));
-var state_1 = __importDefault(require("./state"));
+const actions = __importStar(require("./actions"));
+const effects_1 = __importDefault(require("./effects"));
+const state_1 = __importDefault(require("./state"));
 exports.default = {
-    actions: actions,
+    actions,
     effects: effects_1.default,
     state: state_1.default
 };

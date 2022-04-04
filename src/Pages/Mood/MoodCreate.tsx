@@ -31,6 +31,7 @@ import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { AddFolder } from "../../Components/Icons/AddFolder";
 import { Addfolderv2 } from "../../Components/Icons/Addfolderv2";
+import { CrossCircle } from "../../Components/Icons/CrossCircle";
 
 export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 	const state = useAppState();
@@ -65,8 +66,8 @@ export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 		} catch (ex) {
 			setErrMsg(
 				get(ex, "error.errorMessage.details") ||
-					get(ex, "message") ||
-					"unknown error"
+				get(ex, "message") ||
+				"unknown error"
 			);
 		}
 	};
@@ -115,6 +116,13 @@ export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 				>
 					<Input placeholder="description" />
 				</Form.Item>
+				<Form.Item required={false} name="stakeToAccess">
+					<Input
+						// disabled
+						title="Minimum amount of creator coin stake a user needs to access this folder"
+						placeholder="minimum stake to access"
+					/>
+				</Form.Item>
 				<Form.Item required={false} name="action">
 					<Input
 						disabled
@@ -143,6 +151,7 @@ export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 				<Form.Item label="" className="text-center">
 					<ProgressButton
 						actionName="api.mood.create"
+						progressText="Creating mood..."
 						type="primary"
 						htmlType="submit"
 					>
@@ -160,6 +169,7 @@ export const MoodCreateModal = () => {
 	return (
 		<>
 			<Modal
+				closeIcon={<CrossCircle />}
 				visible={isOpen}
 				onOk={() => setIsOpen(false)}
 				onCancel={() => setIsOpen(false)}

@@ -143,7 +143,7 @@ const ActivityStream: NLView<{
 
 	const postsList = moods.map((m) => m.posts)[0];
 
-	return <div className="notifications-wrapper scrollable-content">
+	return <div className="notifications-wrapper ">
 		{postsList?.slice(0, 20).map((p: any, i: number) => (
 			<NotificationBox
 				user={p.author}
@@ -164,7 +164,7 @@ const NotificationBox: NLView<{
 	aspectRatio: any;
 }> = ({ user, mood, aspectRatio, username, post }) => {
 	console.log(mood);
-	
+
 	return (
 		<Row className="notification-box" justify="space-between">
 			<Row className="notification-box__inside-left">
@@ -232,10 +232,10 @@ export const Profile: NLView = () => {
 		<ContentLayout>
 <<<<<<< HEAD
 			<Row style={{ width: "100%", margin: "20px 0" }}>
-				<LargeArrowBack />
+				{/* <LargeArrowBack /> */}
 			</Row>
 			<ProfileDetails />
-			{/* <div className="notifications-wrapper scrollable-content">
+			{/* <div className="notifications-wrapper ">
 				{postsList?.slice(0, 20).map((p: any, i: number) => (
 					<NotificationBox
 						user={user}
@@ -399,9 +399,9 @@ export const Profile: NLView = () => {
 // 	return (
 // 		<ContentLayout>
 // 			<Row style={{ width: "100%", margin: "20px 0" }}>
-// 				<LargeArrowBack />
+// 				{/* <LargeArrowBack /> */}
 // 			</Row>
-// 			<div className="notifications-wrapper scrollable-content">
+// 			<div className="notifications-wrapper ">
 // 				{postsList?.slice(0, 20).map((p: any, i: number) => (
 // 					<NotificationBox
 // 						user={user}
