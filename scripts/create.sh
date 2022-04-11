@@ -9,6 +9,8 @@ rsync -av node_modules/@newcoin-foundation/iosdk/templates/default/ .
 X=$(cat <<NODE
     const package = require("./package.json");
     
+    package.name = "$1";
+    package.version = "0.5.0";
     package.scripts = package.scripts || {};
     package.scripts.start = "concurrently  \"overmind-devtools\" \"craco start --verbose\"";
     package.scripts.build = "craco build";
