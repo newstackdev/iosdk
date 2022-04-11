@@ -22,6 +22,8 @@ export const config = {
     routing: {
       routeAccessLevels: {
         ...ROUTE_ACCESS_LEVELS,
+        "/": (st) => true, //st >= AUTH_FLOW_STATUS.AUTHENTICATED
+        "/explore": (st) => true, //st >= AUTH_FLOW_STATUS.AUTHENTICATED
         "/counter": (st) => true, //st >= AUTH_FLOW_STATUS.AUTHENTICATED
       } //(AUTH_FLOW_STATUS.AUTHORIZED) <= st && (st < AUTH_FLOW_STATUS.AUTHENTICATED) },
     }
@@ -29,8 +31,8 @@ export const config = {
   routes: {
     // override built-in types here
     overrides: {
-      "/explore": <Explore />,
-      "/": <Home />
+      "/explore": Explore,
+      "/": Home
     }
   },
   // override fundamental building blocks here
