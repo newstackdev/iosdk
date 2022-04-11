@@ -1,6 +1,6 @@
 {
 	"name": "@newcoin-foundation/iosdk",
-	"version": "0.1.158",
+	"version": "0.1.159",
 	"private": false,
 	"main": "dist/iosdk.js",
 	"types": "dist/iosdk.d.ts",
@@ -45,6 +45,7 @@
 		"masonic": "^3.5.0",
 		"mime-types": "^2.1.33",
 		"mini-css-extract-plugin": "^2.5.3",
+		"node-polyfill-webpack-plugin": "^1.1.4",
 		"os-browserify": "^0.3.0",
 		"overmind": "^28.0.1",
 		"overmind-devtools": "^29.0.1",
@@ -69,8 +70,7 @@
 		"typescript-declaration-webpack-plugin": "^0.2.2",
 		"web-vitals": "^1.0.1",
 		"web3": "1.6",
-		"webpack-node-externals": "^3.0.0",
-		"node-polyfill-webpack-plugin": "^1.1.4"
+		"webpack-node-externals": "^3.0.0"
 	},
 	"eslintConfig": {
 		"extends": [
