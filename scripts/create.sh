@@ -1,6 +1,7 @@
 echo Installing IOSDK, this will take a while...
 
 # npx create-react-app $1 --template typescript
+mkdir $1
 cd $1
 yarn add @newcoin-foundation/iosdk
 rsync -av node_modules/@newcoin-foundation/iosdk/templates/default/ .
@@ -8,6 +9,7 @@ rsync -av node_modules/@newcoin-foundation/iosdk/templates/default/ .
 X=$(cat <<NODE
     const package = require("./package.json");
     
+    package.scripts = package.scripts || {};
     package.scripts.start = "concurrently  \"overmind-devtools\" \"craco start --verbose\"";
     package.scripts.build = "craco build";
     package.scripts.test = "craco test";
