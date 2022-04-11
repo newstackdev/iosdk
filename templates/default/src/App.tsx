@@ -12,7 +12,7 @@ import { NewCounter } from './Pages/Counter';
 
 export const App = () =>
       <IOApp overmind={overmind}>
-        <Route key="pl" exact path="/counter" component={NewCounter} />
+        <Route key="nc" exact path="/counter" component={NewCounter} />
       </IOApp>;
 
 export default App;
