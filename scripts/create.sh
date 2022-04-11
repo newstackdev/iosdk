@@ -22,4 +22,7 @@ NODE
 echo "$X" | node > ./package.json.new;
 mv ./package.json.new ./package.json;
 
-echo Done. Run "yarn start" and start hacking.
+echo Done. Run:
+echo cd "$1"
+echo yarn start
+echo ...and start hacking!
