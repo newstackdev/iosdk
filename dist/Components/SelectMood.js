@@ -9,6 +9,7 @@ const ItemGrid_1 = require("./ItemGrid");
 const overmind_1 = require("../overmind");
 const antd_1 = require("antd");
 const ProgressButton_1 = require("./ProgressButton");
+const MoodCreate_1 = require("../Pages/Mood/MoodCreate");
 const SelectMood = ({ moods, onChange, limit, title }) => {
     const [_value, _setValue] = (0, react_1.useState)({});
     const [selectedFolder, setSelectedFolder] = (0, react_1.useState)(false);
@@ -23,9 +24,18 @@ const SelectMood = ({ moods, onChange, limit, title }) => {
         _setValue(nv);
         onChange && onChange(Object.values(nv));
     };
-    return ((0, jsx_runtime_1.jsx)(ItemGrid_1.ItemGrid, { items: checkMoods, limit: limit, 
+    const createMood = (0, jsx_runtime_1.jsx)("div", { style: {
+            textAlign: "center",
+            color: "white",
+            width: "100%",
+            border: "none",
+            padding: "10px",
+        }, children: (0, jsx_runtime_1.jsx)("div", { style: { width: "90%", margin: "0 auto" }, children: (0, jsx_runtime_1.jsx)(MoodCreate_1.MoodCreateModal, {}) }) });
+    return ((0, jsx_runtime_1.jsx)(ItemGrid_1.ItemGrid, { items: [{}, ...checkMoods], limit: limit, 
         // titleLink="/save-folder"
-        title: "Select a folder to share", setSelectedFolder: setSelectedFolder, selectedFolder: selectedFolder, render: (m) => ((0, jsx_runtime_1.jsx)(MoodWidget_1.MoodFolderWidget, { setSelectedFolder: setSelectedFolder, selectedFolder: selectedFolder, mood: m, onClick: () => toggle(m), selected: !!_value[m.id || ""] })) }));
+        title: "Select a folder to share", setSelectedFolder: setSelectedFolder, selectedFolder: selectedFolder, render: (m, index) => (!index ?
+            createMood :
+            (0, jsx_runtime_1.jsx)(MoodWidget_1.MoodFolderWidget, { setSelectedFolder: setSelectedFolder, selectedFolder: selectedFolder, mood: m, onClick: () => toggle(m), selected: !!_value[m.id || ""] })) }));
     // return <ItemGrid items={moods} render={m => <MoodWidget mood={m} onClick={() => toggle(m)} selected={!!value[(m as any).id || ""]} />} />
     // return <ScrollMenu
     //     LeftArrow={LeftCircleOutlined}

@@ -24,7 +24,8 @@ export const TopFoldersGrid: NLView<{
 	wrap?: boolean;
 	posts?: string | undefined;
 	noFullWidth?: boolean;
-}> = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap }) => {
+	blur?: boolean
+}> = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap, blur }) => {
 	const m = useCachedMood(mood);
 	const postsList =
 		title === "Explore folders"
@@ -46,6 +47,8 @@ export const TopFoldersGrid: NLView<{
 					justifyContent: `${
 						posts === "full" ? "space-between" : ""
 					}`,
+					...(blur ? 
+						{ filter: "blur(7px)" } : {})
 				}}
 				className={`${
 					noFullWidth

@@ -1,8 +1,8 @@
 echo Installing IOSDK, this will take a while...
 
-npx create-react-app $1 --template typescript
+# npx create-react-app $1 --template typescript
 cd $1
-yarn add @newcoin-foundation/iosdk @craco/craco craco-less tsconfig-paths-webpack-plugin
+yarn add @newcoin-foundation/iosdk
 rsync -av node_modules/@newcoin-foundation/iosdk/templates/default/ .
 
 X=$(cat <<NODE

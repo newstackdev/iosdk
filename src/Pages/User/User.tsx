@@ -73,7 +73,7 @@ export const User: NLView = () => {
 							<br />
 							check&nbsp;
 							<a
-								href={`https://explorer.newcoin.org/account/${user.username}`}
+								href={`https://explorer-dev.newcoin.org/account/${user.username}`}
 							>
 								the newcoin block explorer.
 							</a>
@@ -147,7 +147,7 @@ export const User: NLView = () => {
 				<Tabs.TabPane tab="Newcoin" key="4">
 					User on newcoin explorer:&nbsp;
 					<a
-						href={`https://explorer.newcoin.org/account/${user.username}`}
+						href={`https://explorer-dev.newcoin.org/account/${user.username}`}
 						target="_blank"
 					>
 						click here

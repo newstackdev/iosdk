@@ -58,6 +58,7 @@ const UserUpdate_1 = require("./Pages/User/UserUpdate");
 const Explore_1 = __importDefault(require("./Pages/Explore/Explore"));
 const overmind_1 = require("./overmind");
 const Auth_1 = require("./Pages/Auth/Auth");
+const TagSearch_1 = __importDefault(require("./Pages/Tag/TagSearch"));
 const UnknownHost = {
     hosts: [],
     components: {
@@ -146,6 +147,8 @@ exports.DEFAULT_ROUTES = [
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/save-folder", component: SelectMood_1.SelectMoodForm }, "sf"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/terms_of_service", component: TOS_1.TOS }, "ts"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/privacy_policy", component: Privacy_1.Privacy }, "pp"),
-    (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/newlife-dao", component: CommunityHistory_1.default }, "ds")
+    (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/newlife-dao", component: CommunityHistory_1.default }, "ds"),
+    (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/search", component: TagSearch_1.default }, "st"),
+    (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/tags/:tags/:postId", component: Post_1.PostInTags }, "st")
 ];
 //# sourceMappingURL=defaultRoutes.js.map

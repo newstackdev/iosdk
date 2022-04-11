@@ -13,7 +13,7 @@ const Title_1 = __importDefault(require("../Pages/Explore/Title"));
 const Closed_1 = __importDefault(require("./Icons/Folder/Closed"));
 const LoadMore_1 = require("./LoadMore");
 const PostWidget_1 = require("./PostWidget");
-const TopFoldersGrid = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap }) => {
+const TopFoldersGrid = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap, blur }) => {
     const m = (0, useCached_1.useCachedMood)(mood);
     const postsList = title === "Explore folders"
         ? m.posts?.slice(0, postNumber + 1)
@@ -25,6 +25,8 @@ const TopFoldersGrid = ({ mood, postNumber, title, posts, noFolder, noFullWidth,
                 height: "auto",
                 display: "flex",
                 justifyContent: `${posts === "full" ? "space-between" : ""}`,
+                ...(blur ?
+                    { filter: "blur(7px)" } : {})
             }, className: `${noFullWidth
                 ? "nl-mood-grid-row-height"
                 : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-four" : ""}`, children: [!noFolder && ((0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/folder/${mood.id}`, className: "ant-col", children: (0, jsx_runtime_1.jsxs)(antd_1.Col, { className: "bg-hover", style: {

@@ -89,6 +89,15 @@ export const newlifeWebsocketsServer = newlifeWebsocketsServers[stage];
 
 export const config = {
 	settings: {
+		app: {
+			newgraph: {
+			  apiKey: ""
+			},
+			newcoin: {
+			  domain: APP_DOMAIN,
+			  poolSymbol: ""
+			}
+		},
 		firebaseConfig,
 		newlife: {
 			baseUrl: newlifeBaseUrl,

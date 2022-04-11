@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { AppearingComponent } from "../../Components/Appearing";
 import { SpaceSpin, Spin } from "../../Components/Spin";
 import SupportBox from "../../Components/SupportBox";
+import { Done } from "./Done";
 
 // const InputWithPostfix:  NLView<InputProps & { postFix: string }>= ({ postFix, ...props }) => {
 //     const [val, setVal] = useState<string>(postFix);
@@ -207,7 +208,7 @@ const InitSteps = (
 		},
 		DONE: {
 			title: "",
-			content: <JoinDao />,
+			content: <Done />,
 			action: "",
 		},
 	};

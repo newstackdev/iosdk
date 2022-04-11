@@ -8,9 +8,10 @@ import { useState } from "react";
 import { ItemGrid } from "./ItemGrid";
 import { MoodsGrid } from "../Pages/Mood/MoodsGrid";
 import { useAppState } from "../overmind";
-import { Form } from "antd";
+import { Col, Form } from "antd";
 import { ProgressButton } from "./ProgressButton";
 import Title from "../Pages/Explore/Title";
+import { MoodCreateModal } from "../Pages/Mood/MoodCreate";
 
 export const SelectMood: NLView<{
 	moods?: MoodReadResponse[];
@@ -37,22 +38,39 @@ export const SelectMood: NLView<{
 		onChange && onChange(Object.values(nv));
 	};
 
+	const createMood =
+		<div
+			style={{
+				textAlign: "center",
+				color: "white",
+				width: "100%",
+				border: "none",
+				padding: "10px",
+			}}
+		>
+			<div style={{ width: "90%", margin: "0 auto" }}>
+				<MoodCreateModal />
+			</div>
+		</div>;
+
 	return (
 		<ItemGrid
-			items={checkMoods}
+			items={[{}, ...checkMoods]}
 			limit={limit}
 			// titleLink="/save-folder"
 			title={"Select a folder to share"}
 			setSelectedFolder={setSelectedFolder}
 			selectedFolder={selectedFolder}
-			render={(m) => (
-				<MoodFolderWidget
-					setSelectedFolder={setSelectedFolder}
-					selectedFolder={selectedFolder}
-					mood={m}
-					onClick={() => toggle(m)}
-					selected={!!_value[(m as any).id || ""]}
-				/>
+			render={(m, index) => (
+				!index ?
+					createMood :
+					<MoodFolderWidget
+						setSelectedFolder={setSelectedFolder}
+						selectedFolder={selectedFolder}
+						mood={m}
+						onClick={() => toggle(m)}
+						selected={!!_value[(m as any).id || ""]}
+					/>
 			)}
 		/>
 	);

@@ -14,7 +14,7 @@ import { useActions, useAppState } from "../overmind";
 import { Callback, NLView } from "../types";
 import { DataRow } from "./DataRow";
 import { ContentImage } from "./Image";
-import { BlockExplorerLink } from "./Links";
+import { BlockExplorerLink, blockExplorerUrl } from "./Links";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { PowerupsCacheItem } from "../overmind/api/state";
@@ -152,16 +152,7 @@ export const UserStake: NLView<{
 		);
 	};
 	const openUrl = (url: string) => {
-		const target =
-			url === "blocks"
-				? `https://local.bloks.io/transaction/${tx}?` +
-				  "nodeUrl=http%3A%2F%2Ftestnet.newcoin.org&coreSymbol=NCO&systemDomain=eosio&" +
-				  "hyperionUrl=http%3A%2F%2Fhyperion.newcoin.org"
-				: url === "newcoin"
-				? "https://explorer.newcoin.org/transaction/" + tx
-				: "";
-
-		if (target) window.open(target, "_new");
+		window.open(url, "_new");
 	};
 
 	return (
@@ -266,13 +257,13 @@ export const UserStake: NLView<{
 					<h1>{round(_value - fee)} NCO</h1>
 					<Button
 						className="nl-button-primary"
-						onClick={() => openUrl("newcoin")}
+						onClick={() => openUrl(blockExplorerUrl.newcoin(tx))}
 					>
 						View on Newcoin
 					</Button>
 					<Button
 						className="nl-button-primary"
-						onClick={() => openUrl("blocks")}
+						onClick={() => openUrl(blockExplorerUrl.blocks(tx))}
 					>
 						View on Bloks.io
 					</Button>
@@ -994,7 +985,7 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({
 			<DataRow
 				title="newcoin domain name"
 				value={user.username}
-				link={`https://explorer.newcoin.org/account/${user.username}`}
+				link={`https://explorer-dev.newcoin.org/account/${user.username}`}
 			/>
 			<DataRow
 				title="account balance"
@@ -1004,17 +995,14 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({
 			<DataRow
 				title="newcoin pool"
 				value={<BlockExplorerLink id={user.newcoinPoolId} />}
-				// link={`https://explorer.newcoin.org/account/${user.newcoinPoolId}`}
 			/>
 			<DataRow
 				title="newcoin account"
 				value={<BlockExplorerLink id={user.newcoinAccTx} />}
-				// link={`https://explorer.newcoin.org/account/${user.newcoinAccTx}`}
 			/>
 			<DataRow
 				title="newcoin publisher public key"
 				value={<HashDisplay hash={user.newcoinPublisherPublicKey} />}
-				// link={`https://explorer.newcoin.org/account/${user.newcoinPoolId}`}
 			/>
 			<DataRow
 				title="newcoin publisher private key"
@@ -1023,7 +1011,6 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({
 						<HashDisplay hash={user.newcoinPublisherPrivateKey} />
 					</RevealInfo>
 				}
-				// link={`https://explorer.newcoin.org/account/${user.newcoinPoolId}`}
 			/>
 		</>
 	);

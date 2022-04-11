@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchUsers = exports.listTopPosts = exports.listTopUsers = void 0;
+exports.searchPosts = exports.searchUsers = exports.listTopPosts = exports.listTopUsers = void 0;
 const overmind_1 = require("overmind");
 const aestheticList_1 = require("./SearchCreative/aestheticList");
 const lodash_1 = __importDefault(require("lodash"));
@@ -90,9 +90,23 @@ exports.searchUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async
     });
     state.lists.search.users.results = r.data;
 });
+exports.searchPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ state, actions, effects }, { tags }) => {
+    // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
+    state.lists.search.posts.results = null;
+    const tagsQ = tags.split(/,/)
+        .map(t => ({ range: { [`scoredTags.${t}`]: { gte: 0.5 } } }));
+    const searchQ = { "bool": { "must": tagsQ } };
+    const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ) });
+    r.data.value?.forEach(v => {
+        state.api.cache.posts[v.id || ""] = v;
+    });
+    state.lists.search.posts.results = r.data;
+    state.lists.search.posts.lastQueried.tags = tags;
+});
 const actions = {
     creativeSearch,
     searchUsers: exports.searchUsers,
+    searchPosts: exports.searchPosts,
     top: {
         moods: listTopMoods,
         users: exports.listTopUsers,
@@ -114,6 +128,7 @@ exports.default = {
             lastQueried: { tags: "", aesthetics: "" },
             isActive: false
         },
+        postsSearch: {},
         top: {
             moods: newListState(),
             users: newListState(),
@@ -123,6 +138,14 @@ exports.default = {
             users: {
                 query: "",
                 results: null
+            },
+            posts: {
+                query: "",
+                results: null,
+                lastQueried: { tags: "", aesthetics: "" },
+                isActive: false,
+                // results: newListState<PostReadResponse>(),
+                tags: newListState()
             }
         }
     },

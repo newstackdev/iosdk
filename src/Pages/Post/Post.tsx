@@ -21,13 +21,13 @@ import {
 import { Ebene } from "../../Components/Icons/Ebene";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import PostReportModal from "./PostModal";
-import { NewcoinLink } from "../Profile";
+// import { NewcoinLink } from "../Profile";
 import { ContentImage } from "../../Components/Image";
 import { Vote } from "../../Components/Vote";
-import { ShareButton } from "../../Components/Share";
 import { json } from "overmind";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Edit } from "../../Components/Icons/Edit";
+import { BlockExplorerLink } from "../../Components/Links";
 
 const useVotingStreamMood = () => {
 	const { moodId, postId, id } =
@@ -35,14 +35,11 @@ const useVotingStreamMood = () => {
 	const currPost = useCachedPost({ id: postId || id }, true);
 	const currMood = useCachedMood({ id: moodId }, true);
 	const [index, setIndex] = useState<number>(-1);
-	const actions = useActions();
 	const state = useAppState();
 	const moodPosts = currMood.posts || [];
 
 	const getIndex = () => {
 		if (!currMood?.id) return;
-
-		// actions.flows.rating.deepLikeInit();
 
 		if (index && moodPosts[index]?.id == currPost.id) return;
 
@@ -53,21 +50,6 @@ const useVotingStreamMood = () => {
 	};
 
 	useEffect(() => getIndex(), [state.routing.location, currPost]);
-
-	// useEffect(() => {
-	// 	if (!currMood?.id) return;
-
-	// 	actions.flows.rating.deepLikeInit();
-
-	// 	if (index && moodPosts[index]?.id == currPost.id) return;
-
-	// 	console.log("mp:", currMood.id, currPost.id);
-
-	// 	const ix = moodPosts.findIndex((p: PostReadResponse) => p.id === currPost.id);
-	// 	setIndex(ix > 0 ? ix : 0);
-	// }, [currMood?.id, currPost?.id]);
-
-	// const moodPosts = currMood.posts || [];
 
 	const getPosts = (m?: MoodReadResponse) => {
 		const cm = state.api.cache.moods[m?.id || ""];
@@ -92,7 +74,37 @@ const useVotingStreamMood = () => {
 		return nextPath;
 	};
 
-	return { nextPath, currMood, currPost, index, isInMood: !!moodId, moodId };
+	return { nextPath, currMood, currPost, index, contextType: "mood", contextValue: moodId };
+};
+
+const useVotingStreamTags = () => {
+	const { tags, postId, id } =
+		useParams<{ tags: string; postId: string; id: string }>();
+	const currPost = useCachedPost({ id: postId || id }, true);
+	const [index, setIndex] = useState<number>(-1);
+	const actions = useActions();
+	const state = useAppState();
+	// const currTags = useCachedPostSearch({ tags }, true);
+
+	const tagsPosts = state.lists.search.posts.results?.value || [];;
+
+	const getIndex = () => {
+		if (!tags) return;
+		const ix = tagsPosts.findIndex((p) => p.id === postId);
+		setIndex(ix > 0 ? ix : 0);
+	};
+
+	useEffect(() => getIndex(), [state.routing.location, currPost]);
+
+	const nextPath = () => {
+		const _nextPostId = tagsPosts[index + 1]?.id;
+		// const nextTags = ??? just make it one tag less or e.g. one of the tags on the last post
+
+		const nextPath = `/tags/${tags}/${_nextPostId}`;
+		return nextPath;
+	};
+
+	return { nextPath, currPost, index, contextType: "tags", contextValue: tags };
 };
 
 const round = (n) => Math.round(n * 10000) / 10000;
@@ -103,19 +115,20 @@ const sumScore = (tagRels: { score: number }[]) => {
 	return round(tagRels.reduce((r, c) => r + w * c.score, 0));
 }
 
-export const Post: NLView = () => {
+export const postBase : (useVotingStreamHook: typeof useVotingStreamTags) => NLView = 
+(useVotingStreamHook) => () => {
 	const state = useAppState();
 	const actions = useActions();
 	const [copyToClipboard, setCopyToClipboard] = useState<boolean>(false);
 
-	const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
+	// const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
+	const nextInStream = useVotingStreamHook(); //useVotingStreamTags();
 
-	const { moodId, currMood, currPost, nextPath, index, isInMood } =
-		useVotingStreamMood();
+	const { contextType, contextValue, currPost, nextPath, index } = nextInStream;
 
 	const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
 	const username = author?.username || author?.displayName;
-	const [selectMoodsForm] = useForm();
+
 	const navigateToNext = () => {
 		const location = nextPath();
 		if (!location) return;
@@ -139,7 +152,9 @@ export const Post: NLView = () => {
 			actions.api.post.rate({
 				post: currPost,
 				amount: rating,
-				mood: currMood
+				contextType,
+				contextValue
+				// mood: currMood
 			});
 
 		if (rating < 100) return navigateToNext();
@@ -147,7 +162,8 @@ export const Post: NLView = () => {
 		// if at 100 the mood will show itself
 	};
 	// else either at 100% or stopped rating
-	if (currMood.id && index === -1) return <Spin />;
+	// if (currMood.id && index === -1) return <Spin />;
+	if(!contextType && !(index >= 0)) return <Spin />;
 
 	const url = [
 		window.location.protocol,
@@ -160,7 +176,7 @@ export const Post: NLView = () => {
 		<>
 			<Vote
 				// useVotingStream={useVotingStreamMood}
-				votingEnabled={isInMood}
+				votingEnabled={!!contextType}
 				onDoneVoting={doneVoting}
 				onLongDoneVoting={() => {
 					const eh = (e) => {
@@ -216,7 +232,7 @@ export const Post: NLView = () => {
 							>
 								<a
 									href={
-										"https://explorer.newcoin.org/account/" +
+										"https://explorer-dev.newcoin.org/account/" +
 										currPost.author?.username
 									}
 									target="_blank"
@@ -243,9 +259,9 @@ export const Post: NLView = () => {
 								"Minting NFT..." /* + currPost.newcoinMintTx || ""*/
 							) : (
 								<>
-									<NewcoinLink tx={currPost.newcoinMintTx}>
+									<BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
 										See minted NFT
-									</NewcoinLink>
+									</BlockExplorerLink>
 									<NFTIcon />
 								</>
 							)}
@@ -277,17 +293,17 @@ export const Post: NLView = () => {
 						<br />
 						{currPost.tags?.length ? "Tags:" : ""}
 						{json(currPost.tags || [])
-							?.sort((a, b) => sumScore(b["_rel"]) - sumScore(a["_rel"]))
+							?.sort((a, b) => sumScore(b._rel as []) - sumScore(a._rel as []))
 							?.slice(0, 10)
 							?.map((t) => {
 								return (
 									<>
-										<div className="text-small">{t.value} [{sumScore(t["_rel"]) * 100}]</div>
+										<div className="text-small">{t.value} [{sumScore(t._rel as []) * 100}]</div>
 
 										<Progress
 											strokeColor="#c1fa50"
 											showInfo={false}
-											percent={sumScore(t["_rel"]) * 100}
+											percent={sumScore(t._rel as []) * 100}
 										/>
 									</>
 								);
@@ -300,6 +316,43 @@ export const Post: NLView = () => {
 				) : (
 					<ContentImage {...currPost} thumbnail={false} />
 				)}
+
+
+			</Vote>
+			<div className="text-right app-main-full-width">
+				<PostReportModal />
+			</div>
+			{
+				<div
+					hidden={state.flows.rating.value !== 100}
+					className="app-main-full-width"
+				>
+					<SelectMoodForm
+						onFinish={addToMoods}
+						title="Select a folder to share to"
+					/>
+				</div>
+			}
+		</>
+	);
+};
+
+export const Post = postBase(useVotingStreamMood);
+export const PostInMood = postBase(useVotingStreamMood);
+export const PostInTags = postBase(useVotingStreamTags);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 				{/* <Modal
 					cancelButtonProps={{ hidden: true }}
@@ -327,21 +380,3 @@ export const Post: NLView = () => {
 						</Row>
 					</Form>
 				</Modal> */}
-			</Vote>
-			<div className="text-right app-main-full-width">
-				<PostReportModal />
-			</div>
-			{
-				<div
-					hidden={state.flows.rating.value !== 100}
-					className="app-main-full-width"
-				>
-					<SelectMoodForm
-						onFinish={addToMoods}
-						title="Select a folder to share to"
-					/>
-				</div>
-			}
-		</>
-	);
-};

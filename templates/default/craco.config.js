@@ -1,7 +1,10 @@
-const webpack = require('webpack');
 const CracoLessPlugin = require('craco-less');
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
+const appDirectory = require('fs').realpathSync(process.cwd());
+const webpack = require('webpack');
+const { writeFileSync } = require('fs');
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
   plugins: [
@@ -31,7 +34,18 @@ module.exports = {
             }
           }
         }
+        // },
+        // },
       }
+      // plugins: [
+      //   { plugin: rewireBabelLoader, 
+      //     options: { 
+      //       includes: [resolveApp("node_modules/use-shopping-cart")], //put things you want to include in array here
+      //       excludes: [/(node_modules|bower_components)/] //things you want to exclude here
+      //       //you can omit include or exclude if you only want to use one option
+      //     }
+      //   }
+      // ],
     }
   ],
   webpack: {
@@ -42,11 +56,14 @@ module.exports = {
         new webpack.ProvidePlugin({
           Buffer: ['buffer', 'Buffer'],
           process: 'process/browser'
+
+          // fetch: 'exports-loader?self.fetch!whatwg-fetch'
         }),
         new TsconfigPathsPlugin({
           logInfoToStdOut: true,
           logLevel: 'INFO'
-        })
+        }),
+        new NodePolyfillPlugin()
       ];
       const r = ({
         ...cfg,
@@ -54,17 +71,21 @@ module.exports = {
 
           resolve: {
             alias: {
-              'react-router-dom': require.resolve('react-router-dom'),
-              "overmind/app": require.resolve(__dirname + "/src/overmind/app.ts")
             },
             fallback: {
+              // "url": require.resolve("url"),
+              // "fs": require.resolve("graceful-fs"),
+              // "tls": false,
+              // "net": false,
               "os": require.resolve("os-browserify/browser"),
+              // "path": require.resolve('path-browserify'),
               "zlib": require.resolve("browserify-zlib"),
               "http": require.resolve("stream-http"),
               "https": require.resolve("https-browserify"),
               "stream": false, //require.resolve('stream-browserify'),
               "crypto": require.resolve('crypto-browserify'),
-              "buffer": require.resolve("buffer/")
+              "buffer": require.resolve("buffer/"),
+              "util": require.resolve("util/")
             },
             extensions: ['.ts', '.tsx', '.js']
           }
@@ -75,6 +96,8 @@ module.exports = {
     babel: {
       presets: ["@babel/preset-env", "@babel/preset-react"],
     },
-  }
+  },
+
+  // options: {
 
 }

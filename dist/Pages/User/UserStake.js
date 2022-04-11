@@ -33,8 +33,12 @@ const UserStakeButton = ({ user, }) => {
         setStaking(false);
         setStaked(true);
     };
-    if (staking || staked)
-        return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
+    // if (staking || staked) return <UserStake
+    // 		onDone={() => setStaking(false)}
+    // 		hideButton={true}
+    // 		user={user}
+    // 		mode={STAKE_STEPS.SELECT}
+    // 	/>;
     return ((0, jsx_runtime_1.jsx)(antd_1.Button, { disabled: !!staking, className: "nl-button-primary text-bold", type: "primary", onClick: doStake, children: staking ? (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "In progress" }) : (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "Stake" }) }));
 };
 exports.UserStakeButton = UserStakeButton;

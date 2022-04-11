@@ -88,7 +88,7 @@ const SearchCreative = () => {
                                     ], children: (0, jsx_runtime_1.jsx)(antd_1.Input, { style: {
                                             fontSize: "clamp(20px, 120px, 9.8vw)",
                                             textAlign: "center",
-                                        } }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { md: 3 }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { md: 3, children: [(0, jsx_runtime_1.jsx)(antd_1.Form.Item, { name: "aestetics" }), (0, jsx_runtime_1.jsx)(antd_1.Form.Item, { wrapperCol: {}, children: (0, jsx_runtime_1.jsx)(antd_1.Button, { type: "primary", htmlType: "submit", size: "large", children: "Submit" }) })] })] }) }) }), (0, jsx_runtime_1.jsx)("div", { style: {
+                                        } }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { sm: 3, lg: 3 }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { lg: 9, children: [(0, jsx_runtime_1.jsx)(antd_1.Form.Item, { name: "aestetics" }), (0, jsx_runtime_1.jsx)(antd_1.Form.Item, { wrapperCol: {}, children: (0, jsx_runtime_1.jsx)(antd_1.Button, { type: "primary", htmlType: "submit", size: "large", children: "Submit" }) })] })] }) }) }), (0, jsx_runtime_1.jsx)("div", { style: {
                     marginBottom: 40,
                     maxWidth: "100vw",
                     overflow: "auto",

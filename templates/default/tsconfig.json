@@ -23,7 +23,6 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "overmind/app": ["src/overmind/app"]
     }
   }
 }

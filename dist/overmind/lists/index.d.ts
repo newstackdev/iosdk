@@ -1,11 +1,14 @@
 import { Action } from "../../types";
-import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse } from "@newlife/newlife-creator-client-api";
+import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse } from "@newlife/newlife-creator-client-api";
 export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse['hits']>[number];
 export declare type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
 export declare const listTopUsers: Action;
 export declare const listTopPosts: Action;
 export declare const searchUsers: Action<{
     query: string;
+}>;
+export declare const searchPosts: Action<{
+    tags: string;
 }>;
 declare type ListState<T> = {
     _items: Record<string, T>;
@@ -36,6 +39,7 @@ declare const _default: {
             };
             isActive: boolean;
         };
+        postsSearch: {};
         top: {
             moods: ListState<MoodReadResponse>;
             users: ListState<UserReadPublicResponse>;
@@ -46,6 +50,16 @@ declare const _default: {
                 query: string;
                 results: UserPagedListReadPublicResponse | null;
             };
+            posts: {
+                query: string;
+                results: PostPagedListReadPublicResponse | null;
+                lastQueried: {
+                    tags: string;
+                    aesthetics: string;
+                };
+                isActive: boolean;
+                tags: ListState<string>;
+            };
         };
     };
     actions: {
@@ -55,6 +69,9 @@ declare const _default: {
         }, void>;
         searchUsers: Action<{
             query: string;
+        }, void>;
+        searchPosts: Action<{
+            tags: string;
         }, void>;
         top: {
             moods: Action<undefined, void>;

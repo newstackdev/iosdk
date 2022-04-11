@@ -8,6 +8,7 @@ export declare const TopFoldersGrid: NLView<{
     wrap?: boolean;
     posts?: string | undefined;
     noFullWidth?: boolean;
+    blur?: boolean;
 }>;
 declare const TopFolders: NLView<{
     maxItems?: number;

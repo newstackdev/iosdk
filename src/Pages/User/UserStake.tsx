@@ -43,7 +43,12 @@ export const UserStakeButton: NLView<{ user: UserReadPublicResponse }> = ({
 		setStaked(true);
 	};
 
-	if (staking || staked) return <></>;
+	// if (staking || staked) return <UserStake
+	// 		onDone={() => setStaking(false)}
+	// 		hideButton={true}
+	// 		user={user}
+	// 		mode={STAKE_STEPS.SELECT}
+	// 	/>;
 
 	return (
 		<Button

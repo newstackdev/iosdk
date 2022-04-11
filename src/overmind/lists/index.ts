@@ -1,7 +1,7 @@
 import { Action } from "../../types";
 import { pipe, debounce, filter, json, derived } from "overmind";
 import { Context } from "../overmind";
-import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse } from "@newlife/newlife-creator-client-api";
+import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { aestheticList } from "./SearchCreative/aestheticList";
 import _ from "lodash";
 import { fischerYates } from "../../utils/random";
@@ -125,9 +125,37 @@ export const searchUsers: Action<{ query: string }> =
             state.lists.search.users.results = r.data;
         }
     );
+
+export const searchPosts: Action<{ tags: string }> =
+    pipe(
+        debounce(1000),
+        async ({ state, actions, effects }: Context, { tags }) => {
+            // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
+            state.lists.search.posts.results = null;
+
+            const tagsQ = tags.split(/,/)
+                .map(t => (
+                    { range: {[`scoredTags.${t}`]:{ gte:0.5}} }
+                ));
+
+            const searchQ = {"bool":{"must":tagsQ}};
+
+            
+
+            const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ) });
+
+            r.data.value?.forEach(v => {
+                state.api.cache.posts[v.id || ""] = v;
+            });
+            state.lists.search.posts.results = r.data;
+            state.lists.search.posts.lastQueried.tags = tags;
+        }
+    );
+
 const actions = {
     creativeSearch,
     searchUsers,
+    searchPosts,
     top: {
         moods: listTopMoods,
         users: listTopUsers,
@@ -158,6 +186,9 @@ export default {
             lastQueried: {tags: "", aesthetics: ""},
             isActive: false
         },
+        postsSearch: {
+
+        },
         top: {
             moods: newListState<MoodReadResponse>(),
             users: newListState<UserReadPublicResponse>(),
@@ -167,6 +198,14 @@ export default {
             users: {
                 query: "",
                 results: null as (UserPagedListReadPublicResponse | null)
+            },
+            posts: {
+                query: "",
+                results: null as (PostPagedListReadPublicResponse | null),
+                lastQueried: {tags: "", aesthetics: ""},
+                isActive: false,
+                // results: newListState<PostReadResponse>(),
+                tags: newListState<string>()    
             }
         }
     },

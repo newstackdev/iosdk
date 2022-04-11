@@ -278,6 +278,7 @@ export declare const standardModules: {
                 };
                 isActive: boolean;
             };
+            postsSearch: {};
             top: {
                 moods: {
                     _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
@@ -303,6 +304,21 @@ export declare const standardModules: {
                     query: string;
                     results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
                 };
+                posts: {
+                    query: string;
+                    results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                    lastQueried: {
+                        tags: string;
+                        aesthetics: string;
+                    };
+                    isActive: boolean;
+                    tags: {
+                        _items: Record<string, string>;
+                        items: string[];
+                        sortKey: string;
+                        page: number;
+                    };
+                };
             };
         };
         actions: {
@@ -312,6 +328,9 @@ export declare const standardModules: {
             }, void>;
             searchUsers: import("../types").Action<{
                 query: string;
+            }, void>;
+            searchPosts: import("../types").Action<{
+                tags: string;
             }, void>;
             top: {
                 moods: import("../types").Action<undefined, void>;

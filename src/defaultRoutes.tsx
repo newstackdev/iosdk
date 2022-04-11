@@ -13,7 +13,7 @@ import { Mood } from "./Pages/Mood/Mood";
 import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import MyMoods from "./Pages/Mood/MyMoods";
 import CommunityHistory from "./Pages/NewlifeDao/CommunityHistory";
-import { Post } from "./Pages/Post/Post";
+import { Post, PostInTags } from "./Pages/Post/Post";
 import { PostCreate } from "./Pages/Post/PostCreate";
 import { Privacy } from "./Pages/Privacy";
 import SearchCreative from "./Pages/SearchCreative";
@@ -31,6 +31,7 @@ import Explore from './Pages/Explore/Explore';
 import { Component } from 'react';
 import { useAppState } from './overmind';
 import { Auth } from './Pages/Auth/Auth';
+import SearchTag from './Pages/Tag/TagSearch';
 
 
 type HostDef = {
@@ -151,6 +152,7 @@ export const DEFAULT_ROUTES = [
 	<OverridableRoute key="sf" exact path="/save-folder" component={SelectMoodForm} />,
 	<OverridableRoute key="ts" exact path="/terms_of_service" component={TOS} />,
 	<OverridableRoute key="pp" exact path="/privacy_policy" component={Privacy} />,
-	<OverridableRoute key="ds" exact path="/newlife-dao" component={CommunityHistory} />
-
+	<OverridableRoute key="ds" exact path="/newlife-dao" component={CommunityHistory} />,
+	<OverridableRoute key="st" exact path="/search" component={SearchTag} />,
+	<OverridableRoute key="st" exact path="/tags/:tags/:postId" component={PostInTags} />
 ];

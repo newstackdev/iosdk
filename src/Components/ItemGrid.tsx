@@ -72,26 +72,12 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
 						width: "100%",
 					}}
 				>
-					<Col className={"share-folder "}>
-						<div
-							style={{
-								textAlign: "center",
-								color: "white",
-								width: "100%",
-								border: "none",
-								padding: "10px",
-							}}
-						>
-							<div style={{ width: "90%", margin: "0 auto" }}>
-								<MoodCreateModal />
-							</div>
-						</div>
-					</Col>
+
 
 					{items.map((item, index) => (
 						<Col
 							key={`item${index}`}
-							className={"share-folder"}
+							// className={"share-folder"}
 							style={{ borderRadius: "25px" }}
 						>
 							{render(item, index)}

@@ -71,8 +71,10 @@ exports._wizardReact = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), ({ st
     if (state.api.auth.authorized &&
         // (state.auth.user?.status === "registered") &&
         (state.api.auth.user?.username != state.flows.user.create.form.username) &&
-        autoRedirectFrom.includes(state.routing.location) &&
-        state.newcoin.pools["CGY"])
+        autoRedirectFrom.includes(state.routing.location)
+    // &&
+    // state.newcoin.pools["CGY"]
+    )
         actions.routing.historyPush({ location: "/explore" });
     state.flows.user.create.wizard.send("UPDATE", i);
 });

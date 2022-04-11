@@ -10,7 +10,6 @@ const react_1 = require("react");
 const useVisibility_1 = __importDefault(require("../hooks/useVisibility"));
 const overmind_1 = require("../overmind");
 const Title_1 = __importDefault(require("../Pages/Explore/Title"));
-const MoodCreate_1 = require("../Pages/Mood/MoodCreate");
 const Spin_1 = require("./Spin");
 const ItemGrid = ({ items, render, title, titleLink, loadMore, selectedFolder, setSelectedFolder, limit, }) => {
     const [isVisible, currentElement] = (0, useVisibility_1.default)(200);
@@ -26,19 +25,15 @@ const ItemGrid = ({ items, render, title, titleLink, loadMore, selectedFolder, s
                 : [];
     if (state.indicators.isWorking === false && !items.length)
         return (0, jsx_runtime_1.jsx)(antd_1.Result, { icon: (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {}), children: "nothing here" });
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [title === undefined ? ((0, jsx_runtime_1.jsx)(antd_1.Row, { style: { width: "100%", marginTop: "20px" }, children: (0, jsx_runtime_1.jsx)("p", { className: "header-2", style: { marginLeft: "40px" }, children: title }) })) : ((0, jsx_runtime_1.jsx)(Title_1.default, { title: title, href: titleLink })), items.length ? ((0, jsx_runtime_1.jsxs)(antd_1.Row, { wrap: true, className: limit
+    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [title === undefined ? ((0, jsx_runtime_1.jsx)(antd_1.Row, { style: { width: "100%", marginTop: "20px" }, children: (0, jsx_runtime_1.jsx)("p", { className: "header-2", style: { marginLeft: "40px" }, children: title }) })) : ((0, jsx_runtime_1.jsx)(Title_1.default, { title: title, href: titleLink })), items.length ? ((0, jsx_runtime_1.jsx)(antd_1.Row, { wrap: true, className: limit
                     ? "nl-mood-grid-row-three app-main-full-width-only"
                     : "nl-mood-grid-row app-main-full-width-only", style: {
                     justifyContent: "space-between",
                     alignItems: " baseline",
                     width: "100%",
-                }, children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { className: "share-folder ", children: (0, jsx_runtime_1.jsx)("div", { style: {
-                                textAlign: "center",
-                                color: "white",
-                                width: "100%",
-                                border: "none",
-                                padding: "10px",
-                            }, children: (0, jsx_runtime_1.jsx)("div", { style: { width: "90%", margin: "0 auto" }, children: (0, jsx_runtime_1.jsx)(MoodCreate_1.MoodCreateModal, {}) }) }) }), items.map((item, index) => ((0, jsx_runtime_1.jsx)(antd_1.Col, { className: "share-folder", style: { borderRadius: "25px" }, children: render(item, index) }, `item${index}`)))] })) : (""), (0, jsx_runtime_1.jsx)("div", { ref: currentElement, children: state.indicators.isWorking === true && loadMore ? ((0, jsx_runtime_1.jsx)(Spin_1.Spin, {})) : ("") })] }));
+                }, children: items.map((item, index) => ((0, jsx_runtime_1.jsx)(antd_1.Col, { 
+                    // className={"share-folder"}
+                    style: { borderRadius: "25px" }, children: render(item, index) }, `item${index}`))) })) : (""), (0, jsx_runtime_1.jsx)("div", { ref: currentElement, children: state.indicators.isWorking === true && loadMore ? ((0, jsx_runtime_1.jsx)(Spin_1.Spin, {})) : ("") })] }));
 };
 exports.ItemGrid = ItemGrid;
 {

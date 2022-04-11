@@ -36,6 +36,15 @@
 import { Context } from './overmind';
 export declare const overmind: (cfg?: import("type-fest/source/partial-deep").PartialObjectDeep<{
     settings: {
+        app: {
+            newgraph: {
+                apiKey: string;
+            };
+            newcoin: {
+                domain: string;
+                poolSymbol: string;
+            };
+        };
         firebaseConfig: import("../types").FirebaseConfig;
         newlife: {
             baseUrl: string;
@@ -67,6 +76,15 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
     state: import("overmind/lib/internalTypes").SubType<{
         config: {
             settings: {
+                app: {
+                    newgraph: {
+                        apiKey: string;
+                    };
+                    newcoin: {
+                        domain: string;
+                        poolSymbol: string;
+                    };
+                };
                 firebaseConfig: import("../types").FirebaseConfig;
                 newlife: {
                     baseUrl: string;
@@ -226,6 +244,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 };
                 isActive: boolean;
             };
+            postsSearch: {};
             top: {
                 moods: {
                     _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
@@ -250,6 +269,21 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 users: {
                     query: string;
                     results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                };
+                posts: {
+                    query: string;
+                    results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                    lastQueried: {
+                        tags: string;
+                        aesthetics: string;
+                    };
+                    isActive: boolean;
+                    tags: {
+                        _items: Record<string, string>;
+                        items: string[];
+                        sortKey: string;
+                        page: number;
+                    };
                 };
             };
         };
@@ -486,6 +520,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             searchUsers: import("../types").Action<{
                 query: string;
             }, void>;
+            searchPosts: import("../types").Action<{
+                tags: string;
+            }, void>;
             top: {
                 moods: import("../types").Action<undefined, void>;
                 users: import("../types").Action<undefined, void>;
@@ -709,7 +746,8 @@ export declare const useActions: () => {
             readonly rate: (payload: {
                 post: import("@newlife/newlife-creator-client-api").PostReadResponse;
                 amount: number;
-                mood?: import("@newlife/newlife-creator-client-api").MoodReadResponse | undefined;
+                contextType: string;
+                contextValue: string;
             }) => void | Promise<void>;
         };
     };
@@ -720,6 +758,9 @@ export declare const useActions: () => {
         }) => void | Promise<void>;
         searchUsers: (payload: {
             query: string;
+        }) => void | Promise<void>;
+        searchPosts: (payload: {
+            tags: string;
         }) => void | Promise<void>;
         top: {
             moods: (payload?: undefined) => void | Promise<void>;

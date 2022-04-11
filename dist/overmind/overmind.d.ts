@@ -39,6 +39,15 @@ export declare const config: (cfg: PartialConfiguration) => {
     state: import("overmind/lib/internalTypes").SubType<{
         config: {
             settings: {
+                app: {
+                    newgraph: {
+                        apiKey: string;
+                    };
+                    newcoin: {
+                        domain: string;
+                        poolSymbol: string;
+                    };
+                };
                 firebaseConfig: import("../types").FirebaseConfig;
                 newlife: {
                     baseUrl: string;
@@ -198,6 +207,7 @@ export declare const config: (cfg: PartialConfiguration) => {
                 };
                 isActive: boolean;
             };
+            postsSearch: {};
             top: {
                 moods: {
                     _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
@@ -222,6 +232,21 @@ export declare const config: (cfg: PartialConfiguration) => {
                 users: {
                     query: string;
                     results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                };
+                posts: {
+                    query: string;
+                    results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                    lastQueried: {
+                        tags: string;
+                        aesthetics: string;
+                    };
+                    isActive: boolean;
+                    tags: {
+                        _items: Record<string, string>;
+                        items: string[];
+                        sortKey: string;
+                        page: number;
+                    };
                 };
             };
         };
@@ -457,6 +482,9 @@ export declare const config: (cfg: PartialConfiguration) => {
             }, void>;
             searchUsers: import("../types").Action<{
                 query: string;
+            }, void>;
+            searchPosts: import("../types").Action<{
+                tags: string;
             }, void>;
             top: {
                 moods: import("../types").Action<undefined, void>;

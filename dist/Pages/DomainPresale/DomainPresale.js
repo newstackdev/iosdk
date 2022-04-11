@@ -14,12 +14,12 @@ const Paragraph_1 = __importDefault(require("antd/lib/typography/Paragraph"));
 const Auth_1 = require("../Auth/Auth");
 const Product_1 = require("../Store/Product");
 const UserCreate_1 = require("../User/UserCreate");
-const JoinDao_1 = require("../JoinDao");
 const ProgressButton_1 = require("../../Components/ProgressButton");
 const react_router_dom_1 = require("react-router-dom");
 const Appearing_1 = require("../../Components/Appearing");
 const Spin_1 = require("../../Components/Spin");
 const SupportBox_1 = __importDefault(require("../../Components/SupportBox"));
+const Done_1 = require("./Done");
 // const InputWithPostfix:  NLView<InputProps & { postFix: string }>= ({ postFix, ...props }) => {
 //     const [val, setVal] = useState<string>(postFix);
 //     return <Input
@@ -102,7 +102,7 @@ const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
         },
         DONE: {
             title: "",
-            content: (0, jsx_runtime_1.jsx)(JoinDao_1.JoinDao, {}),
+            content: (0, jsx_runtime_1.jsx)(Done_1.Done, {}),
             action: "",
         },
     };

@@ -43,6 +43,15 @@ declare const _default: {
             state: import("overmind/lib/internalTypes").SubType<{
                 config: {
                     settings: {
+                        app: {
+                            newgraph: {
+                                apiKey: string;
+                            };
+                            newcoin: {
+                                domain: string;
+                                poolSymbol: string;
+                            };
+                        };
                         firebaseConfig: import("./types").FirebaseConfig;
                         newlife: {
                             baseUrl: string;
@@ -202,6 +211,7 @@ declare const _default: {
                         };
                         isActive: boolean;
                     };
+                    postsSearch: {};
                     top: {
                         moods: {
                             _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
@@ -226,6 +236,21 @@ declare const _default: {
                         users: {
                             query: string;
                             results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                        };
+                        posts: {
+                            query: string;
+                            results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                            lastQueried: {
+                                tags: string;
+                                aesthetics: string;
+                            };
+                            isActive: boolean;
+                            tags: {
+                                _items: Record<string, string>;
+                                items: string[];
+                                sortKey: string;
+                                page: number;
+                            };
                         };
                     };
                 };
@@ -462,6 +487,9 @@ declare const _default: {
                     searchUsers: import("./types").Action<{
                         query: string;
                     }, void>;
+                    searchPosts: import("./types").Action<{
+                        tags: string;
+                    }, void>;
                     top: {
                         moods: import("./types").Action<undefined, void>;
                         users: import("./types").Action<undefined, void>;
@@ -494,6 +522,15 @@ declare const _default: {
         }>;
         config?: import("type-fest/source/partial-deep").PartialObjectDeep<{
             settings: {
+                app: {
+                    newgraph: {
+                        apiKey: string;
+                    };
+                    newcoin: {
+                        domain: string;
+                        poolSymbol: string;
+                    };
+                };
                 firebaseConfig: import("./types").FirebaseConfig;
                 newlife: {
                     baseUrl: string;
@@ -525,6 +562,15 @@ declare const _default: {
     }>;
     overmind: (cfg?: import("type-fest/source/partial-deep").PartialObjectDeep<{
         settings: {
+            app: {
+                newgraph: {
+                    apiKey: string;
+                };
+                newcoin: {
+                    domain: string;
+                    poolSymbol: string;
+                };
+            };
             firebaseConfig: import("./types").FirebaseConfig;
             newlife: {
                 baseUrl: string;
@@ -556,6 +602,15 @@ declare const _default: {
         state: import("overmind/lib/internalTypes").SubType<{
             config: {
                 settings: {
+                    app: {
+                        newgraph: {
+                            apiKey: string;
+                        };
+                        newcoin: {
+                            domain: string;
+                            poolSymbol: string;
+                        };
+                    };
                     firebaseConfig: import("./types").FirebaseConfig;
                     newlife: {
                         baseUrl: string;
@@ -715,6 +770,7 @@ declare const _default: {
                     };
                     isActive: boolean;
                 };
+                postsSearch: {};
                 top: {
                     moods: {
                         _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
@@ -739,6 +795,21 @@ declare const _default: {
                     users: {
                         query: string;
                         results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                    };
+                    posts: {
+                        query: string;
+                        results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                        lastQueried: {
+                            tags: string;
+                            aesthetics: string;
+                        };
+                        isActive: boolean;
+                        tags: {
+                            _items: Record<string, string>;
+                            items: string[];
+                            sortKey: string;
+                            page: number;
+                        };
                     };
                 };
             };
@@ -974,6 +1045,9 @@ declare const _default: {
                 }, void>;
                 searchUsers: import("./types").Action<{
                     query: string;
+                }, void>;
+                searchPosts: import("./types").Action<{
+                    tags: string;
                 }, void>;
                 top: {
                     moods: import("./types").Action<undefined, void>;

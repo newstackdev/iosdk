@@ -21,26 +21,26 @@ import { useAppState } from "../overmind";
 import { NLView } from "../types";
 import { PostWidget } from "../../src/Components/PostWidget";
 
-const BlocksioLink = (tx: string | undefined) => {
-	const link = !tx
-		? ""
-		: `https://local.bloks.io/transaction/${tx}?` +
-		  "nodeUrl=http%3A%2F%2Ftestnet.newcoin.org&coreSymbol=NCO&systemDomain=eosio&" +
-		  "hyperionUrl=http%3A%2F%2Fhyperion.newcoin.org";
-	return (
-		<a href={link} target="_new">
-			{tx}
-		</a>
-	);
-};
+// const BlocksioLink = (tx: string | undefined) => {
+// 	const link = !tx
+// 		? ""
+// 		: `https://local.bloks.io/transaction/${tx}?` +
+// 		  "nodeUrl=http%3A%2F%2Ftestnet.newcoin.org&coreSymbol=NCO&systemDomain=eosio&" +
+// 		  "hyperionUrl=http%3A%2F%2Fhyperion.newcoin.org";
+// 	return (
+// 		<a href={link} target="_new">
+// 			{tx}
+// 		</a>
+// 	);
+// };
 
-export const NewcoinLink: NLView<{ tx?: string }> = ({ tx, children }) => {
-	return (
-		<a href={"http://explorer.newcoin.org/transaction/" + tx} target="_new">
-			{children}
-		</a>
-	);
-};
+// export const NewcoinLink: NLView<{ tx?: string }> = ({ tx, children }) => {
+// 	return (
+// 		<a href={"http://explorer-dev.newcoin.org/transaction/" + tx} target="_new">
+// 			{children}
+// 		</a>
+// 	);
+// };
 
 const ellipsisStyle = {
 	maxWidth: 125,

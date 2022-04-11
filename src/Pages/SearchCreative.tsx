@@ -103,8 +103,8 @@ export const SearchCreative: NLView = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col md={3}></Col>
-              <Col md={3}>
+              <Col sm={3} lg={3}></Col>
+              <Col lg={9}>
                 <Form.Item name="aestetics"></Form.Item>
                 <Form.Item wrapperCol={{}}>
                   <Button

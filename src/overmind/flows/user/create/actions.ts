@@ -104,8 +104,9 @@ export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: Wiza
                 state.api.auth.authorized &&
                 // (state.auth.user?.status === "registered") &&
                 (state.api.auth.user?.username != state.flows.user.create.form.username) &&
-                autoRedirectFrom.includes(state.routing.location) &&
-                state.newcoin.pools["CGY"]
+                autoRedirectFrom.includes(state.routing.location) 
+                // &&
+                // state.newcoin.pools["CGY"]
             )
                 actions.routing.historyPush({ location: "/explore" });
 

@@ -81,17 +81,5 @@ export const SearchItemWidget: NLView<{ item: any, index: number }> = ({ item, i
 					</p>
 			)}
 		</small>
-		{/* <Link to={}>Vote</Link> */}
-		{/* <Space direction="vertical" style={{ wordWrap: "break-word"}}>
-            <div>{
-                item.meta.blog_name ?
-                    <>
-                        By <a href={`${item.meta.short_url}`} target="_new">{ item.meta.blog_name }</a>
-                    </> : ""
-            }</div>
-            {/* <div>
-                {Object.keys(item.content).map(t => <><Link to={`/search-creative/${t.replace(/\s+/g, ".")}`}>{t}</Link> </> )}
-            </div> */}
-		{/* </Space> */}
 	</Card>
 };

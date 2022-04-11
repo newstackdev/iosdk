@@ -81,6 +81,15 @@ exports.newlifeMediaBucket = newlifeMediaBuckets[stage];
 exports.newlifeWebsocketsServer = newlifeWebsocketsServers[stage];
 exports.config = {
     settings: {
+        app: {
+            newgraph: {
+                apiKey: ""
+            },
+            newcoin: {
+                domain: exports.APP_DOMAIN,
+                poolSymbol: ""
+            }
+        },
         firebaseConfig: exports.firebaseConfig,
         newlife: {
             baseUrl: exports.newlifeBaseUrl,
