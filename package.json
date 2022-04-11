@@ -69,7 +69,8 @@
 		"typescript-declaration-webpack-plugin": "^0.2.2",
 		"web-vitals": "^1.0.1",
 		"web3": "1.6",
-		"webpack-node-externals": "^3.0.0"
+		"webpack-node-externals": "^3.0.0",
+		"node-polyfill-webpack-plugin": "^1.1.4"
 	},
 	"eslintConfig": {
 		"extends": [
