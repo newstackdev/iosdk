@@ -21,7 +21,7 @@ const PostModal_1 = __importDefault(require("./PostModal"));
 const Image_1 = require("../../Components/Image");
 const Vote_1 = require("../../Components/Vote");
 const react_copy_to_clipboard_1 = require("react-copy-to-clipboard");
-const Clipboard_1 = require("src/Components/Icons/Clipboard");
+const Clipboard_1 = require("../../Components/Icons/Clipboard");
 const Links_1 = require("../../Components/Links");
 const useVotingStreamMood = () => {
     const { moodId, postId, id } = (0, react_router_1.useParams)();

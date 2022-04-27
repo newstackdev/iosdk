@@ -1,9 +1,9 @@
 import { UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { DetailedHTMLProps, HTMLAttributes, MouseEventHandler, ReactElement } from "react";
 import { Link } from "react-router-dom";
-import { useCurrentUserStakeEligibility } from "src/hooks/useBlockchainInfo";
-import { useActions } from "src/overmind";
-import { EventHandler, IOView } from "src/types";
+import { useCurrentUserStakeEligibility } from "../hooks/useBlockchainInfo";
+import { useActions } from "../overmind";
+import { EventHandler, IOView } from "../types";
 import { UserStake } from "./UserWidget";
 
 const DefaultPrivateContentView: IOView<{

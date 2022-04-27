@@ -18,9 +18,9 @@ import Paragraph from "antd/lib/typography/Paragraph";
 import { Searchicon } from "../Components/Icons/Searchicon";
 import { ThreeDots } from "../Components/Icons/ThreeDots";
 import { Burger } from "../Components/Icons/Burger";
-import { LargeArrowBack } from "src/Components/Icons/LargeArrowBack";
-import { DAO } from "src/Components/Icons/DAO";
-import { WalletWidget } from "src/Components/Wallet";
+import { LargeArrowBack } from "../Components/Icons/LargeArrowBack";
+import { DAO } from "../Components/Icons/DAO";
+import { WalletWidget } from "../Components/Wallet";
 
 const WHITE_BORDER = "0px white solid";
 

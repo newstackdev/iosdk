@@ -7,7 +7,7 @@ exports.TopCreators = exports.Creators = exports.CreatorsList = exports.CreatorW
 const jsx_runtime_1 = require("react/jsx-runtime");
 const antd_1 = require("antd");
 const react_router_dom_1 = require("react-router-dom");
-const useCached_1 = require("src/hooks/useCached");
+const useCached_1 = require("../hooks/useCached");
 const overmind_1 = require("../overmind");
 const Title_1 = __importDefault(require("../Pages/Explore/Title"));
 const Image_1 = require("./Image");

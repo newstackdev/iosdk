@@ -1,5 +1,5 @@
 import { MoodReadResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
-import { useAppState } from "src/overmind";
+import { useAppState } from "../overmind";
 import { useCachedMood, useCachedPool, useCachedUser } from "./useCached";
 
 export const useCurrentUserStakeEligibility = (poolOwner?: UserReadPublicResponse, stakeToAccess?: number) => {

@@ -1,7 +1,7 @@
 import { UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { Avatar, Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import { useCachedUser } from "src/hooks/useCached";
+import { useCachedUser } from "../hooks/useCached";
 import { useActions, useAppState } from "../overmind";
 import Title from "../Pages/Explore/Title";
 import { NLView } from "../types";

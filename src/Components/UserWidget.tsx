@@ -47,7 +47,7 @@ import { SocialLink } from "./SocialLink";
 import { Info } from "./Icons/Info";
 import { Smallinfo } from "./Icons/Smallinfo";
 import { CreatorWidget } from "./Creators";
-import { UserStakeButton } from "src/Pages/User/UserStake";
+import { UserStakeButton } from "../Pages/User/UserStake";
 
 const ellipsisStyle = {
 	maxWidth: 125,

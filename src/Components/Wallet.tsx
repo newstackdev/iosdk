@@ -1,8 +1,8 @@
 import { Dropdown, Tabs } from "antd"
 import { RefObject, useEffect, useRef, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
-import { useActions, useAppState } from "src/overmind"
-import { IOView } from "src/types"
+import { useActions, useAppState } from "../overmind"
+import { IOView } from "../types"
 import { UserNewcoinInfo, UserNewcoinPoolsParticipation } from "./UserWidget";
 
 export const Wallet: IOView = () => {

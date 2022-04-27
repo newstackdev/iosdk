@@ -28,7 +28,7 @@ import { Vote } from "../../Components/Vote";
 import { json } from "overmind";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Edit } from "../../Components/Icons/Edit";
-import { Clipboard } from "src/Components/Icons/Clipboard";
+import { Clipboard } from "../../Components/Icons/Clipboard";
 import { BlockExplorerLink } from "../../Components/Links";
 
 const useVotingStreamMood = () => {

@@ -19,9 +19,9 @@ const Notifications_1 = __importDefault(require("../Components/Icons/Notificatio
 const Logo_1 = __importDefault(require("../Components/Icons/Logo"));
 const SearchWidget_1 = require("../Pages/Search/SearchWidget");
 const Burger_1 = require("../Components/Icons/Burger");
-const LargeArrowBack_1 = require("src/Components/Icons/LargeArrowBack");
-const DAO_1 = require("src/Components/Icons/DAO");
-const Wallet_1 = require("src/Components/Wallet");
+const LargeArrowBack_1 = require("../Components/Icons/LargeArrowBack");
+const DAO_1 = require("../Components/Icons/DAO");
+const Wallet_1 = require("../Components/Wallet");
 const WHITE_BORDER = "0px white solid";
 const DEBUG = false;
 const ifDebug = (v) => (DEBUG ? v : "");
