@@ -23,10 +23,11 @@ import {
 	IndeterminateProgressAction,
 } from "../../Components/IndeterminateProgress";
 import { ProgressButton } from "../../Components/ProgressButton";
+import {config} from "../../config";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe("pk_test_wPJ6hXufjI4FCyabWUFsEnRf002P6QN6lX");
+const stripePromise = loadStripe(`${config.settings.stripe.publicKey}`);
 
 type CreateSubscriptionReq = {
 	customerId: string;
@@ -239,6 +240,8 @@ export const Product = ({
 
 	useEffect(() => {
 		if (!state.api.auth.user?.id) return;
+		
+		return;
 
 		(async () => {
 			const newPaymentIntent =

@@ -16,10 +16,9 @@ exports.layout = {
     labelCol: { span: 0 },
     wrapperCol: { span: 24 },
 };
-const Auth = ({ embedded, setNext, handleCallBack, setIsErrorSubmit, isErrorSubmit, }) => {
+const Auth = ({ embedded, setNext, setIsErrorSubmit, }) => {
     const state = (0, overmind_1.useAppState)();
     const actions = (0, overmind_1.useActions)();
-    const [error, setError] = (0, react_1.useState)(false);
     const [phoneForm] = form_1.default.useForm();
     const [codeForm] = form_1.default.useForm();
     (0, react_1.useEffect)(() => {
@@ -57,7 +56,7 @@ const Auth = ({ embedded, setNext, handleCallBack, setIsErrorSubmit, isErrorSubm
             return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: children });
         }
     };
-    return ((0, jsx_runtime_1.jsxs)(FragmentWrapper, { children: [(0, jsx_runtime_1.jsx)("div", { id: "sign-in-button" }), (0, jsx_runtime_1.jsx)(PhoneForm_1.default, { setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit, embedded: embedded, phoneForm: phoneForm, handleCallBack: handleCallBack, setError: setError, error: error }), (0, jsx_runtime_1.jsx)(CodeForm_1.default, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), (0, jsx_runtime_1.jsx)("div", { className: "u-margin-top-large", style: { height: "69px" }, hidden: embedded })] }));
+    return ((0, jsx_runtime_1.jsxs)(FragmentWrapper, { children: [(0, jsx_runtime_1.jsx)("div", { id: "sign-in-button" }), (0, jsx_runtime_1.jsx)(PhoneForm_1.default, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), (0, jsx_runtime_1.jsx)(CodeForm_1.default, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), (0, jsx_runtime_1.jsx)("div", { className: "u-margin-top-large", style: { height: "69px" }, hidden: embedded })] }));
 };
 exports.Auth = Auth;
 //# sourceMappingURL=Auth.js.map

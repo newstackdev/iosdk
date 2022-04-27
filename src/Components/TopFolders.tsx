@@ -14,7 +14,8 @@ import { Ebene } from "./Icons/Ebene";
 import FolderClosed from "./Icons/Folder/Closed";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { LoadMore } from "./LoadMore";
-import { PostWidget } from "./PostWidget";
+import { MaybeLink, PostWidget } from "./PostWidget";
+import { PremiumContent } from "./PremiumContent";
 
 export const TopFoldersGrid: NLView<{
 	mood: MoodReadResponse;
@@ -25,8 +26,9 @@ export const TopFoldersGrid: NLView<{
 	posts?: string | undefined;
 	noFullWidth?: boolean;
 	blur?: boolean
-}> = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap, blur }) => {
+}> = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap }) => {
 	const m = useCachedMood(mood);
+
 	const postsList =
 		title === "Explore folders"
 			? m.posts?.slice(0, postNumber + 1)
@@ -35,8 +37,11 @@ export const TopFoldersGrid: NLView<{
 			: m.posts?.slice(0, 5);
 
 	return (
-		<div
+		<PremiumContent
+			stakeToAccess={m.stakeToAccess} 
+			owner={m?.author}
 			style={{ width: "100%" }}
+			link={"/folder/" + m.id}
 			// className={title === "Moods" ? "" : ""}
 		>
 			<Row
@@ -47,8 +52,7 @@ export const TopFoldersGrid: NLView<{
 					justifyContent: `${
 						posts === "full" ? "space-between" : ""
 					}`,
-					...(blur ? 
-						{ filter: "blur(7px)" } : {})
+					flexWrap: "unset",
 				}}
 				className={`${
 					noFullWidth
@@ -89,16 +93,40 @@ export const TopFoldersGrid: NLView<{
 					<Col style={{ aspectRatio: "1/1" }} />
 				)}
 				{postsList?.map((p) => (
-					<Col className={"bg-hover"} style={{ aspectRatio: "1/1" }}>
-						<PostWidget
-							mood={mood}
-							post={p}
-							aspectRatio={p.aspectRatio}
-						/>
-					</Col>
+					<MaybeLink
+						to={
+							!p.id
+								? ""
+								: !mood
+								? `/post/${p.id}`
+								: `/folder/${mood.id}/${p.id}`
+						}
+						className={
+							p.contentType === "text/plain"
+								? "maybelink ant-col"
+								: "ant-col"
+						}
+					>
+						<Col
+							className={"bg-hover"}
+							style={{
+								justifyContent: "center",
+								flexDirection: "column",
+								aspectRatio: "1/1",
+								height: "100%",
+								flex: 1,
+							}}
+						>
+							<PostWidget
+								mood={mood}
+								post={p}
+								aspectRatio={p.aspectRatio}
+							/>
+						</Col>
+					</MaybeLink>
 				))}
 			</Row>
-		</div>
+		</PremiumContent>
 	);
 };
 
@@ -153,7 +181,7 @@ const TopFolders: NLView<{
 						</Row>
 					))}
 			</div>
-			{!userMoods && ((moods?.length || 0) < maxItems) && (
+			{!userMoods && (moods?.length || 0) < maxItems && (
 				<LoadMore loadMore={() => actions.lists.top.moods()} />
 			)}
 		</>

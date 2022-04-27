@@ -16,7 +16,7 @@ const ProgressButton_1 = require("../../Components/ProgressButton");
 const RowCheckbox_1 = require("../../Components/RowCheckbox");
 const AddFolder_1 = require("../../Components/Icons/AddFolder");
 const CrossCircle_1 = require("../../Components/Icons/CrossCircle");
-const MoodCreate = ({ onCreated }) => {
+const MoodCreate = ({ onCreated, setIsCreated }) => {
     const state = (0, overmind_1.useAppState)();
     const actions = (0, overmind_1.useActions)();
     const history = (0, react_router_dom_1.useHistory)();
@@ -38,7 +38,8 @@ const MoodCreate = ({ onCreated }) => {
         console.log("Success:", values);
         try {
             const p = await actions.api.mood.create({ mood: values });
-            onCreated && onCreated();
+            onCreated && onCreated(p);
+            setIsCreated(true);
         }
         catch (ex) {
             setErrMsg((0, lodash_1.get)(ex, "error.errorMessage.details") ||
@@ -65,14 +66,14 @@ const MoodCreate = ({ onCreated }) => {
                     // disabled
                     , { 
                         // disabled
-                        title: "Minimum amount of creator coin stake a user needs to access this folder", placeholder: "minimum stake to access" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { required: false, name: "action", children: (0, jsx_runtime_1.jsx)(antd_1.Input, { disabled: true, title: "Upcoming feature", placeholder: "action" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "doMint", valuePropName: "checked", children: (0, jsx_runtime_1.jsx)(RowCheckbox_1.RowCheckbox, { disabled: true, title: "Upcoming feature", children: "Create a Newcoin NFT collection" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "license", rules: [
+                        title: "Minimum amount of creator coin stake a user needs to access this folder", placeholder: "minimum stake in creator coin to access" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { required: false, name: "action", children: (0, jsx_runtime_1.jsx)(antd_1.Input, { disabled: true, title: "Upcoming feature", placeholder: "action" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "doMint", valuePropName: "checked", children: (0, jsx_runtime_1.jsx)(RowCheckbox_1.RowCheckbox, { disabled: true, title: "Upcoming feature", children: "Create a Newcoin NFT collection" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "license", rules: [
                         { required: false, message: "Please pick a license" },
                     ], children: (0, jsx_runtime_1.jsx)(antd_1.Select, { defaultValue: constants_1.LICENSES[0][1], children: constants_1.LICENSES.map((l) => ((0, jsx_runtime_1.jsx)(antd_1.Select.Option, { value: l[1], children: l[0] }))) }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { label: "", className: "text-center", children: (0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { actionName: "api.mood.create", progressText: "Creating mood...", type: "primary", htmlType: "submit", children: "Create" }) })] }) }));
 };
 exports.MoodCreate = MoodCreate;
-const MoodCreateModal = () => {
+const MoodCreateModal = ({ setIsCreated, onCreated }) => {
     const [isOpen, setIsOpen] = (0, react_1.useState)(false);
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(antd_1.Modal, { closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), visible: isOpen, onOk: () => setIsOpen(false), onCancel: () => setIsOpen(false), footer: false, className: "nl-white-box-modal", children: (0, jsx_runtime_1.jsx)(exports.MoodCreate, { onCreated: () => setIsOpen(false) }) }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("div", { style: { fontSize: "120px" }, children: (0, jsx_runtime_1.jsx)(AddFolder_1.AddFolder, { setIsOpen: setIsOpen }) }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
+    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(antd_1.Modal, { closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), visible: isOpen, onOk: () => setIsOpen(false), onCancel: () => setIsOpen(false), footer: false, className: "nl-white-box-modal", children: (0, jsx_runtime_1.jsx)(exports.MoodCreate, { onCreated: (m) => { setIsOpen(false); onCreated && onCreated(m); }, setIsCreated: setIsCreated }) }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("div", { style: { fontSize: "120px" }, children: (0, jsx_runtime_1.jsx)(AddFolder_1.AddFolder, { setIsOpen: setIsOpen }) }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
 };
 exports.MoodCreateModal = MoodCreateModal;
 //# sourceMappingURL=MoodCreate.js.map

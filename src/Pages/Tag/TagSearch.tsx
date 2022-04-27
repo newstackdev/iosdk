@@ -9,7 +9,7 @@ import {
   Tag,
   List,
 } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useActions, useAppState } from "../../overmind";
 import { SearchItemWidget } from "../../Components/SearchItemWidget";
 import { ItemGrid } from "../../Components/ItemGrid";
@@ -30,7 +30,8 @@ export const SearchTag: NLView = () => {
   const state = useAppState();
   const actions = useActions();
   const { tags, aesthetics } = useCreativeSearchQuery();
-
+  const ref = useRef<any>();
+  
   const listState = state.lists.search.posts;
   const doSearch = actions.lists.searchPosts;
 
@@ -39,6 +40,9 @@ export const SearchTag: NLView = () => {
     doSearch({ tags });
   }, []);
 
+  useEffect(() => {
+    ref?.current.focus();
+  }, [ref])
 
   const search = (tags: string, aesthetics: string) => {
     if (tags === "") {
@@ -100,9 +104,11 @@ export const SearchTag: NLView = () => {
                   ]}
                 >
                   <Input
+                    ref={ref}
+                    defaultValue={tags || ""}
                     style={{
-                      fontSize: "clamp(20px, 120px, 9.8vw)",
-                      textAlign: "center",
+                      fontSize: "clamp(20px, 60px, 9.8vw)",
+                      textAlign: "center"
                     }}
                   />
                 </Form.Item>
@@ -110,7 +116,7 @@ export const SearchTag: NLView = () => {
               <Col md={3}></Col>
               <Col md={9}>
                 <Form.Item name="aestetics"></Form.Item>
-                <Form.Item wrapperCol={{}}>
+                <Form.Item wrapperCol={{}} style={{position:"relative", bottom:25}}>
                   <Button
                     type="primary"
                     htmlType="submit"
@@ -153,6 +159,7 @@ export const SearchTag: NLView = () => {
           </Link>
         </div>}
         loadMore={maybeLoadMore}
+        noEmptyResults={true}
       />
 
       {state.indicators.isWorking || items.length  || !lastQueried ? (
@@ -165,7 +172,7 @@ export const SearchTag: NLView = () => {
           locale={{
             emptyText:
               lastQueried.tags === ""
-                ? "Search something!"
+                ? "Search for something!"
                 : `No results for '${lastQueried.tags}'`,
           }}
         />

@@ -6,20 +6,20 @@ exports.state = {
         firebaseConfig: {},
         newlifeBaseUrl: "",
         newlifeMediaBucket: "",
-        newlifeWebsocketsServer: ""
+        newlifeWebsocketsServer: "",
     },
     components: {
         layout: {
             Layout: null,
-            TopMenu: null
+            TopMenu: null,
         },
         auth: {
-            AuthWidget: null
+            AuthWidget: null,
         },
         icons: {
-            Logo: null
-        }
-    }
+            Logo: null,
+        },
+    },
 };
 // indicators: {
 //     _inProgressCounter: 0,

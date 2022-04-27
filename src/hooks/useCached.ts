@@ -9,12 +9,12 @@ export const useCachedUser = (user?: { id?: string, username?: string }, force?:
     const state = useAppState();
     const actions = useActions();
 
-    const byIdOrUsername = (u?: { id?: string, username?: string }) =>{
+    const byIdOrUsername = (u?: { id?: string, username?: string }) => {
+        const cachedItem = u?.id ?
+            state.api.cache.users.byId[u?.id] :
+            u?.username ? state.api.cache.users.byUsername[u?.username] : {};
         return (
-            u?.id ? 
-                state.api.cache.users.byId[u?.id] : 
-            u?.username ? state.api.cache.users.byUsername[u?.username] : 
-            null
+            cachedItem && cachedItem.id && cachedItem.username ? cachedItem : null
         );
     };
 
@@ -30,7 +30,7 @@ export const useCachedUser = (user?: { id?: string, username?: string }, force?:
         }
     }, [state.auth.authenticated, user?.id || "", user?.username || ""]);
     const u = byIdOrUsername(user);
-    return { ...u, moods: u?.moods };
+    return { ...(u || {}), moods: u?.moods };
 }
 
 export const useCachedPost = ({ id }: { id?: string }, force?: boolean) => {
@@ -66,6 +66,7 @@ export const useCachedMood = ({ id }: { id?: string }, force?: boolean) => {
 export const useCachedMoodPosts = ({ id }: { id?: string }, force?: boolean) => {
     const state = useAppState();
     const actions = useActions();
+
     useEffect(() => {
 
         id &&
@@ -104,7 +105,7 @@ export const useCachedPowerups = (user?: { id?: string }, force?: boolean) => {
     const current = state.api.auth.user || {};
     const id = user?.id || current.id || "";
     const targetPu = state.api.cache.powerups && state.api.cache.powerups[id];
-    const currentPu = state.api.cache.powerups[current.id || ""] 
+    const currentPu = state.api.cache.powerups[current.id || ""]
     useEffect(() => {
 
         id &&
@@ -143,10 +144,10 @@ export const useCachedPool = (pool?: { owner?: string, code?: string }, force?: 
 
     useEffect(() => {
         // if(!state.auth.authenticated) return;
-        if(!pool || !id)
+        if (!pool || !id)
             return;
 
-        if(force || !cache[id]) {
+        if (force || !cache[id]) {
             actions.newcoin.getPoolInfo({ pool });
             console.log("Getting pool for ", id)
         } else

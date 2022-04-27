@@ -21,10 +21,16 @@ export const SelectMood: NLView<{
 	title?: string;
 }> = ({ moods, onChange, limit, title }) => {
 	const [_value, _setValue] = useState<Record<string, MoodReadResponse>>({});
-	const [selectedFolder, setSelectedFolder] = useState<boolean>(false);
 	const state = useAppState();
 
-	const checkMoods = moods === undefined ? state.api.auth.moods || [] : moods;
+	const filteredMoods = state.api.auth.moods.filter(
+		(m) => m.title !== "My uploads"
+	);
+
+	const checkMoods =
+		moods === undefined
+			? filteredMoods || []
+			: moods.filter((m) => m.title !== "My uploads");
 
 	const toggle = (ni: { id?: string }) => {
 		if (!ni.id) return;
@@ -49,7 +55,7 @@ export const SelectMood: NLView<{
 			}}
 		>
 			<div style={{ width: "90%", margin: "0 auto" }}>
-				<MoodCreateModal />
+				<MoodCreateModal onCreated={(v) => v?.id && toggle(v) }/>
 			</div>
 		</div>;
 
@@ -59,14 +65,14 @@ export const SelectMood: NLView<{
 			limit={limit}
 			// titleLink="/save-folder"
 			title={"Select a folder to share"}
-			setSelectedFolder={setSelectedFolder}
-			selectedFolder={selectedFolder}
+			// setSelectedFolder={setSelectedFolder}
+			// selectedFolder={selectedFolder}
 			render={(m, index) => (
 				!index ?
 					createMood :
 					<MoodFolderWidget
-						setSelectedFolder={setSelectedFolder}
-						selectedFolder={selectedFolder}
+						// setSelectedFolder={setSelectedFolder}
+						// selectedFolder={selectedFolder}
 						mood={m}
 						onClick={() => toggle(m)}
 						selected={!!_value[(m as any).id || ""]}

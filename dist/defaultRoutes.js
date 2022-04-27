@@ -83,7 +83,8 @@ const HostToDomain = [
             "www.newlife.io",
             "web.newlife.io",
             "web-dev.newlife.io",
-            "share.newlife.io"
+            "share.newlife.io",
+            "test.newlife.io"
         ],
         components: {
             Root: DomainPresale_1.DomainPresale,
@@ -142,7 +143,7 @@ exports.DEFAULT_ROUTES = [
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/user/:username", component: User_1.User }, "v"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/user/invite", component: UserInvite_1.UserInvite }, "ui"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/payment/subscription", component: Product_1.Product }, "s"),
-    (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/auth/legacy", component: LegacyImport_1.LegacyImport }, "ue"),
+    (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/auth/newlife-members", component: LegacyImport_1.LegacyImport }, "ue"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/spotlights", component: Spotlights_1.default }, "sp"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/save-folder", component: SelectMood_1.SelectMoodForm }, "sf"),
     (0, jsx_runtime_1.jsx)(OverridableRoute, { exact: true, path: "/terms_of_service", component: TOS_1.TOS }, "ts"),

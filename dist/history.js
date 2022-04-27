@@ -1,9 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.originalLandingPath = void 0;
-// import createBrowserHistory from 'history/createBrowserHistory'
-const history_1 = require("history");
-const customHistory = (0, history_1.createBrowserHistory)();
+const createBrowserHistory_1 = __importDefault(require("history/createBrowserHistory"));
+// import { createBrowserHistory } from "history";
+const customHistory = (0, createBrowserHistory_1.default)();
 exports.default = customHistory;
 exports.originalLandingPath = window.location.pathname;
 //# sourceMappingURL=history.js.map

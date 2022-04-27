@@ -8,9 +8,9 @@ import { overmind } from "./overmind";
 import { config } from "./config";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App overmind={overmind(config)} />
-  </React.StrictMode>,
+  <App overmind={overmind(config)} />,
+  // <React.StrictMode>
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 

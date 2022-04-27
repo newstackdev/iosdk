@@ -15,4 +15,4 @@ export declare const readMultiple: Action<{
 export declare const getPosts: Action<MoodReadResponse>;
 export declare const create: Action<{
     mood: MoodCreateRequest;
-}>;
+}, MoodReadResponse>;

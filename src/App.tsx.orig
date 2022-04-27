@@ -186,7 +186,7 @@ const DEFAULT_ROUTES = [
 	<Route key="v" exact path="/user/:username" component={User} />,
 	<Route key="ui" exact path="/user/invite" component={UserInvite} />,
 	<Route key="s" exact path="/payment/subscription" component={Product} />,
-	<Route key="ue" exact path="/auth/legacy" component={LegacyImport} />,
+	<Route key="ue" exact path="/auth/newlife-members" component={LegacyImport} />,
 	<Route key="sp" exact path="/spotlights" component={Spotlights} />,
 	<Route key="sa" exact path="/save-folder" component={SelectMoodForm} />,
 	<Route key="sa" exact path="/terms_of_service" component={TOS} />,

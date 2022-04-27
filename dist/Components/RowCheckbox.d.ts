@@ -4,5 +4,5 @@ export declare const RowCheckbox: ({ children, onChange, disabled, title, }: {
     disabled?: boolean | undefined;
     title?: string | undefined;
     children: string | React.FC | JSX.Element;
-    onChange?: Callback | undefined;
+    onChange?: Callback<any> | undefined;
 }) => JSX.Element;

@@ -72,7 +72,7 @@ export const create: Action<{ noRouting?: boolean, user: UserCreateRequest, prer
 
                 !preregisterCreate && effects.ux.notification.open({
                     message: 'Success!',
-                    description: 'User was created successfully'
+                    description: 'User was created successfully. Welcome to Newlife.IO!'
                 });
 
                 await actions.api.auth.logout({ keepFbUser: true });
@@ -176,7 +176,7 @@ export const powerup: Action<{ user: UserReadPublicResponse, amount: number }> =
         debounce(300),
         async ({ state, actions, effects }: Context, { user, amount }) => {
             try {
-                const res = await state.api.client.user.rateCreate({ targetId: user.id, value: amount || 1 })
+                const res = await state.api.client.user.userRateCreate({ targetId: user.id, value: amount || 1 })
                 effects.ux.message.info("Powerup successful")
                 await actions.api.user.getPowerups({ user: state.api.auth.user || {} });
                 await actions.api.user.getPowerups({ user });
@@ -188,8 +188,14 @@ export const powerup: Action<{ user: UserReadPublicResponse, amount: number }> =
 
 export const getPowerups: Action<{ user: UserReadPublicResponse }> = 
     pipe(
-        debounce(300),
+        // throttle(300),
         async ({ state } : Context, { user } : { user : UserReadPublicResponse }) => {
+            if(!user.id)
+                return;
+
+            if(state.api.cache.powerups[user.id || ""])
+                return;
+                 
             const o = await state.api.client.user.ratedOutUsersList(user);
             const i = await state.api.client.user.ratedInList(user);
 

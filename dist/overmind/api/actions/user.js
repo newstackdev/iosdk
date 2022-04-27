@@ -54,7 +54,7 @@ exports.create = (0, overmind_1.pipe)((0, overmind_1.throttle)(3000), async ({ s
             await state.api.client.user.userCreate({ ...user, legacyToken: state.flows.user.create.legacyToken });
         !preregisterCreate && effects.ux.notification.open({
             message: 'Success!',
-            description: 'User was created successfully'
+            description: 'User was created successfully. Welcome to Newlife.IO!'
         });
         await actions.api.auth.logout({ keepFbUser: true });
         await actions.firebase.refreshApiToken();
@@ -125,7 +125,7 @@ const invite = ({ state }, { userInvite }) => {
 exports.invite = invite;
 exports.powerup = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ state, actions, effects }, { user, amount }) => {
     try {
-        const res = await state.api.client.user.rateCreate({ targetId: user.id, value: amount || 1 });
+        const res = await state.api.client.user.userRateCreate({ targetId: user.id, value: amount || 1 });
         effects.ux.message.info("Powerup successful");
         await actions.api.user.getPowerups({ user: state.api.auth.user || {} });
         await actions.api.user.getPowerups({ user });
@@ -134,7 +134,13 @@ exports.powerup = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ s
         effects.ux.message.error(ex.error.errorMessage);
     }
 });
-exports.getPowerups = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ state }, { user }) => {
+exports.getPowerups = (0, overmind_1.pipe)(
+// throttle(300),
+async ({ state }, { user }) => {
+    if (!user.id)
+        return;
+    if (state.api.cache.powerups[user.id || ""])
+        return;
     const o = await state.api.client.user.ratedOutUsersList(user);
     const i = await state.api.client.user.ratedInList(user);
     state.api.cache.powerups[user.id || ""] = {

@@ -13,9 +13,10 @@ const state_1 = require("../../overmind/auth/state");
 const antd_2 = require("antd");
 const IndeterminateProgress_1 = require("../../Components/IndeterminateProgress");
 const ProgressButton_1 = require("../../Components/ProgressButton");
+const config_1 = require("../../config");
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = (0, stripe_js_1.loadStripe)("pk_test_wPJ6hXufjI4FCyabWUFsEnRf002P6QN6lX");
+const stripePromise = (0, stripe_js_1.loadStripe)(`${config_1.config.settings.stripe.publicKey}`);
 async function handlePaymentThatRequiresCustomerAction(stripe, { subscription, invoice, priceId, paymentMethodId, isRetry, }) {
     if (subscription && subscription.status === "active") {
         // Subscription is active, no customer actions required.
@@ -134,6 +135,7 @@ const Product = ({ embedded, setNext, }) => {
     (0, react_1.useEffect)(() => {
         if (!state.api.auth.user?.id)
             return;
+        return;
         (async () => {
             const newPaymentIntent = await state.api.client.payment.stripeIntentCreate({
                 items: [{ productId: "io-domain-presale", priceId: price }],

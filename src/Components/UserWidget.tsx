@@ -2,7 +2,17 @@ import {
 	UserReadPrivateResponse,
 	UserReadPublicResponse,
 } from "@newlife/newlife-creator-client-api";
-import { List, Avatar, Col, Row, Button, Modal, Input, Slider } from "antd";
+import {
+	List,
+	Avatar,
+	Col,
+	Row,
+	Button,
+	Modal,
+	Input,
+	Slider,
+	Tooltip,
+} from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { Link } from "react-router-dom";
 import {
@@ -34,6 +44,10 @@ import { Soundcloud } from "./Icons/Soundcloud";
 import { Twitter } from "./Icons/Twitter";
 import { Edit } from "./Icons/Edit";
 import { SocialLink } from "./SocialLink";
+import { Info } from "./Icons/Info";
+import { Smallinfo } from "./Icons/Smallinfo";
+import { CreatorWidget } from "./Creators";
+import { UserStakeButton } from "src/Pages/User/UserStake";
 
 const ellipsisStyle = {
 	maxWidth: 125,
@@ -77,7 +91,6 @@ export const UserStake: NLView<{
 	hideSelect?: boolean;
 	buttonText?: string;
 	closeOnDone?: boolean;
-
 	onDone?: Callback;
 	onCancel?: Callback;
 }> = ({
@@ -92,246 +105,228 @@ export const UserStake: NLView<{
 	onDone,
 	onCancel,
 }) => {
-	// const [visible, setVisible] = useState(false);
-	const actions = useActions();
-	const poolInfo = useCachedPool({ owner: user?.username });
+		// const [visible, setVisible] = useState(false);
+		const actions = useActions();
+		const poolInfo = useCachedPool({ owner: user?.username });
 
-	const [preStakeValue, setPrestakeValue] = useState(0);
+		const [preStakeValue, setPrestakeValue] = useState(0);
 
-	const [_value, setValue] = useState(value || 100);
-	const [fee, setFee] = useState(0.08 * _value);
-	const state = useAppState();
+		const [_value, setValue] = useState(value || 100);
+		const [fee, setFee] = useState(0.08 * _value);
+		const state = useAppState();
 
-	const [tx, setTx] = useState("");
+		const [tx, setTx] = useState("");
 
-	const [_mode, setMode] = useState(mode ?? STAKE_STEPS.DISABLED);
+		const [_mode, setMode] = useState(mode ?? STAKE_STEPS.DISABLED);
 
-	const _user = useCachedUser(user, true);
+		const _user = useCachedUser(user, true);
 
-	const balances = state.newcoin.account?.acc_balances || [];
-	const ncoBalance = Number((balances[0] || "").replace(/ NCO$/, ""));
+		const balances = state.newcoin.account?.acc_balances || [];
+		const ncoBalance = Number((balances[0] || "").replace(/ NCO$/, ""));
 
-	const membershipValue = state.newcoin.pools[poolInfo.code];
+		const membershipValue = state.newcoin.pools[poolInfo.code];
 
-	minValue = minValue || 100;
+		minValue = minValue || 100;
 
-	const stakeDelta = (membershipValue || 0) - (preStakeValue || 0);
+		const stakeDelta = (membershipValue || 0) - (preStakeValue || 0);
 
-	const hasDao = !!poolInfo.code; // && /\.(io|nco)$/.test(user?.username || "");
+		const hasDao = !!poolInfo.code; // && /\.(io|nco)$/.test(user?.username || "");
 
-	useEffect(() => {
-		setMode(mode ?? STAKE_STEPS.DISABLED);
-	}, [mode]);
+		useEffect(() => {
+			setMode(mode ?? STAKE_STEPS.DISABLED);
+		}, [mode]);
 
-	useEffect(() => {
-		!hasDao && _mode >= 0 && setMode(STAKE_STEPS.NODAO);
-	}, [hasDao, _mode]);
+		useEffect(() => {
+			const m = _mode ?? STAKE_STEPS.DISABLED;
+			setMode(m);
+			actions.flows.stake.setLatestMode({ stakingMode: m })
+		}, [_mode]);
 
-	const updateValue = (v: number) => {
-		setValue(v);
-		setFee(round(0.08 * v));
-	};
 
-	const stake = async () => {
-		setPrestakeValue(membershipValue);
-		const res = await actions.api.user.stake({
-			user: _user,
-			amount: _value + ".0000",
-		});
-		const historyItem = [...state.api.cache.stakeHistory]
-			.reverse()
-			.find((h) => h.user.username === user?.username);
+		useEffect(() => {
+			!hasDao && _mode >= 0 && setMode(STAKE_STEPS.NODAO);
+		}, [hasDao, _mode]);
 
-		const success = historyItem && !historyItem.error;
+		const updateValue = (v: number) => {
+			setValue(v);
+			setFee(round(0.08 * v));
+		};
 
-		// return
-		success && setTx(historyItem?.response?.data?.TxID_stakeToPool);
+		const stake = async () => {
+			setPrestakeValue(membershipValue);
+			const res = await actions.api.user.stake({
+				user: _user,
+				amount: _value + ".0000",
+			});
+			const historyItem = [...state.api.cache.stakeHistory]
+				.reverse()
+				.find((h) => h.user.username === user?.username);
 
-		setMode(
-			success && closeOnDone ? STAKE_STEPS.DISABLED : STAKE_STEPS.DONE
-		);
-	};
-	const openUrl = (url: string) => {
-		window.open(url, "_new");
-	};
+			const success = historyItem && !historyItem.error;
 
-	return (
-		<>
-			<Modal
-				closeIcon={<CrossCircle />}
-				visible={_mode == STAKE_STEPS.NODAO}
-				cancelText="Ok"
-				// onCancel={() => setMode(STAKE_STEPS.SELECT)}
-				onCancel={() => {
-					setMode(STAKE_STEPS.DISABLED);
-					onDone && onDone({});
-				}}
-				okButtonProps={{ style: { display: "none" } }}
-				className="nl-white-box-modal"
-			>
-				<Row align="middle" className="text-center">
-					<Col span={8} className="nl-avatar">
-						<Avatar
-							size="large"
-							src={<ContentImage size="medium" {..._user} />}
-						/>
-					</Col>
-				</Row>
-				<div className="section-divider" />
-				<Row align="middle" className="text-center">
-					<Col span={24} className="nl-avatar">
-						<h2>{_user.username}</h2>
-						<div className="section-divider" />
-						had not created their DAO yet.
-						<div className="section-divider" />
-						Please check this profile later.
-					</Col>
-				</Row>
-			</Modal>
-			<Modal
-				closeIcon={<CrossCircle />}
-				visible={_mode === STAKE_STEPS.DONE}
-				okText="Yes"
-				cancelText="No"
-				onOk={() => stake()}
-				// onCancel={() => setMode(STAKE_STEPS.SELECT)}
-				onCancel={() => {
-					onDone &&
-						onDone({
-							preStakeValue,
-							stakeValue: _value,
-							stakeDelta,
-						});
-					setMode(STAKE_STEPS.DISABLED);
-				}}
-				cancelButtonProps={{ value: "No" }}
-				footer={false}
-				className="nl-white-box-modal"
-			>
-				<Row align="middle" className="text-center">
-					<Col span={8} className="nl-avatar">
-						<Avatar
-							size="large"
-							src={<ContentImage size="medium" {..._user} />}
-						/>
-					</Col>
-					<Col span={4}></Col>
-					<Col span={12} className="text-left">
-						<div>
-							You{" "}
-							{preStakeValue
-								? "increased your stake in"
-								: "joined"}
-							<br />
-							<b style={{ fontSize: "1.3em" }}>
-								{_user?.username}
-							</b>
-							's DAO.
-						</div>
-					</Col>
-				</Row>
-				<div className="text-center">
-					<br />
-					<h2 className="header-2">Congratulations!</h2>
-					{preStakeValue ? (
-						<>
-							Your stake in {_user?.username}'s DAO increased by{" "}
-							{stakeDelta} {poolInfo.code}.
-						</>
-					) : (
-						<>
-							You are now a member of the {_user?.username}'s DAO
-							with all the rights and duties associated.
-						</>
-					)}
-					<br />
-					<br />
-					<p className="text-left">
-						{_value} $NCO
-						<br />— {round((fee * 5) / 8)} $NCO (5%) creator fee
-						<br />— {round((fee * 3) / 8)} $NCO (3%) DAO fee
-						<br />
-						<br />
-						Total stake:
-					</p>
-					<h1>{round(_value - fee)} NCO</h1>
-					<Button
-						className="nl-button-primary"
-						onClick={() => openUrl(blockExplorerUrl.newcoin(tx))}
-					>
-						View on Newcoin
-					</Button>
-					<Button
-						className="nl-button-primary"
-						onClick={() => openUrl(blockExplorerUrl.blocks(tx))}
-					>
-						View on Bloks.io
-					</Button>
-				</div>
-			</Modal>
-			<Modal
-				visible={_mode === STAKE_STEPS.CONFIRM}
-				title="Confirm your request"
-				okText="Yes"
-				cancelText="No"
-				onOk={() => stake()}
-				closeIcon={<CrossCircle />}
-				onCancel={() => {
-					setMode(
-						hideButton ? STAKE_STEPS.DISABLED : STAKE_STEPS.SELECT
-					);
-					// mode === STAKE_STEPS. : DONE
-					// 	? onDone && onDone()
-					// 	: onCancel &&  : onCancel();
-					// setMode(STAKE_STEPS.SELECT);
-					// }}
-				}}
-				// cancelButtonProps={{ value: "No" }}
-				footer={
-					state.indicators.specific["api.user.stake"] ? (
-						<IndeterminateProgress inProgress={true} />
-					) : undefined
-				}
-				className="nl-white-box-modal primary-buttons-modal"
-			>
-				Are you sure you want to
-				{membershipValue ? (
-					<>
-						{" "}
-						increase your stake in {_user?.username || ""}'s DAO by{" "}
-						{_value} $NCO
-					</>
-				) : (
-					<>
-						{" "}
-						stake {_value} $NCO to join {_user?.username || ""}'s
-						DAO?
-					</>
-				)}
-				?
-				<br />
-				You will deposit {_value} $NCO and pay a {round(fee)} $NCO fee.
-				{/* to get
-					your 1000 ${(_user?.username || "").toUpperCase()}. */}
-			</Modal>
-			<Modal
-				visible={_mode >= STAKE_STEPS.SELECT && !hideSelect}
-				okText={"Close"}
-				footer={false}
-				onCancel={() => {
-					mode === STAKE_STEPS.DONE
-						? onDone && onDone()
-						: onCancel && onCancel();
-					setMode(STAKE_STEPS.DISABLED);
-				}}
-				className="nl-white-box-modal"
-				closeIcon={<CrossCircle />}
-			>
-				<Row
-					align="middle"
-					className="text-center nl-row-vertical-space"
+			// return
+			success && setTx(historyItem?.response?.data?.TxID_stakeToPool);
+
+			setMode(
+				success && closeOnDone ? STAKE_STEPS.DISABLED : STAKE_STEPS.DONE
+			);
+
+			// success && setTimeout(() => setMode(STAKE_STEPS.DISABLED));
+		};
+		const openUrl = (url: string) => {
+			window.open(url, "_new");
+		};
+
+		const getContainer = () => {
+			return state.flows.stake.options.stakingContainer;
+		}
+
+		const startStaking = () => {
+			setMode(STAKE_STEPS.SELECT);
+		}
+
+		const displayMembershipValue = membershipValue / 10000;
+
+		return (
+			<>
+
+				<Modal
+					closeIcon={<CrossCircle />}
+					getContainer={getContainer}
+					visible={_mode == STAKE_STEPS.NODAO}
+					cancelText="Ok"
+					// onCancel={() => setMode(STAKE_STEPS.SELECT)}
+					onCancel={() => {
+						setMode(STAKE_STEPS.DISABLED);
+						onDone && onDone({});
+					}}
+					okButtonProps={{ style: { display: "none" } }}
+					className="nl-white-box-modal"
 				>
-					<Col span={24} className="nl-avatar">
+					<Row align="middle" className="text-center">
+						<Col span={8} className="nl-avatar">
+							<Avatar
+								size="large"
+								src={<ContentImage size="medium" {..._user} />}
+							/>
+						</Col>
+					</Row>
+					<div className="section-divider" />
+					<Row align="middle" className="text-center">
+						<Col span={24} className="nl-avatar">
+							<h2>{_user.username}</h2>
+							<div className="section-divider" />
+							had not created their DAO yet.
+							<div className="section-divider" />
+							Please check this profile later.
+						</Col>
+					</Row>
+				</Modal>
+				<Modal
+					closeIcon={<CrossCircle />}
+					visible={_mode === STAKE_STEPS.DONE}
+					getContainer={getContainer}
+					okText="Yes"
+					cancelText="No"
+					onOk={() => stake()}
+					// onCancel={() => setMode(STAKE_STEPS.SELECT)}
+					onCancel={() => {
+						onDone &&
+							onDone({
+								preStakeValue,
+								stakeValue: _value,
+								stakeDelta,
+							});
+						setMode(STAKE_STEPS.DISABLED);
+					}}
+					cancelButtonProps={{ value: "No" }}
+					footer={false}
+					className="nl-white-box-modal"
+				>
+					<Row className="text-center">
+						<Col span={8} className="nl-avatar">
+							<Avatar
+								size="large"
+								src={<ContentImage size="medium" {..._user} />}
+							/>
+						</Col>
+						<Col span={12} className="text-left u-margin-left-small">
+							<div>
+								You{" "}
+								{preStakeValue
+									? "increased your stake in"
+									: "joined"}
+								<br />
+								<p className="header-3">{_user?.username}</p>
+								's DAO.
+							</div>
+						</Col>
+					</Row>
+					<div className="text-center">
+						<div className="text-left">
+							<br />
+							<h2 className="header-2">Congratulations</h2>
+							{preStakeValue ? (
+								<>
+									Your stake in {_user?.username}'s DAO increased
+									by {stakeDelta} {poolInfo.code}.
+								</>
+							) : (
+								<>
+									You are now a member of the {_user?.username}'s
+									DAO with all the rights and duties associated.
+								</>
+							)}
+							<br />
+							<br />
+							<p>
+								{_value} $GNCO
+								<br />— {round((fee * 5) / 8)} $GNCO (5%) creator
+								fee
+								<br />— {round((fee * 3) / 8)} $GNCO (3%) DAO fee
+								<br />
+								<br />
+							</p>
+						</div>
+						<h1>{round(_value - fee)} $GNCO</h1>
+						<Button
+							className="nl-button-primary"
+							onClick={() => openUrl(blockExplorerUrl.newcoin(tx))}
+						>
+							View on Newcoin
+						</Button>
+						<Button
+							className="nl-button-primary"
+							onClick={() => openUrl(blockExplorerUrl.blocks(tx))}
+						>
+							View on Bloks.io
+						</Button>
+					</div>
+				</Modal>
+				<Modal
+					visible={_mode === STAKE_STEPS.CONFIRM}
+					onOk={() => stake()}
+					closeIcon={<CrossCircle />}
+					onCancel={() => {
+						setMode(
+							hideButton ? STAKE_STEPS.DISABLED : STAKE_STEPS.SELECT
+						);
+						// mode === STAKE_STEPS. : DONE
+						// 	? onDone && onDone()
+						// 	: onCancel &&  : onCancel();
+						// setMode(STAKE_STEPS.SELECT);
+						// }}
+					}}
+					// cancelButtonProps={{ value: "No" }}
+					// footer={
+					// 	state.indicators.specific["api.user.stake"] ? (
+					// 		<IndeterminateProgress inProgress={true} />
+					// 	) : undefined
+					// }
+					footer={false}
+					className="nl-white-box-modal primary-buttons-modal"
+				>
+					<Col span={24} className="nl-avatar u-margin-bottom-medium">
 						<Avatar
 							size="large"
 							src={<ContentImage size="medium" {..._user} />}
@@ -339,83 +334,178 @@ export const UserStake: NLView<{
 					</Col>
 					<Col span={24}>
 						{membershipValue > 0 ? (
-							<>
-								Your current stake in {_user?.username || ""}'s
-								DAO is {poolInfo.code} {membershipValue}. Stake{" "}
+							<p className="header-3">
+								{/* Join {_user?.username || ""}'s DAO */}
+								Your membership in { poolInfo.owner.toUpperCase() } DAO is at {displayMembershipValue}. Stake{" "}
 								{_value} NCO more to increase your membership
 								value.
-							</>
+							</p>
 						) : (
-							<>Join {_user?.username || ""}'s DAO</>
+							<p className="header-3">
+								Join {_user?.username || ""}'s DAO
+							</p>
 						)}
 					</Col>
-					<Col span={24}>
-						<div>
+
+					<Col style={{ margin: "80px 0 " }}>
+						<p className="paragraph-2r">
+							Are you sure you want to
+							{membershipValue ? (
+								<>
+									{" "}
+									increase your stake in {_user?.username || ""}'s
+									DAO by {_value} $GNCO
+								</>
+							) : (
+								<>
+									{" "}
+									stake {_value} $GNCO to join{" "}
+									{_user?.username || ""}
+									's DAO?
+								</>
+							)}
+							?
+							<br />
+							You will deposit {_value} $GNCO and pay a {round(fee)}{" "}
+							$GNCO fee.
+						</p>
+						{/* to get
+					your 1000 ${(_user?.username || "").toUpperCase()}. */}
+					</Col>
+
+					<ProgressButton
+						actionName="api.user.stake"
+						type="primary"
+						progressText="Staking..."
+						onClick={() => {
+							stake();
+						}}
+					>
+						Confirm
+					</ProgressButton>
+
+					<Col
+						span={24}
+						className="text-left u-margin-top-large"
+						style={{ width: "100%" }}
+					>
+						<p className="paragraph-2r ">
+							This is only on Testnet! Need help?
+							<br />
+							<span className="paragraph-2u">
+								Join our telegram group!
+							</span>
+						</p>
+					</Col>
+				</Modal>
+				<Modal
+					visible={_mode >= STAKE_STEPS.SELECT && !hideSelect}
+					okText={"Close"}
+					footer={false}
+					onCancel={() => {
+						_mode === STAKE_STEPS.DONE
+							? onDone && onDone()
+							: onCancel && onCancel();
+						setMode(STAKE_STEPS.DISABLED);
+					}}
+					className="nl-white-box-modal"
+					closeIcon={<CrossCircle />}
+				>
+					<Row
+						align="middle"
+						className="text-center nl-row-vertical-space"
+					>
+						<Col span={24} className="nl-avatar">
+							<Avatar
+								size="large"
+								src={<ContentImage size="medium" {..._user} />}
+							/>
+						</Col>
+						<Col span={24}>
+							<p className="header-3">
+								{membershipValue > 0 ? (
+									<>Your stake in {_user.username} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake{" "}
+								{_value} NCO more to increase your membership
+								value.</>
+								)
+									:
+
+									<>
+										Join {_user?.username || ""}'s DAO
+									</>}
+							</p>
+						</Col>
+						<Col span={24}>
 							<Input
-								onChange={(e) =>
-									setValue(Number(e.target.value))
-								}
+								onChange={(e) => setValue(Number(e.target.value))}
 								value={_value}
-								suffix="$NCO"
+								suffix="$GNCO"
+								className="gnco_input"
 							/>
-						</div>
-					</Col>
-					<Col span={24}>
-						<div>
-							<Slider
-								className="nl-slider"
-								value={_value}
-								tooltipVisible={false}
-								style={{ width: "100%" }}
-								onChange={updateValue}
-								marks={{
-									[minValue]: [minValue],
-									[ncoBalance]: ncoBalance,
-								}}
-								min={minValue}
-								max={ncoBalance}
-							/>
-						</div>
-					</Col>
-					<Col span={24}>
-						<div>
+						</Col>
+						<Col span={24}>
+							<div>
+								<Slider
+									className="nl-slider"
+									value={_value}
+									tooltipVisible={false}
+									style={{ width: "100%" }}
+									onChange={updateValue}
+									marks={{
+										100: "0%",
+										[(ncoBalance / 100) * 25]: "25%",
+										[(ncoBalance / 100) * 50]: "50%",
+										[(ncoBalance / 100) * 75]: "75%",
+										[ncoBalance]: "100%",
+									}}
+									min={minValue}
+									max={ncoBalance}
+								/>
+							</div>
+						</Col>
+						<Col span={24} className="u-margin-top-large">
 							<Button
-								className="nl-button-primary"
-								onClick={() => setMode(STAKE_STEPS.CONFIRM)}
+								className="nl-button-primary stake-button-modal"
+								onClick={() => {
+									setMode(STAKE_STEPS.CONFIRM)
+								}
+								}
 							>
 								Stake
 							</Button>
-						</div>
-						<small>{Math.round(fee * 100) / 100} $NCO Fee</small>
-					</Col>
-					<Col span={24}>
-						<small>
-							Learn more about{" "}
-							<a
-								href="https://en.wikipedia.org/wiki/The_DAO_(organization)"
-								target="_new"
-							>
-								DAOs
-							</a>
-						</small>
-					</Col>
-				</Row>
-			</Modal>
-			{hideButton ? (
-				""
-			) : (
-				<ProgressButton
-					actionName="api.user.stake"
-					onClick={() => setMode(STAKE_STEPS.SELECT)}
-					className="nl-button-primary"
-					progressText="Staking..."
-				>
-					{buttonText || "Stake"}
-				</ProgressButton>
-			)}
-		</>
-	);
-};
+						</Col>
+						<Col span={24} className="text-left">
+							<span className="paragraph-2r">
+								{Math.round(fee * 100) / 100} $GNCO Fee
+							</span>
+
+							<p className="paragraph-2r ">
+								This is only on Testnet! Need help?
+								<br />
+								<span className="paragraph-2u">
+									Join our telegram group!
+								</span>
+							</p>
+						</Col>
+					</Row>
+				</Modal>
+				{
+					hideButton ? (
+						""
+					) : (
+						<ProgressButton
+							actionName="api.user.stake"
+							onClick={() => startStaking()}
+							className="nl-button-primary"
+							progressText="Staking..."
+						>
+							{buttonText || "Stake"}
+						</ProgressButton>
+					)
+				}
+			</>
+		);
+	};
 
 export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 	user,
@@ -467,7 +557,10 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 			>
 				<div className="text-center">
 					<div>
-						<Row align="middle" className="text-center">
+						<Row
+							className="text-center"
+							style={{ alignItems: "center" }}
+						>
 							<Col span={8} className="nl-avatar">
 								<Avatar
 									size="large"
@@ -476,56 +569,88 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 									}
 								/>
 							</Col>
-							<Col span={4} className="text-left"></Col>
-							<Col span={12} className="text-left">
+							<Col
+								span={12}
+								className="text-left u-margin-left-medium"
+							>
 								<div>
 									{isPowering && timeSince > 60000
 										? "You powered"
 										: state.indicators.specific[
-												"api.user.powerup"
-										  ]
-										? "Powering..."
-										: ""}
+											"api.user.powerup"
+										]
+											? "Powering..."
+											: ""}
 
 									<br />
-									<b style={{ fontSize: "1.3em" }}>
+									<span className="header-3">
 										{user?.username}
-									</b>
+									</span>
 								</div>
 							</Col>
 						</Row>
-						<Row gutter={12} className="text-center">
+						<Row
+							gutter={12}
+							className="text-center"
+							style={{ margin: "80px 0" }}
+						>
 							<Col span={24}>
-								<span className="nl-font-huge">+1</span>
+								<span className="header-1b">+1</span>
 							</Col>
 						</Row>
 					</div>
 
 					<Row gutter={48}>
-						<Col span={24}>
+						<Col span={24} className="u-margin-bottom-medium">
 							<br />
-							Multiply your power up (i)
-							<br />
-							<br />
+							<div
+								style={{
+									justifyContent: "center",
+									display: "flex",
+									alignItems: "center",
+								}}
+								className="u-margin-bottom-medium"
+							>
+								<span className="paragraph-2r u-margin-right-small ">
+									Multiply your power up
+								</span>
+								<Tooltip
+									placement="right"
+									title="You can add unlimited power to leonielx.io by joining their DAO. As a member of leonielx.io DAO you will purchase $LEONIE tokens which can be used to access content, buy NFTs and vote on community proposals. The more you buy, the more power you give to leonielx.io. This is only on Testnet! "
+								>
+									<span>
+										<Smallinfo />
+									</span>
+								</Tooltip>
+							</div>
 							<Button
 								className="nl-button-primary"
-								onClick={() => {}}
+								onClick={() => { }}
 							>
 								8X Power up
 							</Button>
 						</Col>
-						<Col span={24} className="text-bold">
-							<br />
+						<Col
+							span={24}
+							className="text-bold u-margin-bottom-medium"
+						>
 							<Button
 								className="nl-button-primary inverse"
 								onClick={toStakeMode}
 							>
 								{membershipValue
-									? "Stake more"
+									? "∞ Stake more"
 									: "Join the DAO"}
 							</Button>
 						</Col>
 					</Row>
+					<p className="paragraph-2r text-left">
+						This is only on Testnet! Need help?
+						<br />
+						<span className="paragraph-2u">
+							Join our telegram group!
+						</span>
+					</p>
 				</div>
 			</Modal>
 			<Button onClick={powerup} className="powerup-btn">
@@ -536,14 +661,12 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 					Power up
 				</p>
 			</Button>
-			{
-				<UserStake
-					onDone={() => setStakeMode(false)}
-					hideButton={true}
-					user={user}
-					mode={stakeMode ? STAKE_STEPS.SELECT : STAKE_STEPS.DISABLED}
-				/>
-			}
+			<UserStake
+				onDone={() => setStakeMode(false)}
+				hideButton={true}
+				user={user}
+				mode={stakeMode ? STAKE_STEPS.SELECT : STAKE_STEPS.DISABLED}
+			/>
 		</>
 	);
 };
@@ -581,7 +704,19 @@ export const UserWidgetHeading: NLView<{
 	// cover={<ContentImage width="100%" src={user.contentUrl} />}
 	// >
 
-	console.log(`https://instagram.com/${user["instagram"]}`);
+	const toMonthName = (monthNumber: number) => {
+		const date = new Date();
+		date.setMonth(monthNumber - 1);
+
+		return date.toLocaleString("en-US", {
+			month: "long",
+		});
+	};
+
+	const monthNumber = new Date(user.created || "").getMonth();
+	const fullYear = new Date(user.created || "").getFullYear();
+
+	const joinedDate = "Joined " + toMonthName(monthNumber) + " " + fullYear;
 
 	return (
 		<Row
@@ -590,51 +725,65 @@ export const UserWidgetHeading: NLView<{
 			style={{
 				textAlign: "center",
 				minHeight: 250,
-				alignItems: "baseline",
 				paddingTop: "10px",
 			}}
 			className="app-main-full-width"
 		>
-			<Col xs={24} xl={14} className="nl-avatar">
+			<Col xs={24} xl={16} className="nl-avatar">
 				<Row className="user-widget__first-row">
 					<Col xs={20} xl={20} className="text-left">
 						<Row>
 							<Avatar src={<ContentImage {...u} />} />
 							<Col
-								xs={15}
-								xl={15}
+								xs={18}
+								xl={18}
 								className="u-margin-left-medium"
+								style={{
+									display: "flex",
+									alignItems: "baseline",
+								}}
 							>
-								<p className="header-1r">{u.username}</p>
-								<Col className="user__social-icons-wrapper">
-									<SocialLink
-										platform="instagram"
-										user={user}
-									>
-										<Instagram />
-									</SocialLink>
-									<SocialLink platform="tumblr" user={user}>
-										<Tumblr />
-									</SocialLink>
-									<SocialLink
-										platform="soundcloud"
-										user={user}
-									>
-										<Soundcloud />
-									</SocialLink>
-									<SocialLink platform="twitter" user={user}>
-										<Twitter />
-									</SocialLink>
+								<Col>
+									<p className="header-1r">{u.username}</p>
+									<Col className="user__social-icons-wrapper">
+										<SocialLink
+											platform="instagram"
+											user={user}
+										>
+											<Instagram />
+										</SocialLink>
+										<SocialLink
+											platform="tumblr"
+											user={user}
+										>
+											<Tumblr />
+										</SocialLink>
+										<SocialLink
+											platform="soundcloud"
+											user={user}
+										>
+											<Soundcloud />
+										</SocialLink>
+										<SocialLink
+											platform="twitter"
+											user={user}
+										>
+											<Twitter />
+										</SocialLink>
+									</Col>
+								</Col>
+								<Col style={{ margin: "0 20px" }}>
+									{u.id === state.api.auth.user?.id && (
+										<Link to="/my/profile/update">
+											<Edit />
+										</Link>
+									)}
+								</Col>
+								<Col style={{ flex: 1 }} xs={24}>
+									<p className="header-3r">{user.displayName}</p>
 								</Col>
 							</Col>
 						</Row>
-					</Col>
-					<Col>
-						{u.id === state.api.auth.user?.id && (
-							<Link to="/my/profile/update">
-								<Edit />
-							</Link>
-						)}
 					</Col>
 				</Row>
 				<Row
@@ -653,9 +802,15 @@ export const UserWidgetHeading: NLView<{
 					>
 						{user.description}
 					</ShowMoreText>
+					<p
+						className="paragraph-2b u-margin-left-small"
+						style={{ color: "#959595" }}
+					>
+						{joinedDate}
+					</p>
 				</Row>
 			</Col>
-			<Col xs={24} xl={10} className="user-widget-heading">
+			<Col xs={24} xl={8} className="user-widget-heading">
 				<Row
 					className="user-widget-heading  user-widget__second-row"
 					style={{ width: "100%", textAlign: "left" }}
@@ -726,9 +881,8 @@ export const UserSocialInfo: NLView<{ user?: UserReadPrivateResponse }> = ({
 							<DataRow
 								title={k}
 								value={(user as any)[k]}
-								link={`https://www.${k}.com/${
-									(user as any)[k]
-								}`}
+								link={`https://www.${k}.com/${(user as any)[k]
+									}`}
 							/>
 						}
 					/>
@@ -936,29 +1090,72 @@ export const UserSocialInfoRow: NLView<{ user?: UserReadPrivateResponse }> = ({
 	</>
 );
 
-export const PoolInfoDataRow: NLView<{ pool?: { code: string } }> = ({
+export const PoolInfoDataRow: NLView<{
+	pool?: { code: string },
+}> = ({
 	pool,
 }) => {
-	const poolInfo = useCachedPool(pool);
-	const myPools = useAppState().newcoin.pools;
-	return (
-		<DataRow
-			title={
-				<Link to={`/user/${poolInfo?.owner}`}>{poolInfo?.owner}</Link>
-			}
-			value={`${pool?.code} ${myPools[poolInfo?.code]} ${
-				poolInfo?.code
-			} / ${poolInfo?.total.quantity}`}
-			link={`/user/${poolInfo?.owner}`}
-			target=""
-		/>
-	);
-	// <>${poolInfo?.owner} {JSON.stringify(poolInfo)}</>;
-};
+		const poolInfo = useCachedPool(pool);
+		const myPools = useAppState().newcoin.pools;
+		const user = useCachedUser({ username: poolInfo.owner });
+
+		return (
+			<Row style={{ marginBottom: 10 }}>
+				<Col span={4}>
+					<Link to={`/user/${user.username}`}>
+						<Avatar
+							src={<ContentImage {...user} />}
+							className="avatar-image-small"
+						/>
+					</Link>
+				</Col>
+				<Col span={14}>
+					<div>
+						<Link to={`/user/${user.username}`}>
+
+							${user.username?.toUpperCase()}&nbsp;
+							<b>{myPools[poolInfo?.code] / 10000}</b>
+						</Link>
+					</div>
+					<small>
+						total cap: {Math.round(Number(poolInfo?.total.quantity.toString().replace(/NCO/, "")))}
+					</small>
+				</Col>
+
+				<Col span={6}>
+					<UserStake
+						user={user}
+					/>
+				</Col>
+			</Row>
+
+			// <div>
+			// 			<CreatorWidget avatarClassName="avatar-image-small" creator={{ username: poolInfo.owner }} />
+			// 			{pool?.code} ${myPools[poolInfo?.code]} ${poolInfo?.code} 
+			// 			/ ${poolInfo?.total.quantity }
+			// 	</div>
+		);
+		// <DataRow
+		// 	title={
+		// 		// <Link to={`/user/${poolInfo?.owner}`}>{poolInfo?.owner}</Link>
+		// 		<CreatorWidget avatarClassName="avatar-image-small" creator={{ username: poolInfo.owner }} />
+		// 	}
+		// 	value={
+		// 		`${pool?.code} ${myPools[poolInfo?.code]} ${poolInfo?.code
+		// 		} 
+		// 		/ ${poolInfo?.total.quantity
+		// 	}`}
+		// 	link={`/user/${poolInfo?.owner}`}
+		// 	target=""
+		// />
+		// );
+		// <>${poolInfo?.owner} {JSON.stringify(poolInfo)}</>;
+	};
 
 export const UserNewcoinPoolsParticipation: NLView<{
 	user?: UserReadPrivateResponse;
-}> = ({ user = {} }) => {
+	onStakeStart?: Callback
+}> = ({ user = {}, onStakeStart }) => {
 	const nc = useAppState().newcoin;
 
 	return (
@@ -986,23 +1183,28 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({
 				title="newcoin domain name"
 				value={user.username}
 				link={`https://explorer-dev.newcoin.org/account/${user.username}`}
+				collapse={true}
 			/>
 			<DataRow
 				title="account balance"
 				value={state.newcoin.account.acc_balances}
+				collapse={true}
 			/>
 
 			<DataRow
 				title="newcoin pool"
 				value={<BlockExplorerLink id={user.newcoinPoolId} />}
+				collapse={true}
 			/>
 			<DataRow
 				title="newcoin account"
 				value={<BlockExplorerLink id={user.newcoinAccTx} />}
+				collapse={true}
 			/>
 			<DataRow
 				title="newcoin publisher public key"
 				value={<HashDisplay hash={user.newcoinPublisherPublicKey} />}
+				collapse={true}
 			/>
 			<DataRow
 				title="newcoin publisher private key"
@@ -1011,6 +1213,7 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({
 						<HashDisplay hash={user.newcoinPublisherPrivateKey} />
 					</RevealInfo>
 				}
+				collapse={true}
 			/>
 		</>
 	);

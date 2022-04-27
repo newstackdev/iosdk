@@ -1,50 +1,6 @@
-/// <reference types="@stripe/stripe-js/types/stripe-js/checkout" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/base" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card-number" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card-expiry" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card-cvc" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/iban" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/ideal-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/fpx-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/payment-request-button" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/au-bank-account" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/eps-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/p24-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/affirm-message" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/afterpay-clearpay-message" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/payment" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/link-authentication" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/shipping-address" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/payment-intents" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/setup-intents" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/payment-request" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/token-and-sources" />
-/// <reference types="@stripe/stripe-js/types/api/shared" />
-/// <reference types="@stripe/stripe-js/types/api/PaymentMethods" />
-/// <reference types="@stripe/stripe-js/types/api/PaymentIntents" />
-/// <reference types="@stripe/stripe-js/types/api/SetupIntents" />
-/// <reference types="@stripe/stripe-js/types/api/Sources" />
-/// <reference types="@stripe/stripe-js/types/api/Tokens" />
-/// <reference types="@stripe/stripe-js/types/api/BankAccounts" />
-/// <reference types="@stripe/stripe-js/types/api/Cards" />
-/// <reference types="@stripe/stripe-js/types/api/VerificationSessions" />
-/// <reference types="@stripe/stripe-js" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements" />
-/// <reference types="@stripe/stripe-js/types/stripe-js" />
-/// <reference types="@stripe/react-stripe-js" />
 import { Context } from './overmind';
 export declare const overmind: (cfg?: import("type-fest/source/partial-deep").PartialObjectDeep<{
     settings: {
-        app: {
-            newgraph: {
-                apiKey: string;
-            };
-            newcoin: {
-                domain: string;
-                poolSymbol: string;
-            };
-        };
         firebaseConfig: import("../types").FirebaseConfig;
         newlife: {
             baseUrl: string;
@@ -53,6 +9,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         };
         routing: {
             routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+        };
+        stripe: {
+            publicKey: any;
         };
     };
     routes: {
@@ -64,6 +23,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         layout: {
             Layout: import("../types").GenericComponent;
             TopMenu: import("../types").GenericComponent;
+            Header: import("../types").GenericComponent;
         };
         auth: {
             AuthWidget: import("../types").GenericComponent;
@@ -72,19 +32,15 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             Logo: import("../types").GenericComponent;
         };
     };
+    featureFlags: {
+        onboarding: {
+            premiumDomains: boolean;
+        };
+    };
 }> | undefined) => import("overmind").Overmind<{
     state: import("overmind/lib/internalTypes").SubType<{
         config: {
             settings: {
-                app: {
-                    newgraph: {
-                        apiKey: string;
-                    };
-                    newcoin: {
-                        domain: string;
-                        poolSymbol: string;
-                    };
-                };
                 firebaseConfig: import("../types").FirebaseConfig;
                 newlife: {
                     baseUrl: string;
@@ -93,6 +49,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 };
                 routing: {
                     routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+                };
+                stripe: {
+                    publicKey: any;
                 };
             };
             routes: {
@@ -104,12 +63,18 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 layout: {
                     Layout: import("../types").GenericComponent;
                     TopMenu: import("../types").GenericComponent;
+                    Header: import("../types").GenericComponent;
                 };
                 auth: {
                     AuthWidget: import("../types").GenericComponent;
                 };
                 icons: {
                     Logo: import("../types").GenericComponent;
+                };
+            };
+            featureFlags: {
+                onboarding: {
+                    premiumDomains: boolean;
                 };
             };
         };
@@ -165,7 +130,11 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         };
         payments: unknown;
         evm: unknown;
-        ux: unknown;
+        ux: {
+            layout: {
+                headerShown: boolean;
+            };
+        };
         chromeext: unknown;
         api: {
             client: import("../types").CreatorApi;
@@ -375,6 +344,12 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             userJourney: {
                 flags: Record<string, string>;
             };
+            stake: {
+                options: {
+                    stakingContainer: any;
+                };
+                latestMode: number;
+            };
         }, object>;
         newcoin: {
             account: any;
@@ -420,7 +395,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         };
         chromeext: {};
         api: {
-            initialize(): import("../types").CreatorApi;
+            initialize(baseUrl: any): import("../types").CreatorApi;
             updateToken(token: string): void;
             authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
         };
@@ -443,6 +418,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 };
             };
             userJourney: unknown;
+            stake: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
     }, object>;
@@ -503,6 +479,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 message: string;
                 duration?: number | undefined;
             }, void>;
+            setLayout: import("../types").Action<{
+                headerShown: boolean;
+            }, void>;
         };
         chromeext: typeof import("./chromeext/actions");
         api: {
@@ -549,6 +528,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 }, void>;
                 onInitializeOvermind: import("../types").Action<undefined, void>;
             };
+            stake: typeof import("./flows/stake/actions");
         }, object>;
         newcoin: typeof import("./newcoin/actions");
     }, object>;
@@ -660,6 +640,9 @@ export declare const useActions: () => {
             message: string;
             duration?: number | undefined;
         }) => void | Promise<void>;
+        setLayout: (payload: {
+            headerShown: boolean;
+        }) => void | Promise<void>;
     };
     chromeext: {
         readonly sendMessage: (payload: {
@@ -728,7 +711,7 @@ export declare const useActions: () => {
             readonly getPosts: (payload: import("@newlife/newlife-creator-client-api").MoodReadResponse) => void | Promise<void>;
             readonly create: (payload: {
                 mood: import("@newlife/newlife-creator-client-api").MoodCreateRequest;
-            }) => void | Promise<void>;
+            }) => import("@newlife/newlife-creator-client-api").MoodReadResponse | Promise<import("@newlife/newlife-creator-client-api").MoodReadResponse>;
         };
         post: {
             readonly read: (payload: {
@@ -809,6 +792,14 @@ export declare const useActions: () => {
             }) => void | Promise<void>;
             onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
         };
+        stake: {
+            readonly setOptions: (payload?: {
+                stakingContainer: any;
+            } | undefined) => void | Promise<void>;
+            readonly setLatestMode: (payload: {
+                stakingMode: number;
+            }) => void | Promise<void>;
+        };
     };
     newcoin: {
         readonly getAccountBalance: (payload: {
@@ -862,7 +853,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
     };
     chromeext: {};
     api: {
-        initialize(): import("../types").CreatorApi;
+        initialize(baseUrl: any): import("../types").CreatorApi;
         updateToken(token: string): void;
         authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
     };
@@ -885,6 +876,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
             };
         };
         userJourney: unknown;
+        stake: unknown;
     }, object>;
     newcoin: typeof import("./newcoin/effects");
 }, object>;

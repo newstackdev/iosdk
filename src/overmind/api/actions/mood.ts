@@ -8,6 +8,9 @@ export const cache: Action<{ moods?: (MoodReadResponse & { promise?: Promise<any
         if(!moods)
             return;
 
+        if((moods as any).id && !(moods instanceof Array))
+            moods = [moods];
+
         moods.forEach(m => {
             const id = m.id || "";
             const curr = state.api.cache.moods[id] || {};
@@ -16,14 +19,24 @@ export const cache: Action<{ moods?: (MoodReadResponse & { promise?: Promise<any
             {
                 m.posts?.forEach(p => p.id && (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p }));
             }
+
+            const currPosts = m.posts;
+
+            state.api.cache.moods[id] = { 
+                ...curr,
+                ...m,
+                promise: m.promise || null,
+                posts: ((curr.posts && curr.posts.length) || 0) < (m && m.posts?.length || 0) ? m.posts : curr.posts
+            };
+
             // if(
-            //     !curr?.id ||
-            //     curr.promise ||
-            //     new Date(curr.updated || "").getDate() < new Date(m.updated || "").getDate() 
+            //     // !curr?.id ||
+            //     // curr.promise ||
+            //     // new Date(curr.updated || "").getDate() < new Date(m.updated || "").getDate(),
             //     // overwrite || 
-            //     // ((curr.posts && curr.posts.length) || 0) < (m && m.posts?.length || 0)
+                
             // ) {
-                state.api.cache.moods[id] = { ...state.api.cache.moods[id], ...m, promise: m.promise || null };
+            //     state.api.cache.moods[id].posts = posts;
             // }
 
         });
@@ -66,8 +79,9 @@ export const getPosts: Action<MoodReadResponse> = async ({ state, actions, effec
     // };
 };
 
-export const create : Action<{ mood: MoodCreateRequest }> = async ({ state, actions, effects }, { mood }) => {
+export const create : Action<{ mood: MoodCreateRequest }, MoodReadResponse> = async ({ state, actions, effects }, { mood }) => {
     const m = await state.api.client.mood.moodCreate(mood);
     actions.api.mood.cache({ moods: [m.data] });
     state.api.auth.moods.push(m.data);
+    return m.data;
 }

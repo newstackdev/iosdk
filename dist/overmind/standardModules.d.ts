@@ -1,38 +1,3 @@
-/// <reference types="@stripe/stripe-js/types/stripe-js/checkout" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/base" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card-number" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card-expiry" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/card-cvc" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/iban" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/ideal-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/fpx-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/payment-request-button" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/au-bank-account" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/eps-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/p24-bank" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/affirm-message" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/afterpay-clearpay-message" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/payment" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/link-authentication" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements/shipping-address" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/payment-intents" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/setup-intents" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/payment-request" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/token-and-sources" />
-/// <reference types="@stripe/stripe-js/types/api/shared" />
-/// <reference types="@stripe/stripe-js/types/api/PaymentMethods" />
-/// <reference types="@stripe/stripe-js/types/api/PaymentIntents" />
-/// <reference types="@stripe/stripe-js/types/api/SetupIntents" />
-/// <reference types="@stripe/stripe-js/types/api/Sources" />
-/// <reference types="@stripe/stripe-js/types/api/Tokens" />
-/// <reference types="@stripe/stripe-js/types/api/BankAccounts" />
-/// <reference types="@stripe/stripe-js/types/api/Cards" />
-/// <reference types="@stripe/stripe-js/types/api/VerificationSessions" />
-/// <reference types="@stripe/stripe-js" />
-/// <reference types="@stripe/stripe-js/types/stripe-js/elements" />
-/// <reference types="@stripe/stripe-js/types/stripe-js" />
-/// <reference types="@stripe/react-stripe-js" />
 export declare const standardModules: {
     indicators: {
         state: {
@@ -176,10 +141,18 @@ export declare const standardModules: {
                 message: string;
                 duration?: number | undefined;
             }, void>;
+            setLayout: import("../types").Action<{
+                headerShown: boolean;
+            }, void>;
         };
         effects: {
             notification: import("antd/lib/notification").NotificationApi;
             message: import("antd/lib/message").MessageApi;
+        };
+        state: {
+            layout: {
+                headerShown: boolean;
+            };
         };
     };
     chromeext: {
@@ -195,7 +168,7 @@ export declare const standardModules: {
             post: typeof import("./api/actions/post");
         };
         effects: {
-            initialize(): import("../types").CreatorApi;
+            initialize(baseUrl: any): import("../types").CreatorApi;
             updateToken(token: string): void;
             authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
         };
@@ -429,6 +402,12 @@ export declare const standardModules: {
             userJourney: {
                 flags: Record<string, string>;
             };
+            stake: {
+                options: {
+                    stakingContainer: any;
+                };
+                latestMode: number;
+            };
         }, object>;
         effects: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
@@ -448,6 +427,7 @@ export declare const standardModules: {
                 };
             };
             userJourney: unknown;
+            stake: unknown;
         }, object>;
         actions: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
@@ -469,6 +449,7 @@ export declare const standardModules: {
                 }, void>;
                 onInitializeOvermind: import("../types").Action<undefined, void>;
             };
+            stake: typeof import("./flows/stake/actions");
         }, object>;
     };
     newcoin: {

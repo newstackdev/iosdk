@@ -29,10 +29,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const jsx_runtime_1 = require("react/jsx-runtime");
 const antd_1 = require("antd");
+const overmind_1 = require("overmind");
 const react_1 = require("react");
 const react_router_1 = require("react-router");
 const ActivityStream_1 = require("../../Components/ActivityStream");
-const ContentLayout_1 = require("../../Components/ContentLayout");
 const Creators_1 = __importStar(require("../../Components/Creators"));
 const Deferred_1 = __importDefault(require("../../Components/Deferred"));
 const Spin_1 = require("../../Components/Spin");
@@ -40,17 +40,18 @@ const TopFolders_1 = __importDefault(require("../../Components/TopFolders"));
 const UserWidget_1 = require("../../Components/UserWidget");
 const useCached_1 = require("../../hooks/useCached");
 const useSetTitle_1 = require("../../hooks/useSetTitle");
-const overmind_1 = require("../../overmind");
+const overmind_2 = require("../../overmind");
 const User = () => {
     const [activeKey, setActiveKey] = (0, react_1.useState)("0");
     let { username: paramsUsername } = (0, react_router_1.useParams)();
-    const state = (0, overmind_1.useAppState)();
-    const actions = (0, overmind_1.useActions)();
+    const state = (0, overmind_2.useAppState)();
+    const actions = (0, overmind_2.useActions)();
     let username = paramsUsername || state.api.auth.user?.username;
     // const username = (id.length < 15) ? id : undefined;
     const user = (0, useCached_1.useCachedUser)({ username }, true);
     (0, useSetTitle_1.useSetTitle)(user?.username);
-    const moodList = user.moods || [];
+    // const moodList = user.moods || [];
+    const moodList = (0, overmind_1.json)((user.moods || [])).sort((m1, m2) => (m1.stakeToAccess || 0) - (m2.stakeToAccess || 0));
     const powerups = (0, useCached_1.useCachedPowerups)(user, true);
     const powering = powerups?.out?.value?.length || "";
     const powered = powerups?.in?.value?.length || "";
@@ -63,7 +64,7 @@ const User = () => {
         return ((0, jsx_runtime_1.jsx)(Deferred_1.default, { deferTime: 200, visible: state.indicators.specific["api.user.read"], children: state.indicators.specific["api.user.read"] ? ((0, jsx_runtime_1.jsx)(Spin_1.Spin, {})) : ((0, jsx_runtime_1.jsx)(Deferred_1.default, { deferTime: 200, visible: false, children: (0, jsx_runtime_1.jsxs)("div", { children: ["User not found. The user may exist in the newcoin network,", (0, jsx_runtime_1.jsx)("br", {}), "check\u00A0", (0, jsx_runtime_1.jsx)("a", { href: `https://explorer-dev.newcoin.org/account/${user.username}`, children: "the newcoin block explorer." })] }) })) }));
     // if(true)
     // 	return <>boo</>
-    return ((0, jsx_runtime_1.jsxs)(ContentLayout_1.ContentLayout, { children: [(0, jsx_runtime_1.jsx)(UserWidget_1.UserWidgetHeading, { user: user, setActiveKey: setActiveKey }), (0, jsx_runtime_1.jsxs)(antd_1.Tabs, { className: "app-main-full-width", activeKey: activeKey, onChange: (key) => setActiveKey(key), children: [(0, jsx_runtime_1.jsx)(antd_1.Tabs.TabPane, { tab: "Folders", children: (0, jsx_runtime_1.jsx)(TopFolders_1.default, { userMoods: moodList, title: "" }) }, "0"), (0, jsx_runtime_1.jsx)(antd_1.Tabs.TabPane, { tab: `Powered by  ${powered ? `(${powered})` : ""}`, children: (0, jsx_runtime_1.jsx)(Creators_1.default, { users: powerups?.in?.value
+    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(UserWidget_1.UserWidgetHeading, { user: user, setActiveKey: setActiveKey }), (0, jsx_runtime_1.jsxs)(antd_1.Tabs, { className: "app-main-full-width", activeKey: activeKey, onChange: (key) => setActiveKey(key), children: [(0, jsx_runtime_1.jsx)(antd_1.Tabs.TabPane, { tab: "Folders", children: (0, jsx_runtime_1.jsx)(TopFolders_1.default, { userMoods: moodList, title: "" }) }, "0"), (0, jsx_runtime_1.jsx)(antd_1.Tabs.TabPane, { tab: `Powered by  ${powered ? `(${powered})` : ""}`, children: (0, jsx_runtime_1.jsx)(Creators_1.default, { users: powerups?.in?.value
                                 ?.sort((a, b) => (b.powered || 0) - (a.powered || 0))
                                 .slice(0, 20) || [], title: "" }) }, "1"), (0, jsx_runtime_1.jsx)(antd_1.Tabs.TabPane, { tab: `Powering ${powering ? `(${powering})` : ""}`, children: (0, jsx_runtime_1.jsx)(Creators_1.CreatorsList, { users: powerups?.out?.value
                                 ?.sort((a, b) => (b.powered || 0) - (a.powered || 0))

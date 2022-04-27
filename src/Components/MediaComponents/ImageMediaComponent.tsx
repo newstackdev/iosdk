@@ -57,10 +57,11 @@ export const ImageComponent: ContentElement = (props) => {
 			<br />
 			<Spin />
 		</div>
-
+	
 	return (
 		<ADImage
 			{...props}
+			// ref={props.ref}
 			preview={{
 				visible: false,
 				mask: false,

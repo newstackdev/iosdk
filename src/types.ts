@@ -4,8 +4,9 @@ import { Context } from "./overmind/overmind";
 
 export class CreatorApi extends Api<{ token: string }> {}
 
-export type NLView<T = {}> = React.FC<React.PropsWithChildren<T>>;
+export type NLView<T = {}> = React.FunctionComponent<React.PropsWithChildren<T>>; //React.FC<React.PropsWithChildren<T>>;
 export type GenericComponent = NLView<any> | React.FC<any>;
+export type IOView<T = {}> = NLView<T>;
 
 export type Action<T = undefined, R = void> = (
 	context: Context,
@@ -31,7 +32,7 @@ export type EmbeddableControl = {
 
 export type Timer = ReturnType<typeof setInterval>;
 export type EventHandler = (e?: KeyboardEvent | MouseEvent) => void;
-export type Callback = (e?: any) => void;
+export type Callback<T = any> = (e?: T) => void;
 
 export type ActiveKey = "0" | "1" | "2" | "3";
 

@@ -1,13 +1,14 @@
 import { useParams } from "react-router";
 import { NLView } from "../../types";
-import { Button, Col, Form, Modal, Progress, Row, Tag, Tooltip } from "antd";
+import { Button, Col, Form, Modal, Progress, Row, Tag, TagProps, Tooltip } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
 import {
 	useCachedMood,
 	useCachedPost,
 	useCachedUser,
 } from "../../hooks/useCached";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActions, useAppState } from "../../overmind";
 import { SelectMood, SelectMoodForm } from "../../Components/SelectMood";
 import { MoodCreateModal } from "../Mood/MoodCreate";
@@ -27,6 +28,7 @@ import { Vote } from "../../Components/Vote";
 import { json } from "overmind";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Edit } from "../../Components/Icons/Edit";
+import { Clipboard } from "src/Components/Icons/Clipboard";
 import { BlockExplorerLink } from "../../Components/Links";
 
 const useVotingStreamMood = () => {
@@ -108,234 +110,318 @@ const useVotingStreamTags = () => {
 };
 
 const round = (n) => Math.round(n * 10000) / 10000;
-const sumScore = (tagRels: { score: number }[]) => {
+const sumScore = (tagRels?: { score?: number }[]) => {
 	if (!(tagRels instanceof Array))
-		return round((tagRels as any).score as number);
+		return 0;
 	const w = 1 / tagRels.length;
-	return round(tagRels.reduce((r, c) => r + w * c.score, 0));
+	return round(tagRels.reduce((r, c) => r + w * (c.score || 0), 0));
 }
+const bySumScore = (a, b) => sumScore(b["_rel"]) - sumScore(a["_rel"]);
 
-export const postBase : (useVotingStreamHook: typeof useVotingStreamTags) => NLView = 
-(useVotingStreamHook) => () => {
-	const state = useAppState();
-	const actions = useActions();
-	const [copyToClipboard, setCopyToClipboard] = useState<boolean>(false);
+const SvgPolygons: NLView<{
+	visionTags?: {
+		value?: string,
+		polygons?: { x: number, y: number }[][]
+	}[],
+}> = ({ visionTags }) =>
 
-	// const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
-	const nextInStream = useVotingStreamHook(); //useVotingStreamTags();
+		!visionTags ? <></> :
+			<div style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%" }}>
+				<svg width='100%' height='100%' style={{ left: 0, top: 0, position: "absolute" }} viewBox="0 0 100 100">
+					{
+						visionTags?.map(
+							t => <g>
+								{t.polygons?.map(polygon =>
+									<>
+										{visionTags.length > 1 ? <text
+											fontSize={3}
+											fill="#b3ff00"
+											x={polygon[0].x * 100} y={polygon[0].y * 100 - .5}>{t.value}</text>
+											: <></>}
+										<polygon
+											vector-effect="non-scaling-stroke"
+											style={{
+												stroke: "#b3ff00",
+												strokeWidth: "2px",
+												fill: "transparent",
+												filter: "drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7))"
+											}}
+											points={polygon.map(point => `${point.x * 100},${point.y * 100}`).join(" ")}>
+											{/* {polygon.map(point => <><span>{point.x}</span><span>{point.y}</span></>)} */}
+										</polygon>
+									</>)}
+							</g>
+						)
+					}
+				</svg>
+			</div>
 
-	const { contextType, contextValue, currPost, nextPath, index } = nextInStream;
 
-	const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
-	const username = author?.username || author?.displayName;
+type Polygon = { x: number, y: number }[];
 
-	const navigateToNext = () => {
-		const location = nextPath();
-		if (!location) return;
-		actions.routing.historyPush({ location });
-	};
+type SimplifiedTag = {
+	value?: string,
+	polygons?: Polygon[]
+};
 
-	const addToMoods = async (form?: { moods: { id: string }[] }) => {
-		console.log("attachToMoods: Calling...");
+export const postBase: (useVotingStreamHook: typeof useVotingStreamTags) => NLView =
+	(useVotingStreamHook) => () => {
+		const state = useAppState();
+		const actions = useActions();
+		const [copyToClipboard, setCopyToClipboard] = useState<boolean>(false);
+		// const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
+		const nextInStream = useVotingStreamHook(); //useVotingStreamTags();
+		const ref = useRef<any>();
 
-		if (form?.moods?.length)
-			await actions.api.post.attachToMoods({
-				post: currPost,
-				moods: form?.moods || [],
-			});
-		console.log("attachToMoods: done Attaching to moods...");
-		navigateToNext();
-	};
+		const { contextType, contextValue, currPost, nextPath, index } = nextInStream;
 
-	const doneVoting = (rating: number) => {
-		if (rating > 0)
-			actions.api.post.rate({
-				post: currPost,
-				amount: rating,
-				contextType,
-				contextValue
-				// mood: currMood
-			});
+		const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
+		const username = author?.username || author?.displayName;
 
-		if (rating < 100) return navigateToNext();
+		const [hilightTag, setHilightTag] = useState<SimplifiedTag[]>([])
 
-		// if at 100 the mood will show itself
-	};
-	// else either at 100% or stopped rating
-	// if (currMood.id && index === -1) return <Spin />;
-	if(!contextType && !(index >= 0)) return <Spin />;
+		const navigateToNext = () => {
+			const location = nextPath();
+			if (!location) return;
+			actions.routing.historyPush({ location });
+		};
 
-	const url = [
-		window.location.protocol,
-		"//",
-		window.location.host,
-		state.routing.location,
-	].join("");
+		const addToMoods = async (form?: { moods: { id: string }[] }) => {
+			console.log("attachToMoods: Calling...");
 
-	return (
-		<>
-			<Vote
-				// useVotingStream={useVotingStreamMood}
-				votingEnabled={!!contextType}
-				onDoneVoting={doneVoting}
-				onLongDoneVoting={() => {
-					const eh = (e) => {
-						if (e.which !== 32) return;
+			if (form?.moods?.length)
+				await actions.api.post.attachToMoods({
+					post: currPost,
+					moods: form?.moods || [],
+				});
+			console.log("attachToMoods: done Attaching to moods...");
+			navigateToNext();
+		};
 
-						window.removeEventListener("keyup", eh);
+		const doneVoting = (rating: number) => {
+			if (rating > 0)
+				actions.api.post.rate({
+					post: currPost,
+					amount: rating,
+					contextType,
+					contextValue
+					// mood: currMood
+				});
 
-						e.preventDefault();
-						navigateToNext();
-					};
-					window.addEventListener("keyup", eh);
-					return () => {
-						window.removeEventListener("keyup", eh);
-					};
-				}}
-				info={
-					<div className="post-info-column">
-						<h2
-							className="header-2"
-							hidden={currPost.title === null ? true : false}
-						>
-							{currPost.title}
-						</h2>
-						<div
-							style={{
-								textAlign: "right",
-							}}
-						>
-							<div style={{ textAlign: "left" }}>
-								<Link
-									to={`/user/${username}`}
-									style={{
-										wordBreak: "break-all",
-										maxWidth: "100%",
-										minHeight: "1.5em",
-										textAlign: "right",
-									}}
+			if (rating < 100) return navigateToNext();
+
+			// if at 100 the mood will show itself
+		};
+		// else either at 100% or stopped rating
+		// if (currMood.id && index === -1) return <Spin />;
+		if (!contextType && !(index >= 0)) return <Spin />;
+
+		const url = [
+			window.location.protocol,
+			"//",
+			window.location.host,
+			state.routing.location,
+		].join("");
+
+		const isVisionTag = (t: { _rel?: { source: string, polygons: SimplifiedTag["polygons"] }[] } | any) => 
+			t._rel?.find(r => r.source === "vision" && r.polygons);
+
+		const nonVisionTags: SimplifiedTag[] =
+			currPost.tags?.filter(t => !isVisionTag(t))
+				.map(t => ({ ...t, polygons: [] })) || [];
+
+		const visionTags: SimplifiedTag[] =
+			currPost.tags?.filter(t => isVisionTag(t))
+				.map(t => ({ ...t, polygons: JSON.parse((t._rel?.find(r => r.source === "vision"))?.polygons || "[]") })) || [];
+
+		console.log("Vision tags:", visionTags);
+
+		return (
+			<>
+				<Vote
+					// useVotingStream={useVotingStreamMood}
+					votingEnabled={!!contextType}
+					onDoneVoting={doneVoting}
+					onLongDoneVoting={() => {
+						const eh = (e) => {
+							if (e.which !== 32) return;
+
+							window.removeEventListener("keyup", eh);
+
+							e.preventDefault();
+							navigateToNext();
+						};
+						window.addEventListener("keyup", eh);
+						return () => {
+							window.removeEventListener("keyup", eh);
+						};
+					}}
+					info={
+						<div className="post-info-column">
+							<h2
+								className="header-2"
+								hidden={currPost.title === null ? true : false}
+							>
+								{currPost.title}
+							</h2>
+							<div
+								style={{
+									textAlign: "right",
+								}}
+							>
+								<div style={{ textAlign: "left" }}>
+									<Link
+										to={`/user/${username}`}
+										style={{
+											wordBreak: "break-all",
+											maxWidth: "100%",
+											minHeight: "1.5em",
+											textAlign: "right",
+										}}
+									>
+										<span className="paragraph-2b">
+											{username}{" "}
+										</span>
+										<span className="paragraph-2r">
+											{currPost.description}
+										</span>
+									</Link>
+								</div>
+							</div>
+							{currPost.author?.newcoinPoolTx ? (
+								<Row
+									className="paragraph-2u"
+									align="bottom"
+									style={{ marginTop: "20px" }}
 								>
-									<span className="paragraph-2b">
-										{username}{" "}
-									</span>
-									<span className="paragraph-2r">
-										{currPost.description}
-									</span>
-								</Link>
+									<a
+										href={
+											"https://explorer-dev.newcoin.org/account/" +
+											currPost.author?.username
+										}
+										target="_blank"
+										rel="noreferrer"
+									>
+										Creator pool
+									</a>
+									<Ebene />
+								</Row>
+							) : (
+								""
+							)}
+
+							<Row
+								className="paragraph-2b"
+								align="bottom"
+								style={{ marginTop: "10px" }}
+							>
+								{!currPost.newcoinMintTx ? (
+									""
+								) : ["REQUESTED", "FAILED"].includes(
+									currPost.newcoinMintTx.toString()
+								) ? (
+									"Minting NFT..." /* + currPost.newcoinMintTx || ""*/
+								) : (
+									<>
+										<BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
+											See minted NFT
+										</BlockExplorerLink>
+										<NFTIcon />
+									</>
+								)}
+							</Row>
+							<br />
+							<br />
+							<CopyToClipboard text={url}>
+								<Tooltip
+									title={
+										!copyToClipboard
+											? ""
+											: "copied to clipboard"
+									}
+									placement="right"
+								>
+									<button
+										className="copy-to-clipboard-button"
+										onClick={() => {
+											setCopyToClipboard(true);
+											setTimeout(() => {
+												setCopyToClipboard(false);
+											}, 2000);
+										}}
+									>
+										<Clipboard />
+									</button>
+								</Tooltip>
+							</CopyToClipboard>
+							<br />
+							{currPost.tags?.length && (
+								<p className="paragraph-1r u-margin-top-medium">
+									Tags:
+								</p>
+							)}
+							<br />
+							{visionTags.length ?
+								<div
+									style={{ cursor: "pointer", padding: 6 }}
+									onMouseOver={() => setHilightTag(visionTags)}
+									onMouseOut={() => setHilightTag([])}
+								><EyeOutlined /></div> : <></>}
+							<div style={{ display: "flex", flexWrap: "wrap", cursor: "pointer" }}>
+
+								{[...visionTags?.sort(bySumScore), ...nonVisionTags?.sort(bySumScore).slice(0, Math.max(0, 20 - visionTags.length))]
+									// ?.slice(0, 10)
+									?.map((t) => {
+										const tag = t.value;
+										const score = (
+											sumScore(t["_rel"]) * 100
+										).toFixed(2);
+
+										return (
+											<Row
+												onMouseOver={() => setHilightTag(visionTags.filter(s => s.value == t.value))}
+												onMouseOut={() => setHilightTag([])}
+												className="paragraph-2b tag"
+												style={{ backgroundColor: Number(score) === 100 ? "#b3ff00" : "white" }}
+											>
+												<div>{t.polygons?.length ? <EyeOutlined /> : <></>} &nbsp;</div>
+												<div className="u-margin-right-small">
+													{score}%
+												</div>
+												<p>{tag}</p>
+											</Row>
+										);
+									})}
 							</div>
 						</div>
-						{currPost.author?.newcoinPoolTx ? (
-							<Row
-								className="paragraph-2u"
-								align="bottom"
-								style={{ marginTop: "20px" }}
-							>
-								<a
-									href={
-										"https://explorer-dev.newcoin.org/account/" +
-										currPost.author?.username
-									}
-									target="_blank"
-									rel="noreferrer"
-								>
-									Creator pool
-								</a>
-								<Ebene />
-							</Row>
-						) : (
-							""
-						)}
-
-						<Row
-							className="paragraph-2b"
-							align="bottom"
-							style={{ marginTop: "10px" }}
-						>
-							{!currPost.newcoinMintTx ? (
-								""
-							) : ["REQUESTED", "FAILED"].includes(
-								currPost.newcoinMintTx.toString()
-							) ? (
-								"Minting NFT..." /* + currPost.newcoinMintTx || ""*/
-							) : (
-								<>
-									<BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
-										See minted NFT
-									</BlockExplorerLink>
-									<NFTIcon />
-								</>
-							)}
-						</Row>
-						<br />
-						<br />
-						<CopyToClipboard text={url}>
-							<Tooltip
-								title={
-									!copyToClipboard
-										? ""
-										: "copied to clipboard"
-								}
-								placement="right"
-							>
-								<button
-									className="copy-to-clipboard-button"
-									onClick={() => {
-										setCopyToClipboard(true);
-										setTimeout(() => {
-											setCopyToClipboard(false);
-										}, 2000);
-									}}
-								>
-									<Edit />
-								</button>
-							</Tooltip>
-						</CopyToClipboard>
-						<br />
-						{currPost.tags?.length ? "Tags:" : ""}
-						{json(currPost.tags || [])
-							?.sort((a, b) => sumScore(b._rel as []) - sumScore(a._rel as []))
-							?.slice(0, 10)
-							?.map((t) => {
-								return (
-									<>
-										<div className="text-small">{t.value} [{sumScore(t._rel as []) * 100}]</div>
-
-										<Progress
-											strokeColor="#c1fa50"
-											showInfo={false}
-											percent={sumScore(t._rel as []) * 100}
-										/>
-									</>
-								);
-							})}
+					}
+				>
+					{/PROCESSING/i.test(currPost.contentUrl || "") ? (
+						<Spin title="Processing media..." />
+					) : (
+						<ContentImage ref={ref} {...currPost} thumbnail={false} />
+					)}
+					{hilightTag?.length ?
+						<SvgPolygons visionTags={hilightTag} /> :
+						<></>}
+				</Vote>
+				<div className="text-right app-main-full-width">
+					<PostReportModal />
+				</div>
+				{
+					<div
+						hidden={state.flows.rating.value !== 100}
+						className="app-main-full-width"
+					>
+						<SelectMoodForm
+							onFinish={addToMoods}
+							title="Select a folder to share to"
+						/>
 					</div>
 				}
-			>
-				{/PROCESSING/i.test(currPost.contentUrl || "") ? (
-					<Spin title="Processing media..." />
-				) : (
-					<ContentImage {...currPost} thumbnail={false} />
-				)}
-
-
-			</Vote>
-			<div className="text-right app-main-full-width">
-				<PostReportModal />
-			</div>
-			{
-				<div
-					hidden={state.flows.rating.value !== 100}
-					className="app-main-full-width"
-				>
-					<SelectMoodForm
-						onFinish={addToMoods}
-						title="Select a folder to share to"
-					/>
-				</div>
-			}
-		</>
-	);
-};
+			</>
+		);
+	};
 
 export const Post = postBase(useVotingStreamMood);
 export const PostInMood = postBase(useVotingStreamMood);
@@ -354,7 +440,7 @@ export const PostInTags = postBase(useVotingStreamTags);
 
 
 
-				{/* <Modal
+{/* <Modal
 					cancelButtonProps={{ hidden: true }}
 					footer={false}
 					okText="Done"

@@ -29,7 +29,7 @@ const post = __importStar(require("./actions/post"));
 const state_1 = require("../auth/state");
 const auth = __importStar(require("./actions/auth"));
 const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
-    state.api.client = effects.api.initialize();
+    state.api.client = effects.api.initialize(state.config.settings.newlife.baseUrl);
     // reaction(
     //     (state) => state.firebase.user,
     //     async (fbUser) => {

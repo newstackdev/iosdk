@@ -1,3 +1,4 @@
+import { PostReadResponse } from "@newlife/newlife-creator-client-api";
 import { ImageProps } from "antd";
 import { ReactNode } from "react";
 import { NLView } from "../../types";
@@ -17,8 +18,9 @@ export type ContentImageProps = {
 	size?: Sizes;
 	created?: string;
 	neverHide?: boolean;
-    content?: string
-};
+    content?: string,
+	ref?: any
+} & PostReadResponse;
 
 type ContentElementOpts = {
 	isVisible?: boolean,

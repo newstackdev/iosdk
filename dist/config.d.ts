@@ -5,17 +5,9 @@ export declare const firebaseConfig: FirebaseConfig;
 export declare const newlifeBaseUrl: string;
 export declare const newlifeMediaBucket: any;
 export declare const newlifeWebsocketsServer: any;
+export declare const stripeKey: any;
 export declare const config: {
     settings: {
-        app: {
-            newgraph: {
-                apiKey: string;
-            };
-            newcoin: {
-                domain: string;
-                poolSymbol: string;
-            };
-        };
         firebaseConfig: FirebaseConfig;
         newlife: {
             baseUrl: string;
@@ -24,6 +16,9 @@ export declare const config: {
         };
         routing: {
             routeAccessLevels: Record<string, (st: import("./overmind/auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+        };
+        stripe: {
+            publicKey: any;
         };
     };
     routes: {
@@ -35,12 +30,18 @@ export declare const config: {
         layout: {
             Layout: GenericComponent;
             TopMenu: GenericComponent;
+            Header: GenericComponent;
         };
         auth: {
             AuthWidget: GenericComponent;
         };
         icons: {
             Logo: GenericComponent;
+        };
+    };
+    featureFlags: {
+        onboarding: {
+            premiumDomains: boolean;
         };
     };
 };

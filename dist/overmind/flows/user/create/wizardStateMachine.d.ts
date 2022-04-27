@@ -1,4 +1,5 @@
 import { UserReadPrivateResponse } from '@newlife/newlife-creator-client-api';
+import { Configuration } from 'src/config';
 declare type States = {
     current: 'SELECT_DOMAIN';
     hasNext: boolean;
@@ -28,6 +29,7 @@ export declare type WizardInput = {
     formUsernameIsAvailable: string;
     user: UserReadPrivateResponse | null;
     legacyToken: string;
+    featureFlags: Configuration["featureFlags"];
 };
 declare type BaseState = {
     current: string;

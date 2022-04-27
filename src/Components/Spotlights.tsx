@@ -6,7 +6,7 @@ import Title from "../Pages/Explore/Title";
 import { useAppState } from "../overmind";
 import { NLView } from "../types";
 import { ContentImage } from "./Image";
-import { PostWidget } from "./PostWidget";
+import { MaybeLink, PostWidget } from "./PostWidget";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { max } from "lodash";
 import { ContentLayout } from "./ContentLayout";
@@ -16,7 +16,8 @@ import { fischerYates } from "../utils/random";
 const SpotlightGrid: NLView<{
 	maxItems?: number;
 	title?: string;
-}> = ({ maxItems, title }) => {
+	mood: MoodReadResponse;
+}> = ({ maxItems, title, mood }) => {
 	// const m = useCachedMood(mood);
 	// const postsList = m.posts?.slice(0, 1);
 	// const username = "newdomain.io";
@@ -41,13 +42,28 @@ const SpotlightGrid: NLView<{
 					className="bg-hover"
 				>
 					<Col className="spotlight">
-						<PostWidget
-							mood={moodsList[i]}
-							post={p}
-							username={p.author?.username}
-							aspectRatio={p.aspectRatio}
-							isSpotlight={true}
-						/>
+						<MaybeLink
+							to={
+								!p.id
+									? ""
+									: !mood
+									? `/post/${p.id}`
+									: `/folder/${mood.id}/${p.id}`
+							}
+							className={
+								p.contentType === "text/plain"
+									? "maybelink"
+									: ""
+							}
+						>
+							<PostWidget
+								mood={moodsList[i]}
+								post={p}
+								username={p.author?.username}
+								aspectRatio={p.aspectRatio}
+								isSpotlight={true}
+							/>
+						</MaybeLink>
 					</Col>
 					<p
 						className={
@@ -95,7 +111,11 @@ const Spotlights: NLView<{
 				<div className="spotlight-flex-container">
 					{moods?.slice(0, maxRows || moods.length).map((m) => (
 						<Row className="nl-mood-grid-row spotlight-row">
-							<SpotlightGrid maxItems={maxItems} title={title} />
+							<SpotlightGrid
+								maxItems={maxItems}
+								title={title}
+								mood={m}
+							/>
 						</Row>
 					))}
 				</div>

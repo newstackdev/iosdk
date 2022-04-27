@@ -7,7 +7,7 @@ declare const _default: {
         post: typeof import("./actions/post");
     };
     effects: {
-        initialize(): import("../../types").CreatorApi;
+        initialize(baseUrl: any): import("../../types").CreatorApi;
         updateToken(token: string): void;
         authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
     };

@@ -1,13 +1,12 @@
 import { ErrorResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
-import { newlifeBaseUrl } from "../../config";
 import { CreatorApi } from "../../types";
 
-const baseUrl = newlifeBaseUrl; //"https://api-eu-sit.newlife.io/creator";
+// const baseUrl = newlifeBaseUrl; //"https://api-eu-sit.newlife.io/creator";
 
 export default (() => {
   let api: CreatorApi;
   return {
-    initialize() {
+    initialize(baseUrl) {
       api = new CreatorApi({
         baseUrl, securityWorker: (securityData: { token: string } | null) => {
           return (!securityData ? {} : { headers: { Authorization: securityData.token } })

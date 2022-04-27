@@ -5,8 +5,9 @@ export declare class CreatorApi extends Api<{
     token: string;
 }> {
 }
-export declare type NLView<T = {}> = React.FC<React.PropsWithChildren<T>>;
+export declare type NLView<T = {}> = React.FunctionComponent<React.PropsWithChildren<T>>;
 export declare type GenericComponent = NLView<any> | React.FC<any>;
+export declare type IOView<T = {}> = NLView<T>;
 export declare type Action<T = undefined, R = void> = (context: Context, value: T) => R | Promise<R>;
 export interface Link {
     url?: string;
@@ -25,7 +26,7 @@ export declare type EmbeddableControl = {
 };
 export declare type Timer = ReturnType<typeof setInterval>;
 export declare type EventHandler = (e?: KeyboardEvent | MouseEvent) => void;
-export declare type Callback = (e?: any) => void;
+export declare type Callback<T = any> = (e?: T) => void;
 export declare type ActiveKey = "0" | "1" | "2" | "3";
 export declare type FirebaseConfig = {
     apiKey: string;

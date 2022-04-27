@@ -1,5 +1,10 @@
+/// <reference types="react" />
 import { MoodReadResponse, PostReadResponse } from "@newlife/newlife-creator-client-api";
 import { NLView } from "../types";
+export declare const MaybeLink: React.FC<React.PropsWithChildren<{
+    to: string;
+    className: string;
+}>>;
 export declare const PostWidget: NLView<{
     post: PostReadResponse;
     mood?: MoodReadResponse;

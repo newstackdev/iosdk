@@ -7,7 +7,7 @@ const useCached_1 = require("../hooks/useCached");
 const overmind_1 = require("../overmind");
 const Image_1 = require("./Image");
 const Closed_1 = require("./Icons/Folder/Closed");
-const MoodFolderWidget = ({ mood, onClick, selected, force, selectedFolder, setSelectedFolder, }) => {
+const MoodFolderWidget = ({ mood, onClick, selected, force, }) => {
     const state = (0, overmind_1.useAppState)();
     const m = (0, useCached_1.useCachedMood)(mood, force);
     const url = m.contentUrl || m.posts?.find((p) => p.contentUrl)?.contentUrl;

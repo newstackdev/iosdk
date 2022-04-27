@@ -9,5 +9,6 @@ export declare type ItemGridParams<T> = {
     loadMore?: () => void;
     setSelectedFolder?: React.Dispatch<React.SetStateAction<boolean>>;
     selectedFolder?: boolean;
+    noEmptyResults?: boolean;
 };
 export declare const ItemGrid: NLView<ItemGridParams<object>>;

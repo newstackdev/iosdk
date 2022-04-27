@@ -33,7 +33,10 @@ import { AddFolder } from "../../Components/Icons/AddFolder";
 import { Addfolderv2 } from "../../Components/Icons/Addfolderv2";
 import { CrossCircle } from "../../Components/Icons/CrossCircle";
 
-export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
+export const MoodCreate: NLView<{
+	onCreated?: Callback<MoodReadResponse>;
+	setIsCreated?: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ onCreated, setIsCreated }) => {
 	const state = useAppState();
 	const actions = useActions();
 
@@ -62,12 +65,13 @@ export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 		try {
 			const p = await actions.api.mood.create({ mood: values });
 
-			onCreated && onCreated();
+			onCreated && onCreated(p);
+			setIsCreated!(true);
 		} catch (ex) {
 			setErrMsg(
 				get(ex, "error.errorMessage.details") ||
-				get(ex, "message") ||
-				"unknown error"
+					get(ex, "message") ||
+					"unknown error"
 			);
 		}
 	};
@@ -120,7 +124,7 @@ export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 					<Input
 						// disabled
 						title="Minimum amount of creator coin stake a user needs to access this folder"
-						placeholder="minimum stake to access"
+						placeholder="minimum stake in creator coin to access"
 					/>
 				</Form.Item>
 				<Form.Item required={false} name="action">
@@ -163,7 +167,10 @@ export const MoodCreate: NLView<{ onCreated?: Callback }> = ({ onCreated }) => {
 	);
 };
 
-export const MoodCreateModal = () => {
+export const MoodCreateModal: NLView<{
+	setIsCreated?: React.Dispatch<React.SetStateAction<boolean>>;
+	onCreated?: Callback<MoodReadResponse>;
+}> = ({ setIsCreated, onCreated }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -176,7 +183,10 @@ export const MoodCreateModal = () => {
 				footer={false}
 				className="nl-white-box-modal"
 			>
-				<MoodCreate onCreated={() => setIsOpen(false)} />
+				<MoodCreate
+					onCreated={(m) => { setIsOpen(false); onCreated && onCreated(m); }}
+					setIsCreated={setIsCreated}
+				/>
 			</Modal>
 			<div>
 				<div style={{ fontSize: "120px" }}>

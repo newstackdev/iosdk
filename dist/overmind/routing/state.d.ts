@@ -1,7 +1,7 @@
 import { History } from "history";
 import { Link } from "../../types";
 import { AUTH_FLOW_STATUS_TYPE } from "../auth/state";
-export declare const ROUTE_ACCESS_LEVELS: Record<string, ((st: AUTH_FLOW_STATUS_TYPE) => boolean)>;
+export declare const ROUTE_ACCESS_LEVELS: Record<string, (st: AUTH_FLOW_STATUS_TYPE) => boolean>;
 declare const state: {
     preLoginRoute: string;
     breadcrumbs: Link[];

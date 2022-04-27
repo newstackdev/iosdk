@@ -5,6 +5,10 @@ declare type ICreators = {
     maxItems?: number;
     users?: UserReadPublicResponse[];
 };
+export declare const CreatorWidget: NLView<{
+    creator: UserReadPublicResponse;
+    avatarClassName?: string;
+}>;
 export declare const CreatorsList: NLView<ICreators>;
 export declare const Creators: NLView<ICreators>;
 export declare const TopCreators: NLView<ICreators>;

@@ -661,7 +661,7 @@ export const Layout: NLView = ({ children }) => {
 							height: "100px",
 							width: "175%",
 							border: "white 1px solid",
-						}}> <a href="https://forms.gle/izdem2cpHfYavU3a7" target="_blank">Buy $NCO</a>
+						}}> <a href="https://forms.gle/izdem2cpHfYavU3a7" target="_blank">Buy $GNCO</a>
 						</button>
 					</Col>
 					<Col style={{

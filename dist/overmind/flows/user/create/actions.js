@@ -3,13 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAvailability = exports.create = exports.preregisterCreate = exports.wizardStepNext = exports._wizardReact = exports.wizardStepPrev = exports.stopLegacyImport = exports.startLegacyImport = exports.updateForm = exports.onInitializeOvermind = void 0;
 const overmind_1 = require("overmind");
 // import { IReaction } from "overmind";
-const reduceState = ({ api: { auth }, auth: { authenticated }, flows: { user: { create: { legacyToken, form: { username }, formUsernameIsAvailable } } } }) => {
+const reduceState = ({ api: { auth }, auth: { authenticated }, config: { featureFlags }, flows: { user: { create: { legacyToken, form: { username }, formUsernameIsAvailable } } } }) => {
     return ({
         ...auth, ...{ authenticated }, formUsername: username || "",
         subscribed: !!auth.user?.subscriptionStatus,
         formUsernameIsAvailable,
         user: auth.user,
-        legacyToken
+        legacyToken,
+        featureFlags: featureFlags
     });
 };
 const onInitializeOvermind = async ({ actions, effects, state, reaction }) => {
@@ -32,7 +33,9 @@ const onInitializeOvermind = async ({ actions, effects, state, reaction }) => {
     });
 };
 exports.onInitializeOvermind = onInitializeOvermind;
-exports.updateForm = (0, overmind_1.pipe)((0, overmind_1.debounce)(200), ({ state }, val) => {
+exports.updateForm = (0, overmind_1.pipe)(
+// debounce(200),
+({ state }, val) => {
     state.flows.user.create.form = { ...state.flows.user.create.form, ...val };
 });
 const usernameToAccount = (username) => {
@@ -45,14 +48,20 @@ const usernameToAccount = (username) => {
 const startLegacyImport = async ({ state, actions }) => {
     const user = { ...state.api.auth.user }; // wont be available after logout
     const legacyToken = state.firebase.token;
-    actions.auth.logout({ noRouting: true });
-    actions.routing.historyPush({ location: "/" });
-    actions.flows.user.create.updateForm(user);
+    const displayName = user.displayName || user.username;
+    const username = usernameToAccount(user.displayName || "");
+    actions.flows.user.create.updateForm({
+        ...user,
+        displayName,
+        username
+    });
     state.flows.user.create.legacyToken = legacyToken;
     const form = state.flows.user.create.form;
-    form.username = user.username;
-    form.displayName = form.username || form.displayName;
-    form.username = usernameToAccount(form.displayName || "");
+    // form.username = user.username;
+    // form.displayName = form.displayName || form.username;
+    // form.username = usernameToAccount(form.displayName || "");
+    actions.auth.logout({ noRouting: true });
+    actions.routing.historyPush({ location: "/" });
     window.localStorage.setItem('legacyAuthToken', JSON.stringify({ legacyToken, updated: Date.now() }));
 };
 exports.startLegacyImport = startLegacyImport;

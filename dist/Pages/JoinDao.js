@@ -24,9 +24,16 @@ const JoinDaoWidget = ({ embedded, setNext, }) => {
     // const [staking, setStaking] = useState(false);
     const currentStake = (state.newcoin.pools || {})["CGY"];
     const isMember = currentStake >= 1087;
-    const done = ({ stakeDelta, stakeValue, preStakeValue } = { stakeDelta: 0, stakeValue: 0, preStakeValue: 0 }) => {
+    const done = ({ stakeDelta, stakeValue, preStakeValue, } = {
+        stakeDelta: 0,
+        stakeValue: 0,
+        preStakeValue: 0,
+    }) => {
         if (isMember &&
-            ((!preStakeValue && stakeDelta && state.flows.user.create.justCreated) || (!state.flows.user.create.justCreated)) &&
+            ((!preStakeValue &&
+                stakeDelta &&
+                state.flows.user.create.justCreated) ||
+                !state.flows.user.create.justCreated) &&
             /^\/?$/.test(state.routing.location)
         // !justStaked &&
         // !isStaking
@@ -47,7 +54,7 @@ const JoinDaoWidget = ({ embedded, setNext, }) => {
                 return;
             setVisible(false);
             actions.routing.historyPush({ location: "/explore" });
-        }, children: [isMember ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("h2", { className: "text-left text-bold", children: "You are a member of the Newlife DAO" }), (0, jsx_runtime_1.jsxs)("div", { style: { textAlign: "left" }, children: ["You may increase your stake or visit the", " ", (0, jsx_runtime_1.jsxs)(react_router_dom_1.Link, { to: `/user/${config_1.APP_DOMAIN}`, children: ["$", config_1.APP_DOMAIN] }), " ", "home page."] })] })) : ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("h2", { style: { width: "100%", textAlign: "start" }, className: "header-2", children: "Join the Newlife DAO" }), (0, jsx_runtime_1.jsx)("p", { style: { textAlign: "left", margin: "0" }, className: "paragraph-1r", children: "Newlife is governed by the community. To join the app, you need to own at least 1000 $LIFE on your account." }), (0, jsx_runtime_1.jsxs)("div", { style: { padding: "20px 0" }, children: [(0, jsx_runtime_1.jsx)("p", { className: "header-1b", style: { margin: 0 }, children: "1087" }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-1r", style: { margin: 0 }, children: "$NCO" })] }), (0, jsx_runtime_1.jsx)("p", { style: { textAlign: "left", margin: "0" }, className: "paragraph-1r", children: "By clicking \"Stake\" you will deposit 1087 $NCO into the DAO to receive 1000 $LIFE tokens. You can recover them anytime minus the stake 10% fee." }), (0, jsx_runtime_1.jsx)("div", { className: "text-center" })] })), (0, jsx_runtime_1.jsx)(UserWidget_1.UserStake, { user: APP_USER, value: minValue, 
+        }, children: [isMember ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("h2", { className: "text-left text-bold", children: "You are a member of the Newlife DAO" }), (0, jsx_runtime_1.jsxs)("div", { style: { textAlign: "left" }, children: ["You may increase your stake or visit the", " ", (0, jsx_runtime_1.jsxs)(react_router_dom_1.Link, { to: `/user/${config_1.APP_DOMAIN}`, children: ["$", config_1.APP_DOMAIN] }), " ", "home page."] })] })) : ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("h2", { style: { width: "100%", textAlign: "start" }, className: "header-2", children: "Join the Newlife DAO" }), (0, jsx_runtime_1.jsx)("p", { style: { textAlign: "left", margin: "0" }, className: "paragraph-1r", children: "Newlife is governed by the community. To join the app, you need to own at least 1000 $LIFE on your account." }), (0, jsx_runtime_1.jsxs)("div", { style: { padding: "20px 0" }, children: [(0, jsx_runtime_1.jsx)("p", { className: "header-1b", style: { margin: 0 }, children: "1087" }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-1r", style: { margin: 0 }, children: "$GNCO" })] }), (0, jsx_runtime_1.jsx)("p", { style: { textAlign: "left", margin: "0" }, className: "paragraph-1r", children: "By clicking \"Stake\" you will deposit 1087 $GNCO into the DAO to receive 1000 $LIFE tokens. You can recover them anytime minus the stake 10% fee." }), (0, jsx_runtime_1.jsx)("div", { className: "text-center" })] })), (0, jsx_runtime_1.jsx)(UserWidget_1.UserStake, { user: APP_USER, value: minValue, 
                 // mode={isStaking ? STAKE_STEPS.CONFIRM : STAKE_STEPS.DISABLED}
                 minValue: minValue, onDone: done, 
                 // onCancel={() => setStaking(false)}

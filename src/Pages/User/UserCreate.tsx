@@ -220,7 +220,12 @@ export const UserCreate: NLView<
 				>
 					<RowCheckbox>
 						<p className="paragraph-2r" style={{ margin: 0 }}>
-							I agree to Newlife's privacy policy
+							I agree to Newlife's{" "}
+							<span className="paragraph-2u">
+								<a href="/privacy_policy" target="_blank">
+									privacy policy
+								</a>
+							</span>
 						</p>
 					</RowCheckbox>
 				</Form.Item>

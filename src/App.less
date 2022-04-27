@@ -16,6 +16,7 @@
 .ant-image-img {
 	border-radius: 8px;
 	height: 100%;
+	object-fit: cover;
 	// border: inset 1px @nero solid;
 	// margin-bottom: 4px;
 
@@ -95,7 +96,10 @@ h2 {
 p {
 	margin: 0;
 }
-
+.nav-item {
+	display: flex;
+	align-items: end;
+}
 .nav-item-logo-left-top {
 	padding: 0;
 }
@@ -190,7 +194,7 @@ p {
 	border-radius: 47.5px;
 
 	&.inverse {
-		color: @nero;
+		color: @lightgrey;
 		background-color: @white;
 	}
 }
@@ -264,6 +268,10 @@ p {
 	height: 10px;
 }
 
+.nl-white-box-modal .ant-modal-content {
+	border-radius: 8px;
+}
+
 .footer-m > a:not(:last-child) {
 	margin-right: 1em;
 }
@@ -298,6 +306,34 @@ p {
 	@media screen and (max-width: 428px) {
 		width: 60px;
 		height: 60px;
+	}
+}
+.avatar-image-small {
+	width: 57px;
+	height: 57px;
+
+	@media screen and (max-width: 768px) {
+		width: 66px;
+		height: 66px;
+	}
+
+	@media screen and (max-width: 428px) {
+		width: 60px;
+		height: 60px;
+	}
+}
+.avatar-image-tiny {
+	width: 29px;
+	height: 29px;
+
+	@media screen and (max-width: 768px) {
+		width: 33px;
+		height: 33px;
+	}
+
+	@media screen and (max-width: 428px) {
+		width: 30px;
+		height: 30px;
 	}
 }
 
@@ -519,7 +555,9 @@ p {
 }
 
 .app-layout-wrapper {
-	padding: 0 min(50px, 2vw);
+	@media screen and (max-width: 468px) {
+		padding: 0 min(50px, 2vw);
+	}
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 1250px;
@@ -609,14 +647,12 @@ textarea {
 .post-img-wrapper {
 	cursor: pointer;
 	user-select: none;
-	height: 65vh;
 
 	& > div {
 		border-radius: 8px !important;
 	}
 
 	& > video {
-		max-height: 65vh;
 		height: auto;
 		border-radius: 8px;
 	}
@@ -651,6 +687,7 @@ textarea {
 // }
 
 .post-notification-wrapper {
+	margin-top: 25px;
 	@media screen and (max-width: 728px) {
 		display: none;
 	}
@@ -666,6 +703,7 @@ textarea {
 	width: auto;
 	position: fixed;
 	top: 0;
+	// left: 100;
 	z-index: 999;
 }
 
@@ -854,7 +892,7 @@ textarea {
 	padding: 10px;
 	border-radius: 8px;
 	height: 65%;
-	flex: 1;
+	width: 100%;
 
 	@media screen and (max-width: 728px) {
 		padding: 5px;
@@ -916,11 +954,11 @@ textarea {
 }
 .banner-expand {
 	white-space: unset;
-	background: @darkgrey;
+	background: @offblack;
 	border: none;
 }
 .banner-text-box {
-	background-color: @darkgrey;
+	background-color: @offblack;
 	color: @offwhite;
 	opacity: 40%;
 	width: 100%;
@@ -974,13 +1012,13 @@ textarea {
 	text-align: end !important;
 }
 .footer {
-	transform: translateY(400px);
-}
-.transition-all {
-	transition: all 0.5s ease-in-out;
-}
-.footer-animation {
-	transform: translateY(0px);
+	background-color: gray;
+	display: flex;
+	flex-direction: column;
+	margin-top: 10%;
+	padding: 2% 10% 10% 10%;
+	border-top-right-radius: 12px;
+	border-top-left-radius: 12px;
 }
 .large-arrow-back-wide-screen {
 	margin-top: 68px;
@@ -1037,6 +1075,36 @@ textarea {
 		text-align: center;
 		margin-bottom: 20px;
 	}
+}
+
+.stake-button-modal,
+.stake-button-modal:hover,
+.stake-button-modal:focus,
+.stake-button-modal:active {
+	color: @darkgrey;
+	border: 2px solid @darkgrey;
+}
+
+.title {
+	.u-margin-bottom-large();
+
+	@media screen and (max-width: 428px) {
+		.u-margin-bottom-medium();
+	}
+}
+.big-button {
+	height: auto;
+	width: 70%;
+	padding: 20px;
+	border-radius: 70px;
+}
+
+.tag {
+	background-color: @offwhite;
+	padding: 10px;
+	margin: 0 10px 10px 0;
+	color: @offblack;
+	border-radius: 47.5px;
 }
 
 // REFACTOR ------------------------------------------------------------------------------------------------------------------------------

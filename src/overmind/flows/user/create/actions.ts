@@ -7,13 +7,27 @@ import { WizardInput } from "./wizardStateMachine";
 // import { IReaction } from "overmind";
 
 const reduceState: (st: State) => WizardInput =
-    ({ api: { auth }, auth: { authenticated }, flows: { user: { create: { legacyToken, form: { username }, formUsernameIsAvailable } } } }: State) => {
+    ({
+        api: { auth },
+        auth: { authenticated },
+        config: { featureFlags },
+        flows: {
+            user: {
+                create: {
+                    legacyToken,
+                    form: { username },
+                    formUsernameIsAvailable
+                }
+            }
+        }
+    }: State) => {
         return ({
             ...auth, ...{ authenticated }, formUsername: username || "",
             subscribed: !!auth.user?.subscriptionStatus,
             formUsernameIsAvailable,
             user: auth.user,
-            legacyToken
+            legacyToken,
+            featureFlags: featureFlags
         });
     }
 
@@ -48,7 +62,7 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
 
 export const updateForm: Action<Partial<UserCreateRequest>> = //({ state }, val) =>
     pipe(
-        debounce(200),
+        // debounce(200),
         ({ state }, val) => {
             state.flows.user.create.form = { ...state.flows.user.create.form, ...val };
         }
@@ -70,15 +84,24 @@ export const startLegacyImport: Action = //({ state }, val) =>
         const user = { ...state.api.auth.user }; // wont be available after logout
         const legacyToken = state.firebase.token;
 
-        actions.auth.logout({ noRouting: true });
-        actions.routing.historyPush({ location: "/" });
 
-        actions.flows.user.create.updateForm(user);
+        const displayName = user.displayName || user.username;
+        const username = usernameToAccount(user.displayName || "");
+
+        actions.flows.user.create.updateForm({
+            ...user,
+            displayName,
+            username
+        });
         state.flows.user.create.legacyToken = legacyToken;
         const form = state.flows.user.create.form;
-        form.username = user.username;
-        form.displayName = form.username || form.displayName;
-        form.username = usernameToAccount(form.displayName || "");
+        // form.username = user.username;
+        // form.displayName = form.displayName || form.username;
+        // form.username = usernameToAccount(form.displayName || "");
+
+
+        actions.auth.logout({ noRouting: true });
+        actions.routing.historyPush({ location: "/" });
 
         window.localStorage.setItem('legacyAuthToken', JSON.stringify({ legacyToken, updated: Date.now() }));
     };
@@ -104,7 +127,7 @@ export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: Wiza
                 state.api.auth.authorized &&
                 // (state.auth.user?.status === "registered") &&
                 (state.api.auth.user?.username != state.flows.user.create.form.username) &&
-                autoRedirectFrom.includes(state.routing.location) 
+                autoRedirectFrom.includes(state.routing.location)
                 // &&
                 // state.newcoin.pools["CGY"]
             )

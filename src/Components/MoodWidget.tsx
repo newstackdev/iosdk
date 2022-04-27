@@ -18,21 +18,18 @@ export const MoodFolderWidget: NLView<{
 	onClick?: Callback;
 	selected?: boolean;
 	force?: boolean;
-	setSelectedFolder: React.Dispatch<React.SetStateAction<boolean>>;
-	selectedFolder: boolean;
 }> = ({
 	mood,
 	onClick,
 	selected,
 	force,
-	selectedFolder,
-	setSelectedFolder,
 }) => {
 	const state = useAppState();
 	const m = useCachedMood(mood, force);
 
 	const url = m.contentUrl || m.posts?.find((p) => p.contentUrl)?.contentUrl;
 	const p = (m?.posts && m.posts[0]) || {};
+
 	return (
 		<div
 			{...(onClick ? { onClick: () => onClick() } : {})}

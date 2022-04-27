@@ -68,7 +68,8 @@ const HostToDomain: HostDef[] = [
 			"www.newlife.io",
 			"web.newlife.io",
 			"web-dev.newlife.io",
-			"share.newlife.io"
+			"share.newlife.io",
+			"test.newlife.io"
 		],
 		components: {
 			Root: DomainPresale,
@@ -147,7 +148,7 @@ export const DEFAULT_ROUTES = [
 	<OverridableRoute key="v" exact path="/user/:username" component={User} />,
 	<OverridableRoute key="ui" exact path="/user/invite" component={UserInvite} />,
 	<OverridableRoute key="s" exact path="/payment/subscription" component={Product} />,
-	<OverridableRoute key="ue" exact path="/auth/legacy" component={LegacyImport} />,
+	<OverridableRoute key="ue" exact path="/auth/newlife-members" component={LegacyImport} />,
 	<OverridableRoute key="sp" exact path="/spotlights" component={Spotlights} />,
 	<OverridableRoute key="sf" exact path="/save-folder" component={SelectMoodForm} />,
 	<OverridableRoute key="ts" exact path="/terms_of_service" component={TOS} />,

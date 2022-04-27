@@ -8,4 +8,4 @@ export declare const layout: {
         span: number;
     };
 };
-export declare const Auth: ({ embedded, setNext, handleCallBack, setIsErrorSubmit, isErrorSubmit, }: React.PropsWithChildren<EmbeddableControl>) => JSX.Element;
+export declare const Auth: ({ embedded, setNext, setIsErrorSubmit, }: React.PropsWithChildren<EmbeddableControl>) => JSX.Element;

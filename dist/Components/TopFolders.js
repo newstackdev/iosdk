@@ -13,20 +13,20 @@ const Title_1 = __importDefault(require("../Pages/Explore/Title"));
 const Closed_1 = __importDefault(require("./Icons/Folder/Closed"));
 const LoadMore_1 = require("./LoadMore");
 const PostWidget_1 = require("./PostWidget");
-const TopFoldersGrid = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap, blur }) => {
+const PremiumContent_1 = require("./PremiumContent");
+const TopFoldersGrid = ({ mood, postNumber, title, posts, noFolder, noFullWidth, wrap }) => {
     const m = (0, useCached_1.useCachedMood)(mood);
     const postsList = title === "Explore folders"
         ? m.posts?.slice(0, postNumber + 1)
         : title === "Moods"
             ? m.posts
             : m.posts?.slice(0, 5);
-    return ((0, jsx_runtime_1.jsx)("div", { style: { width: "100%" }, children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { style: {
+    return ((0, jsx_runtime_1.jsx)(PremiumContent_1.PremiumContent, { stakeToAccess: m.stakeToAccess, owner: m?.author, style: { width: "100%" }, link: "/folder/" + m.id, children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { style: {
                 width: "100%",
                 height: "auto",
                 display: "flex",
                 justifyContent: `${posts === "full" ? "space-between" : ""}`,
-                ...(blur ?
-                    { filter: "blur(7px)" } : {})
+                flexWrap: "unset",
             }, className: `${noFullWidth
                 ? "nl-mood-grid-row-height"
                 : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-four" : ""}`, children: [!noFolder && ((0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/folder/${mood.id}`, className: "ant-col", children: (0, jsx_runtime_1.jsxs)(antd_1.Col, { className: "bg-hover", style: {
@@ -37,7 +37,19 @@ const TopFoldersGrid = ({ mood, postNumber, title, posts, noFolder, noFullWidth,
                             flex: 1,
                         }, children: [(0, jsx_runtime_1.jsx)(Closed_1.default, { className: "text-center folder" }), (0, jsx_runtime_1.jsx)("small", { className: "folder-name", style: { paddingTop: "5px" }, children: m.title?.length > 10
                                     ? m.title?.substring(0, 3) + "..."
-                                    : m?.title || "" })] }) })), postsList?.length === 0 && ((0, jsx_runtime_1.jsx)(antd_1.Col, { style: { aspectRatio: "1/1" } })), postsList?.map((p) => ((0, jsx_runtime_1.jsx)(antd_1.Col, { className: "bg-hover", style: { aspectRatio: "1/1" }, children: (0, jsx_runtime_1.jsx)(PostWidget_1.PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) })))] }) }));
+                                    : m?.title || "" })] }) })), postsList?.length === 0 && ((0, jsx_runtime_1.jsx)(antd_1.Col, { style: { aspectRatio: "1/1" } })), postsList?.map((p) => ((0, jsx_runtime_1.jsx)(PostWidget_1.MaybeLink, { to: !p.id
+                        ? ""
+                        : !mood
+                            ? `/post/${p.id}`
+                            : `/folder/${mood.id}/${p.id}`, className: p.contentType === "text/plain"
+                        ? "maybelink ant-col"
+                        : "ant-col", children: (0, jsx_runtime_1.jsx)(antd_1.Col, { className: "bg-hover", style: {
+                            justifyContent: "center",
+                            flexDirection: "column",
+                            aspectRatio: "1/1",
+                            height: "100%",
+                            flex: 1,
+                        }, children: (0, jsx_runtime_1.jsx)(PostWidget_1.PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) })))] }) }));
 };
 exports.TopFoldersGrid = TopFoldersGrid;
 const TopFolders = ({ maxItems, title, posts, userMoods, skipItems }) => {
@@ -55,7 +67,7 @@ const TopFolders = ({ maxItems, title, posts, userMoods, skipItems }) => {
                             : {
                                 justifyContent: "start",
                                 alignItems: "center",
-                            }, children: (0, jsx_runtime_1.jsx)(exports.TopFoldersGrid, { mood: m, postNumber: i, title: title, posts: posts }) })))] }), !userMoods && ((moods?.length || 0) < maxItems) && ((0, jsx_runtime_1.jsx)(LoadMore_1.LoadMore, { loadMore: () => actions.lists.top.moods() }))] }));
+                            }, children: (0, jsx_runtime_1.jsx)(exports.TopFoldersGrid, { mood: m, postNumber: i, title: title, posts: posts }) })))] }), !userMoods && (moods?.length || 0) < maxItems && ((0, jsx_runtime_1.jsx)(LoadMore_1.LoadMore, { loadMore: () => actions.lists.top.moods() }))] }));
 };
 exports.default = TopFolders;
 //# sourceMappingURL=TopFolders.js.map

@@ -31,10 +31,10 @@ const calculateTags = (items: CreativeSearchItem[]) => {
     return aesthetics.slice(0, 5).map((value) => value[0]);
 }
 
-const creativeSearch: Action<{tags: string, aesthetics: string}> =
+const creativeSearch: Action<{ tags: string, aesthetics: string }> =
     pipe(
         debounce(500),
-        async ({ state } : Context, query) => {
+        async ({ state }: Context, query) => {
             if (!state.api.auth.authorized || query.tags === "")
                 return;
 
@@ -42,7 +42,7 @@ const creativeSearch: Action<{tags: string, aesthetics: string}> =
 
             const page = newQuery ? 0 : state.lists.creativeSearch.results.page + 1;
 
-            state.lists.creativeSearch.lastQueried = {...query}; // should be before async call
+            state.lists.creativeSearch.lastQueried = { ...query }; // should be before async call
             state.lists.creativeSearch.results.page = page;
 
             const response = await state.api.client.search.creativeList({
@@ -116,7 +116,10 @@ export const searchUsers: Action<{ query: string }> =
             // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
             state.lists.search.users.results = null;
 
-            const r = await state.api.client.user.listSearchList({ q: query });
+            if (query.length < 2)
+                return;
+
+            const r = await state.api.client.user.listSearchList({ q: "*" + query + "*" });
 
             r.data.value?.forEach(v => {
                 state.api.cache.users.byId[v.id || ""] = v;
@@ -130,27 +133,44 @@ export const searchPosts: Action<{ tags: string }> =
     pipe(
         debounce(1000),
         async ({ state, actions, effects }: Context, { tags }) => {
-            // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
-            state.lists.search.posts.results = null;
+
+            const loadingMore = state.lists.search.posts.lastQueried.tags == tags;
+            if (loadingMore) {
+                if (state.lists.search.posts.results?.done)
+                    return;
+                else
+                    state.lists.top.posts.page = state.lists.search.posts.results ? (state.lists.top.posts.page || 0) + 1 : 0;
+            }
+            else {
+                state.lists.top.posts.page = 0;
+                state.lists.search.posts.results = null;
+            }
 
             const tagsQ = tags.split(/,/)
                 .map(t => (
-                    { range: {[`scoredTags.${t}`]:{ gte:0.5}} }
+                    {
+                        match: {
+                            relevantTags: t
+                        }
+                    }
+                    // { range: {[`scoredTags.${t}`]:{ gte:0.5}} }
                 ));
 
-            const searchQ = {"bool":{"must":tagsQ}};
 
-            
 
-            const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ) });
+            const searchQ = { bool: { must: tagsQ } };
+
+            const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.top.posts.page || 0).toString() });
 
             r.data.value?.forEach(v => {
                 state.api.cache.posts[v.id || ""] = v;
             });
-            state.lists.search.posts.results = r.data;
+            const curr = json(state.lists.search.posts.results)?.value || [];
+            state.lists.search.posts.results = { ...r.data, value: [...curr, ...(r.data.value || [])] };
             state.lists.search.posts.lastQueried.tags = tags;
         }
     );
+
 
 const actions = {
     creativeSearch,
@@ -183,7 +203,7 @@ export default {
         creativeSearch: {
             results: newListState<CreativeSearchItem>(),
             tags: newListState<string>(),
-            lastQueried: {tags: "", aesthetics: ""},
+            lastQueried: { tags: "", aesthetics: "" },
             isActive: false
         },
         postsSearch: {
@@ -202,10 +222,10 @@ export default {
             posts: {
                 query: "",
                 results: null as (PostPagedListReadPublicResponse | null),
-                lastQueried: {tags: "", aesthetics: ""},
+                lastQueried: { tags: "", aesthetics: "" },
                 isActive: false,
                 // results: newListState<PostReadResponse>(),
-                tags: newListState<string>()    
+                tags: newListState<string>()
             }
         }
     },

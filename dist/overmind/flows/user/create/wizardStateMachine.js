@@ -16,10 +16,10 @@ exports.Wizard = (0, overmind_1.statemachine)({
     SUBSCRIBE: {
         NEXT: ({ subscribed }) => subscribed ? defaults.CREATE_USER() : defaults.SUBSCRIBE(),
         PREV: ({ formUsername }) => ({ ...defaults.SELECT_DOMAIN(), hasNext: !!formUsername }),
-        UPDATE: ({ authorized, authenticated, subscribed, user, formUsername }) => {
+        UPDATE: ({ authorized, authenticated, subscribed, user, formUsername, featureFlags }) => {
             return (authorized ?
                 defaults.DONE() :
-                (subscribed || user || (formUsername.length <= 5)) ?
+                (subscribed || (user?.id && (!featureFlags.onboarding.premiumDomains || (formUsername.replace(/\.io$/, "").length >= 5)))) ?
                     defaults.CREATE_USER() :
                     authenticated ?
                         defaults.SUBSCRIBE() :
@@ -34,14 +34,14 @@ exports.Wizard = (0, overmind_1.statemachine)({
                     : defaults.SUBSCRIBE()
                 : defaults.AUTHENTICATE();
         },
-        UPDATE: ({ authorized, formUsername, formUsernameIsAvailable, user }) => {
+        UPDATE: ({ authorized, formUsername, formUsernameIsAvailable, user, featureFlags }) => {
             return authorized && !["imported"].includes(user?.status || "") ?
                 defaults.DONE() :
                 {
                     ...defaults.SELECT_DOMAIN(),
                     hasNext: 
                     // (formUsername.length === 12) && 
-                    (formUsername.replace(/\.io$/, "").length >= 5) &&
+                    (featureFlags.onboarding.premiumDomains || (formUsername.replace(/\.io$/, "").length >= 5)) &&
                         (formUsernameIsAvailable === "available")
                 };
         }

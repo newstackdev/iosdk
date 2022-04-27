@@ -10,6 +10,13 @@
 	z-index: 99;
 }
 
+.ant-layout {
+	margin-top: 80px;
+	@media screen and (max-width: 468px) {
+		margin-top: 40px;
+	}
+}
+
 .ant-btn {
 	height: 33px;
 	background: transparent;
@@ -356,6 +363,7 @@
 .ant-form-item-explain-error {
 	padding-top: 5px;
 	color: @purple;
+	text-align: left;
 }
 
 .ant-form-item .error-circle-form {
@@ -372,6 +380,8 @@
 	width: 100%;
 	border-radius: 47.5px;
 	box-shadow: none !important;
+	height: fit-content;
+	margin: 0 10px;
 }
 
 .anticon-info-circle {
@@ -498,12 +508,35 @@ a.ant-typography,
 .ant-input-suffix {
 	margin-left: 40px;
 }
-.ant-layout {
-	margin-top: 80px;
-}
+
 .ant-menu-submenu .ant-menu-title-content {
 	display: flex;
 }
 .content-uploader .ant-upload {
 	border: none;
+}
+
+.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper-focused > input,
+.ant-input-affix-wrapper-focused > input::placeholder {
+	color: @green;
+	border-color: @green!important;
+}
+.nl-slider .ant-slider-rail,
+.nl-slider .ant-slider-rail:hover {
+	height: 11px !important;
+	background: @lightgrey!important;
+}
+.ant-modal .ant-slider-handle {
+	background-color: @green!important;
+	width: 20px;
+	height: 20px;
+	border: solid 2px @offwhite!important;
+}
+.ant-slider:hover .ant-slider-track {
+	background-color: @green!important;
+}
+.ant-slider-mark-text {
+	font-size: 16px;
+	margin-top: 20px;
 }

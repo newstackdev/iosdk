@@ -376,7 +376,7 @@ export const PostCreate: NLView = (props) => {
 									<Col>
 										<p className="paragraph-2r">Summary:</p>
 										<p className="paragraph-2r">
-											1087 $NCO
+											1087 $GNCO
 										</p>
 										<p className="paragraph-2r">
 											— 5% creator fee

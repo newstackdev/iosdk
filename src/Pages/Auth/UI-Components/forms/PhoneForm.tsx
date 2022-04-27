@@ -7,25 +7,18 @@ import { CrossCircleErr } from "../../../User/UserCreate";
 import { layout } from "../../Auth";
 import { FormInstance } from "antd";
 import "./styles/Form.less";
+import { useState } from "react";
 
 const PhoneForm: NLView<{
 	setIsErrorSubmit: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 	embedded: boolean | undefined;
 	phoneForm: FormInstance<any>;
-	isErrorSubmit: boolean | undefined;
-	handleCallBack: ((value: any) => any) | undefined;
-	setError: React.Dispatch<React.SetStateAction<boolean>>;
-	error: boolean;
-}> = ({
-	setIsErrorSubmit,
-	embedded,
-	phoneForm,
-	isErrorSubmit,
-	setError,
-	error,
-}) => {
+}> = ({ setIsErrorSubmit, embedded, phoneForm }) => {
 	const state = useAppState();
 	const actions = useActions();
+	const [customClassName, setCustomClassName] = useState("");
+
+	const reg = "^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,7}$";
 
 	return (
 		<Form
@@ -33,7 +26,7 @@ const PhoneForm: NLView<{
 			hidden={state.auth.status !== AUTH_FLOW_STATUS.ANONYMOUS}
 			{...layout}
 			name="basic"
-			initialValues={{ phone: "+420111111111" }} // +420111111111
+			initialValues={{ phone: "" }} // +420111111111
 			onFinish={({ phone }) => {
 				actions.firebase.requestToken({ phone });
 				// phoneForm.resetFields();
@@ -48,9 +41,7 @@ const PhoneForm: NLView<{
 					{
 						required: true,
 						message: "The phone number is invalid.",
-						pattern: new RegExp(
-							"^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,7}$"
-						),
+						pattern: new RegExp(reg),
 					},
 				]}
 				className="phone-form-height"
@@ -62,19 +53,23 @@ const PhoneForm: NLView<{
 					onChange={() => {
 						phoneForm
 							.validateFields()
-							.then(() => {
-								setIsErrorSubmit
-									? setIsErrorSubmit(false)
-									: setError(false);
-							})
+							.then(
+								() =>
+									setIsErrorSubmit && setIsErrorSubmit(false)
+							)
 							.catch((e) => {
-								console.log(e.errorFields?.length);
 								if (e.errorFields?.length) {
-									setIsErrorSubmit
-										? setIsErrorSubmit(true)
-										: setError(true);
+									setIsErrorSubmit && setIsErrorSubmit!(true);
 								}
 							});
+
+						const customClassName = phoneForm
+							.getFieldValue("phone")
+							.match(reg)
+							? "disabled-submit-button"
+							: "";
+
+						setCustomClassName(customClassName);
 					}}
 				/>
 			</Form.Item>
@@ -83,9 +78,7 @@ const PhoneForm: NLView<{
 				<Button
 					type="primary"
 					htmlType="submit"
-					className={
-						isErrorSubmit || error ? "disabled-submit-button" : ""
-					}
+					className={customClassName}
 				>
 					Send verification
 				</Button>

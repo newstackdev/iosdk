@@ -16,13 +16,10 @@ export const layout = {
 export const Auth = ({
 	embedded,
 	setNext,
-	handleCallBack,
 	setIsErrorSubmit,
-	isErrorSubmit,
 }: React.PropsWithChildren<EmbeddableControl>) => {
 	const state = useAppState();
 	const actions = useActions();
-	const [error, setError] = useState<boolean>(false);
 
 	const [phoneForm] = Form.useForm();
 	const [codeForm] = Form.useForm();
@@ -80,12 +77,8 @@ export const Auth = ({
 			<div id="sign-in-button" />
 			<PhoneForm
 				setIsErrorSubmit={setIsErrorSubmit}
-				isErrorSubmit={isErrorSubmit}
 				embedded={embedded}
 				phoneForm={phoneForm}
-				handleCallBack={handleCallBack}
-				setError={setError}
-				error={error}
 			/>
 			<CodeForm
 				setIsErrorSubmit={setIsErrorSubmit}

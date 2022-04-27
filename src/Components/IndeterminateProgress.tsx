@@ -1,5 +1,4 @@
 import { Progress } from "antd";
-import EventEmitter from "events";
 import { useEffect, useState } from "react";
 import { useAppState } from "../overmind";
 import { clock } from "../utils/clock";

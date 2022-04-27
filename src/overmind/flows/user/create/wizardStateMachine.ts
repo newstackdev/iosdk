@@ -1,5 +1,8 @@
 import { UserReadPrivateResponse } from '@newlife/newlife-creator-client-api';
 import { statemachine } from 'overmind';
+import { Configuration } from 'src/config';
+import state from 'src/overmind/api/state';
+import config from 'src/overmind/config';
 import user from '..';
 
 type States =
@@ -36,7 +39,8 @@ export type WizardInput = {
     formUsername: string,
     formUsernameIsAvailable: string,
     user: UserReadPrivateResponse | null,
-    legacyToken: string
+    legacyToken: string,
+    featureFlags: Configuration["featureFlags"]
 };
 type WizardInputToStateMap = (input: WizardInput) => States;
 
@@ -65,8 +69,6 @@ type Events =
 // const forwAuthenticated = (authenticated: boolean, step: States): States => authenticated ? { current: 'CREATE_USER', hasNext: false, hasPrev: true } : step;
 
 
-
-
 const defaults: Record<string, (d?: { hasNext: boolean }) => States> = {
     SELECT_DOMAIN: () => ({ current: "SELECT_DOMAIN", hasNext: false, hasPrev: false }),
     DONE: () => ({ current: "DONE", hasNext: false, hasPrev: false }),
@@ -81,11 +83,11 @@ export const Wizard = statemachine<States, Events, BaseState>({
     SUBSCRIBE: {
         NEXT: ({ subscribed }) => subscribed ? defaults.CREATE_USER() : defaults.SUBSCRIBE(),
         PREV: ({ formUsername }) => ({ ...defaults.SELECT_DOMAIN(), hasNext: !!formUsername }) as States,
-        UPDATE: ({ authorized, authenticated, subscribed, user, formUsername }) => {
+        UPDATE: ({ authorized, authenticated, subscribed, user, formUsername, featureFlags }) => {
             return (
                 authorized ? 
                     defaults.DONE() : 
-                (subscribed || user || (formUsername.length <= 5))? 
+                (subscribed || (user?.id && (!featureFlags.onboarding.premiumDomains || (formUsername.replace(/\.io$/, "").length >= 5))))? 
                     defaults.CREATE_USER() : 
                 authenticated ? 
                     defaults.SUBSCRIBE() :
@@ -102,14 +104,14 @@ export const Wizard = statemachine<States, Events, BaseState>({
                             : defaults.SUBSCRIBE()
                         : defaults.AUTHENTICATE()
         },
-        UPDATE: ({ authorized, formUsername, formUsernameIsAvailable, user }) => {
+        UPDATE: ({ authorized, formUsername, formUsernameIsAvailable, user, featureFlags }) => {
             return authorized && !["imported"].includes(user?.status || "") ? 
                     defaults.DONE() : 
                     { 
                         ...defaults.SELECT_DOMAIN(), 
                         hasNext: 
                             // (formUsername.length === 12) && 
-                            (formUsername.replace(/\.io$/, "").length >= 5) &&
+                            (featureFlags.onboarding.premiumDomains || (formUsername.replace(/\.io$/, "").length >= 5)) &&
                             (formUsernameIsAvailable === "available") 
                     } as States
         }

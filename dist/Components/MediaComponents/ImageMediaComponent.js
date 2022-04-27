@@ -33,7 +33,9 @@ const ImageComponent = (props) => {
     // 	return <div>{overrideContentUrl?.toString() || "x"}</div>
     if (/^(processing|failed)$/.test(props.contentUrl || ""))
         return (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)(Spin_1.Spin, {})] });
-    return ((0, jsx_runtime_1.jsx)(antd_1.Image, { ...props, preview: {
+    return ((0, jsx_runtime_1.jsx)(antd_1.Image, { ...props, 
+        // ref={props.ref}
+        preview: {
             visible: false,
             mask: false,
             maskStyle: {

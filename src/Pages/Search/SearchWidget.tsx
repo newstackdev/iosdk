@@ -20,8 +20,8 @@ export const SearchResultsWidget: NLView<{ query: string }> = ({ query }) => {
 
 	return (
 		<ul
-			style={{ padding: 24 }}
-			className="nl-white-box app-box-shadow paragraph-1r"
+			style={{ padding: 24, maxWidth: 700, marginTop: 5, marginLeft: 150 }}
+			className="nl-white-box app-box-shadow paragraph-1r user-search-results-widget"
 		>
 			{res && res?.value?.length ? (
 				<UsersList users={res.value} powerUp={false} />
@@ -41,6 +41,7 @@ export const SearchWidget: NLView<{
 }> = ({ user, search, setSearch }) => {
 	const [query, setQuery] = useState<string>("");
 	const [resultsVisible, setResultsVisible] = useState<boolean>(false);
+	const actions = useActions();
 
 	useEffect(() => {
 		setResultsVisible(!!query);
@@ -67,20 +68,26 @@ export const SearchWidget: NLView<{
 						{search && (
 							<Dropdown
 								visible={resultsVisible}
-								placement="topCenter"
+								placement="bottomCenter"
 								overlay={<SearchResultsWidget query={query} />}
 								//@ts-ignore
-								getPopupContainer={() =>
-									document.getElementById(
-										"search-dropdown-position"
-									)
-								}
+								// getPopupContainer={() =>
+								// 	document.getElementById(
+								// 		"search-dropdown-position"
+								// 	)
+								// }
 							>
 								<Row className="app-main-full-width-only search-row">
 									<Input
 										placeholder="Search"
-										onChange={(e) =>
-											setQuery(e.target.value)
+										onChange={(e) => {
+											if(e.target.value == "#") {
+												actions.routing.historyPush({ location: "/search" });										
+												setSearch(false);
+											}
+											else
+												setQuery(e.target.value);
+										}
 										}
 										style={
 											query === ""
@@ -95,9 +102,9 @@ export const SearchWidget: NLView<{
 										}
 										value={query}
 									/>
-									{query !== "" && (
+									{search && (
 										<div
-											onClick={() => setQuery("")}
+											onClick={() => setSearch(false)}
 											style={{
 												position: "absolute",
 												right: 0,

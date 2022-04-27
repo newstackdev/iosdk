@@ -1,7 +1,7 @@
-import { Header, Content, Footer } from "antd/lib/layout/layout";
+import { Header as ADHeader, Content, Footer } from "antd/lib/layout/layout";
 import { Row, Col, Layout as AntdLayout, Menu, Dropdown } from "antd";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { NLView } from "../types";
+import { IOView, NLView } from "../types";
 import { AuthWidget } from "../Pages/AuthWidget";
 import { useActions, useAppState } from "../overmind";
 import React, { ReactElement, useEffect, useState } from "react";
@@ -18,7 +18,9 @@ import Paragraph from "antd/lib/typography/Paragraph";
 import { Searchicon } from "../Components/Icons/Searchicon";
 import { ThreeDots } from "../Components/Icons/ThreeDots";
 import { Burger } from "../Components/Icons/Burger";
-import { LargeArrowBack } from "../Components/Icons/LargeArrowBack";
+import { LargeArrowBack } from "src/Components/Icons/LargeArrowBack";
+import { DAO } from "src/Components/Icons/DAO";
+import { WalletWidget } from "src/Components/Wallet";
 
 const WHITE_BORDER = "0px white solid";
 
@@ -67,6 +69,23 @@ const ThreeBody: NLView<{
 			</Col>
 		</Row>
 	);
+};
+
+export const Header: IOView = () => {
+	const state = useAppState();
+	if(!state.ux.layout.headerShown)
+		return <></>;
+		
+	return <ADHeader key="h" className="logo" style={{ padding: 0 }}>
+		<Row justify="space-around" gutter={0}>
+			<div
+				className="header"
+				style={{ width: "100%", padding: "0 20px" }}
+			>
+				<state.config.components.layout.TopMenu />
+			</div>
+		</Row>
+	</ADHeader>
 };
 
 export const XTopMenu = () => {
@@ -166,7 +185,8 @@ export const TopMenu: NLView = () => {
 				<div className="large-arrow-back-mobile">
 					{!state.config.routes.noBackButton.includes(
 						state.routing.location
-					) && <LargeArrowBack />}
+					) &&
+						isAuthorized && <LargeArrowBack />}
 				</div>
 			</Menu.Item>
 			{/* <Menu.Item>
@@ -217,6 +237,17 @@ export const TopMenu: NLView = () => {
 							</span>
 						</Link>
 					</Menu.Item>
+					<Menu.Item key="6" style={{ order: 1 }}>
+						<Link to="/newlife-dao" className="nav-item">
+							<DAO />
+							<span className="paragraph-1r navbar-mobile-text">
+								DAO
+							</span>
+						</Link>
+					</Menu.Item>
+					<Menu.Item key="6">
+						<WalletWidget />
+					</Menu.Item>
 					{/* <Menu.Item>
 						<Link to="/notifications">
 							<Notifications />
@@ -253,40 +284,13 @@ const Main: NLView = ({ children }) => {
 };
 
 export const Layout: NLView = ({ children }) => {
-	const [isBottomPage, setIsBottomPage] = useState<boolean>(false);
-
-	useEffect(() => {
-		window.onscroll = () => {
-			if (
-				window.innerHeight + window.scrollY >=
-				document.body.scrollHeight
-			) {
-				setIsBottomPage(true);
-			} else setIsBottomPage(false);
-		};
-	}, []);
-
 	return (
 		<AntdLayout style={{ minHeight: "100vh" }}>
+			<div id="search-dropdown-position" />
 			<Content>
 				<Main>{children}</Main>
 			</Content>
-			<Footer
-				style={{
-					backgroundColor: "gray",
-					display: "flex",
-					flexDirection: "column",
-					marginTop: "10%",
-					padding: "2% 10% 10% 10%",
-					borderTopRightRadius: "12px",
-					borderTopLeftRadius: "12px",
-				}}
-				className={
-					isBottomPage
-						? "transition-all footer-animation"
-						: "transition-all footer"
-				}
-			>
+			<Footer className="footer">
 				<Row
 					justify="space-around"
 					align={"middle"}
@@ -342,7 +346,7 @@ export const Layout: NLView = ({ children }) => {
 								target="_blank"
 								rel="noreferrer"
 							>
-								Buy $NCO
+								Buy $GNCO
 							</a>
 						</button>
 					</Col>

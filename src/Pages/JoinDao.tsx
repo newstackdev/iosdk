@@ -26,17 +26,26 @@ export const JoinDaoWidget = ({
 
 	// const [staking, setStaking] = useState(false);
 
-
 	const currentStake = (state.newcoin.pools || {})["CGY"];
 	const isMember = currentStake >= 1087;
 
 	const done = (
-		{ stakeDelta, stakeValue, preStakeValue }: 
-		{ stakeDelta: number, stakeValue: number, preStakeValue: number } =
-			{ stakeDelta: 0, stakeValue: 0, preStakeValue: 0 }) => {
+		{
+			stakeDelta,
+			stakeValue,
+			preStakeValue,
+		}: { stakeDelta: number; stakeValue: number; preStakeValue: number } = {
+			stakeDelta: 0,
+			stakeValue: 0,
+			preStakeValue: 0,
+		}
+	) => {
 		if (
-			isMember && 
-			((!preStakeValue && stakeDelta && state.flows.user.create.justCreated) || (!state.flows.user.create.justCreated)) &&
+			isMember &&
+			((!preStakeValue &&
+				stakeDelta &&
+				state.flows.user.create.justCreated) ||
+				!state.flows.user.create.justCreated) &&
 			/^\/?$/.test(state.routing.location)
 			// !justStaked &&
 			// !isStaking
@@ -45,11 +54,10 @@ export const JoinDaoWidget = ({
 			return <></>;
 		}
 	};
-	
+
 	done();
 
 	if (!state.newcoin.pools || !state.api.auth.user?.id) return <></>;
-
 
 	if (!state.api.auth.authorized)
 		//  || state.indicators.isWorking
@@ -64,7 +72,7 @@ export const JoinDaoWidget = ({
 			footer={false}
 			closeIcon={isMember ? <CrossCircle /> : <></>}
 			onCancel={() => {
-				if(!isMember) return;
+				if (!isMember) return;
 				setVisible(false);
 				actions.routing.historyPush({ location: "/explore" });
 			}}
@@ -101,14 +109,14 @@ export const JoinDaoWidget = ({
 							1087
 						</p>
 						<p className="paragraph-1r" style={{ margin: 0 }}>
-							$NCO
+							$GNCO
 						</p>
 					</div>
 					<p
 						style={{ textAlign: "left", margin: "0" }}
 						className="paragraph-1r"
 					>
-						By clicking "Stake" you will deposit 1087 $NCO into the
+						By clicking "Stake" you will deposit 1087 $GNCO into the
 						DAO to receive 1000 $LIFE tokens. You can recover them
 						anytime minus the stake 10% fee.
 					</p>

@@ -56,7 +56,7 @@ export const LegacyLogin: NLView = () => {
 	};
 
 	const tryAgain = () => {
-		actions.routing.historyPush({ location: "/auth/legacy" });
+		actions.routing.historyPush({ location: "/auth/newlife-members" });
 		setStatus(STATUS.NONE);
 		setError("");
 		actions.auth.logout({ noRouting: true });
@@ -75,6 +75,7 @@ export const LegacyLogin: NLView = () => {
 		} else if (state.auth.authenticated) {
 			if (
 				!state.api.auth.authorized &&
+				state.api.auth.user?.id &&
 				state.api.auth.user?.status !== "imported"
 			) {
 				// actions.routing.historyPush({ location: "/" });
@@ -156,9 +157,6 @@ export const LegacyLogin: NLView = () => {
 								Hi{" "}
 								{state.api.auth.user?.username ||
 									state.api.auth.user?.displayName}
-								, we've been
-								{state.api.auth.user?.username ||
-									state.api.auth.user?.displayName}
 								, we've been missing you!
 							</h2>
 							<div className="section-divider" />
@@ -175,7 +173,7 @@ export const LegacyLogin: NLView = () => {
 								Continue
 							</Button>
 						</>
-					) : (
+					) : (status == STATUS.AUTHENTICATED_CANTPROCEED ?
 						<>
 							<h2>
 								Email authorization is only available for
@@ -240,7 +238,8 @@ export const LegacyLogin: NLView = () => {
 								<br />
 								<br />
 							</p>
-						</>
+						</> :
+						<></>
 					)}
 				</>
 			) : (
@@ -267,49 +266,49 @@ export const LegacyLogin: NLView = () => {
 				</>
 			)}
 			{status === STATUS.NONE && !state.api.auth.user?.id ? (
-				<ContentLayout customClass="app-content-layout">
-					<p className="super-size font-variant-none">
-						join newlife.IO
-					</p>
+				<>
+					<p className="super-size text-center">join newlife.IO</p>
 
-					<Form
-						form={form}
-						name="basic"
-						initialValues={{ email: "" }} // +420111111111
-						onFinish={onFinish}
-						// onFinishFailed={onFinishFailed}
-						autoComplete="off"
-					>
-						<Form.Item
-							name="email"
-							rules={[
-								{
-									pattern: new RegExp(regexEmail),
-									message: "Please input valid email.",
-								},
-							]}
+					<ContentLayout customClass="app-content-layout">
+						<Form
+							form={form}
+							name="basic"
+							initialValues={{ email: "" }} // +420111111111
+							onFinish={onFinish}
+							// onFinishFailed={onFinishFailed}
+							autoComplete="off"
 						>
-							<Input placeholder="email" />
-						</Form.Item>
-						<Form.Item>
-							<div className="text-center">
-								<ProgressButton
-									actionName="auth.firebaseRequestEmailLink"
-									type="primary"
-									htmlType="submit"
-									progressText="Connecting..."
-								>
-									Connect my account
-								</ProgressButton>
-							</div>
-						</Form.Item>
-						<p className="paragraph-2b text-center">
-							<Link to="/">I don't have an account yet!</Link>
-						</p>
-						<div className="section-divider" />
-						<SupportBox />
-					</Form>
-				</ContentLayout>
+							<Form.Item
+								name="email"
+								rules={[
+									{
+										pattern: new RegExp(regexEmail),
+										message: "Please input valid email.",
+									},
+								]}
+							>
+								<Input placeholder="email" />
+							</Form.Item>
+							<Form.Item>
+								<div className="text-center">
+									<ProgressButton
+										actionName="auth.firebaseRequestEmailLink"
+										type="primary"
+										htmlType="submit"
+										progressText="Connecting..."
+									>
+										Connect my account
+									</ProgressButton>
+								</div>
+							</Form.Item>
+							<p className="paragraph-2b text-center">
+								<Link to="/">I don't have an account yet!</Link>
+							</p>
+							<div className="section-divider" />
+							<SupportBox />
+						</Form>
+					</ContentLayout>
+				</>
 			) : (
 				<></>
 			)}

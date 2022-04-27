@@ -87,6 +87,12 @@ declare const _default: {
         userJourney: {
             flags: Record<string, string>;
         };
+        stake: {
+            options: {
+                stakingContainer: any;
+            };
+            latestMode: number;
+        };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
@@ -106,6 +112,7 @@ declare const _default: {
             };
         };
         userJourney: unknown;
+        stake: unknown;
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
@@ -127,6 +134,7 @@ declare const _default: {
             }, void>;
             onInitializeOvermind: import("../../types").Action<undefined, void>;
         };
+        stake: typeof import("./stake/actions");
     }, object>;
 };
 export default _default;

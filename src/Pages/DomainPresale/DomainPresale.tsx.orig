@@ -159,7 +159,7 @@ const DomainSelector = () => {
 
 				{!state.flows.user.create.legacyToken &&
 				!state.auth.authenticated ? (
-					<Link to="/auth/legacy" className="paragraph-2b">
+					<Link to="/auth/newlife-members" className="paragraph-2b">
 						<b>I'm an early Newlife member!</b>
 					</Link>
 				) : (

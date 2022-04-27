@@ -83,7 +83,9 @@ exports.listTopPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async
 exports.searchUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ state, actions, effects }, { query }) => {
     // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
     state.lists.search.users.results = null;
-    const r = await state.api.client.user.listSearchList({ q: query });
+    if (query.length < 2)
+        return;
+    const r = await state.api.client.user.listSearchList({ q: "*" + query + "*" });
     r.data.value?.forEach(v => {
         state.api.cache.users.byId[v.id || ""] = v;
         state.lists.top.users.items.push(v);
@@ -91,16 +93,32 @@ exports.searchUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async
     state.lists.search.users.results = r.data;
 });
 exports.searchPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ state, actions, effects }, { tags }) => {
-    // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
-    state.lists.search.posts.results = null;
+    const loadingMore = state.lists.search.posts.lastQueried.tags == tags;
+    if (loadingMore) {
+        if (state.lists.search.posts.results?.done)
+            return;
+        else
+            state.lists.top.posts.page = state.lists.search.posts.results ? (state.lists.top.posts.page || 0) + 1 : 0;
+    }
+    else {
+        state.lists.top.posts.page = 0;
+        state.lists.search.posts.results = null;
+    }
     const tagsQ = tags.split(/,/)
-        .map(t => ({ range: { [`scoredTags.${t}`]: { gte: 0.5 } } }));
-    const searchQ = { "bool": { "must": tagsQ } };
-    const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ) });
+        .map(t => ({
+        match: {
+            relevantTags: t
+        }
+    }
+    // { range: {[`scoredTags.${t}`]:{ gte:0.5}} }
+    ));
+    const searchQ = { bool: { must: tagsQ } };
+    const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.top.posts.page || 0).toString() });
     r.data.value?.forEach(v => {
         state.api.cache.posts[v.id || ""] = v;
     });
-    state.lists.search.posts.results = r.data;
+    const curr = (0, overmind_1.json)(state.lists.search.posts.results)?.value || [];
+    state.lists.search.posts.results = { ...r.data, value: [...curr, ...(r.data.value || [])] };
     state.lists.search.posts.lastQueried.tags = tags;
 });
 const actions = {

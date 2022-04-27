@@ -56,7 +56,7 @@ export const LegacyLogin: NLView = () => {
 	};
 
 	const tryAgain = () => {
-		actions.routing.historyPush({ location: "/auth/legacy" });
+		actions.routing.historyPush({ location: "/auth/newlife-members" });
 		setStatus(STATUS.NONE);
 		setError("");
 		actions.auth.logout({ noRouting: true });

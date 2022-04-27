@@ -1,15 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const jsx_runtime_1 = require("react/jsx-runtime");
 const react_router_dom_1 = require("react-router-dom");
 const overmind_react_1 = require("overmind-react");
 const overmind_1 = require("./overmind");
-const CommunityHistory_1 = __importDefault(require("./Pages/NewlifeDao/CommunityHistory"));
-const layout_1 = require("antd/lib/layout/layout");
 const antd_1 = require("antd");
 const CrossCircle_1 = require("./Components/Icons/CrossCircle");
 const react_1 = require("react");
@@ -40,21 +35,21 @@ const AppShell = ({ children }) => {
                                         }), children: !flags["banner"] ? ((0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {})) : ((0, jsx_runtime_1.jsx)(antd_1.Button, { className: "secondary-button", onClick: () => actions.flows.userJourney.setFlag({
                                                 flag: "bannerDisabled",
                                                 value: "true",
-                                            }), children: (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2b", children: "I understand" }) })) })] }) }) })), (0, jsx_runtime_1.jsx)(layout_1.Header, { className: "logo", style: { padding: 0 }, children: (0, jsx_runtime_1.jsx)(antd_1.Row, { justify: "space-around", gutter: 0, children: (0, jsx_runtime_1.jsx)("div", { className: "header", style: { width: "100%", padding: "0 20px" }, children: (0, jsx_runtime_1.jsx)(state.config.components.layout.TopMenu, {}) }) }) }, "h")] }), (0, jsx_runtime_1.jsx)("div", { className: "App app-layout-wrapper", children: (0, jsx_runtime_1.jsxs)(state.config.components.layout.Layout, { children: [state.config.routes.useDefaultRoutes ? defaultRoutes_1.DEFAULT_ROUTES : (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {}), children] }) })] }));
+                                            }), children: (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2b", children: "I understand" }) })) })] }) }) })), (0, jsx_runtime_1.jsx)(state.config.components.layout.Header, {})] }), (0, jsx_runtime_1.jsx)("div", { className: `App ${state.ux.layout.headerShown ? "app-layout-wrapper" : ""}`, children: (0, jsx_runtime_1.jsxs)(state.config.components.layout.Layout, { children: [state.config.routes.useDefaultRoutes ? (defaultRoutes_1.DEFAULT_ROUTES) : ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {})), children] }) })] }));
 };
 const overmindSampleCustomConfig = {
     components: {
         icons: {
-            Logo: () => (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "THIS IS THE LOGO DUDE" })
+            Logo: () => (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "THIS IS THE LOGO DUDE" }),
         },
         layout: {
             TopMenu: () => (0, jsx_runtime_1.jsx)("div", { children: "Custom top menu!" }),
-            Layout: () => (0, jsx_runtime_1.jsx)("div", { children: "Custom layout" })
-        }
-    }
+            Layout: () => (0, jsx_runtime_1.jsx)("div", { children: "Custom layout" }),
+        },
+    },
 };
 const App = ({ children, overmind }) => {
-    return ((0, jsx_runtime_1.jsx)(overmind_react_1.Provider, { value: overmind, children: (0, jsx_runtime_1.jsx)(react_router_dom_1.BrowserRouter, { children: (0, jsx_runtime_1.jsx)(AppShell, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Switch, { children: (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [children || [], (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { exact: true, path: "/newlife-dao", component: CommunityHistory_1.default }, "ds")] }) }) }) }) }));
+    return ((0, jsx_runtime_1.jsx)(overmind_react_1.Provider, { value: overmind, children: (0, jsx_runtime_1.jsx)(react_router_dom_1.BrowserRouter, { children: (0, jsx_runtime_1.jsx)(AppShell, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Switch, { children: children || [] }) }) }) }));
 };
 exports.App = App;
 exports.default = exports.App;

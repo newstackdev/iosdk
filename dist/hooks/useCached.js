@@ -8,10 +8,10 @@ const useCachedUser = (user, force) => {
     const state = (0, overmind_2.useAppState)();
     const actions = (0, overmind_2.useActions)();
     const byIdOrUsername = (u) => {
-        return (u?.id ?
+        const cachedItem = u?.id ?
             state.api.cache.users.byId[u?.id] :
-            u?.username ? state.api.cache.users.byUsername[u?.username] :
-                null);
+            u?.username ? state.api.cache.users.byUsername[u?.username] : {};
+        return (cachedItem && cachedItem.id && cachedItem.username ? cachedItem : null);
     };
     (0, react_1.useEffect)(() => {
         if ((user?.id || user?.username) &&
@@ -23,7 +23,7 @@ const useCachedUser = (user, force) => {
         }
     }, [state.auth.authenticated, user?.id || "", user?.username || ""]);
     const u = byIdOrUsername(user);
-    return { ...u, moods: u?.moods };
+    return { ...(u || {}), moods: u?.moods };
 };
 exports.useCachedUser = useCachedUser;
 const useCachedPost = ({ id }, force) => {

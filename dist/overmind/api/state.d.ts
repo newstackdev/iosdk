@@ -5,6 +5,7 @@ export declare const api: CreatorApi;
 export declare type PowerupsCacheItem = {
     in: PagedRatedResponseUser;
     out: PagedRatedResponseUser;
+    promise?: Promise<PowerupsCacheItem>;
 };
 export declare type PowerupsCache = Record<string, PowerupsCacheItem>;
 declare type State = {

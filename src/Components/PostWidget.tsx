@@ -9,7 +9,7 @@ import { useAppState } from "../overmind";
 import { NLView } from "../types";
 import { ContentImage } from "./Image";
 
-const MaybeLink: React.FC<
+export const MaybeLink: React.FC<
 	React.PropsWithChildren<{ to: string; className: string }>
 > = ({ to, children, className }) =>
 	to ? (
@@ -31,40 +31,27 @@ export const PostWidget: NLView<{
 
 	return (
 		<>
-			<MaybeLink
-				to={
-					!p.id
-						? ""
-						: !mood
-						? `/post/${p.id}`
-						: `/folder/${mood.id}/${p.id}`
-				}
-				className={p.contentType === "text/plain" ? "maybelink" : ""}
-			>
-				{p.contentType === "text/plain" ? (
-					<div className="text-container">
-						<p className="text-mood">
-							"{/* @ts-ignore */}
-							{p.content?.length > 17
-								? p?.content?.substring(0, 12) + "..."
-								: p.content || ""}
-							"
-						</p>
-					</div>
-				) : (
-					<ContentImage
-						size="small"
-						{...p}
-						width="100%"
-						style={{ aspectRatio: `${aspectRatio}` }}
-						className={
-							isSpotlight || aspectRatio! >= 1
-								? "post-rounded"
-								: ""
-						}
-					/>
-				)}
-			</MaybeLink>
+			{p.contentType === "text/plain" ? (
+				<div className="text-container">
+					<p className="text-mood">
+						"{/* @ts-ignore */}
+						{p.content?.length > 17
+							? p?.content?.substring(0, 12) + "..."
+							: p.content || ""}
+						"
+					</p>
+				</div>
+			) : (
+				<ContentImage
+					size="small"
+					{...p}
+					width="100%"
+					style={{ aspectRatio: `${aspectRatio}` }}
+					className={
+						isSpotlight || aspectRatio! >= 1 ? "post-rounded" : ""
+					}
+				/>
+			)}
 
 			{/* {username && (
 				<p className="spotlight-username paragraph-1b font-variant-none">

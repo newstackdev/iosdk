@@ -6,10 +6,10 @@ import { Action } from "../../types";
 import { AUTH_FLOW_STATUS } from "../auth/state";
 import * as auth from "./actions/auth";
 
-const onInitializeOvermind : Action<undefined> = async ({
+const onInitializeOvermind : Action = async ({
     effects, state, actions, reaction
 }) => {
-    state.api.client = effects.api.initialize();
+    state.api.client = effects.api.initialize(state.config.settings.newlife.baseUrl);
 
     // reaction(
     //     (state) => state.firebase.user,

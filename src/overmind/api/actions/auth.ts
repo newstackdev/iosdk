@@ -9,7 +9,8 @@ export const authorize: Action<undefined> = async ({ state, actions, effects }) 
     } catch (ex) {
         console.log(ex);
     }
-    if(!state.api.auth.user || !state.api.auth.user.id) {
+    const user = state.api.auth.user;
+    if(!user) {
         state.auth.status = state.firebase.user ? AUTH_FLOW_STATUS.AUTHENTICATED : AUTH_FLOW_STATUS.ANONYMOUS;
         if(!state.routing.isAllowed)
             actions.routing.historyPush({ location: "/" });
@@ -18,9 +19,12 @@ export const authorize: Action<undefined> = async ({ state, actions, effects }) 
 
         return;
     };
+
+    if(!user.id || !user.username)
+        return;
     
-    actions.newcoin.getAccountBalance({ user: state.api.auth.user });
-    actions.newcoin.getPoolInfo({ pool: { owner: state.api.auth.user.username } });
+    actions.newcoin.getAccountBalance({ user });
+    actions.newcoin.getPoolInfo({ pool: { owner: user.username } });
 
     if(!state.lists.top.moods.items.length) {
         actions.lists.top.moods();

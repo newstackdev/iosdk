@@ -206,7 +206,10 @@ export const PostCreate: NLView = (props) => {
 							name={contentType ? "content" : "description"}
 							rules={[
 								{
-									required: true,
+									required:
+										contentType === "content"
+											? true
+											: false,
 									message: "A couple of words here please",
 								},
 							]}
@@ -383,7 +386,7 @@ export const PostCreate: NLView = (props) => {
 					</Col>
 					<Col>
 						<p className="paragraph-2r">Summary:</p>
-						<p className="paragraph-2r">1087 $NCO</p>
+						<p className="paragraph-2r">1087 $GNCO</p>
 						<p className="paragraph-2r">— 5% creator fee</p>
 						<p className="paragraph-2r">— 3% DAO fee</p>
 					</Col>

@@ -42,7 +42,10 @@ const DomainSelector = () => {
     // 	}
     //  }, [state.api.auth.user]);
     const username = state.flows.user.create.form.username || "";
-    const isPaidUsername = username.length && username.replace(/\.io/, "").length < 5;
+    const isPaidUsername = () => {
+        const len = username.replace(/\.io/, "").length;
+        return (len > 0) && (len < 5);
+    };
     return ((0, jsx_runtime_1.jsxs)(ContentLayout_1.ContentLayout, { children: [(0, jsx_runtime_1.jsx)(antd_mask_input_1.MaskedInput, { ref: el, style: {
                     fontSize: "clamp(20px, 120px, 9.8vw)",
                     textAlign: "center",
@@ -67,7 +70,9 @@ const DomainSelector = () => {
                             return char.toLowerCase();
                         },
                     },
-                } }), (0, jsx_runtime_1.jsx)(Spin_1.SpaceSpin, { isRotating: fuia === "checking" }), fuia === "unavailable" && ((0, jsx_runtime_1.jsxs)(antd_1.Tag, { style: { marginTop: "20px" }, children: ["Name is ", fuia] })), (0, jsx_runtime_1.jsxs)(Paragraph_1.default, { className: "paragraph-2r nl-footer-paragraph", style: { width: "60%" }, children: [isPaidUsername ? ((0, jsx_runtime_1.jsxs)(Appearing_1.AppearingComponent, { seconds: 1, children: [(0, jsx_runtime_1.jsx)("br", {}), "Premium usernames shorter than 5 characters will soon be available.", (0, jsx_runtime_1.jsx)("br", {}), "For early access please contact\u00A0", (0, jsx_runtime_1.jsx)("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "our support team" }), "."] })) : (""), state.flows.user.create.legacyToken &&
+                } }), (0, jsx_runtime_1.jsx)(Spin_1.SpaceSpin, { isRotating: fuia === "checking" }), fuia === "unavailable" && ((0, jsx_runtime_1.jsxs)(antd_1.Tag, { style: { marginTop: "20px" }, children: ["Name is ", fuia] })), (0, jsx_runtime_1.jsxs)(Paragraph_1.default, { className: "paragraph-2r nl-footer-paragraph", style: { width: "60%" }, children: [isPaidUsername() ? ((0, jsx_runtime_1.jsxs)(Appearing_1.AppearingComponent, { seconds: 1, children: [(0, jsx_runtime_1.jsx)("br", {}), state.config.featureFlags.onboarding.premiumDomains ?
+                                (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "Premium usernames shorter than 5 characters must be purchased. Click Next to continue." }) :
+                                (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["For early access please contact\u00A0", (0, jsx_runtime_1.jsx)("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "our support team" }), "."] })] })) : (""), state.flows.user.create.legacyToken &&
                         (state.flows.user.create.form.displayName !==
                             state.flows.user.create.form.username ||
                             fuia === "unavailable") ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(antd_1.Tooltip, { title: (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "Your Newlife identity is now a part of the Newcoin ecosystem and provides access to many exciting services. You may keep your current username as the display name on Newlife on the next dialog." }), children: (0, jsx_runtime_1.jsx)("span", { children: "Why is my username changing?" }) }), "\u00A0", (0, jsx_runtime_1.jsxs)("a", { href: "/", onClick: () => actions.flows.user.create.stopLegacyImport(), children: ["I am not", " ", state.flows.user.create.form.displayName ||
@@ -75,9 +80,6 @@ const DomainSelector = () => {
 };
 //: Record<string, { title: string, content: ReactElement | EmbeddableControl }>
 const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
-    let buffer;
-    const handleCallBack = (value) => (buffer = value);
-    console.log(buffer);
     return {
         SELECT_DOMAIN: {
             title: "Choose your permanent domain name. This cannot be changed or deleted, and you own it.",
@@ -86,9 +88,8 @@ const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
         },
         AUTHENTICATE: {
             title: "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS",
-            content: ((0, jsx_runtime_1.jsx)(Auth_1.Auth, { embedded: true, setNext: setNext, handleCallBack: handleCallBack, setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit })),
+            content: ((0, jsx_runtime_1.jsx)(Auth_1.Auth, { embedded: true, setNext: setNext, setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit })),
             action: "",
-            buffer: buffer,
         },
         SUBSCRIBE: {
             title: "",
@@ -144,7 +145,7 @@ const DomainPresale = () => {
                                 ? "disabled-submit-button"
                                 : "", children: next ? next.text : "Next" }))) : ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {})) }), !state.flows.user.create.legacyToken &&
                         !state.auth.authenticated &&
-                        wizard.matches("SELECT_DOMAIN") && ((0, jsx_runtime_1.jsx)("div", { className: "u-margin-top-medium", children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/auth/legacy", className: "paragraph-2b", children: (0, jsx_runtime_1.jsx)("b", { children: "I'm an early Newlife member!" }) }) })), (0, jsx_runtime_1.jsx)("div", { className: "u-margin-top-large", children: (0, jsx_runtime_1.jsx)(SupportBox_1.default, {}) })] }), (0, jsx_runtime_1.jsxs)("div", { 
+                        wizard.matches("SELECT_DOMAIN") && ((0, jsx_runtime_1.jsx)("div", { className: "app-main-full-width u-margin-top-medium text-center", children: (0, jsx_runtime_1.jsx)(antd_1.Button, { type: "primary", className: "big-button", children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/auth/newlife-members", className: "header-1b", children: "I'm an early Newlife member!" }) }) })), (0, jsx_runtime_1.jsx)("div", { className: "u-margin-top-large", children: (0, jsx_runtime_1.jsx)(SupportBox_1.default, {}) })] }), (0, jsx_runtime_1.jsxs)("div", { 
                 // hidden={!wizard.matches("SELECT_DOMAIN")}
                 style: { width: "50%", margin: "0 auto" }, children: [(0, jsx_runtime_1.jsx)(Paragraph_1.default, { className: "paragraph-2r nl-footer-paragraph", style: { marginTop: 48, width: "60%" }, children: footerTitle }), wizard.matches("SELECT_DOMAIN") && ((0, jsx_runtime_1.jsx)(Paragraph_1.default, { style: { width: "100%" }, className: "nl-footer-paragraph paragraph-2r", children: "9 characters max: a-z and 1-5" }))] })] }));
 };

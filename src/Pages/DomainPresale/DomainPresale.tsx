@@ -42,9 +42,10 @@ const DomainSelector = () => {
 	//  }, [state.api.auth.user]);
 
 	const username = state.flows.user.create.form.username || "";
-	const isPaidUsername =
-		username.length && username.replace(/\.io/, "").length < 5;
-
+	const isPaidUsername = () => {
+		const len = username.replace(/\.io/, "").length;
+		return (len > 0) && (len < 5);
+	}
 	return (
 		<ContentLayout>
 			<MaskedInput
@@ -102,29 +103,34 @@ const DomainSelector = () => {
 			>
 				{/* {(state.api.auth.user.status === 'imported').toString()} {(state.api.auth.user.username !== state.flows.user.create.form.username).toString()} */}
 
-				{isPaidUsername ? (
+				{isPaidUsername() ? (
 					<AppearingComponent seconds={1}>
 						<br />
-						Premium usernames shorter than 5 characters will soon be
-						available.
-						<br />
-						For early access please contact&nbsp;
-						<a
-							href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ"
-							target="_new"
-						>
-							our support team
-						</a>
-						.
+						{
+							state.config.featureFlags.onboarding.premiumDomains ?
+								<>
+									Premium usernames shorter than 5 characters must be purchased. Click Next to continue.
+								</> :
+								<>
+									For early access please contact&nbsp;
+									<a
+										href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ"
+										target="_new"
+									>
+										our support team
+									</a>
+									.
+								</>
+						}
 					</AppearingComponent>
 				) : (
 					""
 				)}
 
 				{state.flows.user.create.legacyToken &&
-				(state.flows.user.create.form.displayName !==
-					state.flows.user.create.form.username ||
-					fuia === "unavailable") ? (
+					(state.flows.user.create.form.displayName !==
+						state.flows.user.create.form.username ||
+						fuia === "unavailable") ? (
 					<>
 						<Tooltip
 							title={
@@ -165,9 +171,6 @@ const InitSteps = (
 	isErrorSubmit: boolean,
 	setIsErrorSubmit: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-	let buffer: any;
-	const handleCallBack = (value: any) => (buffer = value);
-	console.log(buffer);
 	return {
 		SELECT_DOMAIN: {
 			title: "Choose your permanent domain name. This cannot be changed or deleted, and you own it.",
@@ -180,13 +183,11 @@ const InitSteps = (
 				<Auth
 					embedded={true}
 					setNext={setNext}
-					handleCallBack={handleCallBack}
 					setIsErrorSubmit={setIsErrorSubmit}
 					isErrorSubmit={isErrorSubmit}
 				/>
 			),
 			action: "",
-			buffer: buffer,
 		},
 		SUBSCRIBE: {
 			title: "",
@@ -332,10 +333,15 @@ export const DomainPresale = () => {
 				{!state.flows.user.create.legacyToken &&
 					!state.auth.authenticated &&
 					wizard.matches("SELECT_DOMAIN") && (
-						<div className="u-margin-top-medium">
-							<Link to="/auth/legacy" className="paragraph-2b">
-								<b>I'm an early Newlife member!</b>
-							</Link>
+						<div className="app-main-full-width u-margin-top-medium text-center">
+							<Button type="primary" className="big-button">
+								<Link
+									to="/auth/newlife-members"
+									className="header-1b"
+								>
+									I'm an early Newlife member!
+								</Link>
+							</Button>
 						</div>
 					)}
 				<div className="u-margin-top-large">

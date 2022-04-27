@@ -1,7 +1,10 @@
+import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
 import { Col, Row } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { PremiumContent } from "src/Components/PremiumContent";
+import { useCurrentUserStakeEligibility, useFolderStakeInfo } from "src/hooks/useBlockchainInfo";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { ThreeDots } from "../../Components/Icons/ThreeDots";
 import { ContentImage } from "../../Components/Image";
@@ -14,9 +17,27 @@ import {
 	useCachedUser,
 } from "../../hooks/useCached";
 import { useAppState } from "../../overmind";
-import { NLView } from "../../types";
-import { UserStakeButton } from "../User/UserStake";
+import { IOView, NLView } from "../../types";
 import { MoodsGridRow } from "./MoodsGrid";
+
+// const useFolderStakeInfo = (folder: MoodReadResponse) => {
+// 	const moodDetails = useCachedMood(folder, true);
+// 	const state = useAppState();
+// 	const user = useCachedUser(folder.author);
+
+// 	const pool = useCachedPool({ owner: user.username })
+
+// 	const _stakeInfo = {
+// 		toAccess: moodDetails.stakeToAccess || 0,
+// 		currentUserStake: (state.newcoin.pools[pool.code] || 0) / 1000,
+// 	}
+// 	return {
+// 		..._stakeInfo,
+// 		currentUserNeeds: _stakeInfo.currentUserStake - _stakeInfo.toAccess,
+// 		currency: `${user.username?.toUpperCase()}`,
+// 		currentUserEligible: _stakeInfo.currentUserStake - _stakeInfo.toAccess > 0,
+// 	};
+// };
 
 export const Mood: NLView = () => {
 	const { moodId: id } = useParams<{ moodId: string }>();
@@ -29,121 +50,113 @@ export const Mood: NLView = () => {
 
 	const pool = useCachedPool({ owner: user.username })
 
-	const _stakeInfo = {
-		toAccess: moodDetails.stakeToAccess || 0,
-		currentUserStake: (state.newcoin.pools[pool.code] || 0) / 1000,
-	}
-	const stakeInfo = {
-		..._stakeInfo,
-		currentUserNeeds: _stakeInfo.currentUserStake - _stakeInfo.toAccess,
-		currency: `${user.username?.toUpperCase()}`,
-		currentUserEligible: _stakeInfo.currentUserStake - _stakeInfo.toAccess > 0,
-	}
-
+	const stakeInfo = useFolderStakeInfo(moodDetails);
+	// {
+	// 	..._stakeInfo,
+	// 	currentUserNeeds: _stakeInfo.currentUserStake - _stakeInfo.toAccess,
+	// 	currency: `${user.username?.toUpperCase()}`,
+	// 	currentUserEligible: _stakeInfo.currentUserStake - _stakeInfo.toAccess > 0,
+	// }
+	// if(true)
+	// 	return <>{JSON.stringify(moodDetails.stakeToAccess)}</>
 	return (
-		<div className="section-divider">
-			<ContentLayout
-				isWorking={!mood?.posts?.length}
-				header={
-					<>
-						<Row
+		<ContentLayout
+			isWorking={!mood?.posts?.length}
+			header={
+				<>
+					<Row
+						style={{
+							justifyContent: "space-between",
+							alignItems: "center",
+							marginBottom: "40px",
+						}}
+					>
+						<Col
 							style={{
-								justifyContent: "space-between",
 								alignItems: "center",
-								marginBottom: "40px",
+								display: "flex",
 							}}
 						>
-							<Col
+							<span
 								style={{
-									alignItems: "center",
+									marginRight: "10px",
 									display: "flex",
 								}}
 							>
-								<span
-									style={{
-										marginRight: "10px",
-										display: "flex",
-									}}
-								>
-									{/* <LargeArrowBack /> */}
-								</span>
-								<Link
-									to={`/user/${state.api.auth.user?.username}`}
-									style={{ marginLeft: "10px" }}
-								>
-									<Avatar
-										src={<ContentImage {...user} />}
-										className="avatar-image-header"
-									/>
-								</Link>
-								<Link
-									to={`/user/${user.username}`}
-									className="paragraph-1b"
-									style={{ marginLeft: "20px" }}
-								>
-									{user.username}
-								</Link>
-							</Col>
-							<Col
-								style={{
-									alignItems: "center",
-									display: "flex",
-								}}
+								{/* <LargeArrowBack /> */}
+							</span>
+							<Link
+								to={`/user/${state.api.auth.user?.username}`}
+								style={{ marginLeft: "10px" }}
 							>
-								<ThreeDots />
-							</Col>
-						</Row>
-						<div style={{ marginBottom: "40px" }} className="sparse-vertical-children">
-							<p className="paragraph-2b">{moodDetails.title}</p>
-							<p className="paragraph-2r">
-								{moodDetails.description || ""}
-							</p>
-							{
-								stakeInfo.toAccess ?
+								<Avatar
+									src={<ContentImage {...user} />}
+									className="avatar-image-header"
+								/>
+							</Link>
+							<Link
+								to={`/user/${user.username}`}
+								className="paragraph-1b"
+								style={{ marginLeft: "20px" }}
+							>
+								{user.username}
+							</Link>
+						</Col>
+						<Col
+							style={{
+								alignItems: "center",
+								display: "flex",
+							}}
+						>
+							<ThreeDots />
+						</Col>
+					</Row>
+					<Row style={{ marginBottom: "40px" }}>
+						<p className="paragraph-2b">{moodDetails.title}</p>
+						<p className="paragraph-2r">
+							{moodDetails.description || ""}
+						</p>
+						{/* {moodDetails.stakeToAccess} */}
+					</Row>
+					<Row>
+						{
+							stakeInfo.toAccess ?
+								(!stakeInfo.currentUserEligible ?
 									<>
+										<hr />
 										<p className="paragraph-2r">
 											{
 												<>
+													This content is accessible only to members of {user.username} dao.<br /><br />
 													<div>Stake to access: {stakeInfo.toAccess || ""} </div>
 													<div>Your stake: {stakeInfo.currentUserStake}</div>
+													<div>Stake to enter: {stakeInfo.currentUserNeeds}</div>
 												</>
 											}
 										</p>
 									</>
-									: <></>
-							}
-						</div>
-					</>
-				}>
-				<div className="nl-white-box sparse-vertical-children">
-					{/* {JSON.stringify(state.newcoin.pools)} */}
-					{!stakeInfo.currentUserEligible ?
+									: <p>
+										<hr />
+										You are eligible to access this premium folder
+									</p>)
+								: <></>
+						}
+					</Row>
+				</>
+			}
+			isMood
+		>
+			{/* <UserWidgetHeading user={mood.author || {}} /> */}
 
-						<>
-							<div>Stake to access this folder</div>
-
-								<UserStake
-									onDone={() => { }}
-									user={user}
-								/>
-
-						</>
-
-						:
-
-						<>You are eligible to access this folder</>
-					}
-				</div>
-				<TopFoldersGrid
-					mood={mood}
-					noFolder={true}
-					postNumber={3}
-					title="Moods"
-					blur={!stakeInfo.currentUserEligible}
-				/>
-				{/* <ItemGrid items={postList} render={p => <PostWidget post={p} mood={mood} />} /> */}
-			</ContentLayout>
-		</div>
+			{/* <MoodsGridRow mood={mood} noFolder={true} wrap={true} /> */}
+			<TopFoldersGrid
+				mood={mood}
+				noFolder={true}
+				postNumber={3}
+				title="Moods"
+			/>
+			{/* <ItemGrid items={postList} render={p => <PostWidget post={p} mood={mood} />} /> */}
+		</ContentLayout>
 	);
 };
 

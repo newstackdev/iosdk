@@ -65,6 +65,7 @@ export declare const PoolInfoDataRow: NLView<{
 }>;
 export declare const UserNewcoinPoolsParticipation: NLView<{
     user?: UserReadPrivateResponse;
+    onStakeStart?: Callback;
 }>;
 export declare const UserNewcoinInfo: NLView<{
     user?: UserReadPrivateResponse;

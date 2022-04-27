@@ -1,4 +1,5 @@
 import { Tabs } from "antd";
+import { json } from "overmind";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ActivityStream } from "../../Components/ActivityStream";
@@ -44,7 +45,8 @@ export const User: NLView = () => {
 
 	useSetTitle(user?.username);
 
-	const moodList = user.moods || [];
+	// const moodList = user.moods || [];
+	const moodList = json((user.moods || [])).sort((m1, m2) => (m1.stakeToAccess || 0) - (m2.stakeToAccess || 0));
 
 	const powerups = useCachedPowerups(user, true) as PowerupsCacheItem;
 	const powering = powerups?.out?.value?.length || "";
@@ -85,7 +87,7 @@ export const User: NLView = () => {
 	// if(true)
 	// 	return <>boo</>
 	return (
-		<ContentLayout>
+		<>
 			{/* <NewcoinWidget user={user} /> */}
 
 			<UserWidgetHeading user={user} setActiveKey={setActiveKey} />
@@ -103,11 +105,14 @@ export const User: NLView = () => {
 					key="1"
 				>
 					<Creators
-						users={powerups?.in?.value
-							?.sort(
-								(a, b) => (b.powered || 0) - (a.powered || 0)
-							)
-							.slice(0, 20) || []}
+						users={
+							powerups?.in?.value
+								?.sort(
+									(a, b) =>
+										(b.powered || 0) - (a.powered || 0)
+								)
+								.slice(0, 20) || []
+						}
 						title=""
 					/>
 					{/* {
@@ -184,6 +189,6 @@ export const User: NLView = () => {
 			{/* <div className="app-main-full-width">
 				<TopFolders userMoods={moodList} title="" />
 			</div> */}
-		</ContentLayout>
+		</>
 	);
 };

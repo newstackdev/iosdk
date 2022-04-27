@@ -5,7 +5,7 @@ import { AUTH_FLOW_STATUS, AUTH_FLOW_STATUS_TYPE } from "../auth/state";
 
 export const api: CreatorApi = <CreatorApi>{};
 
-export type PowerupsCacheItem = { in: PagedRatedResponseUser, out: PagedRatedResponseUser };
+export type PowerupsCacheItem = { in: PagedRatedResponseUser, out: PagedRatedResponseUser, promise?: Promise<PowerupsCacheItem> };
 export type PowerupsCache = Record<string, PowerupsCacheItem>;
 
 type State = {
