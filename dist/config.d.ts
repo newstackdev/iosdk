@@ -25,6 +25,10 @@ export declare const config: {
         useDefaultRoutes: boolean;
         overrides: {};
         noBackButton: string[];
+        defaultRoute: {
+            condition: (state: any) => boolean;
+            defaultLocation: (_state: any) => string;
+        };
     };
     components: {
         layout: {

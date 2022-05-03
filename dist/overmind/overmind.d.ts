@@ -21,6 +21,10 @@ export declare const config: (cfg: PartialConfiguration) => {
                 useDefaultRoutes: boolean;
                 overrides: {};
                 noBackButton: string[];
+                defaultRoute: {
+                    condition: (state: any) => boolean;
+                    defaultLocation: (_state: any) => string;
+                };
             };
             components: {
                 layout: {

@@ -25,6 +25,10 @@ declare const _default: {
                         useDefaultRoutes: boolean;
                         overrides: {};
                         noBackButton: string[];
+                        defaultRoute: {
+                            condition: (state: any) => boolean;
+                            defaultLocation: (_state: any) => string;
+                        };
                     };
                     components: {
                         layout: {
@@ -519,6 +523,10 @@ declare const _default: {
                 useDefaultRoutes: boolean;
                 overrides: {};
                 noBackButton: string[];
+                defaultRoute: {
+                    condition: (state: any) => boolean;
+                    defaultLocation: (_state: any) => string;
+                };
             };
             components: {
                 layout: {
@@ -559,6 +567,10 @@ declare const _default: {
             useDefaultRoutes: boolean;
             overrides: {};
             noBackButton: string[];
+            defaultRoute: {
+                condition: (state: any) => boolean;
+                defaultLocation: (_state: any) => string;
+            };
         };
         components: {
             layout: {
@@ -599,6 +611,10 @@ declare const _default: {
                     useDefaultRoutes: boolean;
                     overrides: {};
                     noBackButton: string[];
+                    defaultRoute: {
+                        condition: (state: any) => boolean;
+                        defaultLocation: (_state: any) => string;
+                    };
                 };
                 components: {
                     layout: {

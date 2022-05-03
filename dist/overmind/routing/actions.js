@@ -4,8 +4,9 @@ exports.setTitle = exports.setBreadcrumbs = exports.historyPush = exports.setHis
 const naiveQSDecode = (search = "") => search.slice(1).split(/&/).map(kv => kv.split(/=/)).reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 const routeAfterAuth = async ({ state, actions }) => {
     const p = state.routing.location;
-    if (!state.api.auth.authorized) {
-        actions.routing.historyPush({ location: "/" });
+    if (!state.config.routes.defaultRoute.condition(state) || state.api.auth.authorized) {
+        const location = state.config.routes.defaultRoute.defaultLocation(state);
+        actions.routing.historyPush({ location });
         return;
     }
     const h0s = state.routing.simpleHistory.length ? state.routing.simpleHistory[0].search : undefined;

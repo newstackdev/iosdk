@@ -53,7 +53,6 @@ module.exports = {
     configure: (cfg) => {
       cfg.plugins = [
         ...cfg.plugins,
-        new Dotenv(),
         new webpack.ProvidePlugin({
           Buffer: ['buffer', 'Buffer'],
           process: 'process/browser'

@@ -31,39 +31,39 @@ const getEnv = getStr(process.env);
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfigs = {
     "eu-dev": {
-        apiKey: process.env.DEV_FIREBASE_API_KEY || "",
-        authDomain: process.env.DEV_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
         projectId: "newlifeio",
         storageBucket: "newlifeio.appspot.com",
-        messagingSenderId: process.env.DEV_FIREBASE_MESSAGING_SENDER_ID || "",
-        appId: process.env.DEV_FIREBASE_APP_ID || "",
+        messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "",
+        appId: process.env.REACT_APP_FIREBASE_APP_ID || "",
         measurementId: "G-PJWYRPZSNM",
     },
     "eu-sit": {
-        apiKey: process.env.SIT_FIREBASE_API_KEY || "",
-        authDomain: process.env.SIT_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
         projectId: "newlifeio",
         storageBucket: "newlifeio.appspot.com",
-        messagingSenderId: process.env.SIT_FIREBASE_MESSAGING_SENDER_ID || "",
-        appId: process.env.SIT_FIREBASE_APP_ID || "",
+        messagingSenderId: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        appId: process.env.REACT_APP_FIREBASE_API_KEY || "",
         measurementId: "G-PJWYRPZSNM",
     },
     "eu-prod": {
-        apiKey: process.env.PROD_FIREBASE_API_KEY || "",
-        authDomain: process.env.PROD_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
         projectId: "newlifeio-prod",
         storageBucket: "newlifeio-prod.appspot.com",
-        messagingSenderId: process.env.PROD_FIREBASE_MESSAGING_SENDER_ID || "",
+        messagingSenderId: process.env.REACT_APP_FIREBASE_API_KEY || "",
         appId: process.env.PROD_FIREBASE_APP_ID || "",
         measurementId: "G-YMT320RGLJ",
     },
     v1: {
-        apiKey: process.env.V1_FIREBASE_API_KEY || "",
-        authDomain: process.env.V1_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_V1_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_V1_FIREBASE_API_KEY || "",
         projectId: "newlifeio-prod",
         storageBucket: "newlifeio-prod.appspot.com",
-        messagingSenderId: process.env.V1_FIREBASE_MESSAGING_SENDER_ID || "",
-        appId: process.env.V1_FIREBASE_APP_ID || "",
+        messagingSenderId: process.env.REACT_APP_V1_FIREBASE_MESSAGING_SENDER_ID || "",
+        appId: process.env.REACT_APP_V1_FIREBASE_APP_ID || "",
         measurementId: "G-YMT320RGLJ",
     },
 };
@@ -136,7 +136,7 @@ exports.config = {
             websocketsServer: exports.newlifeWebsocketsServer,
         },
         routing: {
-            routeAccessLevels: state_1.ROUTE_ACCESS_LEVELS,
+            routeAccessLevels: state_1.ROUTE_ACCESS_LEVELS
         },
         stripe: {
             publicKey: exports.stripeKey
@@ -146,6 +146,10 @@ exports.config = {
         useDefaultRoutes: true,
         overrides: {},
         noBackButton: ["/explore"],
+        defaultRoute: {
+            condition: state => !state.api.auth.authorized,
+            defaultLocation: _state => "/"
+        }
     },
     components: {
         layout: {

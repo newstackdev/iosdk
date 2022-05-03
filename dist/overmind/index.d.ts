@@ -18,6 +18,10 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         useDefaultRoutes: boolean;
         overrides: {};
         noBackButton: string[];
+        defaultRoute: {
+            condition: (state: any) => boolean;
+            defaultLocation: (_state: any) => string;
+        };
     };
     components: {
         layout: {
@@ -58,6 +62,10 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 useDefaultRoutes: boolean;
                 overrides: {};
                 noBackButton: string[];
+                defaultRoute: {
+                    condition: (state: any) => boolean;
+                    defaultLocation: (_state: any) => string;
+                };
             };
             components: {
                 layout: {
