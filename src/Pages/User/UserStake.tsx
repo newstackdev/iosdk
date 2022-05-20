@@ -4,16 +4,14 @@ import { MaskedInput } from "antd-mask-input";
 import { useForm } from "antd/lib/form/Form";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { pad } from "src/utils/pad";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { UserWidgetHeading } from "../../Components/UserWidget";
 import { useCachedUser } from "../../hooks/useCached";
 import { useActions, useAppState } from "../../overmind";
 import { NLView } from "../../types";
 
-const pad = (s: string, n: number, where: "right" | "left") =>
-	(where == "left" ? s : "") +
-	"0".repeat(n - s.length) +
-	(where == "left" ? "" : s);
+
 const fixValue = (v: string) =>
 	v
 		.replace(/[^\d\.]/g, "")
@@ -91,8 +89,7 @@ export const UserStake: NLView<{ user: UserReadPublicResponse }> = ({
 	if (!/\.(io|nco)/.test(user.username || ""))
 		return (
 			<p>
-				At the moment can only stake on .io and .nco accounts at the
-				moment (got ~{id} {user.username})
+				At the moment can only stake on .io and .nco accounts (got ~{id} {user.username})
 			</p>
 		);
 

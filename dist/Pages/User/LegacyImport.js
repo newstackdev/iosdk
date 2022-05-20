@@ -1,20 +1,14 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LegacyImport = exports.LegacyLogin = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const antd_1 = require("antd");
-const Form_1 = require("antd/lib/form/Form");
-const react_1 = require("react");
-const react_router_dom_1 = require("react-router-dom");
-const ContentLayout_1 = require("../../Components/ContentLayout");
-const ProgressButton_1 = require("../../Components/ProgressButton");
-const Spin_1 = require("../../Components/Spin");
-const SupportBox_1 = __importDefault(require("../../Components/SupportBox"));
-const overmind_1 = require("../../overmind");
-const capFirst_1 = require("../../utils/capFirst");
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Button, Col, Form, Input, Row } from "antd";
+import { useForm } from "antd/lib/form/Form";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ContentLayout } from "../../Components/ContentLayout";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { Spin } from "../../Components/Spin";
+import SupportBox from "../../Components/SupportBox";
+import { useActions, useAppState } from "../../overmind";
+import { capFirst } from "../../utils/capFirst";
 const STATUS = {
     NONE: 0,
     LINK_NO_EMAIL: 1,
@@ -24,13 +18,13 @@ const STATUS = {
     AUTHENTICATED_CANTPROCEED: 5,
     AUTHORIZED: 6,
 };
-const LegacyLogin = () => {
-    const [form] = (0, Form_1.useForm)();
-    const actions = (0, overmind_1.useActions)();
-    const state = (0, overmind_1.useAppState)();
-    const [status, setStatus] = (0, react_1.useState)(STATUS.NONE);
-    const [email, setEmail] = (0, react_1.useState)("");
-    const [error, setError] = (0, react_1.useState)("");
+export const LegacyLogin = () => {
+    const [form] = useForm();
+    const actions = useActions();
+    const state = useAppState();
+    const [status, setStatus] = useState(STATUS.NONE);
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
     // const indicators = state.indicators.specific;
     // const authorizing = state.auth.status > 0 && !state.auth.authorized && !state.auth.authenticated;
     // oobCode &&
@@ -44,7 +38,7 @@ const LegacyLogin = () => {
         }
         catch (ex) {
             setStatus(STATUS.ERROR);
-            setError((0, capFirst_1.capFirst)(ex.code
+            setError(capFirst(ex.code
                 .replace(/^auth\//, "")
                 .replace(/-/g, " ")));
             actions.auth.logout({ noRouting: true });
@@ -56,7 +50,7 @@ const LegacyLogin = () => {
         setError("");
         actions.auth.logout({ noRouting: true });
     };
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         if (state.flows.user.create.legacyToken)
             actions.flows.user.create.stopLegacyImport({ noRedirect: true });
         if (oobCode) {
@@ -75,7 +69,7 @@ const LegacyLogin = () => {
         }
         setStatus(state.api.auth.authorized ? STATUS.AUTHORIZED : STATUS.NONE);
     }, []);
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         if (!(oobCode && state.auth.status > 0) ||
             state.indicators.specific["auth.handleAuthChange"]) {
             return;
@@ -101,28 +95,26 @@ const LegacyLogin = () => {
         }
     };
     if (state.indicators.isWorking)
-        return (0, jsx_runtime_1.jsx)(Spin_1.Spin, {});
+        return _jsx(Spin, {});
     if (error)
-        return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsxs)("h2", { className: "heading-2", children: ["Error: ", error] }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsxs)(antd_1.Row, { children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, xxl: 12, children: (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: tryAgain, children: "Try again" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, xxl: 12, children: (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: () => actions.routing.historyPush({ location: "/" }), children: "Get onboarded using your phone" }) })] })] }));
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [state.auth.authenticated ? ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: state.api.auth.authorized ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsxs)("h2", { children: ["Hi", " ", state.api.auth.user?.username ||
-                                    state.api.auth.user?.displayName, ", we've been missing you!"] }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)("p", { children: "Please take a few steps to access the brand new version of Newlife." }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: () => actions.flows.user.create.startLegacyImport(), children: "Continue" })] })) : (status == STATUS.AUTHENTICATED_CANTPROCEED ?
-                    (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("h2", { children: "Email authorization is only available for existing users of Newlife V1." }), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsxs)("p", { children: ["We could not find your email in our database.", (0, jsx_runtime_1.jsxs)("ul", { className: "app-ul-simple", children: [(0, jsx_runtime_1.jsxs)("li", { children: [email ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["You used the email ", email, (0, jsx_runtime_1.jsx)("br", {})] })) : (""), "Please make sure you are using the same email you were using to access Newlife V1. You may want to", (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: tryAgain, children: "Try again" })] }), (0, jsx_runtime_1.jsxs)("li", { children: ["Please make sure you have not migrated your account to v2 yet. If you had", (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: () => actions.routing.historyPush({
+        return (_jsxs(_Fragment, { children: [_jsxs("h2", { className: "heading-2", children: ["Error: ", error] }), _jsx("div", { className: "section-divider" }), _jsxs(Row, { children: [_jsx(Col, { xs: 24, xxl: 12, children: _jsx(Button, { onClick: tryAgain, children: "Try again" }) }), _jsx(Col, { xs: 24, xxl: 12, children: _jsx(Button, { onClick: () => actions.routing.historyPush({ location: "/" }), children: "Get onboarded using your phone" }) })] })] }));
+    return (_jsxs(_Fragment, { children: [state.auth.authenticated ? (_jsx(_Fragment, { children: state.api.auth.authorized ? (_jsxs(_Fragment, { children: [_jsx("div", { className: "section-divider" }), _jsxs("h2", { children: ["Hi", " ", state.api.auth.user?.username ||
+                                    state.api.auth.user?.displayName, ", we've been missing you!"] }), _jsx("div", { className: "section-divider" }), _jsx("p", { children: "Please take a few steps to access the brand new version of Newlife." }), _jsx("div", { className: "section-divider" }), _jsx(Button, { onClick: () => actions.flows.user.create.startLegacyImport(), children: "Continue" })] })) : (status == STATUS.AUTHENTICATED_CANTPROCEED ?
+                    _jsxs(_Fragment, { children: [_jsx("h2", { children: "Email authorization is only available for existing users of Newlife V1." }), _jsx("br", {}), _jsxs("p", { children: ["We could not find your email in our database.", _jsxs("ul", { className: "app-ul-simple", children: [_jsxs("li", { children: [email ? (_jsxs(_Fragment, { children: ["You used the email ", email, _jsx("br", {})] })) : (""), "Please make sure you are using the same email you were using to access Newlife V1. You may want to", _jsx("div", { className: "section-divider" }), _jsx(Button, { onClick: tryAgain, children: "Try again" })] }), _jsxs("li", { children: ["Please make sure you have not migrated your account to v2 yet. If you had", _jsx("div", { className: "section-divider" }), _jsx(Button, { onClick: () => actions.routing.historyPush({
                                                             location: "/auth",
-                                                        }), children: "Sign in using your phone" })] }), (0, jsx_runtime_1.jsx)("li", { children: "If you still believe this is an error please contact Newlife at info@newlife.io and we will try to help." }), (0, jsx_runtime_1.jsxs)("li", { children: ["Otherwise", (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: () => actions.routing.historyPush({
+                                                        }), children: "Sign in using your phone" })] }), _jsx("li", { children: "If you still believe this is an error please contact Newlife at info@newlife.io and we will try to help." }), _jsxs("li", { children: ["Otherwise", _jsx("div", { className: "section-divider" }), _jsx(Button, { onClick: () => actions.routing.historyPush({
                                                             location: "/",
-                                                        }), children: "Get onboard using your phone" })] })] }), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {})] })] }) :
-                    (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {})) })) : ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {})), status === STATUS.LINK_REQUESTED && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("p", { className: "super-size font-variant-none", children: "check your inbox" }), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("div", { style: { width: "30%" }, children: (0, jsx_runtime_1.jsx)(SupportBox_1.default, {}) }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-3b text-center", children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "#", children: "I don't have an account yet!" }) })] })), status === STATUS.NONE && !state.api.auth.user?.id ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("p", { className: "super-size text-center", children: "join newlife.IO" }), (0, jsx_runtime_1.jsx)(ContentLayout_1.ContentLayout, { customClass: "app-content-layout", children: (0, jsx_runtime_1.jsxs)(antd_1.Form, { form: form, name: "basic", initialValues: { email: "" }, onFinish: onFinish, 
+                                                        }), children: "Get onboard using your phone" })] })] }), _jsx("br", {}), _jsx("br", {}), _jsx("br", {}), _jsx("br", {})] })] }) :
+                    _jsx(_Fragment, {})) })) : (_jsx(_Fragment, {})), status === STATUS.LINK_REQUESTED && (_jsxs(_Fragment, { children: [_jsx("p", { className: "super-size font-variant-none", children: "check your inbox" }), _jsx("br", {}), _jsx("br", {}), _jsx("br", {}), _jsx("br", {}), _jsx("br", {}), _jsx("div", { style: { width: "30%" }, children: _jsx(SupportBox, {}) }), _jsx("div", { className: "section-divider" }), _jsx("p", { className: "paragraph-3b text-center", children: _jsx(Link, { to: "#", children: "I don't have an account yet!" }) })] })), status === STATUS.NONE && !state.api.auth.user?.id ? (_jsxs(_Fragment, { children: [_jsx("p", { className: "super-size text-center", children: "join newlife.IO" }), _jsx(ContentLayout, { customClass: "app-content-layout", children: _jsxs(Form, { form: form, name: "basic", initialValues: { email: "" }, onFinish: onFinish, 
                             // onFinishFailed={onFinishFailed}
-                            autoComplete: "off", children: [(0, jsx_runtime_1.jsx)(antd_1.Form.Item, { name: "email", rules: [
+                            autoComplete: "off", children: [_jsx(Form.Item, { name: "email", rules: [
                                         {
                                             pattern: new RegExp(regexEmail),
                                             message: "Please input valid email.",
                                         },
-                                    ], children: (0, jsx_runtime_1.jsx)(antd_1.Input, { placeholder: "email" }) }), (0, jsx_runtime_1.jsx)(antd_1.Form.Item, { children: (0, jsx_runtime_1.jsx)("div", { className: "text-center", children: (0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { actionName: "auth.firebaseRequestEmailLink", type: "primary", htmlType: "submit", progressText: "Connecting...", children: "Connect my account" }) }) }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b text-center", children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/", children: "I don't have an account yet!" }) }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)(SupportBox_1.default, {})] }) })] })) : ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {}))] }));
+                                    ], children: _jsx(Input, { placeholder: "email" }) }), _jsx(Form.Item, { children: _jsx("div", { className: "text-center", children: _jsx(ProgressButton, { actionName: "auth.firebaseRequestEmailLink", type: "primary", htmlType: "submit", progressText: "Connecting...", children: "Connect my account" }) }) }), _jsx("p", { className: "paragraph-2b text-center", children: _jsx(Link, { to: "/", children: "I don't have an account yet!" }) }), _jsx("div", { className: "section-divider" }), _jsx(SupportBox, {})] }) })] })) : (_jsx(_Fragment, {}))] }));
 };
-exports.LegacyLogin = LegacyLogin;
-const LegacyImport = () => {
-    return (0, jsx_runtime_1.jsx)(exports.LegacyLogin, {});
+export const LegacyImport = () => {
+    return _jsx(LegacyLogin, {});
 };
-exports.LegacyImport = LegacyImport;
 //# sourceMappingURL=LegacyImport.js.map

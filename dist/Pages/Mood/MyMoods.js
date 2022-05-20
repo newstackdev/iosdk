@@ -1,13 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MyMoods = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const overmind_1 = require("../../overmind");
-const MoodsGrid_1 = require("./MoodsGrid");
-const MyMoods = () => {
-    (0, overmind_1.useActions)().routing.setTitle("My folders");
-    return (0, jsx_runtime_1.jsx)(MoodsGrid_1.MoodsGrid, { moods: (0, overmind_1.useAppState)().api.auth.moods, title: "My folders" });
+import { jsx as _jsx } from "react/jsx-runtime";
+import { useActions, useAppState } from "../../overmind";
+import { MoodsGrid } from "./MoodsGrid";
+export const MyMoods = () => {
+    useActions().routing.setTitle("My folders");
+    return _jsx(MoodsGrid, { moods: useAppState().api.auth.moods, title: "My folders" });
 };
-exports.MyMoods = MyMoods;
-exports.default = exports.MyMoods;
+export default MyMoods;
 //# sourceMappingURL=MyMoods.js.map

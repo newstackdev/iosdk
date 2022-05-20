@@ -1,23 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Product = exports.createSubscription = exports.handlePaymentThatRequiresCustomerAction = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const stripe_js_1 = require("@stripe/stripe-js");
-const react_stripe_js_1 = require("@stripe/react-stripe-js");
-const react_stripe_js_2 = require("@stripe/react-stripe-js");
-const antd_1 = require("antd");
-const react_1 = require("react");
-const overmind_1 = require("../../overmind");
-const Form_1 = require("antd/lib/form/Form");
-const state_1 = require("../../overmind/auth/state");
-const antd_2 = require("antd");
-const IndeterminateProgress_1 = require("../../Components/IndeterminateProgress");
-const ProgressButton_1 = require("../../Components/ProgressButton");
-const config_1 = require("../../config");
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { loadStripe, } from "@stripe/stripe-js";
+import { PaymentElement, useElements, useStripe, } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { Form } from "antd";
+import { useEffect, useState } from "react";
+import { useActions, useAppState, useEffects } from "../../overmind";
+import { useForm } from "antd/lib/form/Form";
+import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
+import { IndeterminateProgress, } from "../../Components/IndeterminateProgress";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { config } from "../../config";
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = (0, stripe_js_1.loadStripe)(`${config_1.config.settings.stripe.publicKey}`);
-async function handlePaymentThatRequiresCustomerAction(stripe, { subscription, invoice, priceId, paymentMethodId, isRetry, }) {
+const stripePromise = loadStripe(`${config.settings.stripe.publicKey}`);
+export async function handlePaymentThatRequiresCustomerAction(stripe, { subscription, invoice, priceId, paymentMethodId, isRetry, }) {
     if (subscription && subscription.status === "active") {
         // Subscription is active, no customer actions required.
         return { subscription, priceId, paymentMethodId };
@@ -58,8 +54,7 @@ async function handlePaymentThatRequiresCustomerAction(stripe, { subscription, i
     else {
     }
 }
-exports.handlePaymentThatRequiresCustomerAction = handlePaymentThatRequiresCustomerAction;
-async function createSubscription(stripe, api, { customerId, paymentMethodId, priceId }) {
+export async function createSubscription(stripe, api, { customerId, paymentMethodId, priceId }) {
     try {
         const createSubscriptionResponse = await api.payment.stripeSubscriptionCreate({
             customerId,
@@ -94,15 +89,14 @@ async function createSubscription(stripe, api, { customerId, paymentMethodId, pr
     //     showCardError(error);
     // })
 }
-exports.createSubscription = createSubscription;
 const CheckoutForm = ({ embedded, setNext, }) => {
-    const stripe = (0, react_stripe_js_1.useStripe)();
-    const elements = (0, react_stripe_js_1.useElements)();
-    const state = (0, overmind_1.useAppState)();
-    const actions = (0, overmind_1.useActions)();
-    const effects = (0, overmind_1.useEffects)();
-    const [form] = (0, Form_1.useForm)();
-    (0, react_1.useEffect)(() => {
+    const stripe = useStripe();
+    const elements = useElements();
+    const state = useAppState();
+    const actions = useActions();
+    const effects = useEffects();
+    const [form] = useForm();
+    useEffect(() => {
         embedded &&
             setNext &&
             setNext({
@@ -115,30 +109,33 @@ const CheckoutForm = ({ embedded, setNext, }) => {
     };
     return (
     // <Elements stripe={stripePromise} options={options}>
-    (0, jsx_runtime_1.jsxs)(antd_1.Form, { form: form, onFinish: () => actions.payments.pay({ stripe, elements }), children: [(0, jsx_runtime_1.jsx)(antd_1.Form.Item, { name: "payment", children: (0, jsx_runtime_1.jsx)("div", { style: { minHeight: 142 }, children: (0, jsx_runtime_1.jsx)(react_stripe_js_1.PaymentElement, { onChange: onPaymentElementChanged }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Form.Item, { hidden: embedded, children: (0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { progressText: "Processing payment...", type: "primary", actionName: "payments.pay", htmlType: "submit", disabled: !stripe || !elements, children: "Submit" }) })] })
+    _jsxs(Form, { form: form, onFinish: () => actions.payments.pay({ stripe, elements }), children: [_jsx(Form.Item, { name: "payment", children: _jsx("div", { style: { minHeight: 142 }, children: _jsx(PaymentElement, { onChange: onPaymentElementChanged }) }) }), _jsx(Form.Item, { hidden: embedded, children: _jsx(ProgressButton, { progressText: "Processing payment...", type: "primary", actionName: "payments.pay", htmlType: "submit", disabled: !stripe || !elements, children: "Submit" }) })] })
     // </Elements>
     );
 };
-const Product = ({ embedded, setNext, }) => {
-    const [flowState, setFlowState] = (0, react_1.useState)({ options: { clientSecret: "" }, intent: {} });
-    const state = (0, overmind_1.useAppState)();
-    const actions = (0, overmind_1.useActions)();
-    const [price, setPrice] = (0, react_1.useState)("io-domain-presale-standard");
-    console.log(price);
-    (0, react_1.useEffect)(() => {
+const estimateUsernamePrice = (priceId) => ~~(8 * (10 ** (5 - (priceId.length - 3))));
+export const Product = ({ embedded, setNext, }) => {
+    const [flowState, setFlowState] = useState({ options: { clientSecret: "" }, intent: {} });
+    const state = useAppState();
+    const actions = useActions();
+    // const [price, setPrice] = useState<any>("io-domain-presale-standard");
+    const requestedUsername = state.flows.user.create.form.username;
+    const price = estimateUsernamePrice(requestedUsername);
+    console.log(requestedUsername);
+    useEffect(() => {
         if (!state.indicators.isWorking &&
             !state.api.auth.user?.id &&
-            state.auth.status === state_1.AUTH_FLOW_STATUS.AUTHENTICATED) {
+            state.auth.status === AUTH_FLOW_STATUS.AUTHENTICATED) {
             actions.flows.user.create.preregisterCreate({ noRouting: true });
         }
     }, [state.api.auth.user, state.auth.status, state.indicators.isWorking]);
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         if (!state.api.auth.user?.id)
             return;
-        return;
+        // return;
         (async () => {
             const newPaymentIntent = await state.api.client.payment.stripeIntentCreate({
-                items: [{ productId: "io-domain-presale", priceId: price }],
+                items: [{ productId: "io-domain-sale", priceId: requestedUsername }],
             });
             setFlowState({
                 intent: newPaymentIntent.data,
@@ -147,12 +144,11 @@ const Product = ({ embedded, setNext, }) => {
                 },
             });
         })();
-    }, [price, state.api.auth.user?.id, state.auth.authenticated]);
+    }, [price, state.api.auth.user, state.auth.authenticated]);
     const paymentIntent = flowState.intent || {};
     const options = flowState.options;
     if (!state.api.auth.user?.id)
-        return ((0, jsx_runtime_1.jsx)("div", { className: "app-main-centered", style: { minWidth: 150 }, children: (0, jsx_runtime_1.jsx)(IndeterminateProgress_1.IndeterminateProgress, { inProgress: true }) }));
-    return ((0, jsx_runtime_1.jsxs)("div", { className: "app-main-full-height-only-with-bottom-control", children: [(0, jsx_runtime_1.jsx)(antd_2.Checkbox.Group, { value: price, onChange: (v) => setPrice(v[v.length - 1]), style: { width: "100%" }, children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { align: "bottom", justify: "space-between", children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { sm: 2, children: (0, jsx_runtime_1.jsx)(antd_2.Checkbox, { value: "io-domain-presale-standard", className: "dm-presale-form-checkbox" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { children: (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b", children: "standard" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { sm: 2, children: (0, jsx_runtime_1.jsx)(antd_2.Checkbox, { value: "io-domain-presale-premium", className: "dm-presale-form-checkbox" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { children: (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b", children: "premium" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { sm: 2, children: (0, jsx_runtime_1.jsx)(antd_2.Checkbox, { value: "io-domain-presale-lifetime", className: "dm-presale-form-checkbox" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { children: (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b", children: "lifetime" }) })] }) }), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), paymentIntent["amount"] && ((0, jsx_runtime_1.jsxs)("h2", { className: "header-2", children: ["Total: ", paymentIntent["amount"] / 100, "EUR"] })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("div", { style: { maxWidth: 600, minHeight: 380 }, children: options.clientSecret && ((0, jsx_runtime_1.jsx)(react_stripe_js_2.Elements, { stripe: stripePromise, options: options, children: (0, jsx_runtime_1.jsx)(CheckoutForm, { embedded: embedded, setNext: setNext }) })) })] }));
+        return (_jsx("div", { className: "app-main-centered", style: { minWidth: 150 }, children: _jsx(IndeterminateProgress, { inProgress: true }) }));
+    return (_jsxs("div", { className: "app-main-full-height-only-with-bottom-control", children: [_jsx("br", {}), _jsx("br", {}), paymentIntent["amount"] && (_jsxs("h2", { className: "header-2", children: ["Total for premium domain ", _jsx("b", { children: requestedUsername }), ": ", paymentIntent["amount"] / 100, "EUR"] })), _jsx("br", {}), _jsx("div", { style: { maxWidth: 600, minHeight: 380 }, children: options.clientSecret && (_jsx(Elements, { stripe: stripePromise, options: options, children: _jsx(CheckoutForm, { embedded: embedded, setNext: setNext }) })) })] }));
 };
-exports.Product = Product;
 //# sourceMappingURL=Product.js.map

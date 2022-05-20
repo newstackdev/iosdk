@@ -1,25 +1,19 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DomainPresale = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const antd_1 = require("antd");
-const react_1 = require("react");
-const antd_mask_input_1 = require("antd-mask-input");
-const ContentLayout_1 = require("../../Components/ContentLayout");
-const overmind_1 = require("../../overmind");
-const Paragraph_1 = __importDefault(require("antd/lib/typography/Paragraph"));
-const Auth_1 = require("../Auth/Auth");
-const Product_1 = require("../Store/Product");
-const UserCreate_1 = require("../User/UserCreate");
-const ProgressButton_1 = require("../../Components/ProgressButton");
-const react_router_dom_1 = require("react-router-dom");
-const Appearing_1 = require("../../Components/Appearing");
-const Spin_1 = require("../../Components/Spin");
-const SupportBox_1 = __importDefault(require("../../Components/SupportBox"));
-const Done_1 = require("./Done");
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Button, Tag, Tooltip } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { MaskedInput } from "antd-mask-input";
+import { ContentLayout } from "../../Components/ContentLayout";
+import { useActions, useAppState } from "../../overmind";
+import Paragraph from "antd/lib/typography/Paragraph";
+import { Auth } from "../Auth/Auth";
+import { Product } from "../Store/Product";
+import { UserCreate } from "../User/UserCreate";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { Link } from "react-router-dom";
+import { AppearingComponent } from "../../Components/Appearing";
+import { SpaceSpin } from "../../Components/Spin";
+import SupportBox from "../../Components/SupportBox";
+import { Done } from "./Done";
 // const InputWithPostfix:  NLView<InputProps & { postFix: string }>= ({ postFix, ...props }) => {
 //     const [val, setVal] = useState<string>(postFix);
 //     return <Input
@@ -28,10 +22,10 @@ const Done_1 = require("./Done");
 //     />
 // }
 const DomainSelector = () => {
-    const actions = (0, overmind_1.useActions)();
-    const state = (0, overmind_1.useAppState)();
+    const actions = useActions();
+    const state = useAppState();
     const fuia = state.flows.user.create.formUsernameIsAvailable;
-    const el = (0, react_1.useRef)({});
+    const el = useRef({});
     // useEffect(() => {
     // 	if(["imported", "known"].includes(state.api.auth.user?.status || "") && !state.flows.user.create.form.username) {
     // 		actions.flows.user.create.startLegacyImport();
@@ -44,18 +38,11 @@ const DomainSelector = () => {
     const username = state.flows.user.create.form.username || "";
     const isPaidUsername = () => {
         const len = username.replace(/\.io/, "").length;
-        return (len > 0) && (len < 5);
+        return len > 0 && len < 5;
     };
-    return ((0, jsx_runtime_1.jsxs)(ContentLayout_1.ContentLayout, { children: [(0, jsx_runtime_1.jsx)(antd_mask_input_1.MaskedInput, { ref: el, style: {
-                    fontSize: "clamp(20px, 120px, 9.8vw)",
-                    textAlign: "center",
-                    width: "70%",
-                    height: "auto",
-                    marginTop: "80px",
-                    borderBottomWidth: "13px",
-                }, className: fuia === "unavailable"
-                    ? "masked-input masked-input-error font-variant-none paragraph-2b"
-                    : "masked-input font-variant-none paragraph-2b", defaultValue: state.flows.user.create.form.username?.replace(/\.io$/, "") || "", size: "large", mask: "xxxxxxxxx.IO", placeholderChar: "\u200C", onChange: (v) => {
+    return (_jsxs(ContentLayout, { children: [_jsx(MaskedInput, { ref: el, className: fuia === "unavailable"
+                    ? "nl-domain-presale__masked-input masked-input-error"
+                    : "nl-domain-presale__masked-input", defaultValue: state.flows.user.create.form.username?.replace(/\.io$/, "") || "", size: "large", mask: "xxxxxxxxx.IO", placeholderChar: "\u200C", onChange: (v) => {
                     actions.flows.user.create.updateForm({
                         username: v.target.value
                             .replace(/\u200c/g, "")
@@ -70,12 +57,12 @@ const DomainSelector = () => {
                             return char.toLowerCase();
                         },
                     },
-                } }), (0, jsx_runtime_1.jsx)(Spin_1.SpaceSpin, { isRotating: fuia === "checking" }), fuia === "unavailable" && ((0, jsx_runtime_1.jsxs)(antd_1.Tag, { style: { marginTop: "20px" }, children: ["Name is ", fuia] })), (0, jsx_runtime_1.jsxs)(Paragraph_1.default, { className: "paragraph-2r nl-footer-paragraph", style: { width: "60%" }, children: [isPaidUsername() ? ((0, jsx_runtime_1.jsxs)(Appearing_1.AppearingComponent, { seconds: 1, children: [(0, jsx_runtime_1.jsx)("br", {}), state.config.featureFlags.onboarding.premiumDomains ?
-                                (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "Premium usernames shorter than 5 characters must be purchased. Click Next to continue." }) :
-                                (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["For early access please contact\u00A0", (0, jsx_runtime_1.jsx)("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "our support team" }), "."] })] })) : (""), state.flows.user.create.legacyToken &&
+                } }), _jsx(SpaceSpin, { isRotating: fuia === "checking" }), fuia === "unavailable" && (_jsxs(Tag, { className: "u-margin-top-medium", children: ["Name is ", fuia] })), _jsxs(Paragraph, { className: "paragraph-2r nl-domain-presale__footer-paragraph", children: [isPaidUsername() ? (_jsxs(AppearingComponent, { seconds: 1, children: [_jsx("br", {}), state.config.featureFlags.onboarding.premiumDomains ?
+                                _jsx(_Fragment, { children: "Premium usernames shorter than 5 characters must be purchased. Click Next to continue." }) :
+                                _jsxs(_Fragment, { children: ["For early access please contact\u00A0", _jsx("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "our support team" }), "."] })] })) : (""), state.flows.user.create.legacyToken &&
                         (state.flows.user.create.form.displayName !==
                             state.flows.user.create.form.username ||
-                            fuia === "unavailable") ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(antd_1.Tooltip, { title: (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "Your Newlife identity is now a part of the Newcoin ecosystem and provides access to many exciting services. You may keep your current username as the display name on Newlife on the next dialog." }), children: (0, jsx_runtime_1.jsx)("span", { children: "Why is my username changing?" }) }), "\u00A0", (0, jsx_runtime_1.jsxs)("a", { href: "/", onClick: () => actions.flows.user.create.stopLegacyImport(), children: ["I am not", " ", state.flows.user.create.form.displayName ||
+                            fuia === "unavailable") ? (_jsxs(_Fragment, { children: [_jsx(Tooltip, { title: _jsx(_Fragment, { children: "Your Newlife identity is now a part of the Newcoin ecosystem and provides access to many exciting services. You may keep your current username as the display name on Newlife on the next dialog." }), children: _jsx("span", { children: "Why is my username changing?" }) }), "\u00A0", _jsxs("a", { href: "/", onClick: () => actions.flows.user.create.stopLegacyImport(), children: ["I am not", " ", state.flows.user.create.form.displayName ||
                                         state.flows.user.create.form.username] })] })) : ("")] })] }));
 };
 //: Record<string, { title: string, content: ReactElement | EmbeddableControl }>
@@ -83,45 +70,45 @@ const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
     return {
         SELECT_DOMAIN: {
             title: "Choose your permanent domain name. This cannot be changed or deleted, and you own it.",
-            content: (0, jsx_runtime_1.jsx)(DomainSelector, {}),
+            content: _jsx(DomainSelector, {}),
             action: "",
         },
         AUTHENTICATE: {
             title: "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS",
-            content: ((0, jsx_runtime_1.jsx)(Auth_1.Auth, { embedded: true, setNext: setNext, setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit })),
+            content: (_jsx(Auth, { embedded: true, setNext: setNext, setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit })),
             action: "",
         },
         SUBSCRIBE: {
             title: "",
             action: "payments.pay",
-            content: (0, jsx_runtime_1.jsx)(Product_1.Product, { embedded: true, setNext: setNext }),
+            content: _jsx(Product, { embedded: true, setNext: setNext }),
         },
         CREATE_USER: {
             title: "",
             action: "api.user.create",
-            content: ((0, jsx_runtime_1.jsx)(UserCreate_1.UserCreate, { embedded: true, setNext: setNext, hideUsername: true, noRouing: true, setIsErrorSubmit: setIsErrorSubmit })),
+            content: (_jsx(UserCreate, { embedded: true, setNext: setNext, hideUsername: true, noRouing: true, setIsErrorSubmit: setIsErrorSubmit })),
         },
         DONE: {
             title: "",
-            content: (0, jsx_runtime_1.jsx)(Done_1.Done, {}),
+            content: _jsx(Done, {}),
             action: "",
         },
     };
 };
-const DomainPresale = () => {
-    const actions = (0, overmind_1.useActions)();
-    const state = (0, overmind_1.useAppState)();
-    const [isErrorSubmit, setIsErrorSubmit] = (0, react_1.useState)(false);
-    const [_next, setNext] = (0, react_1.useState)();
-    const [steps] = (0, react_1.useState)(InitSteps(setNext, isErrorSubmit, setIsErrorSubmit));
+export const DomainPresale = () => {
+    const actions = useActions();
+    const state = useAppState();
+    const [isErrorSubmit, setIsErrorSubmit] = useState(false);
+    const [_next, setNext] = useState();
+    const [steps] = useState(InitSteps(setNext, isErrorSubmit, setIsErrorSubmit));
     const wizard = state.flows.user.create.wizard;
     const next = _next;
     const currentSlide = steps[wizard.current];
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         wizard.hasNext && setNext(undefined);
     }, [wizard.hasNext, wizard.current]); // wizard.hasNext,
     const isMember = (state.newcoin.pools || {})["CGY"] > 1087;
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         if (isMember)
             actions.routing.historyPush({ location: "/explore" });
     }, [isMember]);
@@ -134,20 +121,19 @@ const DomainPresale = () => {
             !state.api.auth.authorized &&
             !state.api.auth.attempted &&
             state.firebase.token))
-        return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsxs)(ContentLayout_1.ContentLayout, { customClass: "app-content-layout", children: [currentSlide.content, (0, jsx_runtime_1.jsx)("div", { className: "app-control-surface", children: next || wizard.hasNext ? (currentSlide.action ? ((0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { type: "primary", progressText: "Processing...", actionName: currentSlide.action, onClick: () => {
+        return _jsx(_Fragment, {});
+    return (_jsxs(_Fragment, { children: [_jsxs(ContentLayout, { customClass: "app-content-layout", children: [currentSlide.content, _jsx("div", { className: "app-control-surface", children: next || wizard.hasNext ? (currentSlide.action ? (_jsx(ProgressButton, { type: "primary", progressText: "Processing...", actionName: currentSlide.action, onClick: () => {
                                 return next
                                     ? next.command()
                                     : actions.flows.user.create.wizardStepNext();
-                            }, isErrorSubmit: isErrorSubmit, children: next ? next.text : "Next" })) : ((0, jsx_runtime_1.jsx)(antd_1.Button, { type: "primary", disabled: isErrorSubmit, onClick: () => next
+                            }, isErrorSubmit: isErrorSubmit, children: next ? next.text : "Next" })) : (_jsx(Button, { type: "primary", disabled: isErrorSubmit, onClick: () => next
                                 ? next.command()
                                 : actions.flows.user.create.wizardStepNext(), className: isErrorSubmit
                                 ? "disabled-submit-button"
-                                : "", children: next ? next.text : "Next" }))) : ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {})) }), !state.flows.user.create.legacyToken &&
+                                : "", children: next ? next.text : "Next" }))) : (_jsx(_Fragment, {})) }), !state.flows.user.create.legacyToken &&
                         !state.auth.authenticated &&
-                        wizard.matches("SELECT_DOMAIN") && ((0, jsx_runtime_1.jsx)("div", { className: "app-main-full-width u-margin-top-medium text-center", children: (0, jsx_runtime_1.jsx)(antd_1.Button, { type: "primary", className: "big-button", children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/auth/newlife-members", className: "header-1b", children: "I'm an early Newlife member!" }) }) })), (0, jsx_runtime_1.jsx)("div", { className: "u-margin-top-large", children: (0, jsx_runtime_1.jsx)(SupportBox_1.default, {}) })] }), (0, jsx_runtime_1.jsxs)("div", { 
+                        wizard.matches("SELECT_DOMAIN") && (_jsx("div", { className: "app-main-full-width u-margin-top-medium text-center", children: _jsx(Button, { type: "primary", className: "big-button", children: _jsx(Link, { to: "/auth/newlife-members", className: "header-1b", children: "I'm an early Newlife member!" }) }) })), _jsx("div", { className: "u-margin-top-large", children: _jsx(SupportBox, {}) })] }), _jsxs("div", { 
                 // hidden={!wizard.matches("SELECT_DOMAIN")}
-                style: { width: "50%", margin: "0 auto" }, children: [(0, jsx_runtime_1.jsx)(Paragraph_1.default, { className: "paragraph-2r nl-footer-paragraph", style: { marginTop: 48, width: "60%" }, children: footerTitle }), wizard.matches("SELECT_DOMAIN") && ((0, jsx_runtime_1.jsx)(Paragraph_1.default, { style: { width: "100%" }, className: "nl-footer-paragraph paragraph-2r", children: "9 characters max: a-z and 1-5" }))] })] }));
+                className: "nl-domain-presale__info-text__wrapper", children: [_jsx(Paragraph, { className: "paragraph-2r nl-domain-presale__footer-paragraph", children: footerTitle }), wizard.matches("SELECT_DOMAIN") && (_jsx(Paragraph, { className: "nl-domain-presale__footer-paragraph paragraph-2r", children: "9 characters max: a-z and 1-5" }))] })] }));
 };
-exports.DomainPresale = DomainPresale;
 //# sourceMappingURL=DomainPresale.js.map

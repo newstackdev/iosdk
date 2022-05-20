@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.contentList = void 0;
-exports.contentList = [
+export const contentList = [
     "activity",
     "adult",
     "advertising",

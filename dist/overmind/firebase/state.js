@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 // export const api: CreatorApi = <CreatorApi>{};
-exports.default = {
+export default {
     token: "",
     user: null
     // client: api

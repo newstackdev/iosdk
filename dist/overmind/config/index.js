@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const state_1 = require("./state");
-exports.default = {
-    state: state_1.state
+import { state } from "./state";
+export default {
+    state
 };
 //# sourceMappingURL=index.js.map

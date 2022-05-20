@@ -6,7 +6,6 @@ import { AUTH_FLOW_STATUS } from "../../../../overmind/auth/state";
 import { CrossCircleErr } from "../../../User/UserCreate";
 import { layout } from "../../Auth";
 import { FormInstance } from "antd";
-import "./styles/Form.less";
 import { useState } from "react";
 
 const PhoneForm: NLView<{
@@ -44,7 +43,7 @@ const PhoneForm: NLView<{
 						pattern: new RegExp(reg),
 					},
 				]}
-				className="phone-form-height"
+				className="nl-auth-page-form__height"
 			>
 				<Input
 					className="text-center"
@@ -66,8 +65,8 @@ const PhoneForm: NLView<{
 						const customClassName = phoneForm
 							.getFieldValue("phone")
 							.match(reg)
-							? "disabled-submit-button"
-							: "";
+							? ""
+							: "disabled-submit-button";
 
 						setCustomClassName(customClassName);
 					}}

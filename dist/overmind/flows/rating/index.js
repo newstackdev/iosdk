@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.onInitializeOvermind = exports.deepLikeStop = exports.deepLikeStep = exports.deepLikeStart = exports.deepLikeInit = void 0;
 const VOTE_POLLING_INTERVAL = 50;
 const VOTE_STEP = 4;
 const PREVOTE_DELAY = 400;
-const deepLikeInit = ({ state, effects }) => {
+export const deepLikeInit = ({ state, effects }) => {
     if (state.flows.rating.isRating)
         return;
     console.log("Starting vote");
@@ -16,8 +13,7 @@ const deepLikeInit = ({ state, effects }) => {
         value: 0
     };
 };
-exports.deepLikeInit = deepLikeInit;
-const deepLikeStart = ({ actions, state, effects }, { event }) => {
+export const deepLikeStart = ({ actions, state, effects }, { event }) => {
     const rs = state.flows.rating;
     if (!rs.isRating)
         return;
@@ -33,8 +29,7 @@ const deepLikeStart = ({ actions, state, effects }, { event }) => {
     rs.startTime = Date.now();
     rs.interval.start(() => actions.flows.rating.deepLikeStep());
 };
-exports.deepLikeStart = deepLikeStart;
-const deepLikeStep = ({ actions, state, effects }) => {
+export const deepLikeStep = ({ actions, state, effects }) => {
     if (Date.now() - state.flows.rating.startTime < PREVOTE_DELAY)
         return;
     if (!state.flows.rating.isRating)
@@ -45,8 +40,7 @@ const deepLikeStep = ({ actions, state, effects }) => {
         actions.flows.rating.deepLikeStop();
     }
 };
-exports.deepLikeStep = deepLikeStep;
-const deepLikeStop = ({ state, effects }) => {
+export const deepLikeStop = ({ state, effects }) => {
     console.log("Stopping vote vote");
     state.flows.rating = {
         ...state.flows.rating,
@@ -55,8 +49,7 @@ const deepLikeStop = ({ state, effects }) => {
     };
     state.flows.rating.interval.stop();
 };
-exports.deepLikeStop = deepLikeStop;
-const onInitializeOvermind = ({ actions, state }) => {
+export const onInitializeOvermind = ({ actions, state }) => {
     const nextValue = () => {
     };
     state.flows.rating.keyBinding.setEventHandlers({
@@ -66,7 +59,6 @@ const onInitializeOvermind = ({ actions, state }) => {
         }
     });
 };
-exports.onInitializeOvermind = onInitializeOvermind;
 const effects = {
     initInterval: (ms) => {
         let interval = null;
@@ -135,13 +127,13 @@ const state = {
     keyBinding: effects.onceKeyBinding([32])
 };
 const actions = {
-    deepLikeInit: exports.deepLikeInit,
-    deepLikeStart: exports.deepLikeStart,
-    deepLikeStep: exports.deepLikeStep,
-    deepLikeStop: exports.deepLikeStop,
-    onInitializeOvermind: exports.onInitializeOvermind
+    deepLikeInit,
+    deepLikeStart,
+    deepLikeStep,
+    deepLikeStop,
+    onInitializeOvermind
 };
-exports.default = {
+export default {
     state,
     actions,
     effects

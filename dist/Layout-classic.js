@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Layout = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const layout_1 = require("antd/lib/layout/layout");
-const antd_1 = require("antd");
-const react_router_dom_1 = require("react-router-dom");
-const AuthWidget_1 = require("./Pages/AuthWidget");
-const overmind_1 = require("./overmind");
-const react_1 = require("react");
-const icons_1 = require("@ant-design/icons");
-const state_1 = require("./overmind/auth/state");
-const Layout = ({ children }) => {
-    const state = (0, overmind_1.useAppState)();
-    const actions = (0, overmind_1.useActions)();
-    const history = (0, react_router_dom_1.useHistory)();
-    const match = (0, react_router_dom_1.useRouteMatch)();
-    (0, react_1.useEffect)(() => {
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Header, Content } from "antd/lib/layout/layout";
+import { Breadcrumb, Layout as AntdLayout, Menu, } from "antd";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { AuthWidget } from "./Pages/AuthWidget";
+import { useActions, useAppState } from "./overmind";
+import { useEffect } from "react";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { AUTH_FLOW_STATUS } from "./overmind/auth/state";
+export const Layout = ({ children }) => {
+    const state = useAppState();
+    const actions = useActions();
+    const history = useHistory();
+    const match = useRouteMatch();
+    useEffect(() => {
         // setTimeout(() => {
         history.listen((location) => actions.routing.onRouteChange({ location }));
         // })
@@ -23,23 +20,22 @@ const Layout = ({ children }) => {
     // useEffect(() => {
     // 	state.routing.location && history.push(state.routing.location);
     // }, [state.routing.location]);
-    return ((0, jsx_runtime_1.jsxs)(antd_1.Layout, { children: [(0, jsx_runtime_1.jsx)(layout_1.Header, { className: "header logo", children: (0, jsx_runtime_1.jsxs)(antd_1.Menu, { theme: "dark", mode: "horizontal", defaultSelectedKeys: ["2"], children: [(0, jsx_runtime_1.jsx)(antd_1.Menu.Item, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/explore", 
-                                /*underlayColor="#f0f4f7"*/ className: "nav-item", children: (0, jsx_runtime_1.jsx)("div", { className: `logo-image` }) }) }, "1"), (0, jsx_runtime_1.jsx)(antd_1.Menu.Item, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/payment/subscription", 
-                                /*underlayColor="#f0f4f7"*/ className: "nav-item", children: (0, jsx_runtime_1.jsx)("div", { children: "Subscribe" }) }) }, "0"), (0, jsx_runtime_1.jsx)(antd_1.Menu.Item, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/about", 
-                                /*underlayColor="#f0f4f7"*/ className: "nav-item", children: "About" }) }, "2"), (0, jsx_runtime_1.jsx)(antd_1.Menu.Item, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/search-creative", className: "nav-item", children: "Creative Search" }) }, "3"), (0, jsx_runtime_1.jsx)(antd_1.Menu.Item, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/explore", className: "nav-item", children: "Explore" }) }, "4"), (0, jsx_runtime_1.jsx)(antd_1.Menu.Item, { children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/post-create", className: "nav-item", children: (0, jsx_runtime_1.jsx)(icons_1.PlusCircleOutlined, {}) }) }, "5"), (0, jsx_runtime_1.jsx)(AuthWidget_1.AuthWidget, {})] }) }, "h"), (0, jsx_runtime_1.jsx)(antd_1.Layout, { children: (0, jsx_runtime_1.jsx)(antd_1.Layout, { style: { padding: "0 0 24px" }, children: (0, jsx_runtime_1.jsx)(layout_1.Content, { className: "site-layout-background", style: {
+    return (_jsxs(AntdLayout, { children: [_jsx(Header, { className: "header logo", children: _jsxs(Menu, { theme: "dark", mode: "horizontal", defaultSelectedKeys: ["2"], children: [_jsx(Menu.Item, { children: _jsx(Link, { to: "/explore", 
+                                /*underlayColor="#f0f4f7"*/ className: "nav-item", children: _jsx("div", { className: `logo-image` }) }) }, "1"), _jsx(Menu.Item, { children: _jsx(Link, { to: "/payment/subscription", 
+                                /*underlayColor="#f0f4f7"*/ className: "nav-item", children: _jsx("div", { children: "Subscribe" }) }) }, "0"), _jsx(Menu.Item, { children: _jsx(Link, { to: "/about", 
+                                /*underlayColor="#f0f4f7"*/ className: "nav-item", children: "About" }) }, "2"), _jsx(Menu.Item, { children: _jsx(Link, { to: "/search-creative", className: "nav-item", children: "Creative Search" }) }, "3"), _jsx(Menu.Item, { children: _jsx(Link, { to: "/explore", className: "nav-item", children: "Explore" }) }, "4"), _jsx(Menu.Item, { children: _jsx(Link, { to: "/post-create", className: "nav-item", children: _jsx(PlusCircleOutlined, {}) }) }, "5"), _jsx(AuthWidget, {})] }) }, "h"), _jsx(AntdLayout, { children: _jsx(AntdLayout, { style: { padding: "0 0 24px" }, children: _jsx(Content, { className: "site-layout-background", style: {
                             padding: 24,
                             margin: "auto",
                             minHeight: 280,
                             maxWidth: "90vw",
                             minWidth: "80vw",
                         }, children: state.auth.status <
-                            state_1.AUTH_FLOW_STATUS.AUTHENTICATED ? (
+                            AUTH_FLOW_STATUS.AUTHENTICATED ? (
                         // || NONPOSTAUTHLOCATIONS.includes(state.routing.location)
-                        (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsxs)(antd_1.Breadcrumb, { style: { margin: "16px 0" }, children: [
+                        _jsxs(_Fragment, { children: [_jsxs(Breadcrumb, { style: { margin: "16px 0" }, children: [
                                         //@ts-ignore
-                                        state.routing.breadcrumbs.map((b, i, a) => ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: b.url ? ((0, jsx_runtime_1.jsx)(antd_1.Breadcrumb.Item, { children: b.url ? ((0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: b.url, children: b.text })) : (b.text) })) : ((0, jsx_runtime_1.jsx)(antd_1.Breadcrumb.Item, { children: b.text })) }))), state.routing.breadcrumbs.length ? ((0, jsx_runtime_1.jsx)(antd_1.Breadcrumb.Item, { children: ">" })) : ("")] }), (0, jsx_runtime_1.jsx)("div", { children: children })] })) : ("Checking authorization...") }, "mc") }, "m") }, "c")] }));
+                                        state.routing.breadcrumbs.map((b, i, a) => (_jsx(_Fragment, { children: b.url ? (_jsx(Breadcrumb.Item, { children: b.url ? (_jsx(Link, { to: b.url, children: b.text })) : (b.text) })) : (_jsx(Breadcrumb.Item, { children: b.text })) }))), state.routing.breadcrumbs.length ? (_jsx(Breadcrumb.Item, { children: ">" })) : ("")] }), _jsx("div", { children: children })] })) : ("Checking authorization...") }, "mc") }, "m") }, "c")] }));
 };
-exports.Layout = Layout;
 { /* <Sider width={200} style={{ position: 'absolute' }} defaultCollapsed={true} collapsible={true} className="site-layout-background">
 <Menu
     mode="inline"

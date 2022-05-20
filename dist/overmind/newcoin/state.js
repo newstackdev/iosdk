@@ -1,14 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
+export default {
     account: {},
     pools: {},
+    mainPool: {},
+    daos: {},
     cache: {
         accountHistory: {},
         pools: {
             byCode: {},
             byOwner: {}
-        }
+        },
+        votes: {}
     }
 };
 //# sourceMappingURL=state.js.map

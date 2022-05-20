@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAvailability = exports.create = exports.preregisterCreate = exports.wizardStepNext = exports._wizardReact = exports.wizardStepPrev = exports.stopLegacyImport = exports.startLegacyImport = exports.updateForm = exports.onInitializeOvermind = void 0;
-const overmind_1 = require("overmind");
+import { debounce, pipe } from "overmind";
 // import { IReaction } from "overmind";
 const reduceState = ({ api: { auth }, auth: { authenticated }, config: { featureFlags }, flows: { user: { create: { legacyToken, form: { username }, formUsernameIsAvailable } } } }) => {
     return ({
@@ -13,7 +10,7 @@ const reduceState = ({ api: { auth }, auth: { authenticated }, config: { feature
         featureFlags: featureFlags
     });
 };
-const onInitializeOvermind = async ({ actions, effects, state, reaction }) => {
+export const onInitializeOvermind = async ({ actions, effects, state, reaction }) => {
     const legacy = JSON.parse(window.localStorage.getItem('legacyAuthToken') || "{}");
     if (legacy.updated && ((Date.now() - (legacy.updated || 0) < 30 * 60000))) {
         // const cf = state.flows.user.create;
@@ -32,8 +29,7 @@ const onInitializeOvermind = async ({ actions, effects, state, reaction }) => {
             actions.flows.user.create.checkAvailability({ username });
     });
 };
-exports.onInitializeOvermind = onInitializeOvermind;
-exports.updateForm = (0, overmind_1.pipe)(
+export const updateForm = pipe(
 // debounce(200),
 ({ state }, val) => {
     state.flows.user.create.form = { ...state.flows.user.create.form, ...val };
@@ -45,7 +41,7 @@ const usernameToAccount = (username) => {
     return username
         .replace(/^(.{0,9})(.*)$/, (...m) => `${m[1]}.io`);
 };
-const startLegacyImport = async ({ state, actions }) => {
+export const startLegacyImport = async ({ state, actions }) => {
     const user = { ...state.api.auth.user }; // wont be available after logout
     const legacyToken = state.firebase.token;
     const displayName = user.displayName || user.username;
@@ -64,19 +60,16 @@ const startLegacyImport = async ({ state, actions }) => {
     actions.routing.historyPush({ location: "/" });
     window.localStorage.setItem('legacyAuthToken', JSON.stringify({ legacyToken, updated: Date.now() }));
 };
-exports.startLegacyImport = startLegacyImport;
-const stopLegacyImport = (_, params = {}) => {
+export const stopLegacyImport = (_, params = {}) => {
     window.localStorage.setItem('legacyAuthToken', "");
     if (!params.noRedirect)
         window.location.pathname = "/";
 };
-exports.stopLegacyImport = stopLegacyImport;
-const wizardStepPrev = ({ state }) => {
+export const wizardStepPrev = ({ state }) => {
     state.flows.user.create.wizard.send("PREV", reduceState(state));
 };
-exports.wizardStepPrev = wizardStepPrev;
 const autoRedirectFrom = ["", "/", "/auth"];
-exports._wizardReact = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), ({ state, actions }, i) => {
+export const _wizardReact = pipe(debounce(300), ({ state, actions }, i) => {
     if (state.api.auth.authorized &&
         // (state.auth.user?.status === "registered") &&
         (state.api.auth.user?.username != state.flows.user.create.form.username) &&
@@ -87,24 +80,21 @@ exports._wizardReact = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), ({ st
         actions.routing.historyPush({ location: "/explore" });
     state.flows.user.create.wizard.send("UPDATE", i);
 });
-const wizardStepNext = ({ state }) => {
+export const wizardStepNext = ({ state }) => {
     state.flows.user.create.wizard.send('NEXT', reduceState(state));
     state.flows.user.create.wizard.send('UPDATE', reduceState(state));
 };
-exports.wizardStepNext = wizardStepNext;
-const preregisterCreate = async ({ actions }, params) => {
+export const preregisterCreate = async ({ actions }, params) => {
     const u = params.user || {};
     return actions.api.user.create({ ...params, user: u, preregisterCreate: true });
 };
-exports.preregisterCreate = preregisterCreate;
-const create = async ({ actions }, params) => {
+export const create = async ({ actions }, params) => {
     const u = await actions.api.user.create({ ...params });
     actions.flows.user.create.stopLegacyImport({ noRedirect: true });
 };
-exports.create = create;
-exports.checkAvailability = (0, overmind_1.pipe)(
+export const checkAvailability = pipe(
 // filter((_, { username }) => username.length > 6),
-(0, overmind_1.debounce)(300), async ({ actions, state }, { username }) => {
+debounce(300), async ({ actions, state }, { username }) => {
     if (!username) {
         state.flows.user.create.formUsernameIsAvailable = "";
         return;

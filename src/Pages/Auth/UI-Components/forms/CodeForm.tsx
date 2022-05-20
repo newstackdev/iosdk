@@ -39,6 +39,7 @@ const CodeForm: NLView<{
 						message: "Enter your verification code",
 					},
 				]}
+				className="nl-auth-page-form__height"
 			>
 				<Input
 					className="text-center"
@@ -51,7 +52,6 @@ const CodeForm: NLView<{
 								setIsErrorSubmit!(false);
 							})
 							.catch((e) => {
-								console.log(e.errorFields?.length);
 								if (e.errorFields?.length) {
 									setIsErrorSubmit!(true);
 								}

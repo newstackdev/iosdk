@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.app = void 0;
 // declare namespace iosdk {
-exports.app = {
+export const app = {
 // custom: {
 //     actions: {
 //         info: CustomPlaceholder //(() => console.log("Not implemented")) as CustomPlaceholder

@@ -31,6 +31,7 @@ import { useActions, useAppState } from "../../overmind";
 import { PowerupsCacheItem } from "../../overmind/api/state";
 import { ActiveKey, NLView } from "../../types";
 import { MoodsGrid } from "../Mood/MoodsGrid";
+import Proposals from "../NewlifeDao/ProposalList";
 
 export const User: NLView = () => {
 	const [activeKey, setActiveKey] = useState<string>("0");
@@ -38,7 +39,7 @@ export const User: NLView = () => {
 	const state = useAppState();
 	const actions = useActions();
 
-	let username = paramsUsername || state.api.auth.user?.username;
+	let username = paramsUsername || state.api.auth.user?.username || "";
 
 	// const username = (id.length < 15) ? id : undefined;
 	const user = useCachedUser({ username }, true);
@@ -88,6 +89,7 @@ export const User: NLView = () => {
 	// 	return <>boo</>
 	return (
 		<>
+		{/* {paramsUsername} */}
 			{/* <NewcoinWidget user={user} /> */}
 
 			<UserWidgetHeading user={user} setActiveKey={setActiveKey} />
@@ -134,7 +136,7 @@ export const User: NLView = () => {
 						title=""
 					/>
 				</Tabs.TabPane>
-				<Tabs.TabPane tab="Private" key="3">
+				{/* <Tabs.TabPane tab="Private" key="3">
 					{!isDAOMember ? (
 						<div className="text-center">
 							<div>
@@ -148,7 +150,7 @@ export const User: NLView = () => {
 					) : (
 						"This is private content only for DAO members"
 					)}
-				</Tabs.TabPane>
+				</Tabs.TabPane> */}
 				<Tabs.TabPane tab="Newcoin" key="4">
 					User on newcoin explorer:&nbsp;
 					<a
@@ -176,13 +178,14 @@ export const User: NLView = () => {
 						<Tabs.TabPane tab="Newcoin account" key="6">
 							<UserNewcoinInfo user={user} />
 						</Tabs.TabPane>
-						<Tabs.TabPane tab="DAO memberships" key="7">
+						<Tabs.TabPane tab="DAO memberships" key="8">
 							<UserNewcoinPoolsParticipation user={user} />
 						</Tabs.TabPane>
 					</>
 				) : (
 					<></>
 				)}
+
 			</Tabs>
 			{/* <ItemGrid title="Moods" items={moodList} render={m => <MoodWidget mood={m} />} /> */}
 			{/* <MoodsGrid title="Folders" moods={moodList} /> */}

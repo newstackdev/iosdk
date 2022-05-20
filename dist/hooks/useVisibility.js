@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.useVisibilityOnce = void 0;
-const react_1 = require("react");
+import { useState, useRef, useEffect } from "react";
 /**
  * Check if an element is in viewport
  * @param {number} offset - Number of pixels up to the observable element from the top
  */
-function useVisibility(offset = 0) {
-    const [isVisible, setIsVisible] = (0, react_1.useState)(false);
-    const currentElement = (0, react_1.useRef)(null);
+export default function useVisibility(offset = 0) {
+    const [isVisible, setIsVisible] = useState(false);
+    const currentElement = useRef(null);
     const onScroll = () => {
         if (!currentElement.current) {
             setIsVisible(false);
@@ -17,20 +14,19 @@ function useVisibility(offset = 0) {
         const top = currentElement?.current?.getBoundingClientRect().top || 0;
         setIsVisible(top + offset >= 0 && top - offset <= window.innerHeight);
     };
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         document.addEventListener('scroll', onScroll, true);
         // onScroll();
         return () => document.removeEventListener('scroll', onScroll, true);
     }, []);
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         setIsVisible(currentElement.current?.offsetParent !== null);
     }, [currentElement.current]);
     return [isVisible, currentElement];
 }
-exports.default = useVisibility;
-function useVisibilityOnce(offset = 0) {
-    const [isVisible, setIsVisible] = (0, react_1.useState)(false);
-    const currentElement = (0, react_1.useRef)(null);
+export function useVisibilityOnce(offset = 0) {
+    const [isVisible, setIsVisible] = useState(false);
+    const currentElement = useRef(null);
     const onScroll = () => {
         if (isVisible)
             return console.log("onScrollOnce is already visible");
@@ -43,11 +39,11 @@ function useVisibilityOnce(offset = 0) {
         const top = currentElement?.current?.getBoundingClientRect().top || 0;
         setIsVisible(top + offset >= 0 && top - offset <= window.innerHeight);
     };
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         document.addEventListener('scroll', onScroll, true);
         return () => document.removeEventListener('scroll', onScroll, true);
     }, []);
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         if (isVisible)
             return;
         onScroll();
@@ -55,5 +51,4 @@ function useVisibilityOnce(offset = 0) {
     }, [currentElement.current]);
     return [isVisible, currentElement];
 }
-exports.useVisibilityOnce = useVisibilityOnce;
 //# sourceMappingURL=useVisibility.js.map

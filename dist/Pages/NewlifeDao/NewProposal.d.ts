@@ -1,3 +1,3 @@
 /// <reference types="react" />
-declare const Component: () => JSX.Element;
-export default Component;
+declare const NewProposal: () => JSX.Element;
+export default NewProposal;

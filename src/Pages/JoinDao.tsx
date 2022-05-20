@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ContentLayout } from "../Components/ContentLayout";
 import { CrossCircle } from "../Components/Icons/CrossCircle";
 import { ProgressButton } from "../Components/ProgressButton";
-import { UserStake, STAKE_STEPS } from "../Components/UserWidget";
+import { UserStake } from "../Components/UserWidget";
 import { APP_DOMAIN } from "../config";
 import { useAppState, useActions } from "../overmind";
 import { historyPush } from "../overmind/routing/actions";

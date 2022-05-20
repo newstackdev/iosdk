@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {};
+export default {};
 // import { Button, Input } from "antd";
 // import Form from "antd/lib/form";
 // // import '../App.css';

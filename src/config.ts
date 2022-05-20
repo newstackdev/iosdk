@@ -38,30 +38,30 @@ const getEnv = getStr(process.env);
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfigs: Record<string, FirebaseConfig> = {
 	"eu-dev": {
-		apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "", 	
-		authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "", 
+		apiKey: process.env.REACT_APP_DEV_FIREBASE_API_KEY || "", 	
+		authDomain: process.env.REACT_APP_DEV_FIREBASE_API_KEY || "", 
 		projectId: "newlifeio",
 		storageBucket: "newlifeio.appspot.com",
-		messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "", 
-		appId: process.env.REACT_APP_FIREBASE_APP_ID || "", 
+		messagingSenderId: process.env.REACT_APP_DEV_FIREBASE_MESSAGING_SENDER_ID || "", 
+		appId: process.env.REACT_APP_DEV_FIREBASE_APP_ID || "", 
 		measurementId: "G-PJWYRPZSNM",
 	},
 	"eu-sit": {
-		apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
-		authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
+		apiKey: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
+		authDomain: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
 		projectId: "newlifeio",
 		storageBucket: "newlifeio.appspot.com",
-		messagingSenderId: process.env.REACT_APP_FIREBASE_API_KEY || "",
-		appId: process.env.REACT_APP_FIREBASE_API_KEY || "",
+		messagingSenderId: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
+		appId: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
 		measurementId: "G-PJWYRPZSNM",
 	},
 	"eu-prod": {
-		apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
-		authDomain:  process.env.REACT_APP_FIREBASE_API_KEY || "",
+		apiKey: process.env.REACT_APP_PROD_FIREBASE_API_KEY || "",
+		authDomain:  process.env.REACT_APP_PROD_FIREBASE_API_KEY || "",
 		projectId: "newlifeio-prod",
 		storageBucket: "newlifeio-prod.appspot.com",
-		messagingSenderId: process.env.REACT_APP_FIREBASE_API_KEY || "",
-		appId: process.env.PROD_FIREBASE_APP_ID || "",
+		messagingSenderId: process.env.REACT_APP_PROD_FIREBASE_API_KEY || "",
+		appId: process.env.REACT_APP_PROD_FIREBASE_APP_ID || "",
 		measurementId: "G-YMT320RGLJ",
 	},
 	v1: {
@@ -142,8 +142,20 @@ export const newlifeMediaBucket = newlifeMediaBuckets[stage];
 export const newlifeWebsocketsServer = newlifeWebsocketsServers[stage];
 export const stripeKey = stripeKeys[stage];
 
+
+console.log("Stage", stage);
+console.log("Firebase config", firebaseConfig);
+
 export const config = {
+	env: {
+		stage
+	},
 	settings: {
+		newcoin: {
+			daoId: "43",
+			daoDomain: "testaaagt.io", //has a proposal -> "jnidjeaor.io",
+			poolId: ""
+		},
 		firebaseConfig,
 		newlife: {
 			baseUrl: newlifeBaseUrl,
@@ -162,7 +174,9 @@ export const config = {
 		overrides: {},
 		noBackButton: ["/explore"],
 		defaultRoute: {
-			condition: state => !state.api.auth.authorized,
+			condition: state => {
+				return state.api.auth.authorized && ["registered", "admitted", "premium"].includes(state.api.auth.user.status)
+			},
 			defaultLocation: _state => "/"
 		}
 	},

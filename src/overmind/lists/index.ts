@@ -1,7 +1,7 @@
 import { Action } from "../../types";
 import { pipe, debounce, filter, json, derived } from "overmind";
 import { Context } from "../overmind";
-import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse } from "@newlife/newlife-creator-client-api";
+import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse, PostTagsSearchPublicResponse } from "@newlife/newlife-creator-client-api";
 import { aestheticList } from "./SearchCreative/aestheticList";
 import _ from "lodash";
 import { fischerYates } from "../../utils/random";
@@ -114,6 +114,8 @@ export const searchUsers: Action<{ query: string }> =
         debounce(1000),
         async ({ state, actions, effects }: Context, { query }) => {
             // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
+            state.lists.search.users.query = query;
+            
             state.lists.search.users.results = null;
 
             if (query.length < 2)
@@ -129,17 +131,18 @@ export const searchUsers: Action<{ query: string }> =
         }
     );
 
-export const searchPosts: Action<{ tags: string }> =
+export const searchPosts: Action<{ tags: string, force?: boolean }> =
     pipe(
         debounce(1000),
-        async ({ state, actions, effects }: Context, { tags }) => {
+        async ({ state, actions, effects }: Context, { tags, force }) => {
+            state.lists.search.posts.query = tags;
 
-            const loadingMore = state.lists.search.posts.lastQueried.tags == tags;
+            const loadingMore = !force && state.lists.search.posts.lastQueried.tags == tags;
             if (loadingMore) {
                 if (state.lists.search.posts.results?.done)
                     return;
                 else
-                    state.lists.top.posts.page = state.lists.search.posts.results ? (state.lists.top.posts.page || 0) + 1 : 0;
+                    state.lists.search.posts.page = state.lists.search.posts.results ? (state.lists.top.posts.page || 0) + 1 : 0;
             }
             else {
                 state.lists.top.posts.page = 0;
@@ -160,7 +163,7 @@ export const searchPosts: Action<{ tags: string }> =
 
             const searchQ = { bool: { must: tagsQ } };
 
-            const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.top.posts.page || 0).toString() });
+            const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.search.posts.page || 0).toString() });
 
             r.data.value?.forEach(v => {
                 state.api.cache.posts[v.id || ""] = v;
@@ -172,10 +175,64 @@ export const searchPosts: Action<{ tags: string }> =
     );
 
 
+export const searchTags: Action<{ query: string }> =
+    pipe(
+        debounce(1000),
+        async ({ state, actions, effects }: Context, { query }) => {
+            state.lists.search.tags.query = query;
+
+            const loadingMore = state.lists.search.tags.lastQueried === query;
+            if (loadingMore) {
+                if (state.lists.search.tags.results?.done)
+                    return;
+                else
+                    state.lists.search.tags.page = state.lists.search.tags.results ? (state.lists.search.tags.page || 0) + 1 : 0;
+            }
+            else {
+                state.lists.search.tags.page = 0;
+                state.lists.search.tags.results = { value: [] };
+            }
+            const tagsQ = {
+                bool: {
+                    minimum_should_match: 1,
+                    should: [
+                        {
+                            match: {
+                                tag: {
+                                    query,
+                                    fuzziness: "AUTO"
+                                }
+                            }
+                        },
+                        { query_string: { query: `*${query}*` } },
+                        { query_string: { query } },
+                        { query_string: { query: `${query}*` } },
+                        { query_string: { query: `*${query}` } },
+                    ]
+                }
+            };
+
+
+
+            // const searchQ = { bool: { must: tagsQ } };
+
+            const r = await state.api.client.post.listTagsSearchList({ q: JSON.stringify(tagsQ), page: (state.lists.search.tags.page || 0).toString() });
+
+            // r.data.value?.forEach(v => {
+            //     state.api.cache.tags[v.id || ""] = v;
+            // });
+            // const curr = (loadingMore && json(state.lists.search.tags.results)?.value) || [];
+            state.lists.search.tags.results = r.data; //{ ...r.data, value: [...curr, ...(r.data.value || [])] };
+            state.lists.search.tags.lastQueried = query;
+        }
+    );
+
+
 const actions = {
     creativeSearch,
     searchUsers,
     searchPosts,
+    searchTags,
     top: {
         moods: listTopMoods,
         users: listTopUsers,
@@ -224,9 +281,15 @@ export default {
                 results: null as (PostPagedListReadPublicResponse | null),
                 lastQueried: { tags: "", aesthetics: "" },
                 isActive: false,
-                // results: newListState<PostReadResponse>(),
-                tags: newListState<string>()
-            }
+                page: 0
+            },
+            tags: {
+                query: "",
+                results: null as (PostTagsSearchPublicResponse | null),
+                lastQueried: "",
+                isActive: false,
+                page: 0
+            },
         }
     },
     actions,

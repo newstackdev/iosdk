@@ -1,10 +1,9 @@
 import Form from "antd/lib/form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { EmbeddableControl } from "../../types";
 import { useActions, useAppState } from "../../overmind";
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
 import { ContentLayout } from "../../Components/ContentLayout";
-
 import PhoneForm from "./UI-Components/forms/PhoneForm";
 import CodeForm from "./UI-Components/forms/CodeForm";
 
@@ -91,8 +90,7 @@ export const Auth = ({
 				<IndeterminateProgressAction actionName="auth.firebaseVerifyPhone" />
 			</div> */}
 			<div
-				className="u-margin-top-large"
-				style={{ height: "69px" }}
+				className="u-margin-top-large support-box__fix-height"
 				hidden={embedded}
 			/>
 		</FragmentWrapper>

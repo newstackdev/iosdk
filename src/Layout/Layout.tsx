@@ -73,19 +73,20 @@ const ThreeBody: NLView<{
 
 export const Header: IOView = () => {
 	const state = useAppState();
-	if(!state.ux.layout.headerShown)
-		return <></>;
-		
-	return <ADHeader key="h" className="logo" style={{ padding: 0 }}>
-		<Row justify="space-around" gutter={0}>
-			<div
-				className="header"
-				style={{ width: "100%", padding: "0 20px" }}
-			>
-				<state.config.components.layout.TopMenu />
-			</div>
-		</Row>
-	</ADHeader>
+	if (!state.ux.layout.headerShown) return <></>;
+
+	return (
+		<ADHeader key="h" className="logo" style={{ padding: 0 }}>
+			<Row justify="space-around" gutter={0}>
+				<div
+					className="header"
+					style={{ width: "100%", padding: "0 20px" }}
+				>
+					<state.config.components.layout.TopMenu />
+				</div>
+			</Row>
+		</ADHeader>
+	);
 };
 
 export const XTopMenu = () => {
@@ -119,7 +120,7 @@ export const XTopMenu = () => {
       </Menu.Item> */}
 			<Menu.Item style={{ width: "50vw" }}>
 				{state.api.auth.authorized ? (
-					<SearchWidget search={search} setSearch={setSearch} />
+					<SearchWidget />
 				) : (
 					""
 				)}
@@ -166,7 +167,7 @@ export const XTopMenu = () => {
 
 export const TopMenu: NLView = () => {
 	const state = useAppState();
-	const [search, setSearch] = useState<boolean>(false);
+	// const [search, setSearch] = useState<boolean>(false);
 
 	const isAuthorized = state.api.auth.authorized;
 
@@ -212,7 +213,7 @@ export const TopMenu: NLView = () => {
 							!isAuthorized ? { width: "92%" } : { width: "85%" }
 						}
 					>
-						<SearchWidget search={search} setSearch={setSearch} />
+						<SearchWidget />
 						<div className="large-arrow-back-wide-screen">
 							{!state.config.routes.noBackButton.includes(
 								state.routing.location
@@ -284,10 +285,21 @@ const Main: NLView = ({ children }) => {
 };
 
 export const Layout: NLView = ({ children }) => {
+	const state = useAppState();
+
+	console.log(state.ux.layout.headerShown);
+
 	return (
-		<AntdLayout style={{ minHeight: "100vh" }}>
+		<AntdLayout
+			style={
+				state.ux.layout.headerShown
+					? { minHeight: "100vh" }
+					: { minHeight: "100vh", margin: "20px" }
+			}
+		>
 			<div id="search-dropdown-position" />
 			<Content>
+				{/* !{JSON.stringify(state.api.auth.user?.status)} */}
 				<Main>{children}</Main>
 			</Content>
 			<Footer className="footer">

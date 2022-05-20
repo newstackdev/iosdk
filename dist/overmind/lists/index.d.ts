@@ -1,5 +1,5 @@
 import { Action } from "../../types";
-import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse } from "@newlife/newlife-creator-client-api";
+import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse, PostTagsSearchPublicResponse } from "@newlife/newlife-creator-client-api";
 export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse['hits']>[number];
 export declare type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
 export declare const listTopUsers: Action;
@@ -9,6 +9,10 @@ export declare const searchUsers: Action<{
 }>;
 export declare const searchPosts: Action<{
     tags: string;
+    force?: boolean;
+}>;
+export declare const searchTags: Action<{
+    query: string;
 }>;
 declare type ListState<T> = {
     _items: Record<string, T>;
@@ -58,7 +62,14 @@ declare const _default: {
                     aesthetics: string;
                 };
                 isActive: boolean;
-                tags: ListState<string>;
+                page: number;
+            };
+            tags: {
+                query: string;
+                results: PostTagsSearchPublicResponse | null;
+                lastQueried: string;
+                isActive: boolean;
+                page: number;
             };
         };
     };
@@ -72,6 +83,10 @@ declare const _default: {
         }, void>;
         searchPosts: Action<{
             tags: string;
+            force?: boolean | undefined;
+        }, void>;
+        searchTags: Action<{
+            query: string;
         }, void>;
         top: {
             moods: Action<undefined, void>;

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.state = exports.newAuth = exports.AUTH_FLOW_STATUS = void 0;
-const overmind_1 = require("overmind");
+import { derived } from "overmind";
 var PHONE_VERIFICATION_STATUS;
 (function (PHONE_VERIFICATION_STATUS) {
     PHONE_VERIFICATION_STATUS[PHONE_VERIFICATION_STATUS["ANONYMOUS"] = 0] = "ANONYMOUS";
@@ -16,7 +13,7 @@ var AUTHENTICATION_STATUS;
     AUTHENTICATION_STATUS[AUTHENTICATION_STATUS["AUTHORIZING"] = 6] = "AUTHORIZING";
     AUTHENTICATION_STATUS[AUTHENTICATION_STATUS["AUTHORIZED"] = 7] = "AUTHORIZED";
 })(AUTHENTICATION_STATUS || (AUTHENTICATION_STATUS = {}));
-exports.AUTH_FLOW_STATUS = { ...PHONE_VERIFICATION_STATUS, ...AUTHENTICATION_STATUS };
+export const AUTH_FLOW_STATUS = { ...PHONE_VERIFICATION_STATUS, ...AUTHENTICATION_STATUS };
 const flows = {
     onboarding: {
         status: "",
@@ -24,11 +21,11 @@ const flows = {
         onboardingForm: {}
     }
 };
-const newAuth = () => Object.assign({}, {
+export const newAuth = () => Object.assign({}, {
     initialized: false,
-    status: exports.AUTH_FLOW_STATUS.ANONYMOUS,
+    status: AUTH_FLOW_STATUS.ANONYMOUS,
     error: null,
-    authenticated: (0, overmind_1.derived)((s) => s.status >= exports.AUTH_FLOW_STATUS.AUTHENTICATED),
+    authenticated: derived((s) => s.status >= AUTH_FLOW_STATUS.AUTHENTICATED),
     // token: "",
     // tokenType: "",
     tokens: {},
@@ -40,8 +37,7 @@ const newAuth = () => Object.assign({}, {
     }
     // fbUser: null,
 });
-exports.newAuth = newAuth;
-exports.state = (0, exports.newAuth)();
+export const state = newAuth();
 // indicators: {
 //     _inProgressCounter: 0,
 //     inProgress: derived<{ _inProgressCounter: number }, {}, boolean>((state) => state._inProgressCounter > 0)

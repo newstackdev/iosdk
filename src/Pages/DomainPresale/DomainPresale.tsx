@@ -44,24 +44,16 @@ const DomainSelector = () => {
 	const username = state.flows.user.create.form.username || "";
 	const isPaidUsername = () => {
 		const len = username.replace(/\.io/, "").length;
-		return (len > 0) && (len < 5);
-	}
+		return len > 0 && len < 5;
+	};
 	return (
 		<ContentLayout>
 			<MaskedInput
 				ref={el as any}
-				style={{
-					fontSize: "clamp(20px, 120px, 9.8vw)",
-					textAlign: "center",
-					width: "70%",
-					height: "auto",
-					marginTop: "80px",
-					borderBottomWidth: "13px",
-				}}
 				className={
 					fuia === "unavailable"
-						? "masked-input masked-input-error font-variant-none paragraph-2b"
-						: "masked-input font-variant-none paragraph-2b"
+						? "nl-domain-presale__masked-input masked-input-error"
+						: "nl-domain-presale__masked-input"
 				}
 				defaultValue={
 					state.flows.user.create.form.username?.replace(
@@ -94,13 +86,10 @@ const DomainSelector = () => {
 			/>
 			<SpaceSpin isRotating={fuia === "checking"} />
 			{fuia === "unavailable" && (
-				<Tag style={{ marginTop: "20px" }}>Name is {fuia}</Tag>
+				<Tag className="u-margin-top-medium">Name is {fuia}</Tag>
 			)}
 
-			<Paragraph
-				className="paragraph-2r nl-footer-paragraph"
-				style={{ width: "60%" }}
-			>
+			<Paragraph className="paragraph-2r nl-domain-presale__footer-paragraph">
 				{/* {(state.api.auth.user.status === 'imported').toString()} {(state.api.auth.user.username !== state.flows.user.create.form.username).toString()} */}
 
 				{isPaidUsername() ? (
@@ -285,8 +274,7 @@ export const DomainPresale = () => {
 						Previous
 					</Button>
 				)} */}
-				{/* {JSON.stringify(next)} */}
-
+				{/* {JSON.stringify(wizard)} */}
 				{currentSlide.content}
 				<div className="app-control-surface">
 					{next || wizard.hasNext ? (
@@ -348,22 +336,17 @@ export const DomainPresale = () => {
 					<SupportBox />
 				</div>
 			</ContentLayout>
-			{/* TODO add dynamic text above footer */}
+
+			{/* Dynamic text above footer */}
 			<div
 				// hidden={!wizard.matches("SELECT_DOMAIN")}
-				style={{ width: "50%", margin: "0 auto" }}
+				className="nl-domain-presale__info-text__wrapper"
 			>
-				<Paragraph
-					className="paragraph-2r nl-footer-paragraph"
-					style={{ marginTop: 48, width: "60%" }}
-				>
+				<Paragraph className="paragraph-2r nl-domain-presale__footer-paragraph">
 					{footerTitle}
 				</Paragraph>
 				{wizard.matches("SELECT_DOMAIN") && (
-					<Paragraph
-						style={{ width: "100%" }}
-						className="nl-footer-paragraph paragraph-2r"
-					>
+					<Paragraph className="nl-domain-presale__footer-paragraph paragraph-2r">
 						9 characters max: a-z and 1-5
 					</Paragraph>
 				)}

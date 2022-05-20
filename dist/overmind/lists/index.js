@@ -1,19 +1,13 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchPosts = exports.searchUsers = exports.listTopPosts = exports.listTopUsers = void 0;
-const overmind_1 = require("overmind");
-const aestheticList_1 = require("./SearchCreative/aestheticList");
-const lodash_1 = __importDefault(require("lodash"));
-const random_1 = require("../../utils/random");
+import { pipe, debounce, json } from "overmind";
+import { aestheticList } from "./SearchCreative/aestheticList";
+import _ from "lodash";
+import { fischerYates } from "../../utils/random";
 const ITEMS_PER_PAGE = 20;
 const calculateTags = (items) => {
     const aestheticCounts = {};
     for (const item of items) {
         Object.entries(item["aesthetics"] ?? {}).map((kvp) => {
-            if (aestheticList_1.aestheticList.includes(kvp[0]) && kvp[1] > 0.8) {
+            if (aestheticList.includes(kvp[0]) && kvp[1] > 0.8) {
                 if (kvp[0] in aestheticCounts) {
                     aestheticCounts[kvp[0]] += kvp[1];
                 }
@@ -28,10 +22,10 @@ const calculateTags = (items) => {
     aesthetics.sort((a, b) => b[1] - a[1]);
     return aesthetics.slice(0, 5).map((value) => value[0]);
 };
-const creativeSearch = (0, overmind_1.pipe)((0, overmind_1.debounce)(500), async ({ state }, query) => {
+const creativeSearch = pipe(debounce(500), async ({ state }, query) => {
     if (!state.api.auth.authorized || query.tags === "")
         return;
-    const newQuery = !lodash_1.default.isEqual(query, state.lists.creativeSearch.lastQueried);
+    const newQuery = !_.isEqual(query, state.lists.creativeSearch.lastQueried);
     const page = newQuery ? 0 : state.lists.creativeSearch.results.page + 1;
     state.lists.creativeSearch.lastQueried = { ...query }; // should be before async call
     state.lists.creativeSearch.results.page = page;
@@ -50,18 +44,18 @@ const creativeSearch = (0, overmind_1.pipe)((0, overmind_1.debounce)(500), async
         state.lists.creativeSearch.tags.items = calculateTags(state.lists.creativeSearch.results.items);
     }
 });
-const listTopMoods = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ state, actions, effects }) => {
+const listTopMoods = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.moods.page ?? 0;
     const r = await state.api.client.mood.listTopList({ page: page.toString() }); // Math.floor(20 + (Math.random() * 20)).toString()
     const moods = r.data?.value || [];
     await actions.api.mood.cache({ moods });
-    (0, random_1.fischerYates)(moods).forEach(v => {
+    fischerYates(moods).forEach(v => {
         // state.api.cache.moods[v.id || ""] = v;
         state.lists.top.moods.items.push({ ...v });
     });
     state.lists.top.moods.page++;
 });
-exports.listTopUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ state, actions, effects }) => {
+export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.users.page ? state.lists.top.users.page + 1 : Math.floor(Math.random() * 10);
     const r = await state.api.client.user.listTopList({ page: page.toString() });
     r.data.value?.forEach(v => {
@@ -71,7 +65,7 @@ exports.listTopUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async
     });
     state.lists.top.users.page++;
 });
-exports.listTopPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ state, actions, effects }) => {
+export const listTopPosts = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.posts.page ? state.lists.top.posts.page + 1 : 0;
     const r = await state.api.client.post.listTopList({ page: page.toString() });
     r.data?.value?.forEach(v => {
@@ -80,8 +74,9 @@ exports.listTopPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async
     });
     state.lists.top.posts.page++;
 });
-exports.searchUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ state, actions, effects }, { query }) => {
+export const searchUsers = pipe(debounce(1000), async ({ state, actions, effects }, { query }) => {
     // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
+    state.lists.search.users.query = query;
     state.lists.search.users.results = null;
     if (query.length < 2)
         return;
@@ -92,13 +87,14 @@ exports.searchUsers = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async
     });
     state.lists.search.users.results = r.data;
 });
-exports.searchPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ state, actions, effects }, { tags }) => {
-    const loadingMore = state.lists.search.posts.lastQueried.tags == tags;
+export const searchPosts = pipe(debounce(1000), async ({ state, actions, effects }, { tags, force }) => {
+    state.lists.search.posts.query = tags;
+    const loadingMore = !force && state.lists.search.posts.lastQueried.tags == tags;
     if (loadingMore) {
         if (state.lists.search.posts.results?.done)
             return;
         else
-            state.lists.top.posts.page = state.lists.search.posts.results ? (state.lists.top.posts.page || 0) + 1 : 0;
+            state.lists.search.posts.page = state.lists.search.posts.results ? (state.lists.top.posts.page || 0) + 1 : 0;
     }
     else {
         state.lists.top.posts.page = 0;
@@ -113,22 +109,64 @@ exports.searchPosts = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async
     // { range: {[`scoredTags.${t}`]:{ gte:0.5}} }
     ));
     const searchQ = { bool: { must: tagsQ } };
-    const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.top.posts.page || 0).toString() });
+    const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.search.posts.page || 0).toString() });
     r.data.value?.forEach(v => {
         state.api.cache.posts[v.id || ""] = v;
     });
-    const curr = (0, overmind_1.json)(state.lists.search.posts.results)?.value || [];
+    const curr = json(state.lists.search.posts.results)?.value || [];
     state.lists.search.posts.results = { ...r.data, value: [...curr, ...(r.data.value || [])] };
     state.lists.search.posts.lastQueried.tags = tags;
 });
+export const searchTags = pipe(debounce(1000), async ({ state, actions, effects }, { query }) => {
+    state.lists.search.tags.query = query;
+    const loadingMore = state.lists.search.tags.lastQueried === query;
+    if (loadingMore) {
+        if (state.lists.search.tags.results?.done)
+            return;
+        else
+            state.lists.search.tags.page = state.lists.search.tags.results ? (state.lists.search.tags.page || 0) + 1 : 0;
+    }
+    else {
+        state.lists.search.tags.page = 0;
+        state.lists.search.tags.results = { value: [] };
+    }
+    const tagsQ = {
+        bool: {
+            minimum_should_match: 1,
+            should: [
+                {
+                    match: {
+                        tag: {
+                            query,
+                            fuzziness: "AUTO"
+                        }
+                    }
+                },
+                { query_string: { query: `*${query}*` } },
+                { query_string: { query } },
+                { query_string: { query: `${query}*` } },
+                { query_string: { query: `*${query}` } },
+            ]
+        }
+    };
+    // const searchQ = { bool: { must: tagsQ } };
+    const r = await state.api.client.post.listTagsSearchList({ q: JSON.stringify(tagsQ), page: (state.lists.search.tags.page || 0).toString() });
+    // r.data.value?.forEach(v => {
+    //     state.api.cache.tags[v.id || ""] = v;
+    // });
+    // const curr = (loadingMore && json(state.lists.search.tags.results)?.value) || [];
+    state.lists.search.tags.results = r.data; //{ ...r.data, value: [...curr, ...(r.data.value || [])] };
+    state.lists.search.tags.lastQueried = query;
+});
 const actions = {
     creativeSearch,
-    searchUsers: exports.searchUsers,
-    searchPosts: exports.searchPosts,
+    searchUsers,
+    searchPosts,
+    searchTags,
     top: {
         moods: listTopMoods,
-        users: exports.listTopUsers,
-        posts: exports.listTopPosts
+        users: listTopUsers,
+        posts: listTopPosts
     }
 };
 const newListState = ({ sortKey } = { sortKey: "updated" }) => ({
@@ -138,7 +176,7 @@ const newListState = ({ sortKey } = { sortKey: "updated" }) => ({
     startItem: 0,
     page: 0,
 });
-exports.default = {
+export default {
     state: {
         creativeSearch: {
             results: newListState(),
@@ -162,9 +200,15 @@ exports.default = {
                 results: null,
                 lastQueried: { tags: "", aesthetics: "" },
                 isActive: false,
-                // results: newListState<PostReadResponse>(),
-                tags: newListState()
-            }
+                page: 0
+            },
+            tags: {
+                query: "",
+                results: null,
+                lastQueried: "",
+                isActive: false,
+                page: 0
+            },
         }
     },
     actions,

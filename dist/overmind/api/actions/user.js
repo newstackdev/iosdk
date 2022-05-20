@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrent = exports.getPowerups = exports.powerup = exports.invite = exports.stake = exports.getMoods = exports.update = exports.create = exports.read = exports.cache = void 0;
-const lodash_1 = require("lodash");
-const overmind_1 = require("overmind");
-const state_1 = require("../../auth/state");
-const cache = async ({ state, actions, effects }, { user }) => {
+import { get } from "lodash";
+import { debounce, pipe, throttle } from "overmind";
+import { AUTH_FLOW_STATUS } from "../../auth/state";
+export const cache = async ({ state, actions, effects }, { user }) => {
     // moods.forEach(m => m.author = ur.data)
     const { id, username } = { id: "", username: "", ...user };
     const cache = state.api.cache.users;
@@ -12,21 +9,25 @@ const cache = async ({ state, actions, effects }, { user }) => {
         return;
     // mr.data.value?.forEach(m => (m.id && (state.api.cache.moods[m.id] = { ...state.api.cache.moods[m.id], ...m })));
     const curr = cache.byId[id] || cache.byUsername[username] || null;
+    const isNewer = !curr || (new Date(user?.updated || 0).getTime() - new Date(curr?.updated || 0).getTime() > 0);
+    if (!isNewer)
+        return;
     const mr = curr?.moods || ((await state.api.client.user.moodsList({ id })).data?.value);
     const moods = mr || [];
     mr && actions.api.mood.cache({ moods: mr });
+    (state.api.auth.user?.id === user.id) && Object.assign(state.api.auth.user, { ...user });
     if (curr && curr.id && curr.username && curr.moods && curr.moods.length < moods.length) {
         cache.byId[id].moods = moods;
-        cache.byUsername[curr.username || ""].moods = moods;
+        cache.byUsername[username || ""].moods = moods;
     }
     else {
         cache.byId[id] = { ...curr, ...user, moods: mr };
         cache.byUsername[username] = { ...curr, ...user, moods };
     }
+    ;
 };
-exports.cache = cache;
 const inProgress = {};
-const read = async ({ state, actions, effects }, { id, username }) => {
+export const read = async ({ state, actions, effects }, { id, username }) => {
     if (!(id || username))
         return;
     const known = (id && state.api.cache.users.byId[id]) || (username && state.api.cache.users.byUsername[username]);
@@ -35,8 +36,7 @@ const read = async ({ state, actions, effects }, { id, username }) => {
     actions.api.user.cache({ user: ur.data });
     return ur.data;
 };
-exports.read = read;
-exports.create = (0, overmind_1.pipe)((0, overmind_1.throttle)(3000), async ({ state, effects, actions }, { noRouting, user, preregisterCreate }) => {
+export const create = pipe(throttle(3000), async ({ state, effects, actions }, { noRouting, user, preregisterCreate }) => {
     try {
         const currUser = state.api.auth.user || {};
         if (currUser.id && preregisterCreate)
@@ -62,10 +62,10 @@ exports.create = (0, overmind_1.pipe)((0, overmind_1.throttle)(3000), async ({ s
         state.flows.user.create.justCreated = true;
     }
     catch (ex) {
-        effects.ux.message.error(JSON.stringify((0, lodash_1.get)(ex, "error.errorMessage.details") || (0, lodash_1.get)(ex, "message")));
+        effects.ux.message.error(JSON.stringify(get(ex, "error.errorMessage.details") || get(ex, "message")));
     }
 });
-const update = async ({ state, effects, actions }, { user, file }) => {
+export const update = async ({ state, effects, actions }, { user, file }) => {
     const id = state.api.auth.user?.id ?? "";
     await state.api.client.user.userUpdate({ ...user, id });
     effects.ux.message.info(`Successfully updated profile`);
@@ -82,8 +82,7 @@ const update = async ({ state, effects, actions }, { user, file }) => {
     }
     // state.auth.user = { ...state.auth.user, ...user, contentUrl: "PROCESSING" };
 };
-exports.update = update;
-const getMoods = async ({ state, actions, effects }, { id }) => {
+export const getMoods = async ({ state, actions, effects }, { id }) => {
     if (!id)
         return;
     const r = await state.api.client.user.moodsList({ id });
@@ -102,8 +101,7 @@ const getMoods = async ({ state, actions, effects }, { id }) => {
     actions.api.mood.cache({ moods: r.data?.value });
     // r.data.value?.forEach(p => p.id && (state.api.cache.moods[p.id] = { ...state.api.cache.moods[p.id], ...p }))
 };
-exports.getMoods = getMoods;
-exports.stake = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ state, actions, effects }, { user, amount }) => {
+export const stake = pipe(debounce(1000), async ({ state, actions, effects }, { user, amount }) => {
     try {
         const u = await actions.api.user.read(user);
         const res = await state.api.client.user.stakeCreate({ username: u?.username || "", amount });
@@ -119,11 +117,10 @@ exports.stake = (0, overmind_1.pipe)((0, overmind_1.debounce)(1000), async ({ st
         effects.ux.message.error(errorMessage);
     }
 });
-const invite = ({ state }, { userInvite }) => {
+export const invite = ({ state }, { userInvite }) => {
     const rate = state.api.client.user.inviteCreate(userInvite);
 };
-exports.invite = invite;
-exports.powerup = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ state, actions, effects }, { user, amount }) => {
+export const powerup = pipe(debounce(300), async ({ state, actions, effects }, { user, amount }) => {
     try {
         const res = await state.api.client.user.userRateCreate({ targetId: user.id, value: amount || 1 });
         effects.ux.message.info("Powerup successful");
@@ -134,7 +131,7 @@ exports.powerup = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), async ({ s
         effects.ux.message.error(ex.error.errorMessage);
     }
 });
-exports.getPowerups = (0, overmind_1.pipe)(
+export const getPowerups = pipe(
 // throttle(300),
 async ({ state }, { user }) => {
     if (!user.id)
@@ -148,16 +145,15 @@ async ({ state }, { user }) => {
         out: o.data
     };
 });
-const getCurrent = async ({ state, actions, effects }) => {
+export const getCurrent = async ({ state, actions, effects }) => {
     try {
         state.routing.simpleHistory[0].search.slice(1).split(/&/).map(kv => kv.split(/=/)).reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
         state.api.auth.user = (await state.api.client.user.currentList()).data;
-        state.auth.status = state.api.auth.user.username ? state_1.AUTH_FLOW_STATUS.AUTHORIZED : state.auth.status;
+        state.auth.status = state.api.auth.user.username ? AUTH_FLOW_STATUS.AUTHORIZED : state.auth.status;
     }
     catch (ex) {
         state.api.auth.user = {};
     }
     // actions.auth.routeAfterAuth();
 };
-exports.getCurrent = getCurrent;
 //# sourceMappingURL=user.js.map

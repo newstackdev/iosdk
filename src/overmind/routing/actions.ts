@@ -8,8 +8,8 @@ const naiveQSDecode = (search: string = "") : Record<string, string> =>
 
 export const routeAfterAuth: Action<undefined> = async ({ state, actions }) => {
     const p = state.routing.location;
-    if (!state.config.routes.defaultRoute.condition(state) || state.api.auth.authorized)
-    {    
+    if (!state.config.routes.defaultRoute.condition(state))
+    {
         const location = state.config.routes.defaultRoute.defaultLocation(state);
         actions.routing.historyPush({ location });
         return;

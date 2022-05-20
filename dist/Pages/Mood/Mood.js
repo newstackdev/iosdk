@@ -1,23 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MoodDetailed = exports.Mood = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const antd_1 = require("antd");
-const avatar_1 = __importDefault(require("antd/lib/avatar/avatar"));
-const react_router_1 = require("react-router");
-const react_router_dom_1 = require("react-router-dom");
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Col, Row } from "antd";
+import Avatar from "antd/lib/avatar/avatar";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 // import { PremiumContent } from "../Components/PremiumContent";
-const useBlockchainInfo_1 = require("../../hooks/useBlockchainInfo");
-const ContentLayout_1 = require("../../Components/ContentLayout");
-const ThreeDots_1 = require("../../Components/Icons/ThreeDots");
-const Image_1 = require("../../Components/Image");
-const TopFolders_1 = require("../../Components/TopFolders");
-const useCached_1 = require("../../hooks/useCached");
-const overmind_1 = require("../../overmind");
-const MoodsGrid_1 = require("./MoodsGrid");
+import { useFolderStakeInfo } from "../../hooks/useBlockchainInfo";
+import { ContentLayout } from "../../Components/ContentLayout";
+import { ThreeDots } from "../../Components/Icons/ThreeDots";
+import { ContentImage } from "../../Components/Image";
+import { TopFoldersGrid } from "../../Components/TopFolders";
+import { useCachedMood, useCachedMoodPosts, useCachedPool, useCachedUser, } from "../../hooks/useCached";
+import { useAppState } from "../../overmind";
+import { MoodsGridRow } from "./MoodsGrid";
 // const useFolderStakeInfo = (folder: MoodReadResponse) => {
 // 	const moodDetails = useCachedMood(folder, true);
 // 	const state = useAppState();
@@ -34,14 +28,14 @@ const MoodsGrid_1 = require("./MoodsGrid");
 // 		currentUserEligible: _stakeInfo.currentUserStake - _stakeInfo.toAccess > 0,
 // 	};
 // };
-const Mood = () => {
-    const { moodId: id } = (0, react_router_1.useParams)();
-    const mood = (0, useCached_1.useCachedMoodPosts)({ id }, true);
-    const moodDetails = (0, useCached_1.useCachedMood)({ id }, true);
-    const user = (0, useCached_1.useCachedUser)(mood.author);
-    const state = (0, overmind_1.useAppState)();
-    const pool = (0, useCached_1.useCachedPool)({ owner: user.username });
-    const stakeInfo = (0, useBlockchainInfo_1.useFolderStakeInfo)(moodDetails);
+export const Mood = () => {
+    const { moodId: id } = useParams();
+    const mood = useCachedMoodPosts({ id }, true);
+    const moodDetails = useCachedMood({ id }, true);
+    const user = useCachedUser(mood.author);
+    const state = useAppState();
+    const pool = useCachedPool({ owner: user.username });
+    const stakeInfo = useFolderStakeInfo(moodDetails);
     // {
     // 	..._stakeInfo,
     // 	currentUserNeeds: _stakeInfo.currentUserStake - _stakeInfo.toAccess,
@@ -50,31 +44,29 @@ const Mood = () => {
     // }
     // if(true)
     // 	return <>{JSON.stringify(moodDetails.stakeToAccess)}</>
-    return ((0, jsx_runtime_1.jsx)(ContentLayout_1.ContentLayout, { isWorking: !mood?.posts?.length, header: (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsxs)(antd_1.Row, { style: {
+    return (_jsx(ContentLayout, { isWorking: !mood?.posts?.length, header: _jsxs(_Fragment, { children: [_jsxs(Row, { style: {
                         justifyContent: "space-between",
                         alignItems: "center",
                         marginBottom: "40px",
-                    }, children: [(0, jsx_runtime_1.jsxs)(antd_1.Col, { style: {
+                    }, children: [_jsxs(Col, { style: {
                                 alignItems: "center",
                                 display: "flex",
-                            }, children: [(0, jsx_runtime_1.jsx)("span", { style: {
+                            }, children: [_jsx("span", { style: {
                                         marginRight: "10px",
                                         display: "flex",
-                                    } }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${state.api.auth.user?.username}`, style: { marginLeft: "10px" }, children: (0, jsx_runtime_1.jsx)(avatar_1.default, { src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { ...user }), className: "avatar-image-header" }) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${user.username}`, className: "paragraph-1b", style: { marginLeft: "20px" }, children: user.username })] }), (0, jsx_runtime_1.jsx)(antd_1.Col, { style: {
+                                    } }), _jsx(Link, { to: `/user/${state.api.auth.user?.username}`, style: { marginLeft: "10px" }, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: "avatar-image-header" }) }), _jsx(Link, { to: `/user/${user.username}`, className: "paragraph-1b", style: { marginLeft: "20px" }, children: user.username })] }), _jsx(Col, { style: {
                                 alignItems: "center",
                                 display: "flex",
-                            }, children: (0, jsx_runtime_1.jsx)(ThreeDots_1.ThreeDots, {}) })] }), (0, jsx_runtime_1.jsxs)(antd_1.Row, { style: { marginBottom: "40px" }, children: [(0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b", children: moodDetails.title }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2r", children: moodDetails.description || "" })] }), (0, jsx_runtime_1.jsx)(antd_1.Row, { children: stakeInfo.toAccess ?
+                            }, children: _jsx(ThreeDots, {}) })] }), _jsxs(Row, { style: { marginBottom: "40px" }, children: [_jsx("p", { className: "paragraph-2b", children: moodDetails.title }), _jsx("p", { className: "paragraph-2r", children: moodDetails.description || "" })] }), _jsx(Row, { children: stakeInfo.toAccess ?
                         (!stakeInfo.currentUserEligible ?
-                            (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("hr", {}), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2r", children: (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["This content is accessible only to members of ", user.username, " dao.", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsxs)("div", { children: ["Stake to access: ", stakeInfo.toAccess || "", " "] }), (0, jsx_runtime_1.jsxs)("div", { children: ["Your stake: ", stakeInfo.currentUserStake] }), (0, jsx_runtime_1.jsxs)("div", { children: ["Stake to enter: ", stakeInfo.currentUserNeeds] })] }) })] })
-                            : (0, jsx_runtime_1.jsxs)("p", { children: [(0, jsx_runtime_1.jsx)("hr", {}), "You are eligible to access this premium folder"] }))
-                        : (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {}) })] }), isMood: true, children: (0, jsx_runtime_1.jsx)(TopFolders_1.TopFoldersGrid, { mood: mood, noFolder: true, postNumber: 3, title: "Moods" }) }));
+                            _jsxs(_Fragment, { children: [_jsx("hr", {}), _jsx("p", { className: "paragraph-2r", children: _jsxs(_Fragment, { children: ["This content is accessible only to members of ", user.username, " dao.", _jsx("br", {}), _jsx("br", {}), _jsxs("div", { children: ["Stake to access: ", stakeInfo.toAccess || "", " "] }), _jsxs("div", { children: ["Your stake: ", stakeInfo.currentUserStake] }), _jsxs("div", { children: ["Stake to enter: ", stakeInfo.currentUserNeeds] })] }) })] })
+                            : _jsxs("p", { children: [_jsx("hr", {}), "You are eligible to access this premium folder"] }))
+                        : _jsx(_Fragment, {}) })] }), isMood: true, children: _jsx(TopFoldersGrid, { mood: mood, noFolder: true, postNumber: 3, title: "Moods" }) }));
 };
-exports.Mood = Mood;
-const MoodDetailed = () => {
-    const { moodId: id } = (0, react_router_1.useParams)();
-    const mood = (0, useCached_1.useCachedMood)({ id }, true);
-    const user = (0, useCached_1.useCachedUser)(mood.author);
-    return ((0, jsx_runtime_1.jsxs)(ContentLayout_1.ContentLayout, { isWorking: !mood?.posts?.length, children: [(0, jsx_runtime_1.jsx)("h2", { className: "header-2", children: mood.title }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${user.username}`, children: user.username }), (0, jsx_runtime_1.jsx)("p", { children: mood.description }), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)(MoodsGrid_1.MoodsGridRow, { mood: mood, noFolder: true, wrap: true })] }));
+export const MoodDetailed = () => {
+    const { moodId: id } = useParams();
+    const mood = useCachedMood({ id }, true);
+    const user = useCachedUser(mood.author);
+    return (_jsxs(ContentLayout, { isWorking: !mood?.posts?.length, children: [_jsx("h2", { className: "header-2", children: mood.title }), _jsx(Link, { to: `/user/${user.username}`, children: user.username }), _jsx("p", { children: mood.description }), _jsx("br", {}), _jsx(MoodsGridRow, { mood: mood, noFolder: true, wrap: true })] }));
 };
-exports.MoodDetailed = MoodDetailed;
 //# sourceMappingURL=Mood.js.map

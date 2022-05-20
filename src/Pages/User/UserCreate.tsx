@@ -147,6 +147,16 @@ export const UserCreate: NLView<
 					<Input placeholder="username" suffix={<CrossCircleErr />} />
 				</Form.Item>
 				<Form.Item
+					name="newcoinTicker"
+					rules={[
+						{
+							required: true,
+						},
+					]}
+				>
+					<Input placeholder="newcoin ticker" suffix={<CrossCircleErr />} />
+				</Form.Item>
+				<Form.Item
 					name="displayName"
 					rules={[
 						{

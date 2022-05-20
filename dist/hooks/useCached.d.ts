@@ -6,6 +6,7 @@ export declare const useCachedUser: (user?: {
     username?: string | undefined;
 } | undefined, force?: boolean | undefined) => {
     moods: MoodReadResponse[] | undefined;
+    newcoinTicker?: string | undefined;
     powered?: number | undefined;
     displayName?: string | undefined;
     newcoinAccTx?: string | undefined;
@@ -73,3 +74,35 @@ export declare const useCachedPool: (pool?: {
 export declare const useCachedPoolByCode: (pool: {
     code?: string;
 }, force?: boolean | undefined) => "" | import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo | undefined;
+export declare const useCachedDaoProposals: (params?: {
+    daoOwner?: string | undefined;
+} | undefined) => {
+    daoOwner: string;
+    more?: object | undefined;
+    dao_id?: string | undefined;
+    next_key?: string | undefined;
+    rows?: {
+        summary?: string | undefined;
+        proposer?: string | undefined;
+        vote_start?: string | undefined;
+        more?: object | undefined;
+        next_key?: string | undefined;
+        vote_end?: string | undefined;
+        id?: number | undefined;
+        title?: string | undefined;
+        vote_no?: {
+            quantity?: string | undefined;
+            contract?: string | undefined;
+        } | undefined;
+        url?: string | undefined;
+        vote_yes?: {
+            quantity?: string | undefined;
+            contract?: string | undefined;
+        } | undefined;
+        status?: string | undefined;
+    }[] | undefined;
+};
+export declare const useCachedDaoProposal: ({ daoOwner, proposalId }: {
+    daoOwner?: string | undefined;
+    proposalId?: string | undefined;
+}) => any;

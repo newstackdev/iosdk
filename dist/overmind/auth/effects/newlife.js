@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Api = exports.Websocket = void 0;
-const config_1 = require("../../../config");
-const types_1 = require("../../../types");
-const baseUrl = config_1.newlifeBaseUrl;
-const Websocket = () => {
+import { newlifeBaseUrl } from "../../../config";
+import { CreatorApi } from "../../../types";
+const baseUrl = newlifeBaseUrl;
+export const Websocket = () => {
     const state = {
         socket: null
     };
@@ -17,12 +14,11 @@ const Websocket = () => {
     state.toggle = toggle;
     return state;
 };
-exports.Websocket = Websocket;
-exports.Api = (() => {
+export const Api = (() => {
     let api;
     return {
         initialize() {
-            api = new types_1.CreatorApi({
+            api = new CreatorApi({
                 baseUrl, securityWorker: (securityData) => {
                     console.log("Token is ", securityData?.token);
                     return (!securityData ? {} : { headers: { Authorization: securityData.token } });

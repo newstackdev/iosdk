@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const types_1 = require("../../types");
+import { CreatorApi } from "../../types";
 // const baseUrl = newlifeBaseUrl; //"https://api-eu-sit.newlife.io/creator";
-exports.default = (() => {
+export default (() => {
     let api;
     return {
         initialize(baseUrl) {
-            api = new types_1.CreatorApi({
+            api = new CreatorApi({
                 baseUrl, securityWorker: (securityData) => {
                     return (!securityData ? {} : { headers: { Authorization: securityData.token } });
                 }

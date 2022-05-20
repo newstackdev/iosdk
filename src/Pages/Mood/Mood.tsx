@@ -9,7 +9,6 @@ import { ContentLayout } from "../../Components/ContentLayout";
 import { ThreeDots } from "../../Components/Icons/ThreeDots";
 import { ContentImage } from "../../Components/Image";
 import { TopFoldersGrid } from "../../Components/TopFolders";
-import { STAKE_STEPS, UserStake } from "../../Components/UserWidget";
 import {
 	useCachedMood,
 	useCachedMoodPosts,

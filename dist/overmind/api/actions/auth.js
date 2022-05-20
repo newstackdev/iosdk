@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.authorize = void 0;
-const state_1 = require("../../auth/state");
-const authorize = async ({ state, actions, effects }) => {
-    state.auth.status = Math.max(state_1.AUTH_FLOW_STATUS.AUTHORIZING, state.auth.status);
+import { AUTH_FLOW_STATUS } from "../../auth/state";
+export const authorize = async ({ state, actions, effects }) => {
+    state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHORIZING, state.auth.status);
     try {
         state.api.auth.user = await effects.api.authorize();
     }
@@ -11,15 +8,15 @@ const authorize = async ({ state, actions, effects }) => {
         console.log(ex);
     }
     const user = state.api.auth.user;
-    if (!user) {
-        state.auth.status = state.firebase.user ? state_1.AUTH_FLOW_STATUS.AUTHENTICATED : state_1.AUTH_FLOW_STATUS.ANONYMOUS;
+    if (!user || !user.id) {
+        state.auth.status = state.firebase.user ? AUTH_FLOW_STATUS.AUTHENTICATED : AUTH_FLOW_STATUS.ANONYMOUS;
         if (!state.routing.isAllowed)
             actions.routing.historyPush({ location: "/" });
         state.api.auth.attempted = true;
         return;
     }
     ;
-    if (!user.id || !user.username)
+    if (!user.username)
         return;
     actions.newcoin.getAccountBalance({ user });
     actions.newcoin.getPoolInfo({ pool: { owner: user.username } });
@@ -28,11 +25,10 @@ const authorize = async ({ state, actions, effects }) => {
         actions.lists.top.users();
         actions.lists.top.posts();
     }
-    state.auth.status = state.api.auth.user?.username ? state_1.AUTH_FLOW_STATUS.AUTHORIZED : state_1.AUTH_FLOW_STATUS.AUTHENTICATED;
+    state.auth.status = state.api.auth.user?.username ? AUTH_FLOW_STATUS.AUTHORIZED : AUTH_FLOW_STATUS.AUTHENTICATED;
     actions.routing.routeAfterAuth();
 };
-exports.authorize = authorize;
-const logout = async ({ state, actions, effects }, config) => {
+export const logout = async ({ state, actions, effects }, config) => {
     if (!config?.keepFbUser) {
         state.firebase.token = "";
         state.firebase.user = null;
@@ -43,5 +39,4 @@ const logout = async ({ state, actions, effects }, config) => {
     effects.api.updateToken("");
     effects.websockets.newlife.socket?.close();
 };
-exports.logout = logout;
 //# sourceMappingURL=auth.js.map

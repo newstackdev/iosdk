@@ -95,12 +95,11 @@ const processIncomingNewcoin: Action<{ event: WsEvent }> = //({ reaction, action
 const modelProcessors = {
     user: ({ state, actions }: Context, u: UserReadPrivateResponse) => {
         const curr = state.api.cache.users.byId[u.id ?? ""];
+
         actions.api.user.cache({ user: { ...curr, ...u }});
         // state.api.cache.users.byId[u.id ?? ""] = { ...state.api.cache.users.byId[u.id ?? ""], ...u };
         // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
 
-        (state.api.auth.user?.id === u.id) && 
-            Object.assign(state.api.auth.user, { ...u });
     },
     post: ({ actions, state }: Context, p: PostReadResponse) => {
         state.api.cache.posts[p.id ?? ""] = { ...state.api.cache.posts[p.id ?? ""], ...p };

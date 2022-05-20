@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeUserUpdate = exports.reduceTimer = exports.resetAuthTimer = exports.logout = void 0;
-const state_1 = require("./state");
-const logout = async ({ state, actions, effects }, { noRouting } = {}) => {
-    state.auth.status = state_1.AUTH_FLOW_STATUS.ANONYMOUS;
+import { AUTH_FLOW_STATUS } from "./state";
+export const logout = async ({ state, actions, effects }, { noRouting } = {}) => {
+    state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
     state.auth.timers.authTimeoutCancel();
     state.auth.timers.timeToRefreshCancel();
     await actions.api.auth.logout();
@@ -13,21 +10,17 @@ const logout = async ({ state, actions, effects }, { noRouting } = {}) => {
     if (!noRouting)
         window.location.replace("/");
 };
-exports.logout = logout;
-const resetAuthTimer = async ({ state, actions, effects }) => {
+export const resetAuthTimer = async ({ state, actions, effects }) => {
     state.auth.timers.authTimeout = 120;
     state.auth.timers.authTimeoutCancel && state.auth.timers.authTimeoutCancel();
     state.auth.timers.authTimeoutCancel = () => undefined;
 };
-exports.resetAuthTimer = resetAuthTimer;
-const reduceTimer = async ({ state, actions, effects }) => {
+export const reduceTimer = async ({ state, actions, effects }) => {
     state.auth.timers.authTimeout -= 1;
 };
-exports.reduceTimer = reduceTimer;
-const fakeUserUpdate = async ({ state, actions }, upd) => {
+export const fakeUserUpdate = async ({ state, actions }, upd) => {
     Object.assign(state.api.auth.user, upd);
 };
-exports.fakeUserUpdate = fakeUserUpdate;
 // export const newlifeLogout: Action<{ keepFbUser?: boolean } | undefined> = async ({ state, actions, effects }, config) => {
 //     if(!config?.keepFbUser) {
 //         state.auth.token = "";

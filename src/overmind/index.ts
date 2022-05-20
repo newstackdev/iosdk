@@ -34,5 +34,5 @@ export const useEffects = createEffectsHook<Context>();
 export const useReaction = createReactionHook<Context>();
 
 const isWatchable = (actionName: string) =>
-    /^(api|lists|auth|firebase|payments)/.test(actionName);
+    /^(api|lists|auth|firebase|payments|newcoin)/.test(actionName);
 

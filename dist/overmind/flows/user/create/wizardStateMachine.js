@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Wizard = void 0;
-const overmind_1 = require("overmind");
+import { statemachine } from 'overmind';
 // const forwAuthorized = (authorized: boolean, step: States): States => authorized ? { current: 'DONE', hasNext: false, hasPrev: false } : step;
 // const forwAuthenticated = (authenticated: boolean, step: States): States => authenticated ? { current: 'CREATE_USER', hasNext: false, hasPrev: true } : step;
 const defaults = {
@@ -12,7 +9,7 @@ const defaults = {
     AUTHENTICATE: () => ({ current: "AUTHENTICATE", hasNext: false, hasPrev: true })
 };
 // export type WizardMachine = statemachine<States, Events, BaseState>;
-exports.Wizard = (0, overmind_1.statemachine)({
+export const Wizard = statemachine({
     SUBSCRIBE: {
         NEXT: ({ subscribed }) => subscribed ? defaults.CREATE_USER() : defaults.SUBSCRIBE(),
         PREV: ({ formUsername }) => ({ ...defaults.SELECT_DOMAIN(), hasNext: !!formUsername }),

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.create = exports.getPosts = exports.readMultiple = exports.read = exports.cache = void 0;
-const cache = ({ state, actions, effects }, { moods, overwrite }) => {
+export const cache = ({ state, actions, effects }, { moods, overwrite }) => {
     if (!moods)
         return;
     if (moods.id && !(moods instanceof Array))
@@ -29,8 +26,7 @@ const cache = ({ state, actions, effects }, { moods, overwrite }) => {
         // }
     });
 };
-exports.cache = cache;
-const read = async ({ state, actions, effects }, { id }) => {
+export const read = async ({ state, actions, effects }, { id }) => {
     if (!id)
         return;
     const curr = state.api.cache.moods[id] || {};
@@ -42,12 +38,10 @@ const read = async ({ state, actions, effects }, { id }) => {
     actions.api.mood.cache({ moods: [r.data] });
     //state.api.cache.moods[id] = r.data;
 };
-exports.read = read;
-const readMultiple = async ({ state, actions, effects }, { moods }) => {
+export const readMultiple = async ({ state, actions, effects }, { moods }) => {
     moods?.filter(m => m?.posts?.length || 0 <= 4).forEach(m => actions.api.mood.read(m));
 };
-exports.readMultiple = readMultiple;
-const getPosts = async ({ state, actions, effects }, mood) => {
+export const getPosts = async ({ state, actions, effects }, mood) => {
     if (!mood.id)
         return;
     const r = await state.api.client.mood.postsList({ id: mood.id });
@@ -59,12 +53,10 @@ const getPosts = async ({ state, actions, effects }, mood) => {
     //     moods: (r.data?.value || []) as MoodReadResponse[]
     // };
 };
-exports.getPosts = getPosts;
-const create = async ({ state, actions, effects }, { mood }) => {
+export const create = async ({ state, actions, effects }, { mood }) => {
     const m = await state.api.client.mood.moodCreate(mood);
     actions.api.mood.cache({ moods: [m.data] });
     state.api.auth.moods.push(m.data);
     return m.data;
 };
-exports.create = create;
 //# sourceMappingURL=mood.js.map

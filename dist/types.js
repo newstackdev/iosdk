@@ -1,10 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatorApi = void 0;
-const newlife_creator_client_api_1 = require("@newlife/newlife-creator-client-api");
-class CreatorApi extends newlife_creator_client_api_1.Api {
+import { Api } from "@newlife/newlife-creator-client-api";
+export class CreatorApi extends Api {
 }
-exports.CreatorApi = CreatorApi;
 // export interface UserInfo {
 // 	status?: string;
 // 	token?: string;

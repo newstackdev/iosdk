@@ -1,19 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.useCachedPoolByCode = exports.useCachedPool = exports.useCachedNewconAccountHistory = exports.useCachedPowerups = exports.useCachedMoods = exports.useCachedMoodPosts = exports.useCachedMood = exports.useCachedPost = exports.useCachedUser = void 0;
-const overmind_1 = require("overmind");
-const react_1 = require("react");
-const overmind_2 = require("../overmind");
-const useCachedUser = (user, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
+import { omit } from "lodash";
+import { json } from "overmind";
+import { useEffect } from "react";
+import { useActions, useAppState } from "../overmind";
+export const useCachedUser = (user, force) => {
+    const state = useAppState();
+    const actions = useActions();
     const byIdOrUsername = (u) => {
         const cachedItem = u?.id ?
             state.api.cache.users.byId[u?.id] :
             u?.username ? state.api.cache.users.byUsername[u?.username] : {};
         return (cachedItem && cachedItem.id && cachedItem.username ? cachedItem : null);
     };
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         if ((user?.id || user?.username) &&
             state.auth.authenticated &&
             (force || !byIdOrUsername(user))) {
@@ -25,11 +23,10 @@ const useCachedUser = (user, force) => {
     const u = byIdOrUsername(user);
     return { ...(u || {}), moods: u?.moods };
 };
-exports.useCachedUser = useCachedUser;
-const useCachedPost = ({ id }, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
-    (0, react_1.useEffect)(() => {
+export const useCachedPost = ({ id }, force) => {
+    const state = useAppState();
+    const actions = useActions();
+    useEffect(() => {
         id &&
             state.auth.authenticated &&
             (force || !state.api.cache.posts[id]) &&
@@ -37,11 +34,10 @@ const useCachedPost = ({ id }, force) => {
     }, [state.auth.authenticated, id]);
     return id && state.api.cache.posts[id] || {};
 };
-exports.useCachedPost = useCachedPost;
-const useCachedMood = ({ id }, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
-    (0, react_1.useEffect)(() => {
+export const useCachedMood = ({ id }, force) => {
+    const state = useAppState();
+    const actions = useActions();
+    useEffect(() => {
         id &&
             state.auth.authenticated &&
             (force || !state.api.cache.moods[id]) && //|| !state.api.cache.moods[id].posts?.length) &&
@@ -49,11 +45,10 @@ const useCachedMood = ({ id }, force) => {
     }, [state.auth.authenticated, id]);
     return id && state.api.cache.moods[id] || {};
 };
-exports.useCachedMood = useCachedMood;
-const useCachedMoodPosts = ({ id }, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
-    (0, react_1.useEffect)(() => {
+export const useCachedMoodPosts = ({ id }, force) => {
+    const state = useAppState();
+    const actions = useActions();
+    useEffect(() => {
         id &&
             state.auth.authenticated &&
             (force || !state.api.cache.moods[id]) && //|| !state.api.cache.moods[id].posts?.length) &&
@@ -61,12 +56,11 @@ const useCachedMoodPosts = ({ id }, force) => {
     }, [state.auth.authenticated, id]);
     return id && state.api.cache.moods[id] || {};
 };
-exports.useCachedMoodPosts = useCachedMoodPosts;
-const useCachedMoods = (moods, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
+export const useCachedMoods = (moods, force) => {
+    const state = useAppState();
+    const actions = useActions();
     const moodsCollector = [];
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         const res = [];
         moods && moods.length &&
             state.auth.authenticated &&
@@ -75,27 +69,25 @@ const useCachedMoods = (moods, force) => {
     }, [state.auth.authenticated, moods]);
     return moodsCollector;
 };
-exports.useCachedMoods = useCachedMoods;
-const useCachedPowerups = (user, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
+export const useCachedPowerups = (user, force) => {
+    const state = useAppState();
+    const actions = useActions();
     const current = state.api.auth.user || {};
     const id = user?.id || current.id || "";
     const targetPu = state.api.cache.powerups && state.api.cache.powerups[id];
     const currentPu = state.api.cache.powerups[current.id || ""];
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         id &&
             state.auth.authenticated &&
             (force || !state.api.cache.powerups[id]) &&
             actions.api.user.getPowerups({ user: { id } });
     }, [current.id, id, targetPu, currentPu]);
-    return id && (state.api.cache.powerups[id] ? (0, overmind_1.json)(state.api.cache.powerups[id]) : {});
+    return id && (state.api.cache.powerups[id] ? json(state.api.cache.powerups[id]) : {});
 };
-exports.useCachedPowerups = useCachedPowerups;
-const useCachedNewconAccountHistory = (user, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
-    (0, react_1.useEffect)(() => {
+export const useCachedNewconAccountHistory = (user, force) => {
+    const state = useAppState();
+    const actions = useActions();
+    useEffect(() => {
         user.username &&
             state.auth.authenticated &&
             (force || !state.newcoin.cache.accountHistory[user.username || ""]) &&
@@ -103,14 +95,13 @@ const useCachedNewconAccountHistory = (user, force) => {
     }, [user.username]);
     return user.username && state.newcoin.cache.accountHistory[user.username] || {};
 };
-exports.useCachedNewconAccountHistory = useCachedNewconAccountHistory;
-const useCachedPool = (pool, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
+export const useCachedPool = (pool, force) => {
+    const state = useAppState();
+    const actions = useActions();
     const pools = state.newcoin.cache.pools; //.byOwner[pool?.code];
     const id = pool?.owner || pool?.code || "";
     const cache = pool?.owner ? pools.byOwner : pools.byCode;
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         // if(!state.auth.authenticated) return;
         if (!pool || !id)
             return;
@@ -123,11 +114,10 @@ const useCachedPool = (pool, force) => {
     }, [id, cache[id]]);
     return cache[id] ? cache[id].rows[0] : { owner: "", code: "", total: { quantity: 0 } }; //cache[id] || { rows: [], more: false, next_key: "" };
 };
-exports.useCachedPool = useCachedPool;
-const useCachedPoolByCode = (pool, force) => {
-    const state = (0, overmind_2.useAppState)();
-    const actions = (0, overmind_2.useActions)();
-    (0, react_1.useEffect)(() => {
+export const useCachedPoolByCode = (pool, force) => {
+    const state = useAppState();
+    const actions = useActions();
+    useEffect(() => {
         pool.code &&
             state.auth.authenticated &&
             (force || !state.newcoin.cache.pools.byCode[pool.code || ""]) &&
@@ -135,5 +125,18 @@ const useCachedPoolByCode = (pool, force) => {
     }, [pool.code]);
     return pool.code && state.newcoin.cache.pools.byCode[pool.code];
 };
-exports.useCachedPoolByCode = useCachedPoolByCode;
+export const useCachedDaoProposals = (params) => {
+    const { daoOwner } = params || {};
+    const state = useAppState();
+    const actions = useActions();
+    const _daoOwner = daoOwner || state.config.settings.newcoin.daoDomain;
+    useEffect(() => {
+        actions.newcoin.daoGetProposals({ daoOwner: _daoOwner });
+    }, [daoOwner]);
+    return { ...(state.newcoin.daos[_daoOwner]?.proposals || {}), daoOwner: _daoOwner };
+};
+export const useCachedDaoProposal = ({ daoOwner, proposalId }) => {
+    const daoInfo = useCachedDaoProposals({ daoOwner });
+    return { ...(daoInfo.rows || [])[proposalId || 0] || {}, ...omit(daoInfo, "rows") };
+};
 //# sourceMappingURL=useCached.js.map

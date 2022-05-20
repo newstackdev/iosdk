@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SelectMoodForm = exports.SelectMood = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const MoodWidget_1 = require("./MoodWidget");
-const lodash_1 = require("lodash");
-const react_1 = require("react");
-const ItemGrid_1 = require("./ItemGrid");
-const overmind_1 = require("../overmind");
-const antd_1 = require("antd");
-const ProgressButton_1 = require("./ProgressButton");
-const MoodCreate_1 = require("../Pages/Mood/MoodCreate");
-const SelectMood = ({ moods, onChange, limit, title }) => {
-    const [_value, _setValue] = (0, react_1.useState)({});
-    const state = (0, overmind_1.useAppState)();
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { MoodFolderWidget } from "./MoodWidget";
+import { omit } from "lodash";
+import { useState } from "react";
+import { ItemGrid } from "./ItemGrid";
+import { useAppState } from "../overmind";
+import { Form } from "antd";
+import { ProgressButton } from "./ProgressButton";
+import { MoodCreateModal } from "../Pages/Mood/MoodCreate";
+export const SelectMood = ({ moods, onChange, limit, title }) => {
+    const [_value, _setValue] = useState({});
+    const state = useAppState();
     const filteredMoods = state.api.auth.moods.filter((m) => m.title !== "My uploads");
     const checkMoods = moods === undefined
         ? filteredMoods || []
@@ -21,26 +18,26 @@ const SelectMood = ({ moods, onChange, limit, title }) => {
         if (!ni.id)
             return;
         const nv = _value[ni.id || ""]
-            ? { ...(0, lodash_1.omit)(_value, [ni.id]) }
+            ? { ...omit(_value, [ni.id]) }
             : { ..._value, [ni.id]: ni };
         _setValue(nv);
         onChange && onChange(Object.values(nv));
     };
-    const createMood = (0, jsx_runtime_1.jsx)("div", { style: {
+    const createMood = _jsx("div", { style: {
             textAlign: "center",
             color: "white",
             width: "100%",
             border: "none",
             padding: "10px",
-        }, children: (0, jsx_runtime_1.jsx)("div", { style: { width: "90%", margin: "0 auto" }, children: (0, jsx_runtime_1.jsx)(MoodCreate_1.MoodCreateModal, { onCreated: (v) => v?.id && toggle(v) }) }) });
-    return ((0, jsx_runtime_1.jsx)(ItemGrid_1.ItemGrid, { items: [{}, ...checkMoods], limit: limit, 
+        }, children: _jsx("div", { style: { width: "90%", margin: "0 auto" }, children: _jsx(MoodCreateModal, { onCreated: (v) => v?.id && toggle(v) }) }) });
+    return (_jsx(ItemGrid, { items: [{}, ...checkMoods], limit: limit, 
         // titleLink="/save-folder"
         title: "Select a folder to share", 
         // setSelectedFolder={setSelectedFolder}
         // selectedFolder={selectedFolder}
         render: (m, index) => (!index ?
             createMood :
-            (0, jsx_runtime_1.jsx)(MoodWidget_1.MoodFolderWidget
+            _jsx(MoodFolderWidget
             // setSelectedFolder={setSelectedFolder}
             // selectedFolder={selectedFolder}
             , { 
@@ -59,7 +56,5 @@ const SelectMood = ({ moods, onChange, limit, title }) => {
     //     }
     // </ScrollMenu>
 };
-exports.SelectMood = SelectMood;
-const SelectMoodForm = ({ title, onFinish, }) => ((0, jsx_runtime_1.jsxs)(antd_1.Form, { className: "app-main-full-width", onFinish: onFinish, children: [(0, jsx_runtime_1.jsx)(antd_1.Form.Item, { name: "moods", style: { marginBottom: "40px" }, children: title ? (0, jsx_runtime_1.jsx)(exports.SelectMood, { title: title }) : (0, jsx_runtime_1.jsx)(exports.SelectMood, {}) }), (0, jsx_runtime_1.jsx)(antd_1.Form.Item, { label: "", wrapperCol: { offset: 0, span: 24 }, className: "text-right", children: (0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { actionName: "api.post.attachToMoods", type: "primary", htmlType: "submit", progressText: "Adding to moods...", children: "Share" }) })] }));
-exports.SelectMoodForm = SelectMoodForm;
+export const SelectMoodForm = ({ title, onFinish, }) => (_jsxs(Form, { className: "app-main-full-width", onFinish: onFinish, children: [_jsx(Form.Item, { name: "moods", style: { marginBottom: "40px" }, children: title ? _jsx(SelectMood, { title: title }) : _jsx(SelectMood, {}) }), _jsx(Form.Item, { label: "", wrapperCol: { offset: 0, span: 24 }, className: "text-right", children: _jsx(ProgressButton, { actionName: "api.post.attachToMoods", type: "primary", htmlType: "submit", progressText: "Adding to moods...", children: "Share" }) })] }));
 //# sourceMappingURL=SelectMood.js.map

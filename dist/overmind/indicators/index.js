@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const overmind_1 = require("overmind");
+import { debounce, pipe } from "overmind";
 const exposeIndicators = ({ state }, { actionName }) => {
     const st = state.indicators;
     st.isWorking = st._isWorking > 0;
@@ -10,7 +8,7 @@ const exposeIndicators = ({ state }, { actionName }) => {
     st.specific[actionName] = sp;
     // console.log(`indicators.specific ${actionName} ${st._specific[actionName]}`)
 };
-const isWorkingActionDebounced = (0, overmind_1.pipe)((0, overmind_1.debounce)(300), exposeIndicators);
+const isWorkingActionDebounced = pipe(debounce(300), exposeIndicators);
 const isWorkingAction = ({ actions, state }, { actionName, n }) => {
     const st = state.indicators;
     const __isWorking = st._isWorking + ((n > 0) ? 1 : -1);
@@ -55,7 +53,7 @@ const isWorkingAction = ({ actions, state }, { actionName, n }) => {
 //         actions.indicators._isWorkingReaction
 //     )
 // }
-exports.default = {
+export default {
     state: {
         _isWorking: 0,
         isWorking: true,

@@ -1,14 +1,8 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = exports.stripeKey = exports.newlifeWebsocketsServer = exports.newlifeMediaBucket = exports.newlifeBaseUrl = exports.firebaseConfig = exports.APP_DOMAIN = void 0;
-const Logo_1 = __importDefault(require("./Components/Icons/Logo"));
-const Layout_1 = require("./Layout/Layout");
-const AuthWidget_1 = require("./Pages/AuthWidget");
-const state_1 = require("./overmind/routing/state");
-const lodash_1 = require("lodash");
+import Logo from "./Components/Icons/Logo";
+import { Header, Layout, TopMenu } from "./Layout/Layout";
+import { AuthWidget } from "./Pages/AuthWidget";
+import { ROUTE_ACCESS_LEVELS } from "./overmind/routing/state";
+import { get } from "lodash";
 const currentHost = window.location.hostname === "localhost"
     ? "web-dev.newlife.io"
     : window.location.hostname;
@@ -26,35 +20,35 @@ const newlifeBaseUrls = {
     "eu-sit": "https://api-eu-sit.newlife.io/creator",
     "eu-prod": "https://api-eu-prod.newlife.io/creator",
 };
-const getStr = (o) => (path) => (0, lodash_1.get)(o, path) || "";
+const getStr = (o) => (path) => get(o, path) || "";
 const getEnv = getStr(process.env);
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfigs = {
     "eu-dev": {
-        apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
-        authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_DEV_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_DEV_FIREBASE_API_KEY || "",
         projectId: "newlifeio",
         storageBucket: "newlifeio.appspot.com",
-        messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "",
-        appId: process.env.REACT_APP_FIREBASE_APP_ID || "",
+        messagingSenderId: process.env.REACT_APP_DEV_FIREBASE_MESSAGING_SENDER_ID || "",
+        appId: process.env.REACT_APP_DEV_FIREBASE_APP_ID || "",
         measurementId: "G-PJWYRPZSNM",
     },
     "eu-sit": {
-        apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
-        authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
         projectId: "newlifeio",
         storageBucket: "newlifeio.appspot.com",
-        messagingSenderId: process.env.REACT_APP_FIREBASE_API_KEY || "",
-        appId: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        messagingSenderId: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
+        appId: process.env.REACT_APP_SIT_FIREBASE_API_KEY || "",
         measurementId: "G-PJWYRPZSNM",
     },
     "eu-prod": {
-        apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "",
-        authDomain: process.env.REACT_APP_FIREBASE_API_KEY || "",
+        apiKey: process.env.REACT_APP_PROD_FIREBASE_API_KEY || "",
+        authDomain: process.env.REACT_APP_PROD_FIREBASE_API_KEY || "",
         projectId: "newlifeio-prod",
         storageBucket: "newlifeio-prod.appspot.com",
-        messagingSenderId: process.env.REACT_APP_FIREBASE_API_KEY || "",
-        appId: process.env.PROD_FIREBASE_APP_ID || "",
+        messagingSenderId: process.env.REACT_APP_PROD_FIREBASE_API_KEY || "",
+        appId: process.env.REACT_APP_PROD_FIREBASE_APP_ID || "",
         measurementId: "G-YMT320RGLJ",
     },
     v1: {
@@ -121,25 +115,35 @@ const stripeKeys = {
     "eu-sit": `pk_test_wPJ6hXufjI4FCyabWUFsEnRf002P6QN6lX`,
     "eu-prod": `pk_live_DzLJLMNu6sk2V3aJkdmEhdUj00NrUSF9uM`,
 };
-exports.APP_DOMAIN = "life.nco";
-exports.firebaseConfig = firebaseConfigs[stage];
-exports.newlifeBaseUrl = newlifeBaseUrls[stage];
-exports.newlifeMediaBucket = newlifeMediaBuckets[stage];
-exports.newlifeWebsocketsServer = newlifeWebsocketsServers[stage];
-exports.stripeKey = stripeKeys[stage];
-exports.config = {
+export const APP_DOMAIN = "life.nco";
+export const firebaseConfig = firebaseConfigs[stage];
+export const newlifeBaseUrl = newlifeBaseUrls[stage];
+export const newlifeMediaBucket = newlifeMediaBuckets[stage];
+export const newlifeWebsocketsServer = newlifeWebsocketsServers[stage];
+export const stripeKey = stripeKeys[stage];
+console.log("Stage", stage);
+console.log("Firebase config", firebaseConfig);
+export const config = {
+    env: {
+        stage
+    },
     settings: {
-        firebaseConfig: exports.firebaseConfig,
+        newcoin: {
+            daoId: "43",
+            daoDomain: "testaaagt.io",
+            poolId: ""
+        },
+        firebaseConfig,
         newlife: {
-            baseUrl: exports.newlifeBaseUrl,
-            mediaBucket: exports.newlifeMediaBucket,
-            websocketsServer: exports.newlifeWebsocketsServer,
+            baseUrl: newlifeBaseUrl,
+            mediaBucket: newlifeMediaBucket,
+            websocketsServer: newlifeWebsocketsServer,
         },
         routing: {
-            routeAccessLevels: state_1.ROUTE_ACCESS_LEVELS
+            routeAccessLevels: ROUTE_ACCESS_LEVELS
         },
         stripe: {
-            publicKey: exports.stripeKey
+            publicKey: stripeKey
         }
     },
     routes: {
@@ -147,21 +151,23 @@ exports.config = {
         overrides: {},
         noBackButton: ["/explore"],
         defaultRoute: {
-            condition: state => !state.api.auth.authorized,
+            condition: state => {
+                return state.api.auth.authorized && ["registered", "admitted", "premium"].includes(state.api.auth.user.status);
+            },
             defaultLocation: _state => "/"
         }
     },
     components: {
         layout: {
-            Layout: Layout_1.Layout,
-            TopMenu: Layout_1.TopMenu,
-            Header: Layout_1.Header
+            Layout: Layout,
+            TopMenu: TopMenu,
+            Header: Header
         },
         auth: {
-            AuthWidget: AuthWidget_1.AuthWidget,
+            AuthWidget: AuthWidget,
         },
         icons: {
-            Logo: Logo_1.default,
+            Logo: Logo,
         },
     },
     featureFlags: {

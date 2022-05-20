@@ -1,30 +1,24 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.setFbUser = exports.initRecaptchaVerifier = exports.verifyPhone = exports.requestToken = exports.signInWithEmailLink = exports.requestEmailLink = exports.handleAuthChange = exports.refreshApiToken = exports.logout = exports.onInitializeOvermind = void 0;
-const state_1 = require("../auth/state");
-const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
+import { AUTH_FLOW_STATUS } from "../auth/state";
+export const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
     const auth = effects.firebase.initialize(state.config.settings.firebaseConfig);
     setTimeout(() => (state.auth.initialized = true), 700);
     auth.onAuthStateChanged((u) => actions.firebase.handleAuthChange(u));
 };
-exports.onInitializeOvermind = onInitializeOvermind;
-const logout = async ({ effects, state }) => {
+export const logout = async ({ effects, state }) => {
     await effects.firebase.logout();
     state.firebase.token = "";
 };
-exports.logout = logout;
-const refreshApiToken = async ({ state, actions, effects }) => {
+export const refreshApiToken = async ({ state, actions, effects }) => {
     const token = state.firebase.user ? (await state.firebase.user.getIdToken(true)) : "";
     if (!token)
         return actions.auth.logout();
-    state.auth.status = Math.max(state_1.AUTH_FLOW_STATUS.AUTHENTICATED, state.auth.status);
+    state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHENTICATED, state.auth.status);
     state.firebase.token = token;
     effects.api.updateToken(token);
     state.auth.tokens["firebase"] = { tokenType: "firebase", token, logout: actions.firebase.logout };
     // actions.auth.newlifeAuthorize();
 };
-exports.refreshApiToken = refreshApiToken;
-const handleAuthChange = async ({ actions, state, effects }, fbUser) => {
+export const handleAuthChange = async ({ actions, state, effects }, fbUser) => {
     const userChanged = state.firebase.user?.uid !== fbUser?.uid;
     if (fbUser) {
         await actions.firebase.setFbUser({ user: fbUser });
@@ -38,26 +32,23 @@ const handleAuthChange = async ({ actions, state, effects }, fbUser) => {
     }
     else {
         // if(state.auth.user.id)
-        if (state.auth.status === state_1.AUTH_FLOW_STATUS.REQUESTED)
+        if (state.auth.status === AUTH_FLOW_STATUS.REQUESTED)
             actions.auth.logout({ noRouting: true });
         state.auth.timers.timeToRefreshCancel();
     }
 };
-exports.handleAuthChange = handleAuthChange;
-const requestEmailLink = async ({ state, actions, effects }, { email }) => {
+export const requestEmailLink = async ({ state, actions, effects }, { email }) => {
     await effects.firebase.requestEmailAuthCode({ email });
 };
-exports.requestEmailLink = requestEmailLink;
-const signInWithEmailLink = async ({ state, actions, effects }) => {
+export const signInWithEmailLink = async ({ state, actions, effects }) => {
     const email = window.localStorage.getItem('emailForSignIn') || "";
     if (!email)
         return false;
     await effects.firebase.signInWithEmailLink(email, window.location.href); // state.routing.location); // with react-router, location.href is the landing url; using the router internal
-    state.auth.status = state_1.AUTH_FLOW_STATUS.REQUESTED;
+    state.auth.status = AUTH_FLOW_STATUS.REQUESTED;
     return true;
 };
-exports.signInWithEmailLink = signInWithEmailLink;
-const requestToken = async ({ state, actions, effects }, { phone }) => {
+export const requestToken = async ({ state, actions, effects }, { phone }) => {
     if (!phone)
         return effects.ux.message.warning("No phone provided");
     effects.firebase.initRecaptchaVerifier(); // ok unless we want another name for recaptcha invoking button
@@ -66,7 +57,7 @@ const requestToken = async ({ state, actions, effects }, { phone }) => {
     const timeout = setTimeout(() => {
         actions.auth.resetAuthTimer();
         clearInterval(int);
-        if (state.auth.status != state_1.AUTH_FLOW_STATUS.AUTHENTICATED) {
+        if (state.auth.status != AUTH_FLOW_STATUS.AUTHENTICATED) {
             effects.ux.message.warning("Authentication was taking too long. Please try again.");
             actions.auth.logout();
         }
@@ -77,32 +68,28 @@ const requestToken = async ({ state, actions, effects }, { phone }) => {
     }
     catch (ex) {
         effects.ux.message.warning("Please try again.");
-        state.auth.status = state_1.AUTH_FLOW_STATUS.ANONYMOUS;
+        state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
         // actions.auth.logout({ noRouting: true });
     }
-    state.auth.status = state_1.AUTH_FLOW_STATUS.RECEIVED;
+    state.auth.status = AUTH_FLOW_STATUS.RECEIVED;
 };
-exports.requestToken = requestToken;
-const verifyPhone = async ({ state, actions, effects }, { phoneVerificationCode }) => {
-    state.auth.status = state_1.AUTH_FLOW_STATUS.SUBMITTED;
+export const verifyPhone = async ({ state, actions, effects }, { phoneVerificationCode }) => {
+    state.auth.status = AUTH_FLOW_STATUS.SUBMITTED;
     const r = await effects.firebase.submitPhonVerificationCode({ phoneVerificationCode });
     effects.firebase.clearRecaptchaVerifier();
     actions.auth.resetAuthTimer();
     if (r)
-        state.auth.status = state_1.AUTH_FLOW_STATUS.AUTHENTICATED;
+        state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED;
     else {
         effects.ux.notification.error({ message: "Something went wrong, please try again" });
         await actions.auth.logout({ noRouting: true });
     }
 };
-exports.verifyPhone = verifyPhone;
-const initRecaptchaVerifier = ({ effects }, { containerOrId }) => {
+export const initRecaptchaVerifier = ({ effects }, { containerOrId }) => {
     effects.firebase.initRecaptchaVerifier(containerOrId);
 };
-exports.initRecaptchaVerifier = initRecaptchaVerifier;
-const setFbUser = async ({ state, actions, effects }, { user }) => {
+export const setFbUser = async ({ state, actions, effects }, { user }) => {
     state.firebase.user = user;
 };
-exports.setFbUser = setFbUser;
-exports.default = {};
+export default {};
 //# sourceMappingURL=actions.js.map

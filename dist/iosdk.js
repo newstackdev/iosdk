@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.overmind = exports.App = void 0;
-const App_1 = require("./App");
-Object.defineProperty(exports, "App", { enumerable: true, get: function () { return App_1.App; } });
-const overmind_1 = require("./overmind");
-Object.defineProperty(exports, "overmind", { enumerable: true, get: function () { return overmind_1.overmind; } });
-exports.default = {
-    App: App_1.App,
-    overmind: overmind_1.overmind
+import { App } from "./App";
+import { overmind } from "./overmind";
+export { App };
+export { overmind };
+export default {
+    App,
+    overmind
 };
 //# sourceMappingURL=iosdk.js.map

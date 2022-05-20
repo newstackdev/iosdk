@@ -1,23 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.api = void 0;
-const overmind_1 = require("overmind");
-const state_1 = require("../auth/state");
-exports.api = {};
-exports.default = {
-    client: exports.api,
+import { derived } from "overmind";
+import { AUTH_FLOW_STATUS } from "../auth/state";
+export const api = {};
+export default {
+    client: api,
     auth: {
         // newlife
         user: null,
         moods: [],
-        status: state_1.AUTH_FLOW_STATUS.ANONYMOUS,
+        status: AUTH_FLOW_STATUS.ANONYMOUS,
         attempted: false,
-        userDisplayHandler: (0, overmind_1.derived)((state, rs) => {
+        userDisplayHandler: derived((state, rs) => {
             return state.user?.username ||
                 ((rs.firebase.user?.phoneNumber || "") + (state.user?.id ? "*" : ""));
         }),
-        authorized: (0, overmind_1.derived)((s, rs) => rs.auth.status >= state_1.AUTH_FLOW_STATUS.AUTHORIZED),
-        admitted: (0, overmind_1.derived)((s) => ["admitted", "registered"].includes(s.user?.status || "")),
+        authorized: derived((s, rs) => rs.auth.status >= AUTH_FLOW_STATUS.AUTHORIZED),
+        admitted: derived((s) => ["admitted", "registered"].includes(s.user?.status || "")),
     },
     cache: {
         posts: {},

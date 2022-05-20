@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.setTitle = exports.setBreadcrumbs = exports.historyPush = exports.setHistory = exports.setPreloginRoute = exports.onRouteChange = exports.goBack = exports.routeAfterAuth = void 0;
 const naiveQSDecode = (search = "") => search.slice(1).split(/&/).map(kv => kv.split(/=/)).reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
-const routeAfterAuth = async ({ state, actions }) => {
+export const routeAfterAuth = async ({ state, actions }) => {
     const p = state.routing.location;
-    if (!state.config.routes.defaultRoute.condition(state) || state.api.auth.authorized) {
+    if (!state.config.routes.defaultRoute.condition(state)) {
         const location = state.config.routes.defaultRoute.defaultLocation(state);
         actions.routing.historyPush({ location });
         return;
@@ -23,18 +20,16 @@ const routeAfterAuth = async ({ state, actions }) => {
     state.routing.preLoginRoute = "";
     // (nextRoute != p) && actions.routing.historyPush({ location: nextRoute });
 };
-exports.routeAfterAuth = routeAfterAuth;
 const last = (a) => a[a.length - 1];
 const uriFromLocation = ({ pathname, search }) => `${pathname}?${search}`;
-const goBack = ({ actions, state }) => {
+export const goBack = ({ actions, state }) => {
     state.routing.backHistory.pop();
     const bh = state.routing.backHistory.pop();
     const current = uriFromLocation(state.routing.history.location);
     const prev = bh ? uriFromLocation(bh) : "/";
     actions.routing.historyPush({ location: bh ? uriFromLocation(bh) : "/" });
 };
-exports.goBack = goBack;
-const onRouteChange = async ({ state, actions }, { location: { pathname, search } }) => {
+export const onRouteChange = async ({ state, actions }, { location: { pathname, search } }) => {
     state.routing.location = [pathname, search].filter(Boolean).join("");
     actions.routing.setPreloginRoute();
     state.routing.simpleHistory.push({ pathname, search });
@@ -62,31 +57,25 @@ const onRouteChange = async ({ state, actions }, { location: { pathname, search 
     // if(!state.auth.authenticated && !isAuthPath)
     //     return actions.routing.historyPush({ location: "/auth", force: true });
 };
-exports.onRouteChange = onRouteChange;
-const setPreloginRoute = ({ state, actions, effects }) => {
+export const setPreloginRoute = ({ state, actions, effects }) => {
     const p = state.routing.location;
     if (p !== "/auth")
         state.routing.preLoginRoute = p;
 };
-exports.setPreloginRoute = setPreloginRoute;
-const setHistory = async ({ state, actions, effects }, { history }) => {
+export const setHistory = async ({ state, actions, effects }, { history }) => {
     state.routing.history = history;
 };
-exports.setHistory = setHistory;
-const historyPush = async ({ state, effects }, { location, force }) => {
+export const historyPush = async ({ state, effects }, { location, force }) => {
     // effects.ux.message.info("Routing to " + location)
     if (force)
         state.routing.location = "";
     state.routing.location = location;
     state.routing.history.push(location);
 };
-exports.historyPush = historyPush;
-const setBreadcrumbs = ({ state, actions, effects }, value) => {
+export const setBreadcrumbs = ({ state, actions, effects }, value) => {
     state.routing.breadcrumbs = value;
 };
-exports.setBreadcrumbs = setBreadcrumbs;
-const setTitle = ({ state, actions, effects }, value) => {
+export const setTitle = ({ state, actions, effects }, value) => {
     global.document.title = (value?.substring(0, 44) || "") + " ~ Newlife.IO";
 };
-exports.setTitle = setTitle;
 //# sourceMappingURL=actions.js.map

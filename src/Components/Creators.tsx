@@ -19,9 +19,9 @@ type ICreators = {
 
 // export const Creator: NLView
 
-export const CreatorWidget: NLView<{ 
-	creator: UserReadPublicResponse, 
-	avatarClassName?: string 
+export const CreatorWidget: NLView<{
+	creator: UserReadPublicResponse,
+	avatarClassName?: string
 }> = ({ creator, avatarClassName }) => {
 	const user = useCachedUser(creator);
 	avatarClassName = avatarClassName || "avatar-image-top-creators";

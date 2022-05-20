@@ -285,12 +285,14 @@ export declare const standardModules: {
                         aesthetics: string;
                     };
                     isActive: boolean;
-                    tags: {
-                        _items: Record<string, string>;
-                        items: string[];
-                        sortKey: string;
-                        page: number;
-                    };
+                    page: number;
+                };
+                tags: {
+                    query: string;
+                    results: import("@newlife/newlife-creator-client-api").PostTagsSearchPublicResponse | null;
+                    lastQueried: string;
+                    isActive: boolean;
+                    page: number;
                 };
             };
         };
@@ -304,6 +306,10 @@ export declare const standardModules: {
             }, void>;
             searchPosts: import("../types").Action<{
                 tags: string;
+                force?: boolean | undefined;
+            }, void>;
+            searchTags: import("../types").Action<{
+                query: string;
             }, void>;
             top: {
                 moods: import("../types").Action<undefined, void>;
@@ -458,12 +464,17 @@ export declare const standardModules: {
         state: {
             account: any;
             pools: any;
+            mainPool: any;
+            daos: Record<string, {
+                proposals: import("@newlife/newlife-creator-client-api").BcListDaoProposalsResponse;
+            }>;
             cache: {
                 accountHistory: Record<string, import("./newcoin/types").HyperionAccountHistory>;
                 pools: {
                     byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                     byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                 };
+                votes: Record<string, import("@newlife/newlife-creator-client-api").BcDaoProposalVoteResponse>;
             };
         };
     };

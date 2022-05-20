@@ -1,9 +1,4 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(require("react"));
+import React from "react";
 const preventDefault = (ev) => {
     if (ev.preventDefault) {
         ev.preventDefault();
@@ -20,14 +15,14 @@ const disableBodyScroll = () => {
         });
 };
 function usePreventBodyScroll() {
-    const [hidden, setHidden] = react_1.default.useState(false);
-    react_1.default.useEffect(() => {
+    const [hidden, setHidden] = React.useState(false);
+    React.useEffect(() => {
         hidden ? disableBodyScroll() : enableBodyScroll();
         return enableBodyScroll;
     }, [hidden]);
-    const disableScroll = react_1.default.useCallback(() => setHidden(true), []);
-    const enableScroll = react_1.default.useCallback(() => setHidden(false), []);
+    const disableScroll = React.useCallback(() => setHidden(true), []);
+    const enableScroll = React.useCallback(() => setHidden(false), []);
     return { disableScroll, enableScroll };
 }
-exports.default = usePreventBodyScroll;
+export default usePreventBodyScroll;
 //# sourceMappingURL=usePreventBodyScroll.js.map

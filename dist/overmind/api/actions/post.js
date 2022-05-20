@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.rate = exports.attachToMoods = exports.create = exports.read = void 0;
-const lodash_1 = require("lodash");
-const overmind_1 = require("overmind");
-const read = async ({ state, actions, effects }, { id }) => {
+import { omit } from "lodash";
+import { debounce, pipe } from "overmind";
+export const read = async ({ state, actions, effects }, { id }) => {
     const r = await state.api.client.post.postList({ id });
     if (!r.data)
         return;
@@ -11,11 +8,10 @@ const read = async ({ state, actions, effects }, { id }) => {
         actions.api.user.cache({ user: { ...r.data.author } });
     } // state.api.cache.users.by[r.data.author.id] =
     const isProcessing = /^processing$/i.test(state.api.cache.posts[id]?.contentUrl || "");
-    state.api.cache.posts[id] = (0, lodash_1.omit)(r.data, isProcessing ? ["contentUrl"] : []);
+    state.api.cache.posts[id] = omit(r.data, isProcessing ? ["contentUrl"] : []);
     actions.api.mood.cache({ moods: r.data.moods });
 };
-exports.read = read;
-const create = async ({ state, actions, effects }, { postForm }) => {
+export const create = async ({ state, actions, effects }, { postForm }) => {
     // await state.api.client.post.postCreate(post);
     const shouldUpload = !postForm.contentType;
     if (!shouldUpload) {
@@ -58,8 +54,7 @@ const create = async ({ state, actions, effects }, { postForm }) => {
         effects.ux.notification.open({ message: "Somethink wend wronk!" });
     }
 };
-exports.create = create;
-const attachToMoods = async ({ state, actions, effects }, { moods, post }) => {
+export const attachToMoods = async ({ state, actions, effects }, { moods, post }) => {
     const pid = post.id || "";
     console.log("attachToMoods: enter");
     if (!pid || !moods?.length) {
@@ -80,9 +75,8 @@ const attachToMoods = async ({ state, actions, effects }, { moods, post }) => {
     console.log(`attachToMoods: done caching ${moods.length} moods`);
     return Promise.resolve();
 };
-exports.attachToMoods = attachToMoods;
-exports.rate = (0, overmind_1.pipe)(// mood?: MoodReadResponse 
-(0, overmind_1.debounce)(300), async ({ state, actions, effects }, { post, amount, contextType, contextValue }) => {
+export const rate = pipe(// mood?: MoodReadResponse 
+debounce(300), async ({ state, actions, effects }, { post, amount, contextType, contextValue }) => {
     const t = post.title || post.content || "";
     const mt = t.length <= 30 ? t : t.substring(0, 30) + "...";
     try {

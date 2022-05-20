@@ -10,7 +10,7 @@ export const authorize: Action<undefined> = async ({ state, actions, effects }) 
         console.log(ex);
     }
     const user = state.api.auth.user;
-    if(!user) {
+    if(!user || !user.id) {
         state.auth.status = state.firebase.user ? AUTH_FLOW_STATUS.AUTHENTICATED : AUTH_FLOW_STATUS.ANONYMOUS;
         if(!state.routing.isAllowed)
             actions.routing.historyPush({ location: "/" });
@@ -20,7 +20,7 @@ export const authorize: Action<undefined> = async ({ state, actions, effects }) 
         return;
     };
 
-    if(!user.id || !user.username)
+    if(!user.username)
         return;
     
     actions.newcoin.getAccountBalance({ user });

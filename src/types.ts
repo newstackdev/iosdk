@@ -8,6 +8,9 @@ export type NLView<T = {}> = React.FunctionComponent<React.PropsWithChildren<T>>
 export type GenericComponent = NLView<any> | React.FC<any>;
 export type IOView<T = {}> = NLView<T>;
 
+type ValueOf<T> = T[keyof T];
+
+
 export type Action<T = undefined, R = void> = (
 	context: Context,
 	value: T

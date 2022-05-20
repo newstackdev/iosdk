@@ -1,82 +1,78 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserPrivateInfo = exports.UserNewcoinInfo = exports.UserNewcoinPoolsParticipation = exports.PoolInfoDataRow = exports.UserSocialInfoRow = exports.UsersGrid = exports.UsersHorizontalScroller = exports.UsersList = exports.UserSocialInfo = exports.UserWidgetHeading = exports.UserWidgetTopFixed = exports.UserPowerup = exports.UserStake = exports.STAKE_STEPS = exports.UserWidgetVertical = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const antd_1 = require("antd");
-const Paragraph_1 = __importDefault(require("antd/lib/typography/Paragraph"));
-const react_router_dom_1 = require("react-router-dom");
-const useCached_1 = require("../hooks/useCached");
-const overmind_1 = require("../overmind");
-const DataRow_1 = require("./DataRow");
-const Image_1 = require("./Image");
-const Links_1 = require("./Links");
-const react_1 = require("react");
-const ItemGrid_1 = require("./ItemGrid");
-const react_horizontal_scrolling_menu_1 = require("react-horizontal-scrolling-menu");
-const usePreventBodyScroll_1 = __importDefault(require("../hooks/usePreventBodyScroll"));
-const CrossCircle_1 = require("./Icons/CrossCircle");
-const ProgressButton_1 = require("./ProgressButton");
-const RevealInfo_1 = require("./RevealInfo");
-const CryptoEntities_1 = require("./CryptoEntities");
-const react_show_more_text_1 = __importDefault(require("react-show-more-text"));
-const Instagram_1 = require("./Icons/Instagram");
-const Tumblr_1 = require("./Icons/Tumblr");
-const Soundcloud_1 = require("./Icons/Soundcloud");
-const Twitter_1 = require("./Icons/Twitter");
-const Edit_1 = require("./Icons/Edit");
-const SocialLink_1 = require("./SocialLink");
-const Smallinfo_1 = require("./Icons/Smallinfo");
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { List, Avatar, Col, Row, Button, Modal, Input, Slider, Tooltip, } from "antd";
+import Paragraph from "antd/lib/typography/Paragraph";
+import { Link } from "react-router-dom";
+import { useCachedPool, useCachedPowerups, useCachedUser, } from "../hooks/useCached";
+import { useActions, useAppState } from "../overmind";
+import { DataRow } from "./DataRow";
+import { ContentImage } from "./Image";
+import { BlockExplorerLink, blockExplorerUrl } from "./Links";
+import { useEffect, useState } from "react";
+import { ItemGrid } from "./ItemGrid";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
+import usePreventBodyScroll from "../hooks/usePreventBodyScroll";
+import { CrossCircle } from "./Icons/CrossCircle";
+import { ProgressButton } from "./ProgressButton";
+import { RevealInfo } from "./RevealInfo";
+import { HashDisplay } from "./CryptoEntities";
+import ShowMoreText from "react-show-more-text";
+import { Instagram } from "./Icons/Instagram";
+import { TumblrIcon } from "./Icons/TumblrIcon";
+import { Soundcloud } from "./Icons/Soundcloud";
+import { TwitterIcon } from "./Icons/TwitterIcon";
+import { Edit } from "./Icons/Edit";
+import { SocialLink } from "./SocialLink";
+import { Smallinfo } from "./Icons/Smallinfo";
+import { STAKE_STEPS } from "src/overmind/flows/stake/state";
+// import { Info } from "./Icons/Info";
+// import { CreatorWidget } from "./Creators";
+// import { UserStakeButton } from "../Pages/User/UserStake";
 const ellipsisStyle = {
     maxWidth: 125,
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     overflow: "hidden",
 };
-const UserWidgetVertical = ({ user, }) => {
-    const u = (0, useCached_1.useCachedUser)({ id: user?.id || "" });
+export const UserWidgetVertical = ({ user, }) => {
+    const u = useCachedUser({ id: user?.id || "" });
     if (!u)
-        return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
-    return ((0, jsx_runtime_1.jsxs)("div", { style: { marginBottom: 24 }, children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${u.username}`, children: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "small", width: "100%", src: u.contentUrl }) }), (0, jsx_runtime_1.jsxs)(react_router_dom_1.Link, { to: `/user/stake/${u.username}`, hidden: !u.username, children: ["Stake on ", u.username] })] }));
-};
-exports.UserWidgetVertical = UserWidgetVertical;
-exports.STAKE_STEPS = {
-    DISABLED: -1,
-    NODAO: 0,
-    SELECT: 1,
-    CONFIRM: 2,
-    DONE: 3,
+        return _jsx(_Fragment, {});
+    return (_jsxs("div", { style: { marginBottom: 24 }, children: [_jsx(Link, { to: `/user/${u.username}`, children: _jsx(ContentImage, { size: "small", width: "100%", src: u.contentUrl }) }), _jsxs(Link, { to: `/user/stake/${u.username}`, hidden: !u.username, children: ["Stake on ", u.username] })] }));
 };
 const round = (v) => Math.round(v * 1000) / 1000;
-const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel, }) => {
+/**
+ * User stake widget.
+ * @param
+ * @returns
+ */
+export const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel, }) => {
     // const [visible, setVisible] = useState(false);
-    const actions = (0, overmind_1.useActions)();
-    const poolInfo = (0, useCached_1.useCachedPool)({ owner: user?.username });
-    const [preStakeValue, setPrestakeValue] = (0, react_1.useState)(0);
-    const [_value, setValue] = (0, react_1.useState)(value || 100);
-    const [fee, setFee] = (0, react_1.useState)(0.08 * _value);
-    const state = (0, overmind_1.useAppState)();
-    const [tx, setTx] = (0, react_1.useState)("");
-    const [_mode, setMode] = (0, react_1.useState)(mode ?? exports.STAKE_STEPS.DISABLED);
-    const _user = (0, useCached_1.useCachedUser)(user, true);
-    const balances = state.newcoin.account?.acc_balances || [];
-    const ncoBalance = Number((balances[0] || "").replace(/ NCO$/, ""));
+    const actions = useActions();
+    const poolInfo = useCachedPool({ owner: user?.username });
+    const [preStakeValue, setPrestakeValue] = useState(0);
+    const [_value, setValue] = useState(value || 100);
+    const [fee, setFee] = useState(0.08 * _value);
+    const state = useAppState();
+    const [tx, setTx] = useState("");
+    const [_mode, setMode] = useState(mode ?? STAKE_STEPS.DISABLED);
+    const _user = useCachedUser(user, true);
+    const balances = state.newcoin.mainPool?.acc_balances || []; //state.newcoin.account?.acc_balances || [];
+    const ncoBalance = Number((balances[0] || "").replace(/ GNCO$/, ""));
     const membershipValue = state.newcoin.pools[poolInfo.code];
+    const displayMembershipValue = membershipValue;
     minValue = minValue || 100;
     const stakeDelta = (membershipValue || 0) - (preStakeValue || 0);
     const hasDao = !!poolInfo.code; // && /\.(io|nco)$/.test(user?.username || "");
-    (0, react_1.useEffect)(() => {
-        setMode(mode ?? exports.STAKE_STEPS.DISABLED);
+    useEffect(() => {
+        setMode(mode ?? STAKE_STEPS.DISABLED);
     }, [mode]);
-    (0, react_1.useEffect)(() => {
-        const m = _mode ?? exports.STAKE_STEPS.DISABLED;
+    useEffect(() => {
+        const m = _mode ?? STAKE_STEPS.DISABLED;
         setMode(m);
         actions.flows.stake.setLatestMode({ stakingMode: m });
     }, [_mode]);
-    (0, react_1.useEffect)(() => {
-        !hasDao && _mode >= 0 && setMode(exports.STAKE_STEPS.NODAO);
+    useEffect(() => {
+        !hasDao && _mode >= 0 && setMode(STAKE_STEPS.NODAO);
     }, [hasDao, _mode]);
     const updateValue = (v) => {
         setValue(v);
@@ -94,7 +90,7 @@ const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSe
         const success = historyItem && !historyItem.error;
         // return
         success && setTx(historyItem?.response?.data?.TxID_stakeToPool);
-        setMode(success && closeOnDone ? exports.STAKE_STEPS.DISABLED : exports.STAKE_STEPS.DONE);
+        setMode(success && closeOnDone ? STAKE_STEPS.DISABLED : STAKE_STEPS.DONE);
         // success && setTimeout(() => setMode(STAKE_STEPS.DISABLED));
     };
     const openUrl = (url) => {
@@ -104,15 +100,18 @@ const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSe
         return state.flows.stake.options.stakingContainer;
     };
     const startStaking = () => {
-        setMode(exports.STAKE_STEPS.SELECT);
+        setMode(STAKE_STEPS.SELECT);
     };
-    const displayMembershipValue = membershipValue / 10000;
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsxs)(antd_1.Modal, { closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), getContainer: getContainer, visible: _mode == exports.STAKE_STEPS.NODAO, cancelText: "Ok", 
+    return (_jsxs(_Fragment, { children: [_jsxs(Modal, { closeIcon: _jsx(CrossCircle, {}), 
+                // getContainer={getContainer}
+                visible: _mode == STAKE_STEPS.NODAO, cancelText: "Ok", 
                 // onCancel={() => setMode(STAKE_STEPS.SELECT)}
                 onCancel: () => {
-                    setMode(exports.STAKE_STEPS.DISABLED);
+                    setMode(STAKE_STEPS.DISABLED);
                     onDone && onDone({});
-                }, okButtonProps: { style: { display: "none" } }, className: "nl-white-box-modal", children: [(0, jsx_runtime_1.jsx)(antd_1.Row, { align: "middle", className: "text-center", children: (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 8, className: "nl-avatar", children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { size: "large", src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "medium", ..._user }) }) }) }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), (0, jsx_runtime_1.jsx)(antd_1.Row, { align: "middle", className: "text-center", children: (0, jsx_runtime_1.jsxs)(antd_1.Col, { span: 24, className: "nl-avatar", children: [(0, jsx_runtime_1.jsx)("h2", { children: _user.username }), (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), "had not created their DAO yet.", (0, jsx_runtime_1.jsx)("div", { className: "section-divider" }), "Please check this profile later."] }) })] }), (0, jsx_runtime_1.jsxs)(antd_1.Modal, { closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), visible: _mode === exports.STAKE_STEPS.DONE, getContainer: getContainer, okText: "Yes", cancelText: "No", onOk: () => stake(), 
+                }, okButtonProps: { style: { display: "none" } }, className: "nl-white-box-modal", children: [_jsx(Row, { align: "middle", className: "text-center", children: _jsx(Col, { span: 8, className: "nl-avatar", children: _jsx(Avatar, { size: "large", src: _jsx(ContentImage, { size: "medium", ..._user }) }) }) }), _jsx("div", { className: "section-divider" }), _jsx(Row, { align: "middle", className: "text-center", children: _jsxs(Col, { span: 24, className: "nl-avatar", children: [_jsx("h2", { children: _user.username }), _jsx("div", { className: "section-divider" }), "had not created their DAO yet.", _jsx("div", { className: "section-divider" }), "Please check this profile later."] }) })] }), _jsxs(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: _mode === STAKE_STEPS.DONE, 
+                // getContainer={getContainer}
+                okText: "Yes", cancelText: "No", onOk: () => stake(), 
                 // onCancel={() => setMode(STAKE_STEPS.SELECT)}
                 onCancel: () => {
                     onDone &&
@@ -121,11 +120,11 @@ const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSe
                             stakeValue: _value,
                             stakeDelta,
                         });
-                    setMode(exports.STAKE_STEPS.DISABLED);
-                }, cancelButtonProps: { value: "No" }, footer: false, className: "nl-white-box-modal", children: [(0, jsx_runtime_1.jsxs)(antd_1.Row, { className: "text-center", children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { span: 8, className: "nl-avatar", children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { size: "large", src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "medium", ..._user }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 12, className: "text-left u-margin-left-small", children: (0, jsx_runtime_1.jsxs)("div", { children: ["You", " ", preStakeValue
+                    setMode(STAKE_STEPS.DISABLED);
+                }, cancelButtonProps: { value: "No" }, footer: false, className: "nl-white-box-modal", children: [_jsxs(Row, { className: "text-center", children: [_jsx(Col, { span: 8, className: "nl-avatar", children: _jsx(Avatar, { size: "large", src: _jsx(ContentImage, { size: "medium", ..._user }) }) }), _jsx(Col, { span: 12, className: "text-left u-margin-left-small", children: _jsxs("div", { children: ["You", " ", preStakeValue
                                             ? "increased your stake in"
-                                            : "joined", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("p", { className: "header-3", children: _user?.username }), "'s DAO."] }) })] }), (0, jsx_runtime_1.jsxs)("div", { className: "text-center", children: [(0, jsx_runtime_1.jsxs)("div", { className: "text-left", children: [(0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("h2", { className: "header-2", children: "Congratulations" }), preStakeValue ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["Your stake in ", _user?.username, "'s DAO increased by ", stakeDelta, " ", poolInfo.code, "."] })) : ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["You are now a member of the ", _user?.username, "'s DAO with all the rights and duties associated."] })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsxs)("p", { children: [_value, " $GNCO", (0, jsx_runtime_1.jsx)("br", {}), "\u2014 ", round((fee * 5) / 8), " $GNCO (5%) creator fee", (0, jsx_runtime_1.jsx)("br", {}), "\u2014 ", round((fee * 3) / 8), " $GNCO (3%) DAO fee", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {})] })] }), (0, jsx_runtime_1.jsxs)("h1", { children: [round(_value - fee), " $GNCO"] }), (0, jsx_runtime_1.jsx)(antd_1.Button, { className: "nl-button-primary", onClick: () => openUrl(Links_1.blockExplorerUrl.newcoin(tx)), children: "View on Newcoin" }), (0, jsx_runtime_1.jsx)(antd_1.Button, { className: "nl-button-primary", onClick: () => openUrl(Links_1.blockExplorerUrl.blocks(tx)), children: "View on Bloks.io" })] })] }), (0, jsx_runtime_1.jsxs)(antd_1.Modal, { visible: _mode === exports.STAKE_STEPS.CONFIRM, onOk: () => stake(), closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), onCancel: () => {
-                    setMode(hideButton ? exports.STAKE_STEPS.DISABLED : exports.STAKE_STEPS.SELECT);
+                                            : "joined", _jsx("br", {}), _jsx("p", { className: "header-3", children: _user?.username }), "'s DAO."] }) })] }), _jsxs("div", { className: "text-center", children: [_jsxs("div", { className: "text-left", children: [_jsx("br", {}), _jsx("h2", { className: "header-2", children: "Congratulations" }), preStakeValue ? (_jsxs(_Fragment, { children: ["Your stake in ", _user?.username, "'s DAO increased by ", stakeDelta, " ", poolInfo.code, "."] })) : (_jsxs(_Fragment, { children: ["You are now a member of the ", _user?.username, "'s DAO with all the rights and duties associated."] })), _jsx("br", {}), _jsx("br", {}), _jsxs("p", { children: [_value, " $GNCO", _jsx("br", {}), "\u2014 ", round((fee * 5) / 8), " $GNCO (5%) creator fee", _jsx("br", {}), "\u2014 ", round((fee * 3) / 8), " $GNCO (3%) DAO fee", _jsx("br", {}), _jsx("br", {})] })] }), _jsxs("h1", { children: [round(_value - fee), " $GNCO"] }), _jsx(Button, { className: "nl-button-primary", onClick: () => openUrl(blockExplorerUrl.newcoin(tx)), children: "View on Newcoin" }), _jsx(Button, { className: "nl-button-primary", onClick: () => openUrl(blockExplorerUrl.blocks(tx)), children: "View on Bloks.io" })] })] }), _jsxs(Modal, { visible: _mode === STAKE_STEPS.CONFIRM, onOk: () => stake(), closeIcon: _jsx(CrossCircle, {}), onCancel: () => {
+                    setMode(hideButton ? STAKE_STEPS.DISABLED : STAKE_STEPS.SELECT);
                     // mode === STAKE_STEPS. : DONE
                     // 	? onDone && onDone()
                     // 	: onCancel &&  : onCancel();
@@ -138,39 +137,38 @@ const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSe
                 // 		<IndeterminateProgress inProgress={true} />
                 // 	) : undefined
                 // }
-                footer: false, className: "nl-white-box-modal primary-buttons-modal", children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, className: "nl-avatar u-margin-bottom-medium", children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { size: "large", src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "medium", ..._user }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, children: membershipValue > 0 ? ((0, jsx_runtime_1.jsxs)("p", { className: "header-3", children: ["Your membership in ", poolInfo.owner.toUpperCase(), " DAO is at ", displayMembershipValue, ". Stake", " ", _value, " NCO more to increase your membership value."] })) : ((0, jsx_runtime_1.jsxs)("p", { className: "header-3", children: ["Join ", _user?.username || "", "'s DAO"] })) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { style: { margin: "80px 0 " }, children: (0, jsx_runtime_1.jsxs)("p", { className: "paragraph-2r", children: ["Are you sure you want to", membershipValue ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [" ", "increase your stake in ", _user?.username || "", "'s DAO by ", _value, " $GNCO"] })) : ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [" ", "stake ", _value, " $GNCO to join", " ", _user?.username || "", "'s DAO?"] })), "?", (0, jsx_runtime_1.jsx)("br", {}), "You will deposit ", _value, " $GNCO and pay a ", round(fee), " ", "$GNCO fee."] }) }), (0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { actionName: "api.user.stake", type: "primary", progressText: "Staking...", onClick: () => {
+                footer: false, className: "nl-white-box-modal primary-buttons-modal", children: [_jsx(Col, { span: 24, className: "nl-avatar u-margin-bottom-medium", children: _jsx(Avatar, { size: "large", src: _jsx(ContentImage, { size: "medium", ..._user }) }) }), _jsx(Col, { span: 24, children: membershipValue > 0 ? (_jsxs("p", { className: "header-3", children: ["Your membership in ", poolInfo.owner.toUpperCase(), " DAO is at ", displayMembershipValue, ". Stake", " ", _value, " GNCO more to increase your membership value."] })) : (_jsxs("p", { className: "header-3", children: ["Join ", _user?.username || "", "'s DAO"] })) }), _jsx(Col, { style: { margin: "80px 0 " }, children: _jsxs("p", { className: "paragraph-2r", children: ["Are you sure you want to", membershipValue ? (_jsxs(_Fragment, { children: [" ", "increase your stake in ", _user?.username || "", "'s DAO by ", _value, " $GNCO"] })) : (_jsxs(_Fragment, { children: [" ", "stake ", _value, " $GNCO to join", " ", _user?.username || "", "'s DAO?"] })), "?", _jsx("br", {}), "You will deposit ", _value, " $GNCO and pay a ", round(fee), " ", "$GNCO fee."] }) }), _jsx(ProgressButton, { actionName: "api.user.stake", type: "primary", progressText: "Staking...", onClick: () => {
                             stake();
-                        }, children: "Confirm" }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, className: "text-left u-margin-top-large", style: { width: "100%" }, children: (0, jsx_runtime_1.jsxs)("p", { className: "paragraph-2r ", children: ["This is only on Testnet! Need help?", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2u", children: "Join our telegram group!" })] }) })] }), (0, jsx_runtime_1.jsx)(antd_1.Modal, { visible: _mode >= exports.STAKE_STEPS.SELECT && !hideSelect, okText: "Close", footer: false, onCancel: () => {
-                    _mode === exports.STAKE_STEPS.DONE
+                        }, children: "Confirm" }), _jsxs(Col, { span: 24, className: "text-left u-margin-top-large", style: { width: "100%" }, children: [_jsxs("p", { className: "paragraph-2r ", children: ["This is only on Testnet! Need help?", _jsx("br", {}), _jsx("span", { className: "paragraph-2u", children: "Join our telegram group!" })] }), "id"] })] }), _jsx(Modal, { visible: _mode >= STAKE_STEPS.SELECT && !hideSelect, okText: "Close", footer: false, onCancel: () => {
+                    _mode === STAKE_STEPS.DONE
                         ? onDone && onDone()
                         : onCancel && onCancel();
-                    setMode(exports.STAKE_STEPS.DISABLED);
-                }, className: "nl-white-box-modal", closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { align: "middle", className: "text-center nl-row-vertical-space", children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, className: "nl-avatar", children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { size: "large", src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "medium", ..._user }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, children: (0, jsx_runtime_1.jsx)("p", { className: "header-3", children: membershipValue > 0 ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["Your stake in ", _user.username, " is $", displayMembershipValue, " $", poolInfo.owner.toUpperCase(), ". Stake", " ", _value, " NCO more to increase your membership value."] }))
+                    setMode(STAKE_STEPS.DISABLED);
+                }, className: "nl-white-box-modal", closeIcon: _jsx(CrossCircle, {}), children: _jsxs(Row, { align: "middle", className: "text-center nl-row-vertical-space", children: [_jsx(Col, { span: 24, className: "nl-avatar", children: _jsx(Avatar, { size: "large", src: _jsx(ContentImage, { size: "medium", ..._user }) }) }), _jsx(Col, { span: 24, children: _jsx("p", { className: "header-3", children: membershipValue > 0 ? (_jsxs(_Fragment, { children: ["Your stake in ", _user.newcoinTicker, " is $", displayMembershipValue, " $", poolInfo.owner.toUpperCase(), ". Stake", " ", _value, " GNCO more to increase your membership value."] }))
                                     :
-                                        (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["Join ", _user?.username || "", "'s DAO"] }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, children: (0, jsx_runtime_1.jsx)(antd_1.Input, { onChange: (e) => setValue(Number(e.target.value)), value: _value, suffix: "$GNCO", className: "gnco_input" }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, children: (0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsx)(antd_1.Slider, { className: "nl-slider", value: _value, tooltipVisible: false, style: { width: "100%" }, onChange: updateValue, marks: {
+                                        _jsxs(_Fragment, { children: ["Join ", _user?.username || "", "'s DAO"] }) }) }), _jsx(Col, { span: 24, children: _jsx(Input, { onChange: (e) => setValue(Number(e.target.value)), value: _value, suffix: "$GNCO", className: "gnco_input" }) }), _jsx(Col, { span: 24, children: _jsx("div", { children: _jsx(Slider, { className: "nl-slider", value: _value, tooltipVisible: false, style: { width: "100%" }, onChange: updateValue, marks: {
                                         100: "0%",
                                         [(ncoBalance / 100) * 25]: "25%",
                                         [(ncoBalance / 100) * 50]: "50%",
                                         [(ncoBalance / 100) * 75]: "75%",
                                         [ncoBalance]: "100%",
-                                    }, min: minValue, max: ncoBalance }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, className: "u-margin-top-large", children: (0, jsx_runtime_1.jsx)(antd_1.Button, { className: "nl-button-primary stake-button-modal", onClick: () => {
-                                    setMode(exports.STAKE_STEPS.CONFIRM);
-                                }, children: "Stake" }) }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { span: 24, className: "text-left", children: [(0, jsx_runtime_1.jsxs)("span", { className: "paragraph-2r", children: [Math.round(fee * 100) / 100, " $GNCO Fee"] }), (0, jsx_runtime_1.jsxs)("p", { className: "paragraph-2r ", children: ["This is only on Testnet! Need help?", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2u", children: "Join our telegram group!" })] })] })] }) }), hideButton ? ("") : ((0, jsx_runtime_1.jsx)(ProgressButton_1.ProgressButton, { actionName: "api.user.stake", onClick: () => startStaking(), className: "nl-button-primary", progressText: "Staking...", children: buttonText || "Stake" }))] }));
+                                    }, min: minValue, max: ncoBalance }) }) }), _jsx(Col, { span: 24, className: "u-margin-top-large", children: _jsx(Button, { className: "nl-button-primary stake-button-modal", onClick: () => {
+                                    setMode(STAKE_STEPS.CONFIRM);
+                                }, children: "Stake" }) }), _jsxs(Col, { span: 24, className: "text-left", children: [_jsxs("span", { className: "paragraph-2r", children: [Math.round(fee * 100) / 100, " $GNCO Fee"] }), _jsxs("p", { className: "paragraph-2r ", children: ["This is only on Testnet! Need help?", _jsx("br", {}), _jsx("span", { className: "paragraph-2u", children: "Join our telegram group!" })] })] })] }) }), hideButton ? ("") : (_jsx(ProgressButton, { actionName: "api.user.stake", onClick: () => startStaking(), className: "nl-button-primary", progressText: "Staking...", children: buttonText || "Stake" }))] }));
 };
-exports.UserStake = UserStake;
-const UserPowerup = ({ user, }) => {
-    const [visible, setVisible] = (0, react_1.useState)(false);
-    const actions = (0, overmind_1.useActions)();
-    const state = (0, overmind_1.useAppState)();
-    const currentUserPowerups = (0, useCached_1.useCachedPowerups)();
-    const poolInfo = (0, useCached_1.useCachedPool)({ owner: user?.username });
+export const UserPowerup = ({ user, }) => {
+    const [visible, setVisible] = useState(false);
+    const actions = useActions();
+    const state = useAppState();
+    const currentUserPowerups = useCachedPowerups();
+    const poolInfo = useCachedPool({ owner: user?.username });
     const membershipValue = state.newcoin.pools[poolInfo.code];
     const rating = currentUserPowerups?.out?.value?.find((u) => u.id === user?.id);
     const isPowering = !!rating;
     const timeSince = rating?.rating?.created
         ? Date.now() - new Date(rating?.rating?.created).getDate()
         : -1;
-    const [stakeMode, setStakeMode] = (0, react_1.useState)(false);
+    const [stakeMode, setStakeMode] = useState(false);
     const powerup = async () => {
         setVisible(true);
         !isPowering &&
@@ -182,34 +180,33 @@ const UserPowerup = ({ user, }) => {
         setVisible(false);
     };
     // () => actions.routing.historyPush({ location: `/user/stake/${u.id}` })
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(antd_1.Modal, { visible: visible, 
+    return (_jsxs(_Fragment, { children: [_jsx(Modal, { visible: visible, 
                 // title="Multiply your powerup"
-                okText: "Close", onOk: () => setVisible(false), onCancel: () => setVisible(false), cancelButtonProps: { hidden: true }, footer: false, className: "nl-white-box-modal", closeIcon: (0, jsx_runtime_1.jsx)(CrossCircle_1.CrossCircle, {}), children: (0, jsx_runtime_1.jsxs)("div", { className: "text-center", children: [(0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsxs)(antd_1.Row, { className: "text-center", style: { alignItems: "center" }, children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { span: 8, className: "nl-avatar", children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { size: "large", src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "medium", ...user }) }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 12, className: "text-left u-margin-left-medium", children: (0, jsx_runtime_1.jsxs)("div", { children: [isPowering && timeSince > 60000
+                okText: "Close", onOk: () => setVisible(false), onCancel: () => setVisible(false), cancelButtonProps: { hidden: true }, footer: false, className: "nl-white-box-modal", closeIcon: _jsx(CrossCircle, {}), children: _jsxs("div", { className: "text-center", children: [_jsxs("div", { children: [_jsxs(Row, { className: "text-center", style: { alignItems: "center" }, children: [_jsx(Col, { span: 8, className: "nl-avatar", children: _jsx(Avatar, { size: "large", src: _jsx(ContentImage, { size: "medium", ...user }) }) }), _jsx(Col, { span: 12, className: "text-left u-margin-left-medium", children: _jsxs("div", { children: [isPowering && timeSince > 60000
                                                         ? "You powered"
                                                         : state.indicators.specific["api.user.powerup"]
                                                             ? "Powering..."
-                                                            : "", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("span", { className: "header-3", children: user?.username })] }) })] }), (0, jsx_runtime_1.jsx)(antd_1.Row, { gutter: 12, className: "text-center", style: { margin: "80px 0" }, children: (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, children: (0, jsx_runtime_1.jsx)("span", { className: "header-1b", children: "+1" }) }) })] }), (0, jsx_runtime_1.jsxs)(antd_1.Row, { gutter: 48, children: [(0, jsx_runtime_1.jsxs)(antd_1.Col, { span: 24, className: "u-margin-bottom-medium", children: [(0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsxs)("div", { style: {
+                                                            : "", _jsx("br", {}), _jsx("span", { className: "header-3", children: user?.username })] }) })] }), _jsx(Row, { gutter: 12, className: "text-center", style: { margin: "80px 0" }, children: _jsx(Col, { span: 24, children: _jsx("span", { className: "header-1b", children: "+1" }) }) })] }), _jsxs(Row, { gutter: 48, children: [_jsxs(Col, { span: 24, className: "u-margin-bottom-medium", children: [_jsx("br", {}), _jsxs("div", { style: {
                                                 justifyContent: "center",
                                                 display: "flex",
                                                 alignItems: "center",
-                                            }, className: "u-margin-bottom-medium", children: [(0, jsx_runtime_1.jsx)("span", { className: "paragraph-2r u-margin-right-small ", children: "Multiply your power up" }), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, { placement: "right", title: "You can add unlimited power to leonielx.io by joining their DAO. As a member of leonielx.io DAO you will purchase $LEONIE tokens which can be used to access content, buy NFTs and vote on community proposals. The more you buy, the more power you give to leonielx.io. This is only on Testnet! ", children: (0, jsx_runtime_1.jsx)("span", { children: (0, jsx_runtime_1.jsx)(Smallinfo_1.Smallinfo, {}) }) })] }), (0, jsx_runtime_1.jsx)(antd_1.Button, { className: "nl-button-primary", onClick: () => { }, children: "8X Power up" })] }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 24, className: "text-bold u-margin-bottom-medium", children: (0, jsx_runtime_1.jsx)(antd_1.Button, { className: "nl-button-primary inverse", onClick: toStakeMode, children: membershipValue
+                                            }, className: "u-margin-bottom-medium", children: [_jsx("span", { className: "paragraph-2r u-margin-right-small ", children: "Multiply your power up" }), _jsx(Tooltip, { placement: "right", title: "You can add unlimited power to leonielx.io by joining their DAO. As a member of leonielx.io DAO you will purchase $LEONIE tokens which can be used to access content, buy NFTs and vote on community proposals. The more you buy, the more power you give to leonielx.io. This is only on Testnet! ", children: _jsx("span", { children: _jsx(Smallinfo, {}) }) })] }), _jsx(Button, { className: "nl-button-primary", onClick: () => { }, children: "8X Power up" })] }), _jsx(Col, { span: 24, className: "text-bold u-margin-bottom-medium", children: _jsx(Button, { className: "nl-button-primary inverse", onClick: toStakeMode, children: membershipValue
                                             ? "∞ Stake more"
-                                            : "Join the DAO" }) })] }), (0, jsx_runtime_1.jsxs)("p", { className: "paragraph-2r text-left", children: ["This is only on Testnet! Need help?", (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2u", children: "Join our telegram group!" })] })] }) }), (0, jsx_runtime_1.jsx)(antd_1.Button, { onClick: powerup, className: "powerup-btn", children: (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b", style: { lineHeight: 0, margin: 0 }, children: "Power up" }) }), (0, jsx_runtime_1.jsx)(exports.UserStake, { onDone: () => setStakeMode(false), hideButton: true, user: user, mode: stakeMode ? exports.STAKE_STEPS.SELECT : exports.STAKE_STEPS.DISABLED })] }));
+                                            : "Join the DAO" }) })] }), _jsxs("p", { className: "paragraph-2r text-left", children: ["This is only on Testnet! Need help?", _jsx("br", {}), _jsx("span", { className: "paragraph-2u", children: "Join our telegram group!" })] })] }) }), _jsx(Button, { onClick: powerup, className: "powerup-btn", children: _jsx("p", { className: "paragraph-2b", style: { lineHeight: 0, margin: 0 }, children: "Power up" }) }), _jsx(UserStake, { onDone: () => setStakeMode(false), hideButton: true, user: user, mode: stakeMode ? STAKE_STEPS.SELECT : STAKE_STEPS.DISABLED })] }));
 };
-exports.UserPowerup = UserPowerup;
-const UserWidgetTopFixed = ({ user, }) => {
-    return ((0, jsx_runtime_1.jsx)("div", { style: { position: "fixed", left: 0, top: 54 }, children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${user?.username}`, children: (0, jsx_runtime_1.jsx)("div", { style: {
+export const UserWidgetTopFixed = ({ user, }) => {
+    return (_jsx("div", { style: { position: "fixed", left: 0, top: 54 }, children: _jsx(Link, { to: `/user/${user?.username}`, children: _jsx("div", { style: {
                     wordBreak: "break-all",
                     maxWidth: "100%",
                     minHeight: "1.5em",
                 }, children: user?.username }) }) }));
 };
-exports.UserWidgetTopFixed = UserWidgetTopFixed;
-const UserWidgetHeading = ({ user, setActiveKey }) => {
-    const u = (0, useCached_1.useCachedUser)({ username: user?.username }, true);
-    const state = (0, overmind_1.useAppState)();
+export const UserWidgetHeading = ({ user, setActiveKey }) => {
+    const u = useCachedUser({ username: user?.username }, true);
+    const state = useAppState();
+    const actions = useActions();
     if (!user)
-        return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
+        return _jsx(_Fragment, {});
     // return <Card title={""}
     // cover={<ContentImage width="100%" src={user.contentUrl} />}
     // >
@@ -223,39 +220,36 @@ const UserWidgetHeading = ({ user, setActiveKey }) => {
     const monthNumber = new Date(user.created || "").getMonth();
     const fullYear = new Date(user.created || "").getFullYear();
     const joinedDate = "Joined " + toMonthName(monthNumber) + " " + fullYear;
-    return ((0, jsx_runtime_1.jsxs)(antd_1.Row, { wrap: true, 
+    return (_jsxs(Row, { wrap: true, 
         // gutter={30}
         style: {
             textAlign: "center",
             minHeight: 250,
             paddingTop: "10px",
-        }, className: "app-main-full-width", children: [(0, jsx_runtime_1.jsxs)(antd_1.Col, { xs: 24, xl: 16, className: "nl-avatar", children: [(0, jsx_runtime_1.jsx)(antd_1.Row, { className: "user-widget__first-row", children: (0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 20, xl: 20, className: "text-left", children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { children: [(0, jsx_runtime_1.jsx)(antd_1.Avatar, { src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { ...u }) }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { xs: 18, xl: 18, className: "u-margin-left-medium", style: {
+        }, className: "app-main-full-width", children: [_jsxs(Col, { xs: 24, xl: 16, className: "nl-avatar", children: [_jsx(Row, { className: "user-widget__first-row", children: _jsx(Col, { xs: 20, xl: 20, className: "text-left", children: _jsxs(Row, { children: [_jsx(Avatar, { src: _jsx(ContentImage, { ...u }) }), _jsxs(Col, { xs: 18, xl: 18, className: "u-margin-left-medium", style: {
                                             display: "flex",
                                             alignItems: "baseline",
-                                        }, children: [(0, jsx_runtime_1.jsxs)(antd_1.Col, { children: [(0, jsx_runtime_1.jsx)("p", { className: "header-1r", children: u.username }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { className: "user__social-icons-wrapper", children: [(0, jsx_runtime_1.jsx)(SocialLink_1.SocialLink, { platform: "instagram", user: user, children: (0, jsx_runtime_1.jsx)(Instagram_1.Instagram, {}) }), (0, jsx_runtime_1.jsx)(SocialLink_1.SocialLink, { platform: "tumblr", user: user, children: (0, jsx_runtime_1.jsx)(Tumblr_1.Tumblr, {}) }), (0, jsx_runtime_1.jsx)(SocialLink_1.SocialLink, { platform: "soundcloud", user: user, children: (0, jsx_runtime_1.jsx)(Soundcloud_1.Soundcloud, {}) }), (0, jsx_runtime_1.jsx)(SocialLink_1.SocialLink, { platform: "twitter", user: user, children: (0, jsx_runtime_1.jsx)(Twitter_1.Twitter, {}) })] })] }), (0, jsx_runtime_1.jsx)(antd_1.Col, { style: { margin: "0 20px" }, children: u.id === state.api.auth.user?.id && ((0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: "/my/profile/update", children: (0, jsx_runtime_1.jsx)(Edit_1.Edit, {}) })) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { style: { flex: 1 }, xs: 24, children: (0, jsx_runtime_1.jsx)("p", { className: "header-3r", children: user.displayName }) })] })] }) }) }), (0, jsx_runtime_1.jsxs)(antd_1.Row, { className: "paragraph-2r text-left", style: { marginTop: "20px" }, children: [(0, jsx_runtime_1.jsx)(react_show_more_text_1.default, { lines: 3, more: (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2u", children: "Show more" }), less: (0, jsx_runtime_1.jsx)("span", { className: "paragraph-2u", children: "Show less" }), className: "content-css", anchorClass: "my-anchor-css-class", expanded: false, width: 280, truncatedEndingComponent: " ", children: user.description }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2b u-margin-left-small", style: { color: "#959595" }, children: joinedDate })] })] }), (0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, xl: 8, className: "user-widget-heading", children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { className: "user-widget-heading  user-widget__second-row", style: { width: "100%", textAlign: "left" }, justify: "start", children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, sm: 12, className: "username", children: (0, jsx_runtime_1.jsxs)(antd_1.Row, { className: "user-widget-heading__powering", children: [(0, jsx_runtime_1.jsxs)(antd_1.Col, { xs: 12, xl: 12, children: [(0, jsx_runtime_1.jsx)("p", { onClick: () => setActiveKey("1"), style: {
+                                        }, children: [_jsxs(Col, { children: [_jsx("p", { className: "header-1r", children: u.username }), _jsxs(Col, { className: "user__social-icons-wrapper", children: [_jsx(SocialLink, { platform: "instagram", user: user, children: _jsx(Instagram, {}) }), _jsx(SocialLink, { platform: "tumblr", user: user, children: _jsx(TumblrIcon, {}) }), _jsx(SocialLink, { platform: "soundcloud", user: user, children: _jsx(Soundcloud, {}) }), _jsx(SocialLink, { platform: "twitter", user: user, children: _jsx(TwitterIcon, {}) })] })] }), _jsx(Col, { style: { margin: "0 20px" }, children: u.id === state.api.auth.user?.id && (_jsx(Link, { to: "/my/profile/update", children: _jsx(Edit, {}) })) }), _jsx(Col, { style: { flex: 1 }, xs: 24, children: _jsx("p", { className: "header-3r", children: user.displayName }) })] })] }) }) }), _jsxs(Row, { className: "paragraph-2r text-left", style: { marginTop: "20px" }, children: [_jsx(ShowMoreText, { lines: 3, more: _jsx("span", { className: "paragraph-2u", children: "Show more" }), less: _jsx("span", { className: "paragraph-2u", children: "Show less" }), className: "content-css", anchorClass: "my-anchor-css-class", expanded: false, width: 280, truncatedEndingComponent: " ", children: user.description }), _jsx("p", { className: "paragraph-2b u-margin-left-small", style: { color: "#959595" }, children: joinedDate })] })] }), _jsx(Col, { xs: 24, xl: 8, className: "user-widget-heading", children: _jsxs(Row, { className: "user-widget-heading  user-widget__second-row", style: { width: "100%", textAlign: "left" }, justify: "start", children: [_jsx(Col, { xs: 24, sm: 12, className: "username", children: _jsxs(Row, { className: "user-widget-heading__powering", children: [_jsxs(Col, { xs: 12, xl: 12, children: [_jsx("p", { onClick: () => setActiveKey("1"), style: {
                                                     cursor: "pointer",
-                                                }, className: "header-1r", children: u.powered || 0 }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2r", children: "powered by" })] }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { xs: 12, xl: 12, children: [(0, jsx_runtime_1.jsx)("p", { onClick: () => setActiveKey("2"), style: { cursor: "pointer" }, className: "header-1r", children: u.powering || 0 }), (0, jsx_runtime_1.jsx)("p", { className: "paragraph-2r", children: "powering" })] })] }) }), (0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, sm: 12, className: "powerup text-right", children: (0, jsx_runtime_1.jsx)(exports.UserPowerup, { user: u }) })] }) })] }));
+                                                }, className: "header-1r", children: u.powered || 0 }), _jsx("p", { className: "paragraph-2r", children: "powered by" })] }), _jsxs(Col, { xs: 12, xl: 12, children: [_jsx("p", { onClick: () => setActiveKey("2"), style: { cursor: "pointer" }, className: "header-1r", children: u.powering || 0 }), _jsx("p", { className: "paragraph-2r", children: "powering" })] })] }) }), _jsxs(Col, { xs: 24, sm: 12, className: "powerup text-right nl-vertical-space", children: [_jsx(UserPowerup, { user: u }), _jsx("div", { children: _jsx(Button, { className: "primary", onClick: () => actions.routing.historyPush({ location: "/dao/owner/" + u?.username }), children: "DAO" }) })] })] }) })] }));
 };
-exports.UserWidgetHeading = UserWidgetHeading;
 // export const UserSocialInfo: NLView<{ user?: UserReadPrivateResponse }> = ({ user }) => <div>{JSON.stringify</div>
-const UserSocialInfo = ({ user, }) => ((0, jsx_runtime_1.jsx)(antd_1.List
+export const UserSocialInfo = ({ user, }) => (_jsx(List
 // header="Activity Stream"
 , { 
     // header="Activity Stream"
     itemLayout: "horizontal", dataSource: "instagram,soundcloud,twitter,facebook,pinterest"
         .split(/,/)
         .filter((k) => user[k]), renderItem: (k) => {
-        return ((0, jsx_runtime_1.jsx)(antd_1.List.Item, { children: (0, jsx_runtime_1.jsx)(antd_1.List.Item.Meta, { description: (0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: k, value: user[k], link: `https://www.${k}.com/${user[k]}` }) }) }));
+        return (_jsx(List.Item, { children: _jsx(List.Item.Meta, { description: _jsx(DataRow, { title: k, value: user[k], link: `https://www.${k}.com/${user[k]}` }) }) }));
     } }));
-exports.UserSocialInfo = UserSocialInfo;
-const UsersList = ({ users, powerUp, title, layout }) => ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [title ? (0, jsx_runtime_1.jsx)("h4", { className: "header-4", children: title }) : "", (0, jsx_runtime_1.jsx)(antd_1.List
+export const UsersList = ({ users, powerUp, title, layout }) => (_jsxs(_Fragment, { children: [title ? _jsx("h4", { className: "header-4", children: title }) : "", _jsx(List
         // header="Activity Stream"
         , { 
             // header="Activity Stream"
             itemLayout: layout || "horizontal", dataSource: users || [], renderItem: (u) => {
-                return ((0, jsx_runtime_1.jsx)(antd_1.List.Item, { children: (0, jsx_runtime_1.jsx)(antd_1.List.Item.Meta, { avatar: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { ...u }) }), description: (0, jsx_runtime_1.jsx)(antd_1.Row, { align: "middle", gutter: 18, className: "app-main-full-width-only", justify: "start", wrap: true, children: (0, jsx_runtime_1.jsxs)(antd_1.Col, { sm: 24, xxl: 24, children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${u.username}`, className: "paragraph-1r", children: u.username }), (0, jsx_runtime_1.jsx)(Paragraph_1.default, { style: { marginBottom: "0" }, className: "paragraph-2r", children: u.powered || "" })] }) }) }) }));
+                return (_jsx(List.Item, { children: _jsx(List.Item.Meta, { avatar: _jsx(Avatar, { src: _jsx(ContentImage, { ...u }) }), description: _jsx(Row, { align: "middle", gutter: 18, className: "app-main-full-width-only", justify: "start", wrap: true, children: _jsxs(Col, { sm: 24, xxl: 24, children: [_jsx(Link, { to: `/user/${u.username}`, className: "paragraph-1r", children: u.username }), _jsx(Paragraph, { style: { marginBottom: "0" }, className: "paragraph-2r", children: u.powered || "" })] }) }) }) }));
             } })] }));
-exports.UsersList = UsersList;
 // // header="Activity Stream"
 // items={users || []}
 // render={(u: UserReadPublicResponse) => {
@@ -267,49 +261,46 @@ const sliderStyle = {
     padding: 12,
     width: "min(100%,300px)",
 };
-const UsersHorizontalScroller = ({ users, powerUp, title, layout }) => {
-    const { disableScroll, enableScroll } = (0, usePreventBodyScroll_1.default)();
+export const UsersHorizontalScroller = ({ users, powerUp, title, layout }) => {
+    const { disableScroll, enableScroll } = usePreventBodyScroll();
     console.log(users);
-    return ((0, jsx_runtime_1.jsxs)("div", { style: {
+    return (_jsxs("div", { style: {
             width: "100%",
             height: 200,
             marginBottom: 100,
             marginTop: "1em",
-        }, onMouseEnter: disableScroll, onMouseLeave: enableScroll, children: [title ? ((0, jsx_runtime_1.jsx)("h2", { className: "app-main-full-width header-2", children: title })) : (""), (0, jsx_runtime_1.jsx)(react_horizontal_scrolling_menu_1.ScrollMenu
+        }, onMouseEnter: disableScroll, onMouseLeave: enableScroll, children: [title ? (_jsx("h2", { className: "app-main-full-width header-2", children: title })) : (""), _jsx(ScrollMenu
             // LeftArrow={<LeftOutlined />} RightArrow={<RightOutlined />}
             , { children: users?.map((u, i) => {
-                    return ((0, jsx_runtime_1.jsxs)(antd_1.Row, { align: "middle", style: {
+                    return (_jsxs(Row, { align: "middle", style: {
                             width: /*180*/ "auto",
                             height: 150,
                             marginLeft: "20px",
                             marginRight: "20px",
                             flexWrap: "inherit",
-                        }, justify: "center", wrap: true, children: [(0, jsx_runtime_1.jsx)(antd_1.Col
+                        }, justify: "center", wrap: true, children: [_jsx(Col
                             /*sm={16} xxl={6}*/
                             , { 
                                 /*sm={16} xxl={6}*/
-                                className: "u-margin-small", children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "medium", ...u }) }) }), (0, jsx_runtime_1.jsxs)(antd_1.Col /*sm={16} xxl={8}*/, { children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${u.username}`, className: "paragraph-1b", children: u.username }), (0, jsx_runtime_1.jsx)("br", {}), u.powered || ""] })] }));
-                }) || (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {}) })] }));
+                                className: "u-margin-small", children: _jsx(Avatar, { src: _jsx(ContentImage, { size: "medium", ...u }) }) }), _jsxs(Col /*sm={16} xxl={8}*/, { children: [_jsx(Link, { to: `/user/${u.username}`, className: "paragraph-1b", children: u.username }), _jsx("br", {}), u.powered || ""] })] }));
+                }) || _jsx(_Fragment, {}) })] }));
 };
-exports.UsersHorizontalScroller = UsersHorizontalScroller;
-const UsersGrid = ({ users, powerUp, title, layout }) => ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [title ? (0, jsx_runtime_1.jsx)("h2", { className: "app-main-full-width", children: title }) : "", (0, jsx_runtime_1.jsx)(ItemGrid_1.ItemGrid
+export const UsersGrid = ({ users, powerUp, title, layout }) => (_jsxs(_Fragment, { children: [title ? _jsx("h2", { className: "app-main-full-width", children: title }) : "", _jsx(ItemGrid
         // header="Activity Stream"
         , { 
             // header="Activity Stream"
             items: users || [], render: (u) => {
-                return ((0, jsx_runtime_1.jsxs)(antd_1.Row, { align: "middle", gutter: 6, style: { padding: 12 }, justify: "center", wrap: true, children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { sm: 10, xxl: 4, children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { size: "small", ...u }) }) }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { sm: 14, xxl: 20, children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${u.username}`, children: u.username }), (0, jsx_runtime_1.jsx)("br", {}), u.powered || ""] })] }));
+                return (_jsxs(Row, { align: "middle", gutter: 6, style: { padding: 12 }, justify: "center", wrap: true, children: [_jsx(Col, { sm: 10, xxl: 4, children: _jsx(Avatar, { src: _jsx(ContentImage, { size: "small", ...u }) }) }), _jsxs(Col, { sm: 14, xxl: 20, children: [_jsx(Link, { to: `/user/${u.username}`, children: u.username }), _jsx("br", {}), u.powered || ""] })] }));
             } })] }));
-exports.UsersGrid = UsersGrid;
-const UserSocialInfoRow = ({ user, }) => ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "instagram,soundcloud,twitter,facebook,pinterest,tumblr" //,phone,status"
+export const UserSocialInfoRow = ({ user, }) => (_jsx(_Fragment, { children: "instagram,soundcloud,twitter,facebook,pinterest,tumblr" //,phone,status"
         .split(/,/)
         .filter((k) => user[k])
-        .map((k) => ((0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: k, value: user[k], link: `https://www.${k}.com/${user[k]}` }))) }));
-exports.UserSocialInfoRow = UserSocialInfoRow;
-const PoolInfoDataRow = ({ pool, }) => {
-    const poolInfo = (0, useCached_1.useCachedPool)(pool);
-    const myPools = (0, overmind_1.useAppState)().newcoin.pools;
-    const user = (0, useCached_1.useCachedUser)({ username: poolInfo.owner });
-    return ((0, jsx_runtime_1.jsxs)(antd_1.Row, { style: { marginBottom: 10 }, children: [(0, jsx_runtime_1.jsx)(antd_1.Col, { span: 4, children: (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: `/user/${user.username}`, children: (0, jsx_runtime_1.jsx)(antd_1.Avatar, { src: (0, jsx_runtime_1.jsx)(Image_1.ContentImage, { ...user }), className: "avatar-image-small" }) }) }), (0, jsx_runtime_1.jsxs)(antd_1.Col, { span: 14, children: [(0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsxs)(react_router_dom_1.Link, { to: `/user/${user.username}`, children: ["$", user.username?.toUpperCase(), "\u00A0", (0, jsx_runtime_1.jsx)("b", { children: myPools[poolInfo?.code] / 10000 })] }) }), (0, jsx_runtime_1.jsxs)("small", { children: ["total cap: ", Math.round(Number(poolInfo?.total.quantity.toString().replace(/NCO/, "")))] })] }), (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 6, children: (0, jsx_runtime_1.jsx)(exports.UserStake, { user: user }) })] })
+        .map((k) => (_jsx(DataRow, { title: k, value: user[k], link: `https://www.${k}.com/${user[k]}` }))) }));
+export const PoolInfoDataRow = ({ pool, }) => {
+    const poolInfo = useCachedPool(pool);
+    const myPools = useAppState().newcoin.pools;
+    const user = useCachedUser({ username: poolInfo.owner });
+    return (_jsxs(Row, { style: { marginBottom: 10 }, children: [_jsx(Col, { span: 4, children: _jsx(Link, { to: `/user/${user.username}`, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: "avatar-image-small" }) }) }), _jsxs(Col, { span: 14, children: [_jsx("div", { children: _jsxs(Link, { to: `/user/${user.username}`, children: ["$", user.newcoinTicker?.toUpperCase(), "\u00A0", _jsx("b", { children: ~~myPools[poolInfo?.code] })] }) }), _jsxs("small", { children: ["TVL: ", poolInfo.total.quantity] })] }), _jsx(Col, { span: 6, children: _jsx(UserStake, { user: user }) })] })
     // <div>
     // 			<CreatorWidget avatarClassName="avatar-image-small" creator={{ username: poolInfo.owner }} />
     // 			{pool?.code} ${myPools[poolInfo?.code]} ${poolInfo?.code} 
@@ -332,28 +323,24 @@ const PoolInfoDataRow = ({ pool, }) => {
     // );
     // <>${poolInfo?.owner} {JSON.stringify(poolInfo)}</>;
 };
-exports.PoolInfoDataRow = PoolInfoDataRow;
-const UserNewcoinPoolsParticipation = ({ user = {}, onStakeStart }) => {
-    const nc = (0, overmind_1.useAppState)().newcoin;
-    return ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: Object.keys(nc.pools).map((code) => ((0, jsx_runtime_1.jsx)(exports.PoolInfoDataRow, { pool: { code } }))
+export const UserNewcoinPoolsParticipation = ({ user = {}, onStakeStart }) => {
+    const nc = useAppState().newcoin;
+    return (_jsx(_Fragment, { children: Object.keys(nc.pools).map((code) => (_jsx(PoolInfoDataRow, { pool: { code } }))
         // <DataRow
         //     title={<PoolInfo pool={{code}} />}
         //     value={`${val as string} ${code}`}
         // />
         ) }));
 };
-exports.UserNewcoinPoolsParticipation = UserNewcoinPoolsParticipation;
-const UserNewcoinInfo = ({ user = {}, }) => {
-    const state = (0, overmind_1.useAppState)();
-    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: "newcoin domain name", value: user.username, link: `https://explorer-dev.newcoin.org/account/${user.username}`, collapse: true }), (0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: "account balance", value: state.newcoin.account.acc_balances, collapse: true }), (0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: "newcoin pool", value: (0, jsx_runtime_1.jsx)(Links_1.BlockExplorerLink, { id: user.newcoinPoolId }), collapse: true }), (0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: "newcoin account", value: (0, jsx_runtime_1.jsx)(Links_1.BlockExplorerLink, { id: user.newcoinAccTx }), collapse: true }), (0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: "newcoin publisher public key", value: (0, jsx_runtime_1.jsx)(CryptoEntities_1.HashDisplay, { hash: user.newcoinPublisherPublicKey }), collapse: true }), (0, jsx_runtime_1.jsx)(DataRow_1.DataRow, { title: "newcoin publisher private key", value: (0, jsx_runtime_1.jsx)(RevealInfo_1.RevealInfo, { children: (0, jsx_runtime_1.jsx)(CryptoEntities_1.HashDisplay, { hash: user.newcoinPublisherPrivateKey }) }), collapse: true })] }));
+export const UserNewcoinInfo = ({ user = {}, }) => {
+    const state = useAppState();
+    return (_jsxs(_Fragment, { children: [_jsx(DataRow, { title: "newcoin domain name", value: user.username, link: `https://explorer-dev.newcoin.org/account/${user.username}`, collapse: true }), _jsx(DataRow, { title: "account balance", value: state.newcoin.account.acc_balances, collapse: true }), _jsx(DataRow, { title: "newcoin pool", value: _jsx(BlockExplorerLink, { id: user.newcoinPoolId }), collapse: true }), _jsx(DataRow, { title: "newcoin account", value: _jsx(BlockExplorerLink, { id: user.newcoinAccTx }), collapse: true }), _jsx(DataRow, { title: "newcoin publisher public key", value: _jsx(HashDisplay, { hash: user.newcoinPublisherPublicKey }), collapse: true }), _jsx(DataRow, { title: "newcoin publisher private key", value: _jsx(RevealInfo, { children: _jsx(HashDisplay, { hash: user.newcoinPublisherPrivateKey }) }), collapse: true })] }));
 };
-exports.UserNewcoinInfo = UserNewcoinInfo;
-const UserPrivateInfo = ({ user, }) => ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: user &&
+export const UserPrivateInfo = ({ user, }) => (_jsx(_Fragment, { children: user &&
         "instagram,soundcloud,twitter,facebook,pinterest,phone,status"
             .split(/,/)
             .filter((k) => user[k])
             .map((k) => {
-            return ((0, jsx_runtime_1.jsx)(antd_1.Row, { style: { width: "100%" }, children: (0, jsx_runtime_1.jsxs)(antd_1.Col, { span: 12, children: [user.firstName, " ", user.lastName, " ", user.fullName] }) }));
+            return (_jsx(Row, { style: { width: "100%" }, children: _jsxs(Col, { span: 12, children: [user.firstName, " ", user.lastName, " ", user.fullName] }) }));
         }) }));
-exports.UserPrivateInfo = UserPrivateInfo;
 //# sourceMappingURL=UserWidget.js.map

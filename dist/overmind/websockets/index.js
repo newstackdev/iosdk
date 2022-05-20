@@ -1,14 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const overmind_1 = require("overmind");
-const effects_1 = __importDefault(require("./effects"));
-const lodash_1 = require("lodash");
-const config_1 = require("../../config");
-const capFirst_1 = require("../../utils/capFirst");
-const toggleWebSocket = (0, overmind_1.pipe)((0, overmind_1.debounce)(500), async ({ state, effects, actions }) => {
+import { pipe, debounce, filter } from "overmind";
+import websocket from "./effects";
+import { uniq } from "lodash";
+import { newlifeWebsocketsServer } from "../../config";
+import { capFirst } from "../../utils/capFirst";
+const toggleWebSocket = pipe(debounce(500), async ({ state, effects, actions }) => {
     if (!state.api.auth.authorized)
         return;
     const token = state.firebase.token;
@@ -26,7 +21,7 @@ const toggleWebSocket = (0, overmind_1.pipe)((0, overmind_1.debounce)(500), asyn
         // effects.ux.notification.open({ message: ev.data });
     });
 });
-const processIncomingNewcoin = (0, overmind_1.pipe)((0, overmind_1.filter)((_, { event: { type } }) => type === 'newcoin'), 
+const processIncomingNewcoin = pipe(filter((_, { event: { type } }) => type === 'newcoin'), 
 // filter((_, { event: { payload } }) => (get(payload, "inbound.0.value.label") != "session")),
 ({ state, effects }, { event }) => {
     const msg = event.payload.message;
@@ -47,24 +42,22 @@ const modelProcessors = {
         actions.api.user.cache({ user: { ...curr, ...u } });
         // state.api.cache.users.byId[u.id ?? ""] = { ...state.api.cache.users.byId[u.id ?? ""], ...u };
         // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
-        (state.api.auth.user?.id === u.id) &&
-            Object.assign(state.api.auth.user, { ...u });
     },
     post: ({ actions, state }, p) => {
         state.api.cache.posts[p.id ?? ""] = { ...state.api.cache.posts[p.id ?? ""], ...p };
     },
     mood: () => { }
 };
-const processIncomingModelUpdated = (0, overmind_1.pipe)((0, overmind_1.filter)((_, { event: { type } }) => type === 'modelUpdated'), 
+const processIncomingModelUpdated = pipe(filter((_, { event: { type } }) => type === 'modelUpdated'), 
 // filter((_, { event: { payload } }) => (get(payload, "inbound.0.value.label") != "session")),
 (ctx, { event }) => {
     const { state } = ctx;
     const model = event.model === "user" ? "profile" : event.model;
-    const what = (0, capFirst_1.capFirst)(model);
+    const what = capFirst(model);
     modelProcessors[event.model] && modelProcessors[event.model](ctx, event.payload.value);
     const inRels = event.payload.inbound?.filter(Boolean);
     const outRels = event.payload.outbound?.filter(Boolean);
-    const rels = (0, lodash_1.uniq)([
+    const rels = uniq([
         ...(inRels || []).map((r) => r.value.label),
         // ...(outRels || []).map((r: any) => r.value.label)
     ]).filter(Boolean);
@@ -106,10 +99,10 @@ const actions = {
     processIncomingModelUpdated,
     processIncomingNewcoin
 };
-exports.default = {
+export default {
     state: {
         socket: null,
-        url: config_1.newlifeWebsocketsServer,
+        url: newlifeWebsocketsServer,
         messages: {
             incoming: [],
             activityStream: [],
@@ -118,7 +111,7 @@ exports.default = {
     },
     actions,
     effects: {
-        newlife: (0, effects_1.default)((token) => `${config_1.newlifeWebsocketsServer}?token=${token}`)
+        newlife: websocket((token) => `${newlifeWebsocketsServer}?token=${token}`)
     }
 };
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LICENSES = void 0;
-exports.LICENSES = [
+export const LICENSES = [
     [
         "Creative Commons - No Rights Reserved",
         "CC0",
@@ -46,5 +43,39 @@ exports.LICENSES = [
     ],
     ["Commercial - Exclusive", "CO-EX", ""],
     ["Commercial - Non-exclusive", "CO-NEX", ""],
+];
+export const OEMBED_PROVIDERS = [
+    {
+        provider_name: "YouTube",
+        provider_url: "https://www.youtube.com/",
+        endpoints: [
+            {
+                schemes: [
+                    "https://*.youtube.com/watch*",
+                    "https://*.youtube.com/v/*",
+                    "https://youtu.be/*",
+                    "https://*.youtube.com/playlist?list=*",
+                    "https://youtube.com/playlist?list=*",
+                    "https://*.youtube.com/shorts*",
+                ],
+                url: "https://www.youtube.com/oembed",
+                discovery: true,
+            },
+        ],
+    },
+    {
+        provider_name: "Twitter",
+        provider_url: "http://www.twitter.com/",
+        endpoints: [
+            {
+                schemes: [
+                    "https://twitter.com/*",
+                    "https://twitter.com/*/status/*",
+                    "https://*.twitter.com/*/status/*",
+                ],
+                url: "https://publish.twitter.com/oembed",
+            },
+        ],
+    },
 ];
 //# sourceMappingURL=constants.js.map

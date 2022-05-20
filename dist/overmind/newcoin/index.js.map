@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/newcoin/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,mDAAqC;AACrC,mDAAqC;AACrC,oDAA4B;AAE5B,kBAAe;IACX,OAAO;IACP,OAAO;IACP,KAAK,EAAL,eAAK;CACR,CAAA"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/newcoin/index.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,WAAW,CAAC;AACrC,OAAO,KAAK,OAAO,MAAM,WAAW,CAAC;AACrC,OAAO,KAAK,MAAM,SAAS,CAAC;AAE5B,eAAe;IACX,OAAO;IACP,OAAO;IACP,KAAK;CACR,CAAA"}

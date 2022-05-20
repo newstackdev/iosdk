@@ -39,15 +39,17 @@ import TextArea from "antd/lib/input/TextArea";
 import { HashDisplay } from "./CryptoEntities";
 import ShowMoreText from "react-show-more-text";
 import { Instagram } from "./Icons/Instagram";
-import { Tumblr } from "./Icons/Tumblr";
+import { TumblrIcon } from "./Icons/TumblrIcon";
 import { Soundcloud } from "./Icons/Soundcloud";
-import { Twitter } from "./Icons/Twitter";
+import { TwitterIcon } from "./Icons/TwitterIcon";
 import { Edit } from "./Icons/Edit";
 import { SocialLink } from "./SocialLink";
-import { Info } from "./Icons/Info";
 import { Smallinfo } from "./Icons/Smallinfo";
-import { CreatorWidget } from "./Creators";
-import { UserStakeButton } from "../Pages/User/UserStake";
+import { STAKE_STEPS, STAKE_STEPS_TYPE } from "src/overmind/flows/stake/state";
+
+// import { Info } from "./Icons/Info";
+// import { CreatorWidget } from "./Creators";
+// import { UserStakeButton } from "../Pages/User/UserStake";
 
 const ellipsisStyle = {
 	maxWidth: 125,
@@ -73,18 +75,16 @@ export const UserWidgetVertical: NLView<{ user?: UserReadPublicResponse }> = ({
 	);
 };
 
-export const STAKE_STEPS = {
-	DISABLED: -1,
-	NODAO: 0,
-	SELECT: 1,
-	CONFIRM: 2,
-	DONE: 3,
-};
-const round = (v: number) => Math.round(v * 1000) / 1000;
 
+const round = (v: number) => Math.round(v * 1000) / 1000;
+/**
+ * User stake widget.
+ * @param 
+ * @returns 
+ */
 export const UserStake: NLView<{
 	user?: UserReadPrivateResponse;
-	mode?: number;
+	mode?: STAKE_STEPS_TYPE;
 	value?: number;
 	minValue?: number;
 	hideButton?: boolean;
@@ -117,14 +117,15 @@ export const UserStake: NLView<{
 
 		const [tx, setTx] = useState("");
 
-		const [_mode, setMode] = useState(mode ?? STAKE_STEPS.DISABLED);
+		const [_mode, setMode] = useState<STAKE_STEPS_TYPE>(mode ?? STAKE_STEPS.DISABLED);
 
 		const _user = useCachedUser(user, true);
 
-		const balances = state.newcoin.account?.acc_balances || [];
-		const ncoBalance = Number((balances[0] || "").replace(/ NCO$/, ""));
+		const balances = state.newcoin.mainPool?.acc_balances || []; //state.newcoin.account?.acc_balances || [];
+		const ncoBalance = Number((balances[0] || "").replace(/ GNCO$/, ""));
 
 		const membershipValue = state.newcoin.pools[poolInfo.code];
+		const displayMembershipValue = membershipValue;
 
 		minValue = minValue || 100;
 
@@ -185,14 +186,12 @@ export const UserStake: NLView<{
 			setMode(STAKE_STEPS.SELECT);
 		}
 
-		const displayMembershipValue = membershipValue / 10000;
 
 		return (
 			<>
-
 				<Modal
 					closeIcon={<CrossCircle />}
-					getContainer={getContainer}
+					// getContainer={getContainer}
 					visible={_mode == STAKE_STEPS.NODAO}
 					cancelText="Ok"
 					// onCancel={() => setMode(STAKE_STEPS.SELECT)}
@@ -225,7 +224,7 @@ export const UserStake: NLView<{
 				<Modal
 					closeIcon={<CrossCircle />}
 					visible={_mode === STAKE_STEPS.DONE}
-					getContainer={getContainer}
+					// getContainer={getContainer}
 					okText="Yes"
 					cancelText="No"
 					onOk={() => stake()}
@@ -336,8 +335,8 @@ export const UserStake: NLView<{
 						{membershipValue > 0 ? (
 							<p className="header-3">
 								{/* Join {_user?.username || ""}'s DAO */}
-								Your membership in { poolInfo.owner.toUpperCase() } DAO is at {displayMembershipValue}. Stake{" "}
-								{_value} NCO more to increase your membership
+								Your membership in {poolInfo.owner.toUpperCase()} DAO is at {displayMembershipValue}. Stake{" "}
+								{_value} GNCO more to increase your membership
 								value.
 							</p>
 						) : (
@@ -395,7 +394,7 @@ export const UserStake: NLView<{
 							<span className="paragraph-2u">
 								Join our telegram group!
 							</span>
-						</p>
+						</p>id
 					</Col>
 				</Modal>
 				<Modal
@@ -424,9 +423,9 @@ export const UserStake: NLView<{
 						<Col span={24}>
 							<p className="header-3">
 								{membershipValue > 0 ? (
-									<>Your stake in {_user.username} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake{" "}
-								{_value} NCO more to increase your membership
-								value.</>
+									<>Your stake in {_user.newcoinTicker} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake{" "}
+										{_value} GNCO more to increase your membership
+										value.</>
 								)
 									:
 
@@ -540,6 +539,7 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 		setStakeMode(true);
 		setVisible(false);
 	};
+
 
 	// () => actions.routing.historyPush({ location: `/user/stake/${u.id}` })
 	return (
@@ -661,6 +661,7 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 					Power up
 				</p>
 			</Button>
+			{/* stakeMode: {stakeMode.toString()} */}
 			<UserStake
 				onDone={() => setStakeMode(false)}
 				hideButton={true}
@@ -698,6 +699,7 @@ export const UserWidgetHeading: NLView<{
 }> = ({ user, setActiveKey }) => {
 	const u = useCachedUser({ username: user?.username }, true);
 	const state = useAppState();
+	const actions = useActions();
 
 	if (!user) return <></>;
 	// return <Card title={""}
@@ -756,7 +758,7 @@ export const UserWidgetHeading: NLView<{
 											platform="tumblr"
 											user={user}
 										>
-											<Tumblr />
+											<TumblrIcon />
 										</SocialLink>
 										<SocialLink
 											platform="soundcloud"
@@ -768,7 +770,7 @@ export const UserWidgetHeading: NLView<{
 											platform="twitter"
 											user={user}
 										>
-											<Twitter />
+											<TwitterIcon />
 										</SocialLink>
 									</Col>
 								</Col>
@@ -853,8 +855,12 @@ export const UserWidgetHeading: NLView<{
 							""
 						)} */}
 					</Col>
-					<Col xs={24} sm={12} className="powerup text-right">
+					<Col xs={24} sm={12} className="powerup text-right nl-vertical-space">
 						<UserPowerup user={u} />
+						<div>
+							<Button className="primary" onClick={() => actions.routing.historyPush({ location: "/dao/owner/" + u?.username })}>DAO</Button>
+						</div>
+
 						{/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
 					</Col>
 				</Row>
@@ -1113,12 +1119,13 @@ export const PoolInfoDataRow: NLView<{
 					<div>
 						<Link to={`/user/${user.username}`}>
 
-							${user.username?.toUpperCase()}&nbsp;
-							<b>{myPools[poolInfo?.code] / 10000}</b>
+							${user.newcoinTicker?.toUpperCase()}&nbsp;
+							<b>{~~myPools[poolInfo?.code]}</b>
 						</Link>
 					</div>
 					<small>
-						total cap: {Math.round(Number(poolInfo?.total.quantity.toString().replace(/NCO/, "")))}
+						TVL: {poolInfo.total.quantity}
+						{/* {Math.round(Number(poolInfo?.total.quantity.toString().replace(/NCO/, "")))} */}
 					</small>
 				</Col>
 

@@ -1,4 +1,5 @@
 import { MoodReadResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
+import { omit } from "lodash";
 import { json } from "overmind";
 import { useEffect } from "react";
 import { useActions, useAppState } from "../overmind";
@@ -173,3 +174,23 @@ export const useCachedPoolByCode = (pool: { code?: string }, force?: boolean) =>
     }, [pool.code]);
     return pool.code && state.newcoin.cache.pools.byCode[pool.code];
 }
+
+export const useCachedDaoProposals = (params?: { daoOwner?: string }) => {
+    const { daoOwner } = params || {};
+    const state = useAppState();
+    const actions = useActions();
+
+    const _daoOwner = daoOwner || state.config.settings.newcoin.daoDomain;
+
+    useEffect(() => {
+        actions.newcoin.daoGetProposals({ daoOwner: _daoOwner })
+    }, [daoOwner]);
+
+    return { ...(state.newcoin.daos[_daoOwner]?.proposals || {}), daoOwner: _daoOwner } ;
+};
+
+export const useCachedDaoProposal = ({ daoOwner, proposalId }: { daoOwner?: string, proposalId?: string }) => {
+    const daoInfo = useCachedDaoProposals({ daoOwner });
+
+    return { ...(daoInfo.rows || [])[proposalId || 0] || {}, ...omit(daoInfo, "rows") };
+};

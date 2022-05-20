@@ -7,7 +7,15 @@ export declare const newlifeMediaBucket: any;
 export declare const newlifeWebsocketsServer: any;
 export declare const stripeKey: any;
 export declare const config: {
+    env: {
+        stage: string;
+    };
     settings: {
+        newcoin: {
+            daoId: string;
+            daoDomain: string;
+            poolId: string;
+        };
         firebaseConfig: FirebaseConfig;
         newlife: {
             baseUrl: string;
@@ -26,7 +34,7 @@ export declare const config: {
         overrides: {};
         noBackButton: string[];
         defaultRoute: {
-            condition: (state: any) => boolean;
+            condition: (state: any) => any;
             defaultLocation: (_state: any) => string;
         };
     };

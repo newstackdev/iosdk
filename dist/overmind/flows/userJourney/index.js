@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const state = {
     flags: {},
 };
@@ -16,7 +14,7 @@ const actions = {
     setFlag,
     onInitializeOvermind,
 };
-exports.default = {
+export default {
     actions,
     state,
 };

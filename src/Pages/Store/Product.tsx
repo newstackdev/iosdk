@@ -213,6 +213,8 @@ const CheckoutForm = ({
 	);
 };
 
+const estimateUsernamePrice = (priceId) => ~~(8 * (10 ** (5 - (priceId.length - 3))));
+
 export const Product = ({
 	embedded,
 	setNext,
@@ -224,9 +226,11 @@ export const Product = ({
 
 	const state = useAppState();
 	const actions = useActions();
-	const [price, setPrice] = useState<any>("io-domain-presale-standard");
+	// const [price, setPrice] = useState<any>("io-domain-presale-standard");
+	const requestedUsername = state.flows.user.create.form.username;
+	const price = estimateUsernamePrice(requestedUsername);
 
-	console.log(price);
+	console.log(requestedUsername);
 
 	useEffect(() => {
 		if (
@@ -241,12 +245,12 @@ export const Product = ({
 	useEffect(() => {
 		if (!state.api.auth.user?.id) return;
 		
-		return;
+		// return;
 
 		(async () => {
 			const newPaymentIntent =
 				await state.api.client.payment.stripeIntentCreate({
-					items: [{ productId: "io-domain-presale", priceId: price }],
+					items: [{ productId: "io-domain-sale", priceId: requestedUsername }],
 				});
 
 			setFlowState({
@@ -256,7 +260,7 @@ export const Product = ({
 				},
 			});
 		})();
-	}, [price, state.api.auth.user?.id, state.auth.authenticated]);
+	}, [price, state.api.auth.user, state.auth.authenticated]);
 
 	const paymentIntent = flowState.intent || {};
 	const options = flowState.options;
@@ -270,7 +274,7 @@ export const Product = ({
 		);
 	return (
 		<div className="app-main-full-height-only-with-bottom-control">
-			<Checkbox.Group
+			{/* <Checkbox.Group
 				value={price}
 				onChange={(v) => setPrice(v[v.length - 1])}
 				style={{ width: "100%" }}
@@ -304,12 +308,13 @@ export const Product = ({
 						<p className="paragraph-2b">lifetime</p>
 					</Col>
 				</Row>
-			</Checkbox.Group>
+			</Checkbox.Group> */}
 			<br />
+			{/* Estimated: domain price: ${price} */}
 			<br />
 			{(paymentIntent as any)["amount"] && (
 				<h2 className="header-2">
-					Total: {(paymentIntent as any)["amount"] / 100}EUR
+					Total for premium domain <b>{requestedUsername}</b>: {(paymentIntent as any)["amount"] / 100}EUR
 				</h2>
 			)}
 			<br />

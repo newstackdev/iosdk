@@ -15,6 +15,7 @@ import {
 import Spotlights from "../../Components/Spotlights";
 import TopFolders from "../../Components/TopFolders";
 import Creators, { TopCreators } from "../../Components/Creators";
+import { NewcoinRecept } from "src/Components/Recepts";
 
 export const Explore: NLView = () => {
 	const state = useAppState();
@@ -31,6 +32,9 @@ export const Explore: NLView = () => {
 	useEffect(() => {
 		!users.length && actions.lists.top.users();
 	}, []);
+
+	// if(true)
+	// 	return <NewcoinRecept visible={true} tx="hello">Here is your receipt</NewcoinRecept>;
 
 	// return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
 	return (

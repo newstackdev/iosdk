@@ -348,7 +348,7 @@ export const UserStake: NLView<{
 							<>
 								Your current stake in {_user?.username || ""}'s
 								DAO is {poolInfo.code} {membershipValue}. Stake{" "}
-								{_value} NCO more to increase your membership
+								{_value} GNCO more to increase your membership
 								value.
 							</>
 						) : (

@@ -105,13 +105,6 @@
 	border-color: @green;
 }
 
-.masked-input-error,
-.masked-input-error:focus,
-.masked-input-error:hover {
-	border-color: @purple;
-	color: @purple!important;
-}
-
 .ant-tag {
 	font-size: 12pt;
 	line-height: 22pt;
@@ -516,12 +509,6 @@ a.ant-typography,
 	border: none;
 }
 
-.ant-input-affix-wrapper-focused,
-.ant-input-affix-wrapper-focused > input,
-.ant-input-affix-wrapper-focused > input::placeholder {
-	color: @green;
-	border-color: @green!important;
-}
 .nl-slider .ant-slider-rail,
 .nl-slider .ant-slider-rail:hover {
 	height: 11px !important;
@@ -539,4 +526,21 @@ a.ant-typography,
 .ant-slider-mark-text {
 	font-size: 16px;
 	margin-top: 20px;
+}
+
+// DOMAIN PRESALE
+
+.masked-input-error,
+.masked-input-error:focus,
+.masked-input-error:hover {
+	border-color: @purple;
+	color: @purple!important;
+}
+
+.ant-form-item-has-success .ant-input {
+	color: @green;
+}
+
+.ant-form-item-has-success .ant-input-affix-wrapper {
+	border-color: @green!important;
 }

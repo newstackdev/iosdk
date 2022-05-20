@@ -30,6 +30,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Edit } from "../../Components/Icons/Edit";
 import { Clipboard } from "../../Components/Icons/Clipboard";
 import { BlockExplorerLink } from "../../Components/Links";
+import { Share } from "../../Components/Share";
 
 const useVotingStreamMood = () => {
 	const { moodId, postId, id } =
@@ -223,7 +224,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags) => NLVi
 			state.routing.location,
 		].join("");
 
-		const isVisionTag = (t: { _rel?: { source: string, polygons: SimplifiedTag["polygons"] }[] } | any) => 
+		const isVisionTag = (t: { _rel?: { source: string, polygons: SimplifiedTag["polygons"] }[] } | any) =>
 			t._rel?.find(r => r.source === "vision" && r.polygons);
 
 		const nonVisionTags: SimplifiedTag[] =
@@ -321,45 +322,67 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags) => NLVi
 									currPost.newcoinMintTx.toString()
 								) ? (
 									"Minting NFT..." /* + currPost.newcoinMintTx || ""*/
-								) : (
-									<>
-										<BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
-											See minted NFT
-										</BlockExplorerLink>
-										<NFTIcon />
-									</>
-								)}
+								) : (<>
+									<BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
+										See minted NFT
+									</BlockExplorerLink>
+									<NFTIcon />
+								</>)
+								}
 							</Row>
 							<br />
 							<br />
-							<CopyToClipboard text={url}>
-								<Tooltip
-									title={
-										!copyToClipboard
-											? ""
-											: "copied to clipboard"
-									}
-									placement="right"
-								>
-									<button
-										className="copy-to-clipboard-button"
-										onClick={() => {
-											setCopyToClipboard(true);
-											setTimeout(() => {
-												setCopyToClipboard(false);
-											}, 2000);
-										}}
-									>
-										<Clipboard />
-									</button>
-								</Tooltip>
-							</CopyToClipboard>
+							<Share currentPostProps={currPost} />
 							<br />
-							{currPost.tags?.length && (
-								<p className="paragraph-1r u-margin-top-medium">
-									Tags:
-								</p>
-							)}
+							<br />
+							{currPost.tags?.length ? "Tags:" : ""}
+
+							{/* {json(currPost.tags || [])
+								?.sort((a, b) => sumScore(b._rel as []) - sumScore(a._rel as []))
+								?.slice(0, 10)
+								?.map((t) => {
+									return (
+										<>
+											<BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
+												See minted NFT
+											</BlockExplorerLink>
+											<NFTIcon />
+										</>
+									)
+								})} */}
+							{/* <br />
+							<br /> */}
+
+							<>{
+								// <CopyToClipboard text={url}>
+								// 	<Tooltip
+								// 		title={
+								// 			!copyToClipboard
+								// 				? ""
+								// 				: "copied to clipboard"
+								// 		}
+								// 		placement="right"
+								// 	>
+								// 		<button
+								// 			className="copy-to-clipboard-button"
+								// 			onClick={() => {
+								// 				setCopyToClipboard(true);
+								// 				setTimeout(() => {
+								// 					setCopyToClipboard(false);
+								// 				}, 2000);
+								// 			}}
+								// 		>
+								// 			<Clipboard />
+								// 		</button>
+								// 	</Tooltip>
+								// </CopyToClipboard>
+								// 	<br />
+								// 	{currPost.tags?.length && (
+								// <p className="paragraph-1r u-margin-top-medium">
+								// 	Tags:
+								// </p>
+							}</>
+
 							<br />
 							{visionTags.length ?
 								<div
@@ -401,10 +424,12 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags) => NLVi
 					) : (
 						<ContentImage ref={ref} {...currPost} thumbnail={false} />
 					)}
-					{hilightTag?.length ?
-						<SvgPolygons visionTags={hilightTag} /> :
-						<></>}
-				</Vote>
+					{
+						hilightTag?.length ?
+							<SvgPolygons visionTags={hilightTag} /> :
+							<></>
+					}
+				</Vote >
 				<div className="text-right app-main-full-width">
 					<PostReportModal />
 				</div>

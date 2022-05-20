@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/auth/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;AAAA,mDAAqC;AACrC,mDAAqC;AACrC,mCAAgC;AAEhC,kBAAe;IACX,OAAO;IACP,OAAO;IACP,KAAK,EAAL,aAAK;CACR,CAAA"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/auth/index.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,WAAW,CAAC;AACrC,OAAO,KAAK,OAAO,MAAM,WAAW,CAAC;AACrC,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAC;AAEhC,eAAe;IACX,OAAO;IACP,OAAO;IACP,KAAK;CACR,CAAA"}

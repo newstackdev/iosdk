@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.hyperion = exports.newcoin = void 0;
-const newcoin_sdk_1 = require("@newcoin-foundation/newcoin-sdk");
-// import { NCO_BlockchainAPI } from "../../../../newcoin-sdk/dist";
+import { NCO_BlockchainAPI } from "@newcoin-foundation/newcoin-sdk";
 // import t from "@newcoin-foundation/newcoin-sdk";
-const conns = {
-    bc_url: "http://nodeos-dev.newcoin.org",
-    hyp_url: "https://hyperion-dev.newcoin.org",
-};
-console.log(newcoin_sdk_1.NCO_BlockchainAPI);
-exports.newcoin = new newcoin_sdk_1.NCO_BlockchainAPI(conns);
+// import { devnet_services, devnet_urls, NCO_BlockchainAPI, NCStakePool } from "../../../../newcoin-sdk/src";
+// const conns = {
+// 	bc_url: "http://nodeos-dev.newcoin.org",
+// 	hyp_url: "https://hyperion-dev.newcoin.org",
+// };
+console.log(NCO_BlockchainAPI);
+export const newcoin = new NCO_BlockchainAPI(NCO_BlockchainAPI.defaults.devnet_urls, NCO_BlockchainAPI.defaults.devnet_services);
 const HyperionClient = (url) => {
     return (query) => {
         return fetch(url + query);
     };
 };
-exports.hyperion = HyperionClient("https://hyperion.newcoin.org");
+export const hyperion = HyperionClient("https://hyperion.newcoin.org");
 //# sourceMappingURL=effects.js.map

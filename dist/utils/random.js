@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fischerYates = void 0;
 const swap = (arr, i, j) => {
     [arr[i], arr[j]] = [arr[j], arr[i]];
     return arr;
 };
-const fischerYates = (arr, n) => {
+export const fischerYates = (arr, n) => {
     n = n || arr.length;
     arr = [...arr];
     const r = [];
@@ -15,5 +12,4 @@ const fischerYates = (arr, n) => {
     }
     return r;
 };
-exports.fischerYates = fischerYates;
 //# sourceMappingURL=random.js.map

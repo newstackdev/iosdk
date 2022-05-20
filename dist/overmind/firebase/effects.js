@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 // import '../App.css';
-const auth_1 = require("firebase/auth");
-const app_1 = require("firebase/app");
+import { getAuth, RecaptchaVerifier, sendSignInLinkToEmail, signInWithEmailLink, signInWithPhoneNumber } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 // import { firebaseConfig } from "../../config";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
@@ -15,12 +13,12 @@ const app_1 = require("firebase/app");
 //   measurementId: "G-PJWYRPZSNM"
 // };
 // Initialize Firebase
-exports.default = (() => {
+export default (() => {
     let auth;
     let recaptcaVerifier = null;
     let confirmationResult;
     const getRecaptchaVerifier = (containerOrId = 'sign-in-button') => {
-        return recaptcaVerifier || (recaptcaVerifier = new auth_1.RecaptchaVerifier(containerOrId, {
+        return recaptcaVerifier || (recaptcaVerifier = new RecaptchaVerifier(containerOrId, {
             'size': 'invisible',
             'callback': (response) => {
                 // reCAPTCHA solved, allow signInWithPhoneNumber.
@@ -38,8 +36,8 @@ exports.default = (() => {
     };
     return {
         initialize(firebaseConfig) {
-            (0, app_1.initializeApp)(firebaseConfig);
-            auth = (0, auth_1.getAuth)();
+            initializeApp(firebaseConfig);
+            auth = getAuth();
             return auth;
         },
         initRecaptchaVerifier(containerOrId = 'sign-in-button') {
@@ -48,7 +46,7 @@ exports.default = (() => {
         },
         clearRecaptchaVerifier,
         async requestPhoneAuthCode(v) {
-            return confirmationResult = await (0, auth_1.signInWithPhoneNumber)(auth, v.phone, getRecaptchaVerifier());
+            return confirmationResult = await signInWithPhoneNumber(auth, v.phone, getRecaptchaVerifier());
         },
         async requestEmailAuthCode(v) {
             // signinwith
@@ -68,12 +66,12 @@ exports.default = (() => {
                 // },
                 // dynamicLinkDomain: window.location.host
             };
-            return await (0, auth_1.sendSignInLinkToEmail)(auth, v.email, actionCodeSettings);
+            return await sendSignInLinkToEmail(auth, v.email, actionCodeSettings);
             // return await signInWithEmailLink(auth, v.email, window.location.href + "?deep_link_id=123&link=" + window.location.href)
             // return await signInWithEmailAndPassword(auth, v.email, v.password); // getRecaptchaVerifier());
         },
         async signInWithEmailLink(email, emailLink) {
-            const p = (0, auth_1.signInWithEmailLink)(auth, email, emailLink);
+            const p = signInWithEmailLink(auth, email, emailLink);
             await p;
             // .then((result) => {
             //   // Clear email from storage.

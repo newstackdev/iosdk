@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const pay = async ({ state, actions, effects }, { stripe, elements }) => {
     if (!elements || !stripe) {
         return;
@@ -17,21 +15,22 @@ const pay = async ({ state, actions, effects }, { stripe, elements }) => {
         },
         redirect: "if_required"
     });
-    effects.ux.notification.open({
-        message: "Success! You have subscribed. Please fill in a few more details.",
-    });
-    await actions.api.auth.authorize();
-    if (confirmation.paymentIntent?.status === "succeeded")
+    if (confirmation.paymentIntent?.status === "succeeded") {
+        effects.ux.notification.open({
+            message: "Success! You have subscribed. Please fill in a few more details.",
+        });
+        await actions.api.auth.authorize();
         await actions.auth.fakeUserUpdate({
             subscriptionStatus: "subscribed",
         });
+    }
     else
         effects.ux.notification.error({
-            message: "Someting has gone wrong while paying. Please try again. " +
+            message: "Someting has gone wrong while paying. Please try again. The error reported by payment provider is: " +
                 (confirmation.error?.message || ""),
         });
 };
-exports.default = {
+export default {
     actions: {
         pay
     }

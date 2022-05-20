@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = (() => {
+export default (() => {
     // var port = chrome.runtime.connect({ name: "newlife" });
     // port.postMessage({ joke: "Knock knock" });
     // port.onMessage.addListener(function (msg : any) {

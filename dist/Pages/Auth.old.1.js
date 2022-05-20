@@ -1,5 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+export {};
 // // import React from 'react';
 // // import logo from './logo.svg';
 // import '../App.css';

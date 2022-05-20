@@ -1,19 +1,18 @@
 /// <reference types="react" />
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { Callback, NLView } from "../types";
+import { STAKE_STEPS_TYPE } from "src/overmind/flows/stake/state";
 export declare const UserWidgetVertical: NLView<{
     user?: UserReadPublicResponse;
 }>;
-export declare const STAKE_STEPS: {
-    DISABLED: number;
-    NODAO: number;
-    SELECT: number;
-    CONFIRM: number;
-    DONE: number;
-};
+/**
+ * User stake widget.
+ * @param
+ * @returns
+ */
 export declare const UserStake: NLView<{
     user?: UserReadPrivateResponse;
-    mode?: number;
+    mode?: STAKE_STEPS_TYPE;
     value?: number;
     minValue?: number;
     hideButton?: boolean;

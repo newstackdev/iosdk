@@ -4,7 +4,10 @@ echo Installing IOSDK, this will take a while...
 mkdir $1
 cd $1
 yarn add @newcoin-foundation/iosdk @types/react@17.0.44
-rsync -av node_modules/@newcoin-foundation/iosdk/templates/default/ .
+
+template=${2-default}
+
+rsync -av node_modules/@newcoin-foundation/iosdk/templates/$template/ .
 
 # Removes type discrepancies - a temporary measure
 rm -rf ./node_modules/@newcoin-foundation/iosdk/node_modules

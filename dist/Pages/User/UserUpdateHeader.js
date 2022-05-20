@@ -1,36 +1,31 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const jsx_runtime_1 = require("react/jsx-runtime");
-const antd_1 = require("antd");
-const form_1 = __importDefault(require("antd/lib/form"));
-const SupportBox_1 = __importDefault(require("../../Components/SupportBox"));
-const PicturesWall_1 = require("../../Components/PicturesWall");
-const overmind_1 = require("../../overmind");
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Col, Input, Row } from "antd";
+import Form from "antd/lib/form";
+import SupportBox from "../../Components/SupportBox";
+import { PictureWallFormItem } from "../../Components/PicturesWall";
+import { useAppState } from "../../overmind";
 const UserUpdateHeader = () => {
-    const state = (0, overmind_1.useAppState)();
+    const state = useAppState();
     const sf = state.api.auth.user || {};
-    return ((0, jsx_runtime_1.jsxs)("div", { className: "post-create-header-wrapper", children: [(0, jsx_runtime_1.jsx)("div", { className: "post-back-arrow", style: { padding: "0px 20px" } }), (0, jsx_runtime_1.jsxs)(antd_1.Row, { style: {
+    return (_jsxs("div", { className: "post-create-header-wrapper", children: [_jsx("div", { className: "post-back-arrow", style: { padding: "0px 20px" } }), _jsxs(Row, { style: {
                     flex: 1,
                     justifyContent: "space-between",
                     flexDirection: "column",
-                }, children: [(0, jsx_runtime_1.jsxs)(antd_1.Row, { style: { flexDirection: "column" }, children: [(0, jsx_runtime_1.jsx)("h2", { className: "text-center header-5", style: { margin: "0 auto 20px auto" }, children: "Edit Profile" }), (0, jsx_runtime_1.jsx)(antd_1.Row, { justify: "center", className: "full-width-only", children: (0, jsx_runtime_1.jsx)(antd_1.Col, { span: 18, children: (0, jsx_runtime_1.jsx)(form_1.default.Item
+                }, children: [_jsxs(Row, { style: { flexDirection: "column" }, children: [_jsx("h2", { className: "text-center header-5", style: { margin: "0 auto 20px auto" }, children: "Edit Profile" }), _jsx(Row, { justify: "center", className: "full-width-only", children: _jsx(Col, { span: 18, children: _jsx(Form.Item
                                     // label="Avatar"
                                     , { 
                                         // label="Avatar"
-                                        name: "file", children: (0, jsx_runtime_1.jsx)(PicturesWall_1.PictureWallFormItem, { uploadText: "Upload avatar" }) }) }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { children: (0, jsx_runtime_1.jsx)(antd_1.Input, { readOnly: true, placeholder: "your domain" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "displayName", rules: [
+                                        name: "file", children: _jsx(PictureWallFormItem, { uploadText: "Upload avatar" }) }) }) }), _jsx(Form.Item, { children: _jsx(Input, { readOnly: true, placeholder: "your domain" }) }), _jsx(Form.Item, { name: "displayName", rules: [
                                     {
                                         required: true,
                                         message: "Display name must start with a letter, be 3 - 9 chars or longer and contain only latin letters, digits and dots.",
                                     },
-                                ], children: (0, jsx_runtime_1.jsx)(antd_1.Input, { placeholder: "display name" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "description", children: (0, jsx_runtime_1.jsx)(antd_1.Input.TextArea, { placeholder: "bio" }) }), (0, jsx_runtime_1.jsx)(form_1.default.Item, { name: "email", required: true, rules: [
+                                ], children: _jsx(Input, { placeholder: "display name" }) }), _jsx(Form.Item, { name: "description", children: _jsx(Input.TextArea, { placeholder: "bio" }) }), _jsx(Form.Item, { name: "email", required: true, rules: [
                                     {
                                         required: true,
                                         message: "Please enter your email",
                                     },
-                                ], children: (0, jsx_runtime_1.jsx)(antd_1.Input, { placeholder: "email" }) })] }), (0, jsx_runtime_1.jsx)(antd_1.Row, { style: { flex: 1, flexDirection: "column" }, children: (0, jsx_runtime_1.jsx)(SupportBox_1.default, {}) }), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("br", {})] })] }));
+                                ], children: _jsx(Input, { placeholder: "email" }) })] }), _jsx(Row, { style: { flex: 1, flexDirection: "column" }, children: _jsx(SupportBox, {}) }), _jsx("br", {}), _jsx("br", {}), _jsx("br", {}), _jsx("br", {})] })] }));
 };
-exports.default = UserUpdateHeader;
+export default UserUpdateHeader;
 //# sourceMappingURL=UserUpdateHeader.js.map

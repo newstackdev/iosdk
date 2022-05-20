@@ -17,7 +17,12 @@ const onInitializeOvermind : Action = async ({
     //         if (!fbUser && state.api.auth?.user?.id)
     //             return actions.api.auth.logout();
     //     });
-
+    reaction(
+        (state) => state.api.auth.user?.status,
+        async () => {
+            console.log(state.api.auth.user?.status);
+        }
+    )
     reaction(
         (state) => state.api.auth.authorized,
         async () => {

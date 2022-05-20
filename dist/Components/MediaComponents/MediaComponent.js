@@ -1,35 +1,30 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MediaComponent = exports.getMediaComponentUrl = void 0;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const react_router_dom_1 = require("react-router-dom");
-const useVisibility_1 = require("../../hooks/useVisibility");
-const ImageMediaComponent_1 = require("./ImageMediaComponent");
-const TextMediaComponent_1 = require("./TextMediaComponent");
-const VideoMediaComponent_1 = require("./VideoMediaComponent");
-const withLink = (element, to) => to ? (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, { to: to, children: element }) : element;
+import { jsx as _jsx } from "react/jsx-runtime";
+import { Link } from "react-router-dom";
+import { useVisibilityOnce } from "../../hooks/useVisibility";
+import { contentImageUrl, ImageComponent } from "./ImageMediaComponent";
+import { TextMediaComponent } from "./TextMediaComponent";
+import { contentVideoUrl, VideoComponent } from "./VideoMediaComponent";
+const withLink = (element, to) => to ? _jsx(Link, { to: to, children: element }) : element;
 const contentTypeElements = {
-    default: ImageMediaComponent_1.ImageComponent,
-    "video/mp4": VideoMediaComponent_1.VideoComponent,
-    "text/plain": TextMediaComponent_1.TextMediaComponent,
+    default: ImageComponent,
+    "video/mp4": VideoComponent,
+    "text/plain": TextMediaComponent,
 };
 const mediaComponentUrlResolvers = {
-    default: ImageMediaComponent_1.contentImageUrl,
-    "video/mp4": VideoMediaComponent_1.contentVideoUrl,
+    default: contentImageUrl,
+    "video/mp4": contentVideoUrl,
     // "text/html": content
 };
-const getMediaComponentUrl = (props) => (mediaComponentUrlResolvers[props.contentType || ""] ||
+export const getMediaComponentUrl = (props) => (mediaComponentUrlResolvers[props.contentType || ""] ||
     mediaComponentUrlResolvers.default)(props);
-exports.getMediaComponentUrl = getMediaComponentUrl;
-const MediaComponent = (props) => {
+export const MediaComponent = (props) => {
     const { contentType, thumbnail } = props;
     const cte = contentTypeElements[contentType || ""];
     const ContentTypeElement = cte || contentTypeElements.default;
-    const [isVisible, currentElement] = (0, useVisibility_1.useVisibilityOnce)(150);
+    const [isVisible, currentElement] = useVisibilityOnce(150);
     const isThumbnail = thumbnail ?? true;
     if (!isThumbnail)
-        return ((0, jsx_runtime_1.jsx)(ContentTypeElement, { ...{ ...props, thumbnail: thumbnail ?? true, isVisible } }));
-    return ((0, jsx_runtime_1.jsx)("div", { ref: currentElement, style: { overflow: "hidden" }, className: "ant-image-size", children: (0, jsx_runtime_1.jsx)(ContentTypeElement, { ...{ ...props, thumbnail: isThumbnail, isVisible } }) }));
+        return (_jsx(ContentTypeElement, { ...{ ...props, thumbnail: thumbnail ?? true, isVisible } }));
+    return (_jsx("div", { ref: currentElement, style: { overflow: "hidden" }, className: "ant-image-size", children: _jsx(ContentTypeElement, { ...{ ...props, thumbnail: isThumbnail, isVisible } }) }));
 };
-exports.MediaComponent = MediaComponent;
 //# sourceMappingURL=MediaComponent.js.map

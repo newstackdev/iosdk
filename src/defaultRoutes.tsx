@@ -12,7 +12,6 @@ import { JoinDao } from "./Pages/JoinDao";
 import { Mood } from "./Pages/Mood/Mood";
 import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import MyMoods from "./Pages/Mood/MyMoods";
-import CommunityHistory from "./Pages/NewlifeDao/CommunityHistory";
 import { Post, PostInTags } from "./Pages/Post/Post";
 import { PostCreate } from "./Pages/Post/PostCreate";
 import { Privacy } from "./Pages/Privacy";
@@ -32,6 +31,10 @@ import { Component } from 'react';
 import { useAppState } from './overmind';
 import { Auth } from './Pages/Auth/Auth';
 import SearchTag from './Pages/Tag/TagSearch';
+import ProposalList, { ProposalsPage } from "./Pages/NewlifeDao/ProposalList";
+import NewProposal from "./Pages/NewlifeDao/NewProposal";
+import ViewProposal, { ViewProposalPage } from "./Pages/NewlifeDao/ViewProposal";
+import DaoCreate from './Pages/NewlifeDao/DaoCreate';
 
 
 type HostDef = {
@@ -153,7 +156,13 @@ export const DEFAULT_ROUTES = [
 	<OverridableRoute key="sf" exact path="/save-folder" component={SelectMoodForm} />,
 	<OverridableRoute key="ts" exact path="/terms_of_service" component={TOS} />,
 	<OverridableRoute key="pp" exact path="/privacy_policy" component={Privacy} />,
-	<OverridableRoute key="ds" exact path="/newlife-dao" component={CommunityHistory} />,
 	<OverridableRoute key="st" exact path="/search" component={SearchTag} />,
-	<OverridableRoute key="st" exact path="/tags/:tags/:postId" component={PostInTags} />
+	<OverridableRoute key="st" exact path="/tags/:tags/:postId" component={PostInTags} />,
+	<OverridableRoute key="ds" exact path="/newlife-dao" component={ProposalList} />,
+	<OverridableRoute key="dg" exact path="/newlife-dao/new-proposal" component={NewProposal} />,
+	<OverridableRoute key="drp" exact path="/newlife-dao/proposal/:id" component={ViewProposal} />,
+	<OverridableRoute key="dcp" exact path="/dao/:daoOwner/proposal-create" component={NewProposal} />,
+	<OverridableRoute key="dvp" exact path="/dao/:daoOwner/proposal/:id" component={ViewProposalPage} />,
+	<OverridableRoute key="dc" exact path="/dao/create" component={DaoCreate} />,
+	<OverridableRoute key="dpl" exact path="/dao/owner/:daoOwner" component={ProposalsPage} />
 ];

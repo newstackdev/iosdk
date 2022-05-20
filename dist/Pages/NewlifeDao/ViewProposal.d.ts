@@ -1,3 +1,7 @@
 /// <reference types="react" />
-declare const Component: () => JSX.Element;
-export default Component;
+export declare const ViewProposalPage: () => JSX.Element;
+declare const ViewProposal: (props: {
+    daoOwner: string;
+    proposalId: string;
+}) => JSX.Element;
+export default ViewProposal;

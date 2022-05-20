@@ -16,19 +16,27 @@ export const cache: Action<{ user: UserReadPublicResponse }> = async ({ state, a
 
     const curr = cache.byId[id] || cache.byUsername[username] || null;
 
+    const isNewer = !curr || (new Date(user?.updated || 0).getTime() - new Date(curr?.updated || 0).getTime() > 0);
+
+    if(!isNewer)
+        return;
+
     const mr = curr?.moods || ((await state.api.client.user.moodsList({ id })).data?.value);
 
     const moods = mr || [];
 
     mr && actions.api.mood.cache({ moods: mr });
 
+
+    (state.api.auth.user?.id === user.id) && Object.assign(state.api.auth.user, { ...user });
+
     if (curr && curr.id && curr.username && curr.moods && curr.moods.length < moods.length) {
         cache.byId[id].moods = moods;
-        cache.byUsername[curr.username || ""].moods = moods
+        cache.byUsername[username || ""].moods = moods;
     } else {
         cache.byId[id] = { ...curr, ...user, moods: mr };
         cache.byUsername[username] = { ...curr, ...user, moods };
-    }
+    };
 }
 const inProgress: Record<string, any> = {};
 
@@ -129,6 +137,7 @@ export const getMoods: Action<{ id?: string }> = async ({ state, actions, effect
         ...u,
         moods: (r.data?.value || []) as MoodReadResponse[]
     };
+
     state.api.cache.users.byUsername[un] = {
         ...u,
         moods: (r.data?.value || []) as MoodReadResponse[]

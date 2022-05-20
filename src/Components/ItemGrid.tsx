@@ -17,7 +17,7 @@ export type ItemGridParams<T> = {
 	loadMore?: () => void;
 	setSelectedFolder?: React.Dispatch<React.SetStateAction<boolean>>;
 	selectedFolder?: boolean;
-	noEmptyResults?: boolean
+	noEmptyResults?: boolean;
 };
 
 export const ItemGrid: NLView<ItemGridParams<object>> = ({
@@ -27,7 +27,7 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
 	titleLink,
 	loadMore,
 	limit,
-	noEmptyResults
+	noEmptyResults,
 }) => {
 	const [isVisible, currentElement] = useVisibility<HTMLDivElement>(200);
 	const state = useAppState();
@@ -43,7 +43,11 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
 			: [];
 
 	if (state.indicators.isWorking === false && !items.length)
-		return noEmptyResults ? <></> : <Result icon={<></>}>nothing here</Result>;
+		return noEmptyResults ? (
+			<></>
+		) : (
+			<Result icon={<></>}>nothing here</Result>
+		);
 	return (
 		<>
 			{/* See All page */}
@@ -76,7 +80,10 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
 						<Col
 							key={`item${index}`}
 							// className={"share-folder"}
-							style={{ borderRadius: "25px" }}
+							style={{
+								borderRadius: "25px",
+								marginBottom: "20px",
+							}}
 						>
 							{render(item, index)}
 						</Col>

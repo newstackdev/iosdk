@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.aestheticList = void 0;
-exports.aestheticList = [
+export const aestheticList = [
     // "Arty Fashion CSM Queer Feminine Hyperluxury",
     // "Global Emergence RetroFuturism",
     // "Internet Trap Teenager CryptoBro",

@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 // import { Firebase } from './effects/firebase.ts.bak';
 // import { Api } from './effects/newlife';
-const fetch_1 = require("./effects/fetch");
-exports.default = {
+import { fetch } from "./effects/fetch";
+export default {
     // Firebase,
     // Api,
-    fetch: fetch_1.fetch
+    fetch
 };
 // export default {}
 //# sourceMappingURL=effects.js.map

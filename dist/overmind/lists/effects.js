@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = ({ url, key }) => {
+export default ({ url, key }) => {
     const state = {
         socket: null
     };

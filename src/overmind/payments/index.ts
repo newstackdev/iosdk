@@ -14,6 +14,7 @@ async ({ state, actions, effects }, { stripe, elements }) => {
 
     // return
     const loc = window.location;
+    
     const confirmation = await stripe.confirmPayment({
         elements,
         confirmParams: {
@@ -22,19 +23,20 @@ async ({ state, actions, effects }, { stripe, elements }) => {
         redirect: "if_required"
     });
 
-    effects.ux.notification.open({
-        message: "Success! You have subscribed. Please fill in a few more details.",
-    });
-    await actions.api.auth.authorize();
+    if (confirmation.paymentIntent?.status === "succeeded") {
+        effects.ux.notification.open({
+            message: "Success! You have subscribed. Please fill in a few more details.",
+        });
+        await actions.api.auth.authorize();
 
-    if (confirmation.paymentIntent?.status === "succeeded")
         await actions.auth.fakeUserUpdate({
             subscriptionStatus: "subscribed",
         });
+    }
     else
         effects.ux.notification.error({
             message:
-                "Someting has gone wrong while paying. Please try again. " +
+                "Someting has gone wrong while paying. Please try again. The error reported by payment provider is: " +
                 (confirmation.error?.message || ""),
         });
 };
