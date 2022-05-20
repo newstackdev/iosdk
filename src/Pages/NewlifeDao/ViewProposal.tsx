@@ -6,13 +6,13 @@ import ProgressBar from "../../Components/Icons/ProgressBar";
 import { Info } from "../../Components/Icons/Info";
 import { ContentImage } from "../../Components/Image";
 import { useEffect } from "react";
-import { useCachedDaoProposal, useCachedPool, useCachedUser } from "src/hooks/useCached";
+import { useCachedDaoProposal, useCachedPool, useCachedUser } from "../../hooks/useCached";
 import Modal from "antd/lib/modal/Modal";
 import { UserStake } from "../../Components/UserWidget";
 import { JoinDaoWidget } from "../JoinDao";
 import { useParams } from "react-router-dom";
-import { ProgressButton } from "src/Components/ProgressButton";
-import { pad } from "src/utils/pad";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { pad } from "../../utils/pad";
 
 export const ViewProposalPage = () => {
 	const { daoOwner, id } = useParams<{ daoOwner: string, id: string }>();

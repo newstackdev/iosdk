@@ -5,7 +5,7 @@ import { Burger } from '../../Components/Icons/Burger';
 import { Link, useParams } from "react-router-dom";
 import { useAppState } from "../../overmind";
 import { useState, useEffect } from "react";
-import { useCachedDaoProposals } from "src/hooks/useCached";
+import { useCachedDaoProposals } from "../../hooks/useCached";
 import { convertDaoProposalsForUI, createSeedProposalsForUI } from "./Utils/Helpers";
 import { ProposalRow, ProposalCard } from "./Components/UI-Elements";
 

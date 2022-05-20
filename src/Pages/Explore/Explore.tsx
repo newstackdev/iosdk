@@ -15,7 +15,6 @@ import {
 import Spotlights from "../../Components/Spotlights";
 import TopFolders from "../../Components/TopFolders";
 import Creators, { TopCreators } from "../../Components/Creators";
-import { NewcoinRecept } from "src/Components/Recepts";
 
 export const Explore: NLView = () => {
 	const state = useAppState();

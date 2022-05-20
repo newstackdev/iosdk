@@ -45,7 +45,7 @@ import { TwitterIcon } from "./Icons/TwitterIcon";
 import { Edit } from "./Icons/Edit";
 import { SocialLink } from "./SocialLink";
 import { Smallinfo } from "./Icons/Smallinfo";
-import { STAKE_STEPS, STAKE_STEPS_TYPE } from "src/overmind/flows/stake/state";
+import { STAKE_STEPS, STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
 
 // import { Info } from "./Icons/Info";
 // import { CreatorWidget } from "./Creators";

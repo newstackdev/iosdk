@@ -21,7 +21,7 @@ import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { NFTLargeIcon } from "../../Components/Icons/NFTLargeIcon";
 import Avatar from "antd/lib/avatar/avatar";
 import { ContentImage } from "../../Components/Image";
-import { ContentPreview } from "src/Components/ContentPreview";
+import { ContentPreview } from "../../Components/ContentPreview";
 const initialLicense = { name: LICENSES[0][0], value: LICENSES[0][1] };
 const mintNTFcolor = {
     white: "#FCFCF3",

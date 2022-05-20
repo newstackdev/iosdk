@@ -2,10 +2,8 @@ import { ContentLayout } from "../../Components/ContentLayout";
 import Form from "antd/lib/form";
 import { Button, Checkbox, Input, notification, Row } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import { RowCheckbox } from "../../Components/RowCheckbox";
 import { ProgressButton } from "../../Components/ProgressButton";
-import { CrossCircle } from "../../Components/Icons/CrossCircle";
-import { useActions, useAppState } from "src/overmind";
+import { useActions, useAppState } from "../../overmind";
 
 const DaoCreate = () => {
 	const [form] = useForm();

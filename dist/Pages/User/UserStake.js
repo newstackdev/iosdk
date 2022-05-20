@@ -4,7 +4,7 @@ import { MaskedInput } from "antd-mask-input";
 import { useForm } from "antd/lib/form/Form";
 import { useState } from "react";
 import { useParams } from "react-router";
-import { pad } from "src/utils/pad";
+import { pad } from "../../utils/pad";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { UserWidgetHeading } from "../../Components/UserWidget";
 import { useCachedUser } from "../../hooks/useCached";

@@ -8,7 +8,7 @@ import { useQuery } from "../../hooks/useQuery";
 import { ContentImage } from "../../Components/Image";
 import { Link } from "react-router-dom";
 import { PostReadResponse } from "@newlife/newlife-creator-client-api";
-import { fischerYates } from "src/utils/random";
+import { fischerYates } from "../../utils/random";
 
 export const useCreativeSearchQuery = () => {
 	const query = useQuery();

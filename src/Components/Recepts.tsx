@@ -1,7 +1,6 @@
 import { Avatar, Button, Col, Row } from "antd";
 import Modal from "antd/lib/modal";
 import { useEffect, useState } from "react";
-import { round } from "src/utils/numeric";
 import { Callback, NLView } from "../types";
 import { CrossCircle } from "./Icons/CrossCircle";
 import { ContentImage } from "./Image";

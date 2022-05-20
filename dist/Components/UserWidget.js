@@ -23,7 +23,7 @@ import { TwitterIcon } from "./Icons/TwitterIcon";
 import { Edit } from "./Icons/Edit";
 import { SocialLink } from "./SocialLink";
 import { Smallinfo } from "./Icons/Smallinfo";
-import { STAKE_STEPS } from "src/overmind/flows/stake/state";
+import { STAKE_STEPS } from "../overmind/flows/stake/state";
 // import { Info } from "./Icons/Info";
 // import { CreatorWidget } from "./Creators";
 // import { UserStakeButton } from "../Pages/User/UserStake";

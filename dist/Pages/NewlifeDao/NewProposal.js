@@ -5,7 +5,7 @@ import { DatePicker, Input, Select } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { ProgressButton } from "../../Components/ProgressButton";
-import { useActions } from "src/overmind";
+import { useActions } from "../../overmind";
 import { useParams } from "react-router-dom";
 const NewProposal = () => {
     const [form] = useForm();

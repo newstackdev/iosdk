@@ -5,7 +5,7 @@ import { useForm } from "antd/lib/form/Form";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { CrossCircle } from "../../Components/Icons/CrossCircle";
-import { useActions } from "src/overmind";
+import { useActions } from "../../overmind";
 import { Moment } from "moment";
 import { useParams } from "react-router-dom";
 

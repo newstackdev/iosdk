@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { Callback, NLView } from "../types";
-import { STAKE_STEPS_TYPE } from "src/overmind/flows/stake/state";
+import { STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
 export declare const UserWidgetVertical: NLView<{
     user?: UserReadPublicResponse;
 }>;
