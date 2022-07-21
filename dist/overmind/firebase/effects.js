@@ -37,6 +37,8 @@ export default (() => {
     };
     return {
         initialize(firebaseConfig) {
+            if (!firebaseConfig.apiKey || !firebaseConfig.appId)
+                throw new Error("Firebase config is missing");
             initializeApp(firebaseConfig);
             auth = getAuth();
             return auth;
