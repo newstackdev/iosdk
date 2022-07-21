@@ -1,5 +1,5 @@
 import { NLView } from "../../types";
-import { PostReadResponse } from "@newlife/newlife-creator-client-api";
+import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 declare const useVotingStreamTags: () => {
     nextPath: () => string;
     currPost: PostReadResponse;
@@ -7,7 +7,7 @@ declare const useVotingStreamTags: () => {
     contextType: string;
     contextValue: string;
 };
-export declare const postBase: (useVotingStreamHook: typeof useVotingStreamTags) => NLView;
+export declare const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingEnabled?: boolean) => NLView;
 export declare const Post: NLView<{}>;
 export declare const PostInMood: NLView<{}>;
 export declare const PostInTags: NLView<{}>;

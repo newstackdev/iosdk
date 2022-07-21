@@ -1,10 +1,9 @@
 export default ({ url, key }) => {
     const state = {
-        socket: null
+        socket: null,
     };
     return {
-        query(q) {
-        }
+        query(q) { },
     };
 };
 //# sourceMappingURL=effects.js.map

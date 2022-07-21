@@ -1,7 +1,7 @@
-import { PostReadResponse } from "@newlife/newlife-creator-client-api";
 import { ImageProps } from "antd";
-import { ReactNode } from "react";
 import { NLView } from "../../types";
+import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { ReactNode } from "react";
 export declare type Sizes = "small" | "medium" | "full" | "";
 export declare type ContentImageProps = {
     id?: string;

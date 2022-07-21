@@ -1,11 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Input } from "antd";
-import Form from "antd/lib/form";
-import { useActions, useAppState } from "../../../../overmind";
 import { AUTH_FLOW_STATUS } from "../../../../overmind/auth/state";
-import { ProgressButton } from "../../../../Components/ProgressButton";
 import { CrossCircleErr } from "../../../User/UserCreate";
+import { Input } from "antd";
+import { ProgressButton } from "../../../../Components/ProgressButton";
 import { layout } from "../../Auth";
+import { useActions, useAppState } from "../../../../overmind";
+import Form from "antd/lib/form";
 const CodeForm = ({ setIsErrorSubmit, embedded, codeForm }) => {
     const state = useAppState();
     const actions = useActions();

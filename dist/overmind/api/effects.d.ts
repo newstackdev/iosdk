@@ -1,7 +1,7 @@
-import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
 import { CreatorApi } from "../../types";
+import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 declare const _default: {
-    initialize(baseUrl: any): CreatorApi;
+    initialize(baseUrl: string): CreatorApi;
     updateToken(token: string): void;
     authorize(): Promise<UserReadPrivateResponse>;
 };

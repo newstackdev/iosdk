@@ -1,8 +1,10 @@
-import { UserCreateRequest } from "@newlife/newlife-creator-client-api";
 import { Action } from "../../../../types";
+import { UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { WizardInput } from "./wizardStateMachine";
 export declare const onInitializeOvermind: Action<any>;
-export declare const updateForm: Action<Partial<UserCreateRequest>>;
+export declare const updateForm: Action<Partial<UserCreateRequest & {
+    couponCode?: string;
+}>>;
 export declare const startLegacyImport: Action;
 export declare const stopLegacyImport: Action<{
     noRedirect?: boolean;

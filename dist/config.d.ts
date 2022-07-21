@@ -1,10 +1,10 @@
-import { PartialDeep } from "type-fest";
 import { FirebaseConfig, GenericComponent } from "./types";
+import { PartialDeep } from "type-fest";
+export declare const stage: string;
 export declare const APP_DOMAIN = "life.nco";
 export declare const firebaseConfig: FirebaseConfig;
-export declare const newlifeBaseUrl: string;
-export declare const newlifeMediaBucket: any;
-export declare const newlifeWebsocketsServer: any;
+export declare const apiBaseUrl: string;
+export declare const mediaBucket: any;
 export declare const stripeKey: any;
 export declare const config: {
     env: {
@@ -14,10 +14,11 @@ export declare const config: {
         newcoin: {
             daoId: string;
             daoDomain: string;
+            displayDaoDomain: string;
             poolId: string;
         };
         firebaseConfig: FirebaseConfig;
-        newlife: {
+        newgraph: {
             baseUrl: string;
             mediaBucket: any;
             websocketsServer: any;
@@ -27,6 +28,9 @@ export declare const config: {
         };
         stripe: {
             publicKey: any;
+        };
+        indicators: {
+            isWatchable: (actionName: string) => boolean;
         };
     };
     routes: {

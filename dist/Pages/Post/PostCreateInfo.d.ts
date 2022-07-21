@@ -11,5 +11,9 @@ declare const PostCreateInfo: NLView<{
     isLicense: boolean;
     mintConfirmationOpen: boolean;
     ncoBalance: number;
+    content: string;
+    contentType: string;
+    embedSwitch: boolean;
+    isLoading: boolean;
 }>;
 export default PostCreateInfo;

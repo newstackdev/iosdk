@@ -1,19 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import "./App.less";
 import "./Pages/Auth/styles/AuthForms.less";
 import "./Pages/DomainPresale/styles/DomainPresale.less";
-import { overmind } from "./overmind";
+import "./index.css";
 import { config } from "./config";
+import { overmind } from "./overmind";
+import App from "./App";
+import React from "react";
+import ReactDOM from "react-dom";
+import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-	<App overmind={overmind(config)} />,
-	// <React.StrictMode>
-	// </React.StrictMode>,
-	document.getElementById("root")
+  <App overmind={overmind(config)} />,
+  // <React.StrictMode>
+  // </React.StrictMode>,
+  document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function

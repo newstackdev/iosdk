@@ -1,15 +1,15 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { Input, Modal, Select, } from "antd";
-import Form from "antd/lib/form";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Input, Modal, Select } from "antd";
 import { get } from "lodash";
 import { useActions, useAppState } from "../../overmind";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import Form from "antd/lib/form";
+import { AddFolder } from "../../Components/Icons/AddFolder";
+import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { LICENSES } from "../../constants";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
-import { AddFolder } from "../../Components/Icons/AddFolder";
-import { CrossCircle } from "../../Components/Icons/CrossCircle";
 export const MoodCreate = ({ onCreated, setIsCreated }) => {
     const state = useAppState();
     const actions = useActions();
@@ -36,9 +36,7 @@ export const MoodCreate = ({ onCreated, setIsCreated }) => {
             setIsCreated(true);
         }
         catch (ex) {
-            setErrMsg(get(ex, "error.errorMessage.details") ||
-                get(ex, "message") ||
-                "unknown error");
+            setErrMsg(get(ex, "error.errorMessage.details") || get(ex, "message") || "unknown error");
         }
     };
     const onFinishFailed = (errorInfo) => {
@@ -60,12 +58,13 @@ export const MoodCreate = ({ onCreated, setIsCreated }) => {
                     // disabled
                     , { 
                         // disabled
-                        title: "Minimum amount of creator coin stake a user needs to access this folder", placeholder: "minimum stake in creator coin to access" }) }), _jsx(Form.Item, { required: false, name: "action", children: _jsx(Input, { disabled: true, title: "Upcoming feature", placeholder: "action" }) }), _jsx(Form.Item, { name: "doMint", valuePropName: "checked", children: _jsx(RowCheckbox, { disabled: true, title: "Upcoming feature", children: "Create a Newcoin NFT collection" }) }), _jsx(Form.Item, { name: "license", rules: [
-                        { required: false, message: "Please pick a license" },
-                    ], children: _jsx(Select, { defaultValue: LICENSES[0][1], children: LICENSES.map((l) => (_jsx(Select.Option, { value: l[1], children: l[0] }))) }) }), _jsx(Form.Item, { label: "", className: "text-center", children: _jsx(ProgressButton, { actionName: "api.mood.create", progressText: "Creating mood...", type: "primary", htmlType: "submit", children: "Create" }) })] }) }));
+                        title: "Minimum amount of creator coin stake a user needs to access this folder", placeholder: "minimum stake in creator coin to access" }) }), _jsx(Form.Item, { required: false, name: "action", children: _jsx(Input, { disabled: true, title: "Upcoming feature", placeholder: "action" }) }), _jsx(Form.Item, { name: "doMint", valuePropName: "checked", children: _jsx(RowCheckbox, { disabled: true, title: "Upcoming feature", children: "Create a Newcoin NFT collection" }) }), _jsx(Form.Item, { name: "license", rules: [{ required: false, message: "Please pick a license" }], children: _jsx(Select, { defaultValue: LICENSES[0][1], children: LICENSES.map((l) => (_jsx(Select.Option, { value: l[1], children: l[0] }))) }) }), _jsx(Form.Item, { label: "", className: "text-center", children: _jsx(ProgressButton, { actionName: "api.mood.create", progressText: "Creating mood...", type: "primary", htmlType: "submit", children: "Create" }) })] }) }));
 };
 export const MoodCreateModal = ({ setIsCreated, onCreated }) => {
     const [isOpen, setIsOpen] = useState(false);
-    return (_jsxs(_Fragment, { children: [_jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: isOpen, onOk: () => setIsOpen(false), onCancel: () => setIsOpen(false), footer: false, className: "nl-white-box-modal", children: _jsx(MoodCreate, { onCreated: (m) => { setIsOpen(false); onCreated && onCreated(m); }, setIsCreated: setIsCreated }) }), _jsxs("div", { children: [_jsx("div", { style: { fontSize: "120px" }, children: _jsx(AddFolder, { setIsOpen: setIsOpen }) }), _jsx("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
+    return (_jsxs(_Fragment, { children: [_jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: isOpen, onOk: () => setIsOpen(false), onCancel: () => setIsOpen(false), footer: false, className: "nl-white-box-modal", children: _jsx(MoodCreate, { onCreated: (m) => {
+                        setIsOpen(false);
+                        onCreated && onCreated(m);
+                    }, setIsCreated: setIsCreated }) }), _jsxs("div", { children: [_jsx("div", { style: { fontSize: "120px" }, children: _jsx(AddFolder, { setIsOpen: setIsOpen }) }), _jsx("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
 };
 //# sourceMappingURL=MoodCreate.js.map

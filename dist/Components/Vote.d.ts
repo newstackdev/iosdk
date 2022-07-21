@@ -1,5 +1,5 @@
-import { ReactElement } from "react";
 import { Callback, NLView } from "../types";
+import { ReactElement } from "react";
 export declare const Vote: NLView<{
     onDoneVoting: (val: number) => void;
     onLongDoneVoting?: Callback;

@@ -1,3 +1,2 @@
-export const sendMessage = () => {
-};
+export const sendMessage = () => { };
 //# sourceMappingURL=actions.js.map

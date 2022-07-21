@@ -1,72 +1,64 @@
 // import '../App.css';
-import { useEffect } from "react";
+import { ContentLayout } from "../../Components/ContentLayout";
+import { ItemGrid } from "../../Components/ItemGrid";
+import { MoodWidget } from "../../Components/MoodWidget";
+import { MoodsGrid } from "../Mood/MoodsGrid";
 import { NLView } from "../../types";
 import { useActions, useAppState } from "../../overmind";
-import { MoodWidget } from "../../Components/MoodWidget";
-import { ItemGrid } from "../../Components/ItemGrid";
+import { useEffect } from "react";
+import Creators, { TopCreators } from "../../Components/Creators";
 import FolderClosed from "../../Components/Icons/Folder/Closed";
-import { MoodsGrid } from "../Mood/MoodsGrid";
-import { ContentLayout } from "../../Components/ContentLayout";
-import {
-	UsersGrid,
-	UsersHorizontalScroller,
-	UsersList,
-} from "../../Components/UserWidget";
 import Spotlights from "../../Components/Spotlights";
 import TopFolders from "../../Components/TopFolders";
-import Creators, { TopCreators } from "../../Components/Creators";
+import TopHashtags from "../../Components/TopHashtags";
 
 export const Explore: NLView = () => {
-	const state = useAppState();
-	const actions = useActions();
+  const state = useAppState();
+  const actions = useActions();
 
-	const moods = state.lists.top.moods.items;
+  const moods = state.lists.top.moods.items;
 
-	useEffect(() => {
-		!moods.length && actions.lists.top.moods();
-	}, []);
+  useEffect(() => {
+    !moods.length && actions.lists.top.moods();
+  }, []);
 
-	const users = state.lists.top.users.items;
+  const users = state.lists.top.users.items;
 
-	useEffect(() => {
-		!users.length && actions.lists.top.users();
-	}, []);
+  useEffect(() => {
+    !users.length && actions.lists.top.users();
+  }, []);
 
-	// if(true)
-	// 	return <NewcoinRecept visible={true} tx="hello">Here is your receipt</NewcoinRecept>;
+  // if(true)
+  // 	return <NewcoinRecept visible={true} tx="hello">Here is your receipt</NewcoinRecept>;
 
-	// return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
-	return (
-		<div className="explore-page-wrapper">
-			{/* <UsersHorizontalScroller
+  // return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
+  return (
+    <div className="explore-page-wrapper">
+      {/* <UsersHorizontalScroller
 				users={users}
 				powerUp={false}
 				layout="vertical"
 				title={users?.length ? "Spotlights" : ""}
 			/> */}
-			<Spotlights title={"Spotlights"} maxRows={1} maxItems={3} />
-			<TopFolders
-				title={"Explore top folders"}
-				maxItems={3}
-				posts={"full"}
-			/>
-			{/* <MoodsGrid
+      <Spotlights title={"Spotlights"} maxRows={1} maxItems={10} carousel />
+      <TopFolders title={"Explore top folders"} maxItems={3} maxPostsToShow={5} posts={"full"} filterToSameNumberPosts />
+      {/* <MoodsGrid
 				moods={moods}
 				loadMore={actions.lists.top.moods}
 				title={moods?.length ? "Top moods today" : ""}
 			/> */}
-			<TopCreators
-				maxItems={3}
-				title={"Explore top creators"}
-				users={users}
-			/>
-			<TopFolders
-				title={"Explore more folders"}
-				maxItems={3}
-				skipItems={3}
-			/>
-		</div>
-	);
+      <TopCreators maxItems={4} title={"Explore top creators"} users={users} />
+      <TopHashtags maxItems={3} title={"Explore top hashtags"} />
+      <TopFolders
+        title={"Explore more folders"}
+        maxItems={3}
+        maxPostsToShow={5}
+        skipItems={3}
+        filterToSameNumberPosts
+        posts={"full"}
+      />
+    </div>
+  );
 };
 
 export default Explore;

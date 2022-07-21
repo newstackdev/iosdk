@@ -22,7 +22,7 @@ declare type ActivityStreamEvent = {
 };
 declare type NewcoinEvent = {
     payload: {
-        message: 'stake_received' | 'stake_sent';
+        message: "stake_received" | "stake_sent";
         txid: string;
     };
     recipient: string;
@@ -47,7 +47,6 @@ declare const actions: {
 declare type WebsocketsState = {
     state: {
         socket: WebSocket | null;
-        url: string;
         messages: {
             incoming: any[];
             activityStream: ActivityStreamEvent[];

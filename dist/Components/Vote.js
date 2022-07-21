@@ -1,9 +1,9 @@
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import { useRef, useEffect } from "react";
-import { useEffects, useActions, useAppState } from "../overmind";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { AppearingComponent } from "./Appearing";
 import { ContentLayout } from "./ContentLayout";
-import { LargeArrowBack } from "./Icons/LargeArrowBack";
+import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useActions, useAppState, useEffects } from "../overmind";
 const preventEvent = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -17,20 +17,27 @@ onDoneVoting, onLongDoneVoting, children, info, votingEnabled, }) => {
     const effects = useEffects();
     const actions = useActions();
     const state = useAppState();
-    effects.ux.message.config({
-        maxCount: 2,
-        duration: 1,
-        getContainer: () => divMessage.current,
-    });
     useEffect(() => {
-        actions.flows.rating.deepLikeInit();
+        effects.ux.message.config({
+            maxCount: 2,
+            duration: 1,
+            getContainer: () => divMessage.current,
+        });
+        return effects.ux.message.config({
+            getContainer: undefined,
+        });
+    }, []);
+    useEffect(() => {
+        if (votingEnabled)
+            actions.flows.rating.deepLikeInit();
         actions.ux.setLayout({ headerShown: false });
         return () => {
             actions.ux.setLayout({ headerShown: true });
         };
     }, []);
     useEffect(() => {
-        actions.flows.rating.deepLikeInit();
+        if (votingEnabled)
+            actions.flows.rating.deepLikeInit();
     }, [state.routing.location]);
     useEffect(() => {
         const r = state.flows.rating;
@@ -53,12 +60,10 @@ onDoneVoting, onLongDoneVoting, children, info, votingEnabled, }) => {
                 display: "flex",
                 justifyContent: "space-between",
                 flex: 1,
-            }, children: [_jsx("div", { className: "post-back-arrow", children: _jsx(LargeArrowBack, {}) }), _jsx("div", { ref: divMessage, style: { flex: 1 }, className: "post-notification-wrapper" }), votingEnabled !== false ? (_jsx(_Fragment, { children: state.flows.rating.value === 100 && (_jsx(AppearingComponent, { seconds: 5, onShow: onLongDoneVoting, children: _jsx("div", { className: "post-notification-wrapper ant-message-notice-content", children: "Tap spacebar to continue" }) })) })) : (state.flows.rating.isRating &&
+            }, children: [_jsx(Link, { to: "/explore", children: _jsx("div", { className: "logo-left-top", style: { padding: "0px 20px" }, children: _jsx(state.config.components.icons.Logo, {}) }) }), _jsx("div", { ref: divMessage, style: { flex: 1 }, className: "post-notification-wrapper" }), votingEnabled !== false ? (_jsx(_Fragment, { children: state.flows.rating.value === 100 && (_jsx(AppearingComponent, { seconds: 5, onShow: onLongDoneVoting, children: _jsx("div", { className: "post-notification-wrapper ant-message-notice-content", children: "Tap spacebar to continue" }) })) })) : (state.flows.rating.isRating &&
                     !state.flows.rating.rated &&
-                    !state.flows.rating.value && (_jsx(AppearingComponent, { seconds: 8, children: _jsx("div", { className: "post-notification-wrapper ant-message-notice-content", children: "Hold spacebar to vote" }) })))] }), info: info, children: [_jsx("div", { className: "flex-center nl-fullsize-image app-main-full-height-only post-img-wrapper", onMouseDown: touchClickVoteStart, onMouseUp: touchClickVoteStop, onTouchStart: touchClickVoteStart, onTouchEnd: touchClickVoteStop, onContextMenu: preventEvent, children: children }), true || state.flows.rating.isRating ? (_jsx("div", { className: "nl-rating-bar-wrapper", children: _jsx("div", { className: "nl-rating-bar", style: {
-                        opacity: [0, 100].includes(state.flows.rating.value)
-                            ? 0
-                            : 100,
+                    !state.flows.rating.value && (_jsx(AppearingComponent, { seconds: 8, children: _jsx("div", { className: "post-notification-wrapper ant-message-notice-content", children: "Hold spacebar to vote" }) })))] }), info: info, children: [_jsxs("div", { className: "nl-fullsize-image-container", children: [_jsx("div", { className: "flex-center nl-fullsize-image app-main-full-height-only post-img-wrapper", onMouseDown: touchClickVoteStart, onMouseUp: touchClickVoteStop, onTouchStart: touchClickVoteStart, onTouchEnd: touchClickVoteStop, onContextMenu: preventEvent, children: children }), " "] }), true || state.flows.rating.isRating ? (_jsx("div", { className: "nl-rating-bar-wrapper", children: _jsx("div", { className: "nl-rating-bar", style: {
+                        opacity: [0, 100].includes(state.flows.rating.value) ? 0 : 100,
                         width: `${state.flows.rating.value || 0}vw`,
                     } }) })) : ("")] }));
 };

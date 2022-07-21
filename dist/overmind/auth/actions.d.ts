@@ -1,5 +1,5 @@
-import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
 import { Action } from "../../types";
+import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const logout: Action<{
     noRouting?: boolean;
 } | undefined>;

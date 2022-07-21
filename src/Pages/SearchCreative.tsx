@@ -1,20 +1,11 @@
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Space,
-  Tag,
-  List,
-} from "antd";
-import { Spin } from "../Components/Spin";
-import React, { useEffect } from "react";
+import { Button, Col, Form, Input, List, Row, Space, Tag } from "antd";
+import { ItemGrid } from "../Components/ItemGrid";
 import { NLView } from "../types";
+import { SearchItemWidget } from "../Components/SearchItemWidget";
+import { Spin } from "../Components/Spin";
 import { useActions, useAppState } from "../overmind";
 import { useLocation } from "react-router-dom";
-import { SearchItemWidget } from "../Components/SearchItemWidget";
-import { ItemGrid } from "../Components/ItemGrid";
+import React, { useEffect } from "react";
 
 // TODO: Maybe move to utils or something
 function useQuery() {
@@ -28,7 +19,7 @@ export const useCreativeSearchQuery = () => {
   const index: number = Number(query.get("index") ?? 0);
   const aesthetics = query.get("aesthetics") ?? "";
   return { tags, aesthetics, index };
-}
+};
 
 export const SearchCreative: NLView = () => {
   const state = useAppState();
@@ -107,11 +98,7 @@ export const SearchCreative: NLView = () => {
               <Col lg={9}>
                 <Form.Item name="aestetics"></Form.Item>
                 <Form.Item wrapperCol={{}}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    size="large"
-                  >
+                  <Button type="primary" htmlType="submit" size="large">
                     Submit
                   </Button>
                 </Form.Item>
@@ -130,22 +117,15 @@ export const SearchCreative: NLView = () => {
       >
         <Space>
           {state.lists.creativeSearch.tags.items.map((aesthetic) => (
-            <Tag
-              onClick={() => search(tags, aesthetic)}
-              style={{ cursor: "pointer" }}
-            >
+            <Tag onClick={() => search(tags, aesthetic)} style={{ cursor: "pointer" }}>
               {aesthetic}
             </Tag>
           ))}
         </Space>
       </div>
 
-      <ItemGrid
-        items={items}
-        render={(m, index) => <SearchItemWidget item={m} index={index} />}
-        loadMore={maybeLoadMore}
-      />
-      
+      <ItemGrid items={items} render={(m, index) => <SearchItemWidget item={m} index={index} />} loadMore={maybeLoadMore} />
+
       {state.indicators.isWorking ? (
         <Spin />
       ) : !items.length && lastQueried ? (
@@ -154,10 +134,7 @@ export const SearchCreative: NLView = () => {
           dataSource={[]}
           loading={state.indicators.isWorking}
           locale={{
-            emptyText:
-              lastQueried.tags === ""
-                ? "Search something!"
-                : `No results for '${lastQueried.tags}'`,
+            emptyText: lastQueried.tags === "" ? "Search something!" : `No results for '${lastQueried.tags}'`,
           }}
         />
       ) : (

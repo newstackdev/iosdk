@@ -262,10 +262,10 @@ p {
 .make-order-zero {
 	order: 0 !important;
 }
-.powerup-btn,
-.powerup-btn:hover,
-.powerup-btn:active,
-.powerup-btn:focus {
+.primary-green-btn,
+.primary-green-btn:hover,
+.primary-green-btn:active,
+.primary-green-btn:focus {
 	background-color: #baff00;
 	color: black;
 	border: none;

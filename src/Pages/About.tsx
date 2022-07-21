@@ -1,15 +1,17 @@
-import { useEffect } from "react";
 import { useActions } from "../overmind";
+import { useEffect } from "react";
 
 export const About = () => {
-    const actions = useActions();
+  const actions = useActions();
 
-    useEffect(() => {
-        actions.routing.setBreadcrumbs([{ text: "About" }])
-    }, []);
+  useEffect(() => {
+    actions.routing.setBreadcrumbs([{ text: "About" }]);
+  }, []);
 
-    return <>
-        <h3>About</h3>
-        This is newweb
+  return (
+    <>
+      <h3>About</h3>
+      This is newweb
     </>
-}
+  );
+};

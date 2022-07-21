@@ -1,4 +1,4 @@
-import { notification, message } from "antd";
+import { message, notification } from "antd";
 // import { ArgsProps } from "antd/lib/notification";
 const showNotification = ({ effects }, { message, duration }) => {
     effects.ux.message.info(message, duration);
@@ -9,7 +9,7 @@ const setLayout = ({ state }, { headerShown }) => {
 export default {
     actions: {
         showNotification,
-        setLayout
+        setLayout,
     },
     effects: {
         notification,
@@ -17,8 +17,8 @@ export default {
     },
     state: {
         layout: {
-            headerShown: true
-        }
-    }
+            headerShown: true,
+        },
+    },
 };
 //# sourceMappingURL=index.js.map

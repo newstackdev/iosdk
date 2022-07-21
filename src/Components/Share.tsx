@@ -1,23 +1,18 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { Tooltip, Modal, Button } from "antd";
-import { PostReadResponse } from "@newlife/newlife-creator-client-api";
-import CopyToClipboard from "react-copy-to-clipboard";
-import {
-  TumblrShareButton,
-  TwitterShareButton,
-  TelegramShareButton,
-  PinterestShareButton,
-} from "react-share";
-import { QRCodeSVG } from "qrcode.react";
-import { NLView } from "../types";
-import { CrossCircle } from "./Icons/CrossCircle";
-import { TumblrIcon } from "./Icons/TumblrIcon";
-import { ShareIcon } from "./Icons/ShareIcon";
+import { Button, Modal, Tooltip } from "antd";
 import { Clipboard } from "./Icons/Clipboard";
-import { TwitterIcon } from "./Icons/TwitterIcon";
-import { TelegramIcon } from "./Icons/TelegramIcon";
+import { CrossCircle } from "./Icons/CrossCircle";
+import { NLView } from "../types";
 import { PinterestIcon } from "./Icons/PinterestIcon";
-import { contentImageUrl } from "./MediaComponents/ImageMediaComponent";
+import { PinterestShareButton, TelegramShareButton, TumblrShareButton, TwitterShareButton } from "react-share";
+import { PostReadResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { QRCodeSVG } from "qrcode.react";
+import { ShareIcon } from "./Icons/ShareIcon";
+import { TelegramIcon } from "./Icons/TelegramIcon";
+import { TumblrIcon } from "./Icons/TumblrIcon";
+import { TwitterIcon } from "./Icons/TwitterIcon";
+import { useContentImageUrl } from "./MediaComponents/ImageMediaComponent";
+import CopyToClipboard from "react-copy-to-clipboard";
+import React, { useCallback, useEffect, useState } from "react";
 
 const ShareModalContent: NLView<{
   label?: string;
@@ -37,11 +32,7 @@ const ShareModalContent: NLView<{
       }}
     >
       {label ? (
-        <label
-          className="header-2"
-          htmlFor={`nl-share-btn-${label}`}
-          style={{ width: "100%", cursor: "pointer" }}
-        >
+        <label className="header-2" htmlFor={`nl-share-btn-${label}`} style={{ width: "100%", cursor: "pointer" }}>
           {label}
         </label>
       ) : (
@@ -52,11 +43,15 @@ const ShareModalContent: NLView<{
   );
 };
 
-export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
-  currentPostProps,
-}) => {
+export const Share: NLView<{
+  currentPostProps?: PostReadResponse;
+  urlToShare?: string;
+  user?: UserReadPrivateResponse;
+}> = ({ currentPostProps, urlToShare, user }) => {
   const URL =
-    process.env.NODE_ENV === "production"
+    !currentPostProps && urlToShare
+      ? urlToShare
+      : process.env.NODE_ENV === "production"
       ? window.location.href
       : `https://web-dev.newlife.io${window.location.pathname}`;
   const [isVisible, setIsVisible] = useState(false);
@@ -70,13 +65,13 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
   }, [setIsVisible, setViewQR]);
 
   useEffect(() => {
-    if (currentPostProps.tags) {
-      const tags = currentPostProps.tags.map(
-        (tag) => tag.value?.replace(/ /g, "") as string
-      );
+    if (currentPostProps?.tags) {
+      const tags = currentPostProps.tags.map((tag) => tag.value?.replace(/ /g, "") as string);
       setHashtags(tags);
     }
-  }, [currentPostProps.tags]);
+  }, [currentPostProps?.tags]);
+
+  const contentImageUrl = useContentImageUrl(currentPostProps ? { ...currentPostProps } : { ...user });
 
   return (
     <>
@@ -93,9 +88,7 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
               <div className="header-2" style={{ paddingBottom: 15 }}>
                 Share to
               </div>
-              <p className="paragraph-2r">
-                Share this content to your networks!
-              </p>
+              <p className="paragraph-2r">Share this content to your networks!</p>
             </>
           }
         >
@@ -108,7 +101,7 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
               <ShareModalContent label="Twitter">
                 <TwitterShareButton
                   url={URL}
-                  title={currentPostProps.title}
+                  title={currentPostProps?.title}
                   className="nl-share-btn-Twitter"
                   id="nl-share-btn-Twitter"
                 >
@@ -118,7 +111,7 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
               <ShareModalContent label="Tumblr">
                 <TumblrShareButton
                   url={URL}
-                  title={currentPostProps.title}
+                  title={currentPostProps?.title}
                   className="nl-share-btn-Tumblr"
                   id="nl-share-btn-Tumblr"
                   tags={hashtags}
@@ -129,7 +122,7 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
               <ShareModalContent label="Telegram">
                 <TelegramShareButton
                   url={URL}
-                  title={currentPostProps.title}
+                  title={currentPostProps?.title}
                   className="nl-share-btn-Telegram"
                   id="nl-share-btn-Telegram"
                 >
@@ -139,10 +132,10 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
               <ShareModalContent label="Pinterest">
                 <PinterestShareButton
                   url={URL}
-                  title={currentPostProps.title}
+                  title={currentPostProps?.title}
                   className="nl-share-btn-Pinterest"
                   id="nl-share-btn-Pinterest"
-                  media={contentImageUrl({ ...currentPostProps })}
+                  media={contentImageUrl}
                 >
                   <PinterestIcon />
                 </PinterestShareButton>
@@ -175,7 +168,7 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
               </ShareModalContent>
             </>
           )}
-          <ShareModalContent style={{ paddingBottom: "none" }}>
+          <ShareModalContent style={{ paddingBottom: "none", justifyContent: "center" }}>
             <Button
               className="ant-btn ant-btn-primary"
               onClick={() => {
@@ -189,7 +182,7 @@ export const Share: NLView<{ currentPostProps: PostReadResponse }> = ({
       ) : (
         false
       )}
-      <span onClick={() => setIsVisible(true)} style={{ cursor: "pointer" }}>
+      <span onClick={() => setIsVisible(true)} style={{ cursor: "pointer", height: 30 }}>
         <ShareIcon />
       </span>
     </>

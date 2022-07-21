@@ -3,9 +3,9 @@
 import { fetch } from "./effects/fetch";
 
 export default {
-    // Firebase,
-    // Api,
-    fetch
-}
+  // Firebase,
+  // Api,
+  fetch,
+};
 
 // export default {}

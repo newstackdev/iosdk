@@ -1,4 +1,4 @@
-import { IContext } from 'overmind';
+import { IContext } from "overmind";
 import { PartialConfiguration } from "../config";
 export declare const config: (cfg: PartialConfiguration) => {
     state: import("overmind/lib/internalTypes").SubType<{
@@ -10,10 +10,11 @@ export declare const config: (cfg: PartialConfiguration) => {
                 newcoin: {
                     daoId: string;
                     daoDomain: string;
+                    displayDaoDomain: string;
                     poolId: string;
                 };
                 firebaseConfig: import("../types").FirebaseConfig;
-                newlife: {
+                newgraph: {
                     baseUrl: string;
                     mediaBucket: any;
                     websocketsServer: any;
@@ -23,6 +24,9 @@ export declare const config: (cfg: PartialConfiguration) => {
                 };
                 stripe: {
                     publicKey: any;
+                };
+                indicators: {
+                    isWatchable: (actionName: string) => boolean;
                 };
             };
             routes: {
@@ -81,7 +85,6 @@ export declare const config: (cfg: PartialConfiguration) => {
         };
         websockets: {
             socket: WebSocket | null;
-            url: string;
             messages: {
                 incoming: any[];
                 activityStream: {
@@ -115,8 +118,8 @@ export declare const config: (cfg: PartialConfiguration) => {
             client: import("../types").CreatorApi;
             auth: {
                 status: import("./auth/state").AUTH_FLOW_STATUS_TYPE;
-                user: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse | null;
-                moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
+                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                 authorized: boolean;
                 admitted: boolean;
                 userDisplayHandler: string;
@@ -124,20 +127,20 @@ export declare const config: (cfg: PartialConfiguration) => {
             };
             cache: {
                 users: {
-                    byUsername: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                        moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                    byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                        moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                     }>;
-                    byId: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                        moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                    byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                        moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                     }>;
                 };
                 powerups: import("./api/state").PowerupsCache;
-                posts: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                moods: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse & {
+                posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | null | undefined;
                 }>;
                 stakeHistory: {
-                    user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                    user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                     amount: string;
                     response: any;
                     error: any;
@@ -191,20 +194,20 @@ export declare const config: (cfg: PartialConfiguration) => {
             postsSearch: {};
             top: {
                 moods: {
-                    _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
-                    items: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
+                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                     sortKey: string;
                     page: number;
                 };
                 users: {
-                    _items: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse>;
-                    items: import("@newlife/newlife-creator-client-api").UserReadPublicResponse[];
+                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
+                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
                     sortKey: string;
                     page: number;
                 };
                 posts: {
-                    _items: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                    items: import("@newlife/newlife-creator-client-api").PostReadResponse[];
+                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
                     sortKey: string;
                     page: number;
                 };
@@ -212,11 +215,11 @@ export declare const config: (cfg: PartialConfiguration) => {
             search: {
                 users: {
                     query: string;
-                    results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
                 };
                 posts: {
                     query: string;
-                    results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
                     lastQueried: {
                         tags: string;
                         aesthetics: string;
@@ -226,7 +229,7 @@ export declare const config: (cfg: PartialConfiguration) => {
                 };
                 tags: {
                     query: string;
-                    results: import("@newlife/newlife-creator-client-api").PostTagsSearchPublicResponse | null;
+                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
                     lastQueried: string;
                     isActive: boolean;
                     page: number;
@@ -236,9 +239,13 @@ export declare const config: (cfg: PartialConfiguration) => {
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
                 create: {
-                    form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                    form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                        couponCode?: string | undefined;
+                    }>;
                     justCreated: boolean;
                     legacyToken: string;
+                    legacyUsername: string;
+                    isLegacyUpdateOngoing: boolean;
                     formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
                     wizard: ({
                         current: "SELECT_DOMAIN";
@@ -327,21 +334,25 @@ export declare const config: (cfg: PartialConfiguration) => {
                 };
                 latestMode: number;
             };
+            vote: {
+                options: {
+                    votingContainer: any;
+                };
+                latestMode: number;
+            };
         }, object>;
         newcoin: {
             account: any;
             pools: any;
             mainPool: any;
-            daos: Record<string, {
-                proposals: import("@newlife/newlife-creator-client-api").BcListDaoProposalsResponse;
-            }>;
+            daos: Record<string, import("./newcoin/state").DaoState>;
             cache: {
                 accountHistory: Record<string, import("./newcoin/types").HyperionAccountHistory>;
                 pools: {
                     byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                     byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                 };
-                votes: Record<string, import("@newlife/newlife-creator-client-api").BcDaoProposalVoteResponse>;
+                votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
     }, object>;
@@ -377,9 +388,9 @@ export declare const config: (cfg: PartialConfiguration) => {
         };
         chromeext: {};
         api: {
-            initialize(baseUrl: any): import("../types").CreatorApi;
+            initialize(baseUrl: string): import("../types").CreatorApi;
             updateToken(token: string): void;
-            authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
+            authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
         };
         lists: {};
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -401,6 +412,7 @@ export declare const config: (cfg: PartialConfiguration) => {
             };
             userJourney: unknown;
             stake: unknown;
+            vote: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
     }, object>;
@@ -515,6 +527,7 @@ export declare const config: (cfg: PartialConfiguration) => {
                 onInitializeOvermind: import("../types").Action<undefined, void>;
             };
             stake: typeof import("./flows/stake/actions");
+            vote: typeof import("./flows/vote/actions");
         }, object>;
         newcoin: typeof import("./newcoin/actions");
     }, object>;

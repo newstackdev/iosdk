@@ -1,5 +1,5 @@
-import { UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { NLView } from "../../types";
+import { UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const UserStakeButton: NLView<{
     user: UserReadPublicResponse;
 }>;

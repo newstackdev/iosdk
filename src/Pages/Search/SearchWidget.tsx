@@ -1,197 +1,286 @@
-import { UserReadPrivateResponse } from "@newlife/newlife-creator-client-api";
-import { Button, Col, Dropdown, Input, Row, Select } from "antd";
+import { Avatar, Button, Col, Dropdown, Input, Row, Select } from "antd";
+import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 
-import { useEffect, useState } from "react";
-import { NLView } from "../../types";
-import OutsideClickHandler from "react-outside-click-handler";
-import { useActions, useAppState } from "../../overmind";
-import { UsersList } from "../../Components/UserWidget";
+import { Callback, IOView, NLView } from "../../types";
+import { ContentImage } from "../../Components/Image";
 import { Searchicon } from "../../Components/Icons/Searchicon";
+import { UsersList } from "../../Components/UserWidget";
+import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
 import { json } from "overmind";
-import { Link } from "react-router-dom";
-import { uniqBy } from "lodash"
+import { map, uniqBy, values } from "lodash";
+import { useActions, useAppState } from "../../overmind";
+import { useEffect, useMemo, useState } from "react";
+import { useVerified } from "../../hooks/useVerified";
 
 export const UserSearchResultsWidget: NLView<{ query: string }> = ({ query }) => {
-	const state = useAppState();
-	const actions = useActions();
-	const res = state.lists.search.users.results;
+  const state = useAppState();
+  const actions = useActions();
+  const res = state.lists.search.users.results;
 
-	useEffect(() => {
-		actions.lists.searchUsers({ query });
-	}, [query]);
+  useEffect(() => {
+    actions.lists.searchUsers({ query });
+  }, [query]);
 
-	return (
-		<ul
-			style={{ padding: 24, maxWidth: 700, marginTop: 5, marginLeft: 150 }}
-			className="nl-white-box app-box-shadow paragraph-1r user-search-results-widget"
-		>
-			{res && res?.value?.length ? (
-				<UsersList users={res.value} powerUp={false} />
-			) : res && !res?.value?.length ? (
-				"No results"
-			) : (
-				""
-			)}
-		</ul>
-	);
+  return (
+    <Select.Option className="nl-white-box app-box-shadow paragraph-1r user-search-results-widget">
+      {res && res?.value?.length ? (
+        <UsersList users={res.value} powerUp={false} />
+      ) : res && !res?.value?.length ? (
+        "No results"
+      ) : (
+        ""
+      )}
+    </Select.Option>
+  );
 };
 
 export const TagsAutosuggestWidget: NLView<{ query: string }> = ({ query }) => {
-	const state = useAppState();
-	const actions = useActions();
-	const res = uniqBy(json(state.lists.search.tags.results)?.value || [], t => t.tag);
+  const state = useAppState();
+  const actions = useActions();
+  const res = uniqBy(json(state.lists.search.tags.results)?.value || [], (t: any) => t.tag);
 
-	useEffect(() => {
-		actions.lists.searchTags({ query });
-	}, [query]);
+  useEffect(() => {
+    actions.lists.searchTags({ query });
+  }, [query]);
 
-	return (
-		<div
-			style={{ padding: 24, maxWidth: 700, marginTop: 5, marginLeft: 150 }}
-			className="nl-white-box app-box-shadow paragraph-1r user-search-results-widget"
-		>
-			{res.length ? (
-				res.map(t => <div
-					style={{ width: "100%", cursor: "pointer" }}
-					key={t.tag}
-					onClick={() => actions.routing.historyPush({ location: `/search?tags=${t.tag}` })}>
-					{t.tag}
-				</div>
-				)
-			) : res && !res?.length ? (
-				"No results"
-			) : (
-				""
-			)}
-		</div>
-	);
+  return (
+    <div
+      style={{
+        padding: 24,
+        maxWidth: 700,
+        marginTop: 5,
+        marginLeft: 150,
+      }}
+      className="nl-white-box app-box-shadow paragraph-1r user-search-results-widget"
+    >
+      {res.length
+        ? res.map((t: any) => (
+            <div
+              style={{ width: "100%", cursor: "pointer" }}
+              key={t.tag}
+              onClick={() =>
+                actions.routing.historyPush({
+                  location: `/search?tags=${t.tag}`,
+                })
+              }
+            >
+              {t.tag}
+            </div>
+          ))
+        : res && !res?.length
+        ? "No results"
+        : ""}
+    </div>
+  );
 };
 
 type SearchResultsWidget = typeof UserSearchResultsWidget;
 
-
 const SearchResultsByMode = {
-	"@": UserSearchResultsWidget,
-	"#": TagsAutosuggestWidget
+  "@": UserSearchResultsWidget,
+  "#": TagsAutosuggestWidget,
 };
 
 export const SearchWidget: NLView<{
-	user?: UserReadPrivateResponse;
-	// search: boolean;
-	// setSearch: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ user }) => {
-	const state = useAppState();
+  user?: UserReadPrivateResponse;
+  searchUsers?: boolean;
+  searchTags?: boolean;
+  noNavigation?: boolean;
+  onChange?: Callback;
+  showSearch?: boolean;
+  // search: boolean;
+  // setSearch: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch }) => {
+  const state = useAppState();
+  const actions = useActions();
+  const [query, setQuery] = useState<string>("");
+  const [selection, setSelection] = useState<string>("");
+  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(true);
+  const [mouseVisible, setMouseVisible] = useState(false);
+  const [justNavigated, setJustNavigated] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [filterState, setFilterState] = useState<"Member" | "Tag" | undefined>(undefined);
 
-	const [query, setQuery] = useState<string>("");
-	const [mode, setMode] = useState<string>("#");
-	const [resultsVisible, setResultsVisible] = useState<boolean>(false);
-	const [SearchResultsWidget, setSearchResultsWidget] = useState<{ component: SearchResultsWidget }>({ component: TagsAutosuggestWidget })
-	const actions = useActions();
-	const currQuery = mode == "#" ? state.lists.search.posts.query : state.lists.search.users.query
-	// const setQuery = mode == "#" ? actions.lists.searchTags : actions.lists.searchUsers;
-	const [search, setSearch] = useState(false);
+  const foundUsers = state.lists.search.users?.results?.value || [];
+  const foundTags = Array.from(new Set((state.lists.search.tags?.results?.value || []).map((t) => t.tag))) || [];
 
-	useEffect(() => {
+  const { verifiedUsers } = useVerified(map(foundUsers, "username"));
 
-		if (/^[\@\#]$/.test(query)) {
-			setMode(query);
-			setSearchResultsWidget({ component: SearchResultsByMode[query] });
-			setQuery("");
-			return;
-		}
-		// if(query.startsWith("#") && query.length > 3)
-		// 	actions.lists.searchTags({ query });
-	}, [query]);
+  useEffect(() => {
+    const searchForResults = async () => {
+      if (query.length < 3) return;
 
-	useEffect(() => {
-		if (currQuery == query)
-			return;
+      setLoading(true);
 
-		setQuery(currQuery);
-		setResultsVisible(false);
+      const queryUsers = searchUsers && actions.lists.searchUsers({ query });
+      const queryTags = searchTags && actions.lists.searchTags({ query });
 
+      await Promise.all([queryUsers, queryTags]);
 
-	}, [currQuery])
+      setLoading(false);
+    };
 
-	return (
-		<Row
-			style={{
-				height: "100%",
-				alignItems: "center",
-				width: "100%",
-			}}
-		>
-			<div onClick={() => setSearch(!search)}>
+    searchForResults();
+  }, [query]);
 
-				<Searchicon />
-			</div>
-			<div style={{ flex: "1" }}>
-				<OutsideClickHandler
-					onOutsideClick={() => {
-						setResultsVisible(false);
-					}}
-				>
-					<Col span={20} className="app-main-full-width-only">
-						{search && (
-							<Dropdown
-								visible={resultsVisible}
-								placement="bottomCenter"
-								overlay={
-									<SearchResultsWidget.component query={query || ""} />
-								}
-							>
-								<Row className="app-main-full-width-only search-row">
-									<Input
-										prefix={mode || ""}
-										placeholder="Search"
-										onPressEnter={() => {
-											const q = query;
-											// setQuery("");
-											
-											// actions.lists.searchPosts({ tags: q, force: true });
-											if(mode == "#") {
-												setTimeout(() => actions.routing.historyPush({ location: `/search?tags=${q}` }), 100);
-												setResultsVisible(false);
-											}
-										}}
-										suffix={search && (
-											<div
-												onClick={() => setSearch(false)}
-												style={{
-													position: "absolute",
-													right: 0,
-													color: "white",
-													// top: "20px",
-													fontSize: "15px",
-												}}
-											>
-												Cancel
-											</div>
-										)}
-										onFocus={() => setResultsVisible(true)}
-										onChange={(e) => {
-											setQuery(e.target.value);
-											setResultsVisible(!!e.target.value);
-										}}
-										style={
-											query === ""
-												? {
-													opacity: "80%",
-													width: "100%",
-												}
-												: {
-													opacity: "100%",
-													width: "100%",
-												}
-										}
-										value={query}
-									/>
-								</Row>
-							</Dropdown>
-						)}
-					</Col>
-				</OutsideClickHandler>
-			</div>
-		</Row>
-	);
+  return (
+    <Row align="bottom">
+      <div
+        style={{ width: 30, margin: "16px 5px 0 5px" }}
+        onClick={() => setVisible(!visible)}
+        onMouseOver={() => setMouseVisible(true)}
+        onMouseOut={() => setMouseVisible(false)}
+      >
+        <Searchicon />
+      </div>
+      <div>
+        {!(showSearch || visible) && !mouseVisible ? (
+          <></>
+        ) : (
+          <Select
+            className="search-widget"
+            showSearch
+            allowClear
+            open={open && query.length >= 3}
+            clearIcon={
+              !loading ? (
+                <div
+                  style={{
+                    position: "absolute",
+                    right: -10,
+                    color: "white",
+                  }}
+                  className="paragraph-2b"
+                  onClick={() => setOpen(false)}
+                >
+                  Cancel
+                </div>
+              ) : (
+                <></>
+              )
+            }
+            value={selection || []}
+            loading={loading}
+            defaultActiveFirstOption
+            filterOption={false}
+            autoFocus
+            style={{ marginTop: 12, width: "min(350px,80vw)" }}
+            placeholder="Search..."
+            onSearch={(v) => {
+              setQuery(v);
+              setOpen(true);
+              setJustNavigated(false);
+            }}
+            onBlur={() => setSelection("")}
+            onSelect={(val: string) => {
+              if (justNavigated) return;
+
+              const mode = /^[@#]/.test(val[0]) ? val[0] : "#";
+              const v = val.replace(/^[@#]/, "");
+              const path = mode === "#" ? `/search?tags=${v}` : `/user/${v}`;
+              setQuery("");
+
+              if (!noNavigation)
+                actions.routing.historyPush({
+                  location: path,
+                });
+
+              setSelection(v);
+              onChange && onChange(v);
+
+              setJustNavigated(true);
+              // if(mode === "@")
+            }}
+            dropdownRender={(menu) => (
+              <div>
+                <Row
+                  style={{
+                    backgroundColor: "#A5A1A1",
+                    padding: 10,
+                  }}
+                >
+                  {foundUsers.length > 0 && foundTags.length > 0 ? (
+                    <>
+                      <Col
+                        className={filterState === "Member" ? "filter-tag filter-tag__active" : "filter-tag"}
+                        onClick={() => {
+                          setFilterState("Member");
+                          setVisible(true);
+                        }}
+                      >
+                        <p className="paragraph-2b">Member</p>
+                      </Col>
+                      <Col
+                        className={filterState === "Tag" ? "filter-tag filter-tag__active" : "filter-tag"}
+                        onClick={() => {
+                          setFilterState("Tag");
+                          setVisible(true);
+                        }}
+                      >
+                        <p className="paragraph-2b">Hashtag</p>
+                      </Col>
+                    </>
+                  ) : (
+                    <Col className={"filter-tag"}>
+                      <p className="paragraph-2b">No filters available.</p>
+                    </Col>
+                  )}
+                </Row>
+                {menu}
+              </div>
+            )}
+          >
+            {foundUsers?.map((u) => {
+              const isUserVerified = verifiedUsers && u.username && verifiedUsers.includes(u.username);
+              if (filterState === "Tag") return;
+              return (
+                <Select.Option value={`@${u.username}`}>
+                  <Row gutter={18} className="app-main-full-width-only" wrap={true} style={{ alignItems: "center" }}>
+                    <Col>
+                      <Avatar src={<ContentImage {...u} />} />
+                    </Col>
+                    <Col>
+                      <p className="paragraph-2b">{u.username}</p>
+                      {isUserVerified && <VerifiedIcon />}
+                    </Col>
+                  </Row>
+                </Select.Option>
+              );
+            })}
+
+            {foundTags.map((t) => {
+              if (filterState === "Member") return;
+              return (
+                <Select.Option value={`#${t}`}>
+                  <Row align="middle" gutter={18} className="app-main-full-width-only" justify="start" wrap={true}>
+                    <Col span={5}>
+                      <Avatar
+                        src={
+                          <div
+                            style={{
+                              background: "lightgrey",
+                              color: "grey",
+                              paddingTop: 10,
+                              paddingBottom: 10,
+                            }}
+                          >
+                            #
+                          </div>
+                        }
+                      />
+                    </Col>
+                    <Col span={13}>
+                      <p className="paragraph-2b">{t}</p>
+                    </Col>
+                    <Col span={6}></Col>
+                  </Row>
+                </Select.Option>
+              );
+            })}
+          </Select>
+        )}
+      </div>
+    </Row>
+  );
 };

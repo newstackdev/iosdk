@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { List } from "antd";
-import { json } from "overmind";
 import { Link } from "react-router-dom";
+import { json } from "overmind";
 import { useAppState } from "../overmind";
 import Logo from "./Icons/Logo";
 export const ActivityStream = (props) => {

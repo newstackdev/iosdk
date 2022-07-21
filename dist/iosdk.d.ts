@@ -14,10 +14,11 @@ declare const _default: {
                         newcoin: {
                             daoId: string;
                             daoDomain: string;
+                            displayDaoDomain: string;
                             poolId: string;
                         };
                         firebaseConfig: import("./types").FirebaseConfig;
-                        newlife: {
+                        newgraph: {
                             baseUrl: string;
                             mediaBucket: any;
                             websocketsServer: any;
@@ -27,6 +28,9 @@ declare const _default: {
                         };
                         stripe: {
                             publicKey: any;
+                        };
+                        indicators: {
+                            isWatchable: (actionName: string) => boolean;
                         };
                     };
                     routes: {
@@ -85,7 +89,6 @@ declare const _default: {
                 };
                 websockets: {
                     socket: WebSocket | null;
-                    url: string;
                     messages: {
                         incoming: any[];
                         activityStream: {
@@ -119,8 +122,8 @@ declare const _default: {
                     client: import("./types").CreatorApi;
                     auth: {
                         status: import("./overmind/auth/state").AUTH_FLOW_STATUS_TYPE;
-                        user: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse | null;
-                        moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                        user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
+                        moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                         authorized: boolean;
                         admitted: boolean;
                         userDisplayHandler: string;
@@ -128,20 +131,20 @@ declare const _default: {
                     };
                     cache: {
                         users: {
-                            byUsername: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                                moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                            byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                                moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                             }>;
-                            byId: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                                moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                            byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                                moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                             }>;
                         };
                         powerups: import("./overmind/api/state").PowerupsCache;
-                        posts: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                        moods: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse & {
+                        posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                        moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
                             promise?: Promise<any> | null | undefined;
                         }>;
                         stakeHistory: {
-                            user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                            user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                             amount: string;
                             response: any;
                             error: any;
@@ -195,20 +198,20 @@ declare const _default: {
                     postsSearch: {};
                     top: {
                         moods: {
-                            _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
-                            items: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                            _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
+                            items: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                             sortKey: string;
                             page: number;
                         };
                         users: {
-                            _items: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse>;
-                            items: import("@newlife/newlife-creator-client-api").UserReadPublicResponse[];
+                            _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
+                            items: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
                             sortKey: string;
                             page: number;
                         };
                         posts: {
-                            _items: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                            items: import("@newlife/newlife-creator-client-api").PostReadResponse[];
+                            _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                            items: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
                             sortKey: string;
                             page: number;
                         };
@@ -216,11 +219,11 @@ declare const _default: {
                     search: {
                         users: {
                             query: string;
-                            results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                            results: import("@newcoin-foundation/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
                         };
                         posts: {
                             query: string;
-                            results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                            results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
                             lastQueried: {
                                 tags: string;
                                 aesthetics: string;
@@ -230,7 +233,7 @@ declare const _default: {
                         };
                         tags: {
                             query: string;
-                            results: import("@newlife/newlife-creator-client-api").PostTagsSearchPublicResponse | null;
+                            results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
                             lastQueried: string;
                             isActive: boolean;
                             page: number;
@@ -240,9 +243,13 @@ declare const _default: {
                 flows: import("overmind/lib/internalTypes").SubType<{
                     user: import("overmind/lib/internalTypes").SubType<{
                         create: {
-                            form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                            form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                                couponCode?: string | undefined;
+                            }>;
                             justCreated: boolean;
                             legacyToken: string;
+                            legacyUsername: string;
+                            isLegacyUpdateOngoing: boolean;
                             formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
                             wizard: ({
                                 current: "SELECT_DOMAIN";
@@ -331,21 +338,25 @@ declare const _default: {
                         };
                         latestMode: number;
                     };
+                    vote: {
+                        options: {
+                            votingContainer: any;
+                        };
+                        latestMode: number;
+                    };
                 }, object>;
                 newcoin: {
                     account: any;
                     pools: any;
                     mainPool: any;
-                    daos: Record<string, {
-                        proposals: import("@newlife/newlife-creator-client-api").BcListDaoProposalsResponse;
-                    }>;
+                    daos: Record<string, import("./overmind/newcoin/state").DaoState>;
                     cache: {
                         accountHistory: Record<string, import("./overmind/newcoin/types").HyperionAccountHistory>;
                         pools: {
                             byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                             byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                         };
-                        votes: Record<string, import("@newlife/newlife-creator-client-api").BcDaoProposalVoteResponse>;
+                        votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
                     };
                 };
             }, object>;
@@ -381,9 +392,9 @@ declare const _default: {
                 };
                 chromeext: {};
                 api: {
-                    initialize(baseUrl: any): import("./types").CreatorApi;
+                    initialize(baseUrl: string): import("./types").CreatorApi;
                     updateToken(token: string): void;
-                    authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
+                    authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
                 };
                 lists: {};
                 flows: import("overmind/lib/internalTypes").SubType<{
@@ -405,6 +416,7 @@ declare const _default: {
                     };
                     userJourney: unknown;
                     stake: unknown;
+                    vote: unknown;
                 }, object>;
                 newcoin: typeof import("./overmind/newcoin/effects");
             }, object>;
@@ -519,6 +531,7 @@ declare const _default: {
                         onInitializeOvermind: import("./types").Action<undefined, void>;
                     };
                     stake: typeof import("./overmind/flows/stake/actions");
+                    vote: typeof import("./overmind/flows/vote/actions");
                 }, object>;
                 newcoin: typeof import("./overmind/newcoin/actions");
             }, object>;
@@ -531,10 +544,11 @@ declare const _default: {
                 newcoin: {
                     daoId: string;
                     daoDomain: string;
+                    displayDaoDomain: string;
                     poolId: string;
                 };
                 firebaseConfig: import("./types").FirebaseConfig;
-                newlife: {
+                newgraph: {
                     baseUrl: string;
                     mediaBucket: any;
                     websocketsServer: any;
@@ -544,6 +558,9 @@ declare const _default: {
                 };
                 stripe: {
                     publicKey: any;
+                };
+                indicators: {
+                    isWatchable: (actionName: string) => boolean;
                 };
             };
             routes: {
@@ -583,10 +600,11 @@ declare const _default: {
             newcoin: {
                 daoId: string;
                 daoDomain: string;
+                displayDaoDomain: string;
                 poolId: string;
             };
             firebaseConfig: import("./types").FirebaseConfig;
-            newlife: {
+            newgraph: {
                 baseUrl: string;
                 mediaBucket: any;
                 websocketsServer: any;
@@ -596,6 +614,9 @@ declare const _default: {
             };
             stripe: {
                 publicKey: any;
+            };
+            indicators: {
+                isWatchable: (actionName: string) => boolean;
             };
         };
         routes: {
@@ -635,10 +656,11 @@ declare const _default: {
                     newcoin: {
                         daoId: string;
                         daoDomain: string;
+                        displayDaoDomain: string;
                         poolId: string;
                     };
                     firebaseConfig: import("./types").FirebaseConfig;
-                    newlife: {
+                    newgraph: {
                         baseUrl: string;
                         mediaBucket: any;
                         websocketsServer: any;
@@ -648,6 +670,9 @@ declare const _default: {
                     };
                     stripe: {
                         publicKey: any;
+                    };
+                    indicators: {
+                        isWatchable: (actionName: string) => boolean;
                     };
                 };
                 routes: {
@@ -706,7 +731,6 @@ declare const _default: {
             };
             websockets: {
                 socket: WebSocket | null;
-                url: string;
                 messages: {
                     incoming: any[];
                     activityStream: {
@@ -740,8 +764,8 @@ declare const _default: {
                 client: import("./types").CreatorApi;
                 auth: {
                     status: import("./overmind/auth/state").AUTH_FLOW_STATUS_TYPE;
-                    user: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse | null;
-                    moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                    user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
+                    moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                     authorized: boolean;
                     admitted: boolean;
                     userDisplayHandler: string;
@@ -749,20 +773,20 @@ declare const _default: {
                 };
                 cache: {
                     users: {
-                        byUsername: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                            moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                        byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                            moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                         }>;
-                        byId: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                            moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                        byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                            moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                         }>;
                     };
                     powerups: import("./overmind/api/state").PowerupsCache;
-                    posts: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                    moods: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse & {
+                    posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                    moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
                         promise?: Promise<any> | null | undefined;
                     }>;
                     stakeHistory: {
-                        user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                        user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                         amount: string;
                         response: any;
                         error: any;
@@ -816,20 +840,20 @@ declare const _default: {
                 postsSearch: {};
                 top: {
                     moods: {
-                        _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
-                        items: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                        _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
+                        items: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                         sortKey: string;
                         page: number;
                     };
                     users: {
-                        _items: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse>;
-                        items: import("@newlife/newlife-creator-client-api").UserReadPublicResponse[];
+                        _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
+                        items: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
                         sortKey: string;
                         page: number;
                     };
                     posts: {
-                        _items: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                        items: import("@newlife/newlife-creator-client-api").PostReadResponse[];
+                        _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                        items: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
                         sortKey: string;
                         page: number;
                     };
@@ -837,11 +861,11 @@ declare const _default: {
                 search: {
                     users: {
                         query: string;
-                        results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                        results: import("@newcoin-foundation/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
                     };
                     posts: {
                         query: string;
-                        results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                        results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
                         lastQueried: {
                             tags: string;
                             aesthetics: string;
@@ -851,7 +875,7 @@ declare const _default: {
                     };
                     tags: {
                         query: string;
-                        results: import("@newlife/newlife-creator-client-api").PostTagsSearchPublicResponse | null;
+                        results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
                         lastQueried: string;
                         isActive: boolean;
                         page: number;
@@ -861,9 +885,13 @@ declare const _default: {
             flows: import("overmind/lib/internalTypes").SubType<{
                 user: import("overmind/lib/internalTypes").SubType<{
                     create: {
-                        form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                        form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                            couponCode?: string | undefined;
+                        }>;
                         justCreated: boolean;
                         legacyToken: string;
+                        legacyUsername: string;
+                        isLegacyUpdateOngoing: boolean;
                         formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
                         wizard: ({
                             current: "SELECT_DOMAIN";
@@ -952,21 +980,25 @@ declare const _default: {
                     };
                     latestMode: number;
                 };
+                vote: {
+                    options: {
+                        votingContainer: any;
+                    };
+                    latestMode: number;
+                };
             }, object>;
             newcoin: {
                 account: any;
                 pools: any;
                 mainPool: any;
-                daos: Record<string, {
-                    proposals: import("@newlife/newlife-creator-client-api").BcListDaoProposalsResponse;
-                }>;
+                daos: Record<string, import("./overmind/newcoin/state").DaoState>;
                 cache: {
                     accountHistory: Record<string, import("./overmind/newcoin/types").HyperionAccountHistory>;
                     pools: {
                         byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                         byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                     };
-                    votes: Record<string, import("@newlife/newlife-creator-client-api").BcDaoProposalVoteResponse>;
+                    votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
                 };
             };
         }, object>;
@@ -1002,9 +1034,9 @@ declare const _default: {
             };
             chromeext: {};
             api: {
-                initialize(baseUrl: any): import("./types").CreatorApi;
+                initialize(baseUrl: string): import("./types").CreatorApi;
                 updateToken(token: string): void;
-                authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
+                authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
             };
             lists: {};
             flows: import("overmind/lib/internalTypes").SubType<{
@@ -1026,6 +1058,7 @@ declare const _default: {
                 };
                 userJourney: unknown;
                 stake: unknown;
+                vote: unknown;
             }, object>;
             newcoin: typeof import("./overmind/newcoin/effects");
         }, object>;
@@ -1140,6 +1173,7 @@ declare const _default: {
                     onInitializeOvermind: import("./types").Action<undefined, void>;
                 };
                 stake: typeof import("./overmind/flows/stake/actions");
+                vote: typeof import("./overmind/flows/vote/actions");
             }, object>;
             newcoin: typeof import("./overmind/newcoin/actions");
         }, object>;

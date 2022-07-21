@@ -1,55 +1,6 @@
-import { Context } from './overmind';
-export declare const overmind: (cfg?: import("type-fest/source/partial-deep").PartialObjectDeep<{
-    env: {
-        stage: string;
-    };
-    settings: {
-        newcoin: {
-            daoId: string;
-            daoDomain: string;
-            poolId: string;
-        };
-        firebaseConfig: import("../types").FirebaseConfig;
-        newlife: {
-            baseUrl: string;
-            mediaBucket: any;
-            websocketsServer: any;
-        };
-        routing: {
-            routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
-        };
-        stripe: {
-            publicKey: any;
-        };
-    };
-    routes: {
-        useDefaultRoutes: boolean;
-        overrides: {};
-        noBackButton: string[];
-        defaultRoute: {
-            condition: (state: any) => any;
-            defaultLocation: (_state: any) => string;
-        };
-    };
-    components: {
-        layout: {
-            Layout: import("../types").GenericComponent;
-            TopMenu: import("../types").GenericComponent;
-            Header: import("../types").GenericComponent;
-        };
-        auth: {
-            AuthWidget: import("../types").GenericComponent;
-        };
-        icons: {
-            Logo: import("../types").GenericComponent;
-        };
-    };
-    featureFlags: {
-        onboarding: {
-            premiumDomains: boolean;
-        };
-    };
-}> | undefined) => import("overmind").Overmind<{
+import { Context } from "./overmind";
+import { PartialConfiguration } from "../config";
+export declare const overmind: (cfg?: PartialConfiguration) => import("overmind").Overmind<{
     state: import("overmind/lib/internalTypes").SubType<{
         config: {
             env: {
@@ -59,10 +10,11 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 newcoin: {
                     daoId: string;
                     daoDomain: string;
+                    displayDaoDomain: string;
                     poolId: string;
                 };
                 firebaseConfig: import("../types").FirebaseConfig;
-                newlife: {
+                newgraph: {
                     baseUrl: string;
                     mediaBucket: any;
                     websocketsServer: any;
@@ -72,6 +24,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 };
                 stripe: {
                     publicKey: any;
+                };
+                indicators: {
+                    isWatchable: (actionName: string) => boolean;
                 };
             };
             routes: {
@@ -130,7 +85,6 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         };
         websockets: {
             socket: WebSocket | null;
-            url: string;
             messages: {
                 incoming: any[];
                 activityStream: {
@@ -164,8 +118,8 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             client: import("../types").CreatorApi;
             auth: {
                 status: import("./auth/state").AUTH_FLOW_STATUS_TYPE;
-                user: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse | null;
-                moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
+                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                 authorized: boolean;
                 admitted: boolean;
                 userDisplayHandler: string;
@@ -173,20 +127,20 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             };
             cache: {
                 users: {
-                    byUsername: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                        moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                    byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                        moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                     }>;
-                    byId: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                        moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                    byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                        moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                     }>;
                 };
                 powerups: import("./api/state").PowerupsCache;
-                posts: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                moods: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse & {
+                posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | null | undefined;
                 }>;
                 stakeHistory: {
-                    user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                    user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                     amount: string;
                     response: any;
                     error: any;
@@ -240,20 +194,20 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             postsSearch: {};
             top: {
                 moods: {
-                    _items: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse>;
-                    items: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
+                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
                     sortKey: string;
                     page: number;
                 };
                 users: {
-                    _items: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse>;
-                    items: import("@newlife/newlife-creator-client-api").UserReadPublicResponse[];
+                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
+                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
                     sortKey: string;
                     page: number;
                 };
                 posts: {
-                    _items: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-                    items: import("@newlife/newlife-creator-client-api").PostReadResponse[];
+                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
                     sortKey: string;
                     page: number;
                 };
@@ -261,11 +215,11 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             search: {
                 users: {
                     query: string;
-                    results: import("@newlife/newlife-creator-client-api").UserPagedListReadPublicResponse | null;
+                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
                 };
                 posts: {
                     query: string;
-                    results: import("@newlife/newlife-creator-client-api").PostPagedListReadPublicResponse | null;
+                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
                     lastQueried: {
                         tags: string;
                         aesthetics: string;
@@ -275,7 +229,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 };
                 tags: {
                     query: string;
-                    results: import("@newlife/newlife-creator-client-api").PostTagsSearchPublicResponse | null;
+                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
                     lastQueried: string;
                     isActive: boolean;
                     page: number;
@@ -285,9 +239,13 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
                 create: {
-                    form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                    form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                        couponCode?: string | undefined;
+                    }>;
                     justCreated: boolean;
                     legacyToken: string;
+                    legacyUsername: string;
+                    isLegacyUpdateOngoing: boolean;
                     formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
                     wizard: ({
                         current: "SELECT_DOMAIN";
@@ -376,21 +334,25 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 };
                 latestMode: number;
             };
+            vote: {
+                options: {
+                    votingContainer: any;
+                };
+                latestMode: number;
+            };
         }, object>;
         newcoin: {
             account: any;
             pools: any;
             mainPool: any;
-            daos: Record<string, {
-                proposals: import("@newlife/newlife-creator-client-api").BcListDaoProposalsResponse;
-            }>;
+            daos: Record<string, import("./newcoin/state").DaoState>;
             cache: {
                 accountHistory: Record<string, import("./newcoin/types").HyperionAccountHistory>;
                 pools: {
                     byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                     byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                 };
-                votes: Record<string, import("@newlife/newlife-creator-client-api").BcDaoProposalVoteResponse>;
+                votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
     }, object>;
@@ -426,9 +388,9 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
         };
         chromeext: {};
         api: {
-            initialize(baseUrl: any): import("../types").CreatorApi;
+            initialize(baseUrl: string): import("../types").CreatorApi;
             updateToken(token: string): void;
-            authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
+            authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
         };
         lists: {};
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -450,6 +412,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
             };
             userJourney: unknown;
             stake: unknown;
+            vote: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
     }, object>;
@@ -564,6 +527,7 @@ export declare const overmind: (cfg?: import("type-fest/source/partial-deep").Pa
                 onInitializeOvermind: import("../types").Action<undefined, void>;
             };
             stake: typeof import("./flows/stake/actions");
+            vote: typeof import("./flows/vote/actions");
         }, object>;
         newcoin: typeof import("./newcoin/actions");
     }, object>;
@@ -576,7 +540,7 @@ export declare const useActions: () => {
         } | undefined) => void | Promise<void>;
         readonly resetAuthTimer: (payload?: undefined) => void | Promise<void>;
         readonly reduceTimer: (payload?: undefined) => void | Promise<void>;
-        readonly fakeUserUpdate: (payload: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse) => void | Promise<void>;
+        readonly fakeUserUpdate: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse) => void | Promise<void>;
     };
     indicators: {
         isWorking: (payload: {
@@ -696,43 +660,56 @@ export declare const useActions: () => {
         };
         user: {
             readonly cache: (payload: {
-                user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
+                force?: boolean | undefined;
+                moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse | undefined;
             }) => void | Promise<void>;
             readonly read: (payload: {
                 id?: string | undefined;
                 username?: string | undefined;
-            }) => import("@newlife/newlife-creator-client-api").UserReadPublicResponse | Promise<import("@newlife/newlife-creator-client-api").UserReadPublicResponse>;
+            }) => import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
             readonly create: (payload: {
                 noRouting?: boolean | undefined;
-                user: import("@newlife/newlife-creator-client-api").UserCreateRequest;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest;
                 preregisterCreate?: boolean | undefined;
             }) => void | Promise<void>;
             readonly update: (payload: {
-                user: import("@newlife/newlife-creator-client-api").UserUpdateRequest;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserUpdateRequest;
                 file?: any;
             }) => void | Promise<void>;
             readonly getMoods: (payload: {
                 id?: string | undefined;
             }) => void | Promise<void>;
             readonly stake: (payload: {
-                user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: string;
-            }) => void | Promise<void>;
+            }) => any;
             readonly invite: (payload: {
-                userInvite: import("@newlife/newlife-creator-client-api").UserInviteRequest;
+                userInvite: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInviteRequest;
             }) => void | Promise<void>;
             readonly powerup: (payload: {
-                user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: number;
             }) => void | Promise<void>;
+            readonly powerUpMultiple: (payload: {
+                users: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
+                amount?: number | undefined;
+            }) => void | Promise<void>;
             readonly getPowerups: (payload: {
-                user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
             }) => void | Promise<void>;
             readonly getCurrent: (payload?: undefined) => void | Promise<void>;
+            readonly checkLinkHash: (payload: {
+                hash: string;
+            }) => void | Promise<void>;
+            readonly checkNft: (payload: {
+                collectionAddr: string;
+                nftId: number;
+            }) => void | Promise<void>;
         };
         mood: {
             readonly cache: (payload: {
-                moods?: (import("@newlife/newlife-creator-client-api").MoodReadResponse & {
+                moods?: (import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | undefined;
                 })[] | undefined;
                 overwrite?: boolean | undefined;
@@ -741,32 +718,35 @@ export declare const useActions: () => {
                 id?: string | undefined;
             }) => void | Promise<void>;
             readonly readMultiple: (payload: {
-                moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
             }) => void | Promise<void>;
-            readonly getPosts: (payload: import("@newlife/newlife-creator-client-api").MoodReadResponse) => void | Promise<void>;
+            readonly getPosts: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse) => void | Promise<void>;
             readonly create: (payload: {
-                mood: import("@newlife/newlife-creator-client-api").MoodCreateRequest;
-            }) => import("@newlife/newlife-creator-client-api").MoodReadResponse | Promise<import("@newlife/newlife-creator-client-api").MoodReadResponse>;
+                mood: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodCreateRequest;
+            }) => import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
         };
         post: {
             readonly read: (payload: {
                 id: string;
             }) => void | Promise<void>;
             readonly create: (payload: {
-                postForm: import("@newlife/newlife-creator-client-api").PostCreateRequest & {
+                postForm: import("@newcoin-foundation/iosdk-newgraph-client-js").PostCreateRequest & {
                     file: any;
                 };
-            }) => void | import("@newlife/newlife-creator-client-api").PostReadResponse | Promise<void | import("@newlife/newlife-creator-client-api").PostReadResponse>;
+            }) => void | import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse | Promise<void | import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
             readonly attachToMoods: (payload: {
-                moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
-                post: import("@newlife/newlife-creator-client-api").PostReadResponse;
+                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
+                post: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse;
             }) => void | Promise<void>;
             readonly rate: (payload: {
-                post: import("@newlife/newlife-creator-client-api").PostReadResponse;
+                post: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse;
                 amount: number;
                 contextType: string;
                 contextValue: string;
             }) => void | Promise<void>;
+            readonly getRemoteMeta: (payload: {
+                url: string;
+            }) => import("@newcoin-foundation/iosdk-newgraph-client-js").PostRemoteMetaProxyResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").PostRemoteMetaProxyResponse>;
         };
     };
     lists: {
@@ -794,7 +774,9 @@ export declare const useActions: () => {
         user: {
             create: {
                 readonly onInitializeOvermind: () => void | Promise<void>;
-                readonly updateForm: (payload: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>) => void | Promise<void>;
+                readonly updateForm: (payload: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                    couponCode?: string | undefined;
+                }>) => void | Promise<void>;
                 readonly startLegacyImport: (payload?: undefined) => void | Promise<void>;
                 readonly stopLegacyImport: (payload?: {
                     noRedirect?: boolean | undefined;
@@ -804,11 +786,11 @@ export declare const useActions: () => {
                 readonly wizardStepNext: (payload?: undefined) => void | Promise<void>;
                 readonly preregisterCreate: (payload: {
                     noRouting?: boolean | undefined;
-                    user?: import("@newlife/newlife-creator-client-api").UserCreateRequest | undefined;
+                    user?: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest | undefined;
                 }) => void | Promise<void>;
                 readonly create: (payload: {
                     noRouting?: boolean | undefined;
-                    user: import("@newlife/newlife-creator-client-api").UserCreateRequest;
+                    user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest;
                 }) => void | Promise<void>;
                 readonly checkAvailability: (payload: {
                     username: string;
@@ -839,13 +821,22 @@ export declare const useActions: () => {
                 stakingMode: number;
             }) => void | Promise<void>;
         };
+        vote: {
+            readonly setOptions: (payload?: {
+                votingContainer: any;
+            } | undefined) => void | Promise<void>;
+            readonly setLatestMode: (payload: {
+                votingMode: number;
+            }) => void | Promise<void>;
+        };
     };
     newcoin: {
-        readonly getAccountBalance: (payload: {
-            user: {
+        readonly progressTest: (payload?: undefined) => void | Promise<void>;
+        readonly getAccountBalance: (payload?: {
+            user?: {
                 username?: string | undefined;
-            };
-        }) => any;
+            } | undefined;
+        } | undefined) => any;
         readonly getPoolInfo: (payload: {
             pool: {
                 owner?: string | undefined;
@@ -863,21 +854,49 @@ export declare const useActions: () => {
             daoOwner: string;
             proposal_id?: string | undefined;
         }) => any;
-        readonly daoCreate: (payload: import("@newlife/newlife-creator-client-api").BcCreateDaoRequest) => any;
-        readonly daoCreateProposal: (payload: import("@newlife/newlife-creator-client-api").BcCreateDaoProposal) => any;
-        readonly daoApproveProposal: (payload: {
+        readonly daoGetWhitelistProposals: (payload: {
+            daoId?: string | undefined;
             daoOwner: string;
-            proposalId: string;
+            proposal_id?: string | undefined;
+        }) => any;
+        readonly daoCreate: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").BcCreateDaoRequest) => any;
+        readonly daoCreateProposal: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").BcCreateDaoProposal) => any;
+        readonly daoCreateWhitelistProposal: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").BcCreateWhitelistDaoProposal) => any;
+        readonly daoApproveProposal: (payload: {
+            dao_owner: string;
+            proposal_id: string;
+        }) => any;
+        readonly daoApproveWhitelistProposal: (payload: {
+            dao_owner: string;
+            proposal_id: string;
         }) => any;
         readonly daoVoteProposal: (payload: {
             dao_owner: any;
             proposal_id: any;
             option: any;
             quantity: any;
+            proposal_type: any;
         }) => any;
         readonly voterListVotes: (payload?: {
             voter?: string | undefined;
         } | undefined) => any;
+        readonly daoGetWhitelist: (payload?: {
+            daoOwner?: string | undefined;
+        } | undefined) => any;
+        readonly daoExecuteWhitelistProposal: (payload: {
+            dao_id: string;
+            proposal_id: number;
+            proposal_author: string;
+        }) => any;
+        readonly daoExecuteProposal: (payload: {
+            dao_owner: string;
+            dao_id: string;
+            proposal_id: number;
+            proposal_author: string;
+        }) => any;
+        readonly daoWithdrawVoteDeposit: (payload: {
+            vote_id: string;
+        }) => any;
     };
 };
 export declare const useEffects: () => import("overmind/lib/internalTypes").SubType<{
@@ -912,9 +931,9 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
     };
     chromeext: {};
     api: {
-        initialize(baseUrl: any): import("../types").CreatorApi;
+        initialize(baseUrl: string): import("../types").CreatorApi;
         updateToken(token: string): void;
-        authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
+        authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
     };
     lists: {};
     flows: import("overmind/lib/internalTypes").SubType<{
@@ -936,6 +955,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
         };
         userJourney: unknown;
         stake: unknown;
+        vote: unknown;
     }, object>;
     newcoin: typeof import("./newcoin/effects");
 }, object>;

@@ -1,21 +1,29 @@
-const naiveQSDecode = (search = "") => search.slice(1).split(/&/).map(kv => kv.split(/=/)).reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+const naiveQSDecode = (search = "") => search
+    .slice(1)
+    .split(/&/)
+    .map((kv) => kv.split(/=/))
+    .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 export const routeAfterAuth = async ({ state, actions }) => {
     const p = state.routing.location;
-    if (!state.config.routes.defaultRoute.condition(state)) {
+    const h0s = state.routing.simpleHistory.length ? state.routing.simpleHistory[0].search : undefined;
+    const qs0 = naiveQSDecode(h0s);
+    if (qs0.path) {
+        setTimeout(() => {
+            actions.routing.historyPush({ location: qs0.path });
+        });
+        return;
+    }
+    if (state.routing.isAllowed) {
+        return;
+    }
+    if (!state.routing.isAllowed && !state.config.routes.defaultRoute.condition(state)) {
         const location = state.config.routes.defaultRoute.defaultLocation(state);
         actions.routing.historyPush({ location });
         return;
     }
-    const h0s = state.routing.simpleHistory.length ? state.routing.simpleHistory[0].search : undefined;
-    const qs0 = naiveQSDecode(h0s);
-    if (qs0.path) {
-        actions.routing.historyPush({ location: qs0.path });
-        return;
-    }
-    const nextRoute = !state.api.auth.authorized ? "/user-create" :
-        state.routing.preLoginRoute || "/explore";
-    //  || 
-    // (NONPOSTAUTHLOCATIONS.includes(p) ? 
+    const nextRoute = !state.api.auth.authorized ? "/user-create" : state.routing.preLoginRoute || "/explore";
+    //  ||
+    // (NONPOSTAUTHLOCATIONS.includes(p) ?
     //     "/explore" : p);
     state.routing.preLoginRoute = "";
     // (nextRoute != p) && actions.routing.historyPush({ location: nextRoute });
@@ -37,14 +45,14 @@ export const onRouteChange = async ({ state, actions }, { location: { pathname, 
     if (lastBh) {
         const prevPath = (lastBh.pathname || "").split(/\//);
         const currPath = pathname.split(/\//);
-        if ((currPath.length <= 3) || (prevPath.length != currPath.length) ||
+        if (currPath.length <= 3 ||
+            prevPath.length != currPath.length ||
             currPath.slice(0, currPath.length - 2).join("") != prevPath.slice(0, currPath.length - 2).join(""))
             state.routing.backHistory.push({ pathname, search });
     }
     else {
         state.routing.backHistory.push({ ...state.routing.history.location });
     }
-    ;
     if (!state.routing.isAllowed) {
         return;
     }

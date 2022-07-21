@@ -1,12 +1,6 @@
 export const ShareIcon = () => (
-  <svg
-    width="30"
-    height="31"
-    viewBox="0 0 30 31"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <g clip-path="url(#clip0_641_21810)">
+  <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clipPath="url(#clip0_641_21810)">
       <path
         d="M9.62012 5.97L11.0501 7.36L14.0001 4.34L14.0001 23L16.0001 23L16.0001 4.49L18.9701 7.38L20.3601 5.95L14.8701 0.59L9.62012 5.97Z"
         fill="#FCFCF3"
@@ -18,12 +12,7 @@ export const ShareIcon = () => (
     </g>
     <defs>
       <clipPath id="clip0_641_21810">
-        <rect
-          width="30.41"
-          height="30"
-          fill="white"
-          transform="translate(0 31) rotate(-90)"
-        />
+        <rect width="30.41" height="30" fill="white" transform="translate(0 31) rotate(-90)" />
       </clipPath>
     </defs>
   </svg>

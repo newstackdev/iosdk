@@ -7,16 +7,16 @@ declare const _default: {
         post: typeof import("./actions/post");
     };
     effects: {
-        initialize(baseUrl: any): import("../../types").CreatorApi;
+        initialize(baseUrl: string): import("../../types").CreatorApi;
         updateToken(token: string): void;
-        authorize(): Promise<import("@newlife/newlife-creator-client-api").UserReadPrivateResponse>;
+        authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
     };
     state: {
         client: import("../../types").CreatorApi;
         auth: {
             status: import("../auth/state").AUTH_FLOW_STATUS_TYPE;
-            user: import("@newlife/newlife-creator-client-api").UserReadPrivateResponse | null;
-            moods: import("@newlife/newlife-creator-client-api").MoodReadResponse[];
+            user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
+            moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
             authorized: boolean;
             admitted: boolean;
             userDisplayHandler: string;
@@ -24,20 +24,20 @@ declare const _default: {
         };
         cache: {
             users: {
-                byUsername: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                    moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                    moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                 }>;
-                byId: Record<string, import("@newlife/newlife-creator-client-api").UserReadPublicResponse & {
-                    moods?: import("@newlife/newlife-creator-client-api").MoodReadResponse[] | undefined;
+                byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                    moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                 }>;
             };
             powerups: import("./state").PowerupsCache;
-            posts: Record<string, import("@newlife/newlife-creator-client-api").PostReadResponse>;
-            moods: Record<string, import("@newlife/newlife-creator-client-api").MoodReadResponse & {
+            posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+            moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
                 promise?: Promise<any> | null | undefined;
             }>;
             stakeHistory: {
-                user: import("@newlife/newlife-creator-client-api").UserReadPublicResponse;
+                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: string;
                 response: any;
                 error: any;

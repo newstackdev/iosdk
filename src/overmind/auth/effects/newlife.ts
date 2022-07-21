@@ -1,43 +1,42 @@
-import { ErrorResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
-import { newlifeBaseUrl } from "../../../config";
+import { ErrorResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+// import { newlifeBaseUrl } from "../../../config";
 import { CreatorApi } from "../../../types";
 
-const baseUrl = newlifeBaseUrl;
+// const baseUrl = newlifeBaseUrl;
 
 export const Websocket = () => {
   const state = {
-    socket: null 
+    socket: null,
   } as {
-    socket: WebSocket | null,
-    toggle: (url: string) => void
+    socket: WebSocket | null;
+    toggle: (url: string) => void;
   };
-  
-  const toggle = async (url: string) => {
-    if(state.socket)
-      state.socket.close();
 
-    if(url)
-      state.socket = new WebSocket(url);
-  }
+  const toggle = async (url: string) => {
+    if (state.socket) state.socket.close();
+
+    if (url) state.socket = new WebSocket(url);
+  };
   state.toggle = toggle;
 
-  return state
-}
+  return state;
+};
 
 export const Api = (() => {
   let api: CreatorApi;
   return {
-    initialize() {
+    initialize(baseUrl: string) {
       api = new CreatorApi({
-        baseUrl, securityWorker: (securityData: { token: string } | null) => {
+        baseUrl,
+        securityWorker: (securityData: { token: string } | null) => {
           console.log("Token is ", securityData?.token);
-          return (!securityData ? {} : { headers: { Authorization: securityData.token } })
-        }
+          return !securityData ? {} : { headers: { Authorization: securityData.token } };
+        },
       });
       return api;
     },
     updateToken(token: string) {
-      api.setSecurityData({ token })
+      api.setSecurityData({ token });
     },
     async authorize(): Promise<UserReadPublicResponse> {
       try {
@@ -51,6 +50,6 @@ export const Api = (() => {
         alert(ex.error.errorMessage);
         throw ex;
       }
-    }
-  }
+    },
+  };
 })();

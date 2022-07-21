@@ -1,6 +1,6 @@
 import { Action } from "../../types";
-import { MoodReadResponse, UserPagedListReadPublicResponse, UserReadPublicResponse, PostReadResponse, CreativeSearchResponse, PostPagedListReadPublicResponse, PostTagsSearchPublicResponse } from "@newlife/newlife-creator-client-api";
-export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse['hits']>[number];
+import { CreativeSearchResponse, MoodReadResponse, PostPagedListReadPublicResponse, PostReadResponse, PostTagsSearchPublicResponse, UserPagedListReadPublicResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse["hits"]>[number];
 export declare type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
 export declare const listTopUsers: Action;
 export declare const listTopPosts: Action;

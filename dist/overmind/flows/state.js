@@ -2,6 +2,6 @@ export const routing = {
     preLoginRoute: "",
     breadcrumbs: [],
     history,
-    location: ""
+    location: "",
 };
 //# sourceMappingURL=state.js.map

@@ -1,12 +1,14 @@
 import { namespaced } from "overmind/config";
-import user from "./user";
 import rating from "./rating";
-import userJourney from "./userJourney";
 import stake from "./stake";
+import user from "./user";
+import userJourney from "./userJourney";
+import vote from "./vote";
 export default namespaced({
     user,
     rating,
     userJourney,
-    stake
+    stake,
+    vote,
 });
 //# sourceMappingURL=index.js.map

@@ -1,20 +1,18 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Button, Form, Spin } from "antd";
-import { MaskedInput } from "antd-mask-input";
-import { useForm } from "antd/lib/form/Form";
-import { useState } from "react";
-import { useParams } from "react-router";
-import { pad } from "../../utils/pad";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { MaskedInput } from "antd-mask-input";
+import { useState } from "react";
 import { UserWidgetHeading } from "../../Components/UserWidget";
-import { useCachedUser } from "../../hooks/useCached";
+import { pad } from "../../utils/pad";
 import { useActions, useAppState } from "../../overmind";
-const fixValue = (v) => v
-    .replace(/[^\d\.]/g, "")
-    .replace(/^(\d+)\.(\d+)?(.*)$/, (_, m1, m2) => {
+import { useCachedUser } from "../../hooks/useCached";
+import { useForm } from "antd/lib/form/Form";
+import { useParams } from "react-router";
+const fixValue = (v) => v.replace(/[^\d\.]/g, "").replace(/^(\d+)\.(\d+)?(.*)$/, (_, m1, m2) => {
     return `${m1.slice(0, 6)}.${pad((m2 || "").slice(0, 4), 4, "left")}`;
 });
-export const UserStakeButton = ({ user, }) => {
+export const UserStakeButton = ({ user }) => {
     const actions = useActions();
     const u = useCachedUser(user, true);
     const [staking, setStaking] = useState(false);
@@ -36,8 +34,7 @@ export const UserStakeButton = ({ user, }) => {
     // 	/>;
     return (_jsx(Button, { disabled: !!staking, className: "nl-button-primary text-bold", type: "primary", onClick: doStake, children: staking ? _jsx(_Fragment, { children: "In progress" }) : _jsx(_Fragment, { children: "Stake" }) }));
 };
-export const UserStake = ({ user: _user, }) => {
-    const [activeKey, setActiveKey] = useState("0");
+export const UserStake = ({ user: _user }) => {
     const actions = useActions();
     const state = useAppState();
     const [form] = useForm();
@@ -67,12 +64,9 @@ export const UserStake = ({ user: _user, }) => {
     //         <h3>you just staked on {user.username}. Reload the page to stake again.</h3>
     //     </div>
     const recentlyStaked = state.websockets.messages.newcoin.filter((msg) => {
-        return (msg.original.recipient === user.id &&
-            msg.original.payload.message == "stake_sent");
+        return msg.original.recipient === user.id && msg.original.payload.message == "stake_sent";
     });
-    return (_jsxs(ContentLayout, { header: "Support " + user.username, info: _jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey }), children: [recentlyStaked.length ? (_jsxs(_Fragment, { children: [_jsx("h2", { className: "header-2", children: "Thanks for your support!" }), _jsxs("p", { children: [" ", "You recently staked on ", user.username, " ", recentlyStaked.length, " times:", " ", recentlyStaked
-                                .map((m) => m.original.updated)
-                                .join(", ")] }), _jsx("p", { children: "You are welcome to stake again." })] })) : (""), _jsxs(Form, { form: form, onFinish: stake, 
+    return (_jsxs(ContentLayout, { header: "Support " + user.username, info: _jsx(UserWidgetHeading, { user: user }), children: [recentlyStaked.length ? (_jsxs(_Fragment, { children: [_jsx("h2", { className: "header-2", children: "Thanks for your support!" }), _jsxs("p", { children: [" ", "You recently staked on ", user.username, " ", recentlyStaked.length, " times:", " ", recentlyStaked.map((m) => m.original.updated).join(", ")] }), _jsx("p", { children: "You are welcome to stake again." })] })) : (""), _jsxs(Form, { form: form, onFinish: stake, 
                 // onFinishFailed={onFinishFailed}
                 autoComplete: "off", children: [_jsx(Form.Item, { name: "amount", rules: [{ required: true, message: "Enter amount please" }], children: _jsx(MaskedInput, { style: { fontSize: 100, textAlign: "center" }, size: "large", mask: "xxxxxxxxxxx", placeholderChar: "\u200C", placeholder: "100.0000", 
                             // value={form.amount}

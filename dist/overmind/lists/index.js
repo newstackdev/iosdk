@@ -1,7 +1,7 @@
-import { pipe, debounce, json } from "overmind";
 import { aestheticList } from "./SearchCreative/aestheticList";
-import _ from "lodash";
+import { debounce, json, pipe } from "overmind";
 import { fischerYates } from "../../utils/random";
+import _ from "lodash";
 const ITEMS_PER_PAGE = 20;
 const calculateTags = (items) => {
     const aestheticCounts = {};
@@ -18,7 +18,7 @@ const calculateTags = (items) => {
         });
     }
     const aesthetics = Object.entries(aestheticCounts);
-    aesthetics.filter(val => val[1] > 0.8);
+    aesthetics.filter((val) => val[1] > 0.8);
     aesthetics.sort((a, b) => b[1] - a[1]);
     return aesthetics.slice(0, 5).map((value) => value[0]);
 };
@@ -32,9 +32,9 @@ const creativeSearch = pipe(debounce(500), async ({ state }, query) => {
     const response = await state.api.client.search.creativeList({
         tags: query.tags,
         aesthetics: query.aesthetics,
-        page: page.toString()
+        page: page.toString(),
     });
-    const newdata = (response?.data?.hits || []).map(h => h._source || {});
+    const newdata = (response?.data?.hits || []).map((h) => h._source || {});
     if (newQuery) {
         state.lists.creativeSearch.results.items = newdata;
         state.lists.creativeSearch.tags.items = calculateTags(state.lists.creativeSearch.results.items);
@@ -46,10 +46,12 @@ const creativeSearch = pipe(debounce(500), async ({ state }, query) => {
 });
 const listTopMoods = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.moods.page ?? 0;
-    const r = await state.api.client.mood.listTopList({ page: page.toString() }); // Math.floor(20 + (Math.random() * 20)).toString()
+    const r = await state.api.client.mood.listTopList({
+        page: page.toString(),
+    }); // Math.floor(20 + (Math.random() * 20)).toString()
     const moods = r.data?.value || [];
     await actions.api.mood.cache({ moods });
-    fischerYates(moods).forEach(v => {
+    fischerYates(moods).forEach((v) => {
         // state.api.cache.moods[v.id || ""] = v;
         state.lists.top.moods.items.push({ ...v });
     });
@@ -57,8 +59,10 @@ const listTopMoods = pipe(debounce(300), async ({ state, actions, effects }) => 
 });
 export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.users.page ? state.lists.top.users.page + 1 : Math.floor(Math.random() * 10);
-    const r = await state.api.client.user.listTopList({ page: page.toString() });
-    r.data.value?.forEach(v => {
+    const r = await state.api.client.user.listTopList({
+        page: page.toString(),
+    });
+    r.data.value?.forEach((v) => {
         state.api.cache.users.byId[v.id || ""] = v;
         state.api.cache.users.byUsername[v.username || ""] = v;
         state.lists.top.users.items.push(v);
@@ -67,21 +71,25 @@ export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects
 });
 export const listTopPosts = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.posts.page ? state.lists.top.posts.page + 1 : 0;
-    const r = await state.api.client.post.listTopList({ page: page.toString() });
-    r.data?.value?.forEach(v => {
+    const r = await state.api.client.post.listTopList({
+        page: page.toString(),
+    });
+    r.data?.value?.forEach((v) => {
         state.api.cache.posts[v.id || ""] = v;
         state.lists.top.posts.items.push(v);
     });
     state.lists.top.posts.page++;
 });
-export const searchUsers = pipe(debounce(1000), async ({ state, actions, effects }, { query }) => {
+export const searchUsers = pipe(debounce(300), async ({ state, actions, effects }, { query }) => {
     // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
     state.lists.search.users.query = query;
     state.lists.search.users.results = null;
     if (query.length < 2)
         return;
-    const r = await state.api.client.user.listSearchList({ q: "*" + query + "*" });
-    r.data.value?.forEach(v => {
+    const r = await state.api.client.user.listSearchList({
+        q: "*" + query + "*",
+    });
+    r.data.value?.forEach((v) => {
         state.api.cache.users.byId[v.id || ""] = v;
         state.lists.top.users.items.push(v);
     });
@@ -100,24 +108,28 @@ export const searchPosts = pipe(debounce(1000), async ({ state, actions, effects
         state.lists.top.posts.page = 0;
         state.lists.search.posts.results = null;
     }
-    const tagsQ = tags.split(/,/)
-        .map(t => ({
+    const tagsQ = tags.split(/,/).map((t) => ({
         match: {
-            relevantTags: t
-        }
-    }
+            relevantTags: t,
+        },
+    }));
     // { range: {[`scoredTags.${t}`]:{ gte:0.5}} }
-    ));
     const searchQ = { bool: { must: tagsQ } };
-    const r = await state.api.client.post.listSearchList({ q: JSON.stringify(searchQ), page: (state.lists.search.posts.page || 0).toString() });
-    r.data.value?.forEach(v => {
+    const r = await state.api.client.post.listSearchList({
+        q: JSON.stringify(searchQ),
+        page: (state.lists.search.posts.page || 0).toString(),
+    });
+    r.data.value?.forEach((v) => {
         state.api.cache.posts[v.id || ""] = v;
     });
     const curr = json(state.lists.search.posts.results)?.value || [];
-    state.lists.search.posts.results = { ...r.data, value: [...curr, ...(r.data.value || [])] };
+    state.lists.search.posts.results = {
+        ...r.data,
+        value: [...curr, ...(r.data.value || [])],
+    };
     state.lists.search.posts.lastQueried.tags = tags;
 });
-export const searchTags = pipe(debounce(1000), async ({ state, actions, effects }, { query }) => {
+export const searchTags = pipe(debounce(300), async ({ state, actions, effects }, { query }) => {
     state.lists.search.tags.query = query;
     const loadingMore = state.lists.search.tags.lastQueried === query;
     if (loadingMore) {
@@ -138,19 +150,22 @@ export const searchTags = pipe(debounce(1000), async ({ state, actions, effects 
                     match: {
                         tag: {
                             query,
-                            fuzziness: "AUTO"
-                        }
-                    }
+                            fuzziness: "AUTO",
+                        },
+                    },
                 },
                 { query_string: { query: `*${query}*` } },
                 { query_string: { query } },
                 { query_string: { query: `${query}*` } },
                 { query_string: { query: `*${query}` } },
-            ]
-        }
+            ],
+        },
     };
     // const searchQ = { bool: { must: tagsQ } };
-    const r = await state.api.client.post.listTagsSearchList({ q: JSON.stringify(tagsQ), page: (state.lists.search.tags.page || 0).toString() });
+    const r = await state.api.client.post.listTagsSearchList({
+        q: JSON.stringify(tagsQ),
+        page: (state.lists.search.tags.page || 0).toString(),
+    });
     // r.data.value?.forEach(v => {
     //     state.api.cache.tags[v.id || ""] = v;
     // });
@@ -166,8 +181,8 @@ const actions = {
     top: {
         moods: listTopMoods,
         users: listTopUsers,
-        posts: listTopPosts
-    }
+        posts: listTopPosts,
+    },
 };
 const newListState = ({ sortKey } = { sortKey: "updated" }) => ({
     _items: {},
@@ -182,38 +197,38 @@ export default {
             results: newListState(),
             tags: newListState(),
             lastQueried: { tags: "", aesthetics: "" },
-            isActive: false
+            isActive: false,
         },
         postsSearch: {},
         top: {
             moods: newListState(),
             users: newListState(),
-            posts: newListState()
+            posts: newListState(),
         },
         search: {
             users: {
                 query: "",
-                results: null
+                results: null,
             },
             posts: {
                 query: "",
                 results: null,
                 lastQueried: { tags: "", aesthetics: "" },
                 isActive: false,
-                page: 0
+                page: 0,
             },
             tags: {
                 query: "",
                 results: null,
                 lastQueried: "",
                 isActive: false,
-                page: 0
+                page: 0,
             },
-        }
+        },
     },
     actions,
     effects: {
     // wss://wsapi-eu-sit.newlife.io/creator?token=${token}`)
-    }
+    },
 };
 //# sourceMappingURL=index.js.map

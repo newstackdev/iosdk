@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
 import { Callback, NLView } from "../../types";
+import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const MoodCreate: NLView<{
     onCreated?: Callback<MoodReadResponse>;
     setIsCreated?: React.Dispatch<React.SetStateAction<boolean>>;

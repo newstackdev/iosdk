@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 /**
  * Check if an element is in viewport
  * @param {number} offset - Number of pixels up to the observable element from the top
@@ -15,9 +15,9 @@ export default function useVisibility(offset = 0) {
         setIsVisible(top + offset >= 0 && top - offset <= window.innerHeight);
     };
     useEffect(() => {
-        document.addEventListener('scroll', onScroll, true);
+        document.addEventListener("scroll", onScroll, true);
         // onScroll();
-        return () => document.removeEventListener('scroll', onScroll, true);
+        return () => document.removeEventListener("scroll", onScroll, true);
     }, []);
     useEffect(() => {
         setIsVisible(currentElement.current?.offsetParent !== null);
@@ -40,8 +40,8 @@ export function useVisibilityOnce(offset = 0) {
         setIsVisible(top + offset >= 0 && top - offset <= window.innerHeight);
     };
     useEffect(() => {
-        document.addEventListener('scroll', onScroll, true);
-        return () => document.removeEventListener('scroll', onScroll, true);
+        document.addEventListener("scroll", onScroll, true);
+        return () => document.removeEventListener("scroll", onScroll, true);
     }, []);
     useEffect(() => {
         if (isVisible)

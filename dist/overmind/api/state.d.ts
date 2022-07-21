@@ -1,6 +1,6 @@
-import { MoodReadResponse, PagedRatedResponseUser, PostReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
-import { CreatorApi } from "../../types";
 import { AUTH_FLOW_STATUS_TYPE } from "../auth/state";
+import { CreatorApi } from "../../types";
+import { MoodReadResponse, PagedRatedResponseUser, PostReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const api: CreatorApi;
 export declare type PowerupsCacheItem = {
     in: PagedRatedResponseUser;
@@ -12,7 +12,7 @@ declare type State = {
     client: CreatorApi;
     auth: {
         status: AUTH_FLOW_STATUS_TYPE;
-        user: UserReadPrivateResponse | null;
+        user: UserReadPrivateResponse;
         moods: MoodReadResponse[];
         authorized: boolean;
         admitted: boolean;

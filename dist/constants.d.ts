@@ -5,6 +5,13 @@ export declare const OEMBED_PROVIDERS: ({
     endpoints: {
         schemes: string[];
         url: string;
+    }[];
+} | {
+    provider_name: string;
+    provider_url: string;
+    endpoints: {
+        schemes: string[];
+        url: string;
         discovery: boolean;
     }[];
 } | {
@@ -13,5 +20,43 @@ export declare const OEMBED_PROVIDERS: ({
     endpoints: {
         schemes: string[];
         url: string;
+        discovery: boolean;
+        formats: string[];
+    }[];
+} | {
+    provider_name: string;
+    provider_url: string;
+    endpoints: {
+        schemes: string[];
+        url: string;
+        formats: string[];
+    }[];
+} | {
+    provider_name: string;
+    provider_url: string;
+    endpoints: {
+        url: string;
+        discovery: boolean;
+    }[];
+} | {
+    provider_name: string;
+    provider_url: string;
+    endpoints: {
+        url: string;
+    }[];
+} | {
+    provider_name: string;
+    provider_url: string;
+    endpoints: {
+        url: string;
+        discovery: boolean;
+        formats: string[];
+    }[];
+} | {
+    provider_name: string;
+    provider_url: string;
+    endpoints: {
+        url: string;
+        formats: string[];
     }[];
 })[];

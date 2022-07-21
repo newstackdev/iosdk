@@ -1,7 +1,10 @@
 /// <reference types="react" />
-import { UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { Callback, NLView } from "../types";
 import { STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
+import { UserFlowRoutes } from "../Pages/User/User";
+import { UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserSocials } from "../Pages/User/interfaces/IUser";
+export declare const SOCIAL_MEDIA: UserSocials[];
 export declare const UserWidgetVertical: NLView<{
     user?: UserReadPublicResponse;
 }>;
@@ -30,8 +33,9 @@ export declare const UserWidgetTopFixed: NLView<{
 }>;
 export declare const UserWidgetHeading: NLView<{
     user?: UserReadPrivateResponse;
-    setActiveKey: React.Dispatch<React.SetStateAction<string>>;
+    setActiveKey?: React.Dispatch<React.SetStateAction<UserFlowRoutes>>;
     setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
+    activeKey?: UserFlowRoutes;
 }>;
 export declare const UserSocialInfo: NLView<{
     user?: UserReadPrivateResponse;
@@ -61,10 +65,12 @@ export declare const PoolInfoDataRow: NLView<{
     pool?: {
         code: string;
     };
+    verifyIconLight?: boolean;
 }>;
 export declare const UserNewcoinPoolsParticipation: NLView<{
     user?: UserReadPrivateResponse;
     onStakeStart?: Callback;
+    isWalletUsage?: boolean;
 }>;
 export declare const UserNewcoinInfo: NLView<{
     user?: UserReadPrivateResponse;

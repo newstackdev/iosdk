@@ -4,6 +4,6 @@ import { state } from "./state";
 export default {
     actions,
     effects,
-    state
+    state,
 };
 //# sourceMappingURL=index.js.map

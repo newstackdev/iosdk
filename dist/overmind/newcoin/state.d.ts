@@ -1,6 +1,6 @@
-import { NCPoolsInfo } from "@newcoin-foundation/newcoin-sdk";
-import { BcDaoProposalVoteResponse, BcListDaoProposalsResponse } from "@newlife/newlife-creator-client-api";
+import { BcDaoProposalVoteResponse, BcListDaoProposalsResponse, BcListDaoWhitelistResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { HyperionAccountHistory } from "./types";
+import { NCPoolsInfo } from "@newcoin-foundation/newcoin-sdk";
 export interface PoolInfo {
     rows: Row[];
     more: boolean;
@@ -19,13 +19,16 @@ export interface Total {
     quantity: string;
     contract: string;
 }
+export declare type DaoState = {
+    proposals: BcListDaoProposalsResponse;
+    whitelistProposals: BcListDaoProposalsResponse;
+    whitelist: BcListDaoWhitelistResponse;
+};
 declare const _default: {
     account: any;
     pools: any;
     mainPool: any;
-    daos: Record<string, {
-        proposals: BcListDaoProposalsResponse;
-    }>;
+    daos: Record<string, DaoState>;
     cache: {
         accountHistory: Record<string, HyperionAccountHistory>;
         pools: {

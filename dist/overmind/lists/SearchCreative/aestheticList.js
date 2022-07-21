@@ -16,6 +16,6 @@ export const aestheticList = [
     "goth",
     "margiela vintage",
     "vintage",
-    "y2k"
+    "y2k",
 ];
 //# sourceMappingURL=aestheticList.js.map

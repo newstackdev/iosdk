@@ -7,19 +7,21 @@ var PHONE_VERIFICATION_STATUS;
     PHONE_VERIFICATION_STATUS[PHONE_VERIFICATION_STATUS["SUBMITTED"] = 3] = "SUBMITTED";
     PHONE_VERIFICATION_STATUS[PHONE_VERIFICATION_STATUS["AUTHENTICATED"] = 4] = "AUTHENTICATED";
 })(PHONE_VERIFICATION_STATUS || (PHONE_VERIFICATION_STATUS = {}));
-;
 var AUTHENTICATION_STATUS;
 (function (AUTHENTICATION_STATUS) {
     AUTHENTICATION_STATUS[AUTHENTICATION_STATUS["AUTHORIZING"] = 6] = "AUTHORIZING";
     AUTHENTICATION_STATUS[AUTHENTICATION_STATUS["AUTHORIZED"] = 7] = "AUTHORIZED";
 })(AUTHENTICATION_STATUS || (AUTHENTICATION_STATUS = {}));
-export const AUTH_FLOW_STATUS = { ...PHONE_VERIFICATION_STATUS, ...AUTHENTICATION_STATUS };
+export const AUTH_FLOW_STATUS = {
+    ...PHONE_VERIFICATION_STATUS,
+    ...AUTHENTICATION_STATUS,
+};
 const flows = {
     onboarding: {
         status: "",
         domainName: "",
-        onboardingForm: {}
-    }
+        onboardingForm: {},
+    },
 };
 export const newAuth = () => Object.assign({}, {
     initialized: false,
@@ -31,10 +33,10 @@ export const newAuth = () => Object.assign({}, {
     tokens: {},
     timers: {
         authTimeout: 60,
-        authTimeoutCancel: (() => undefined),
+        authTimeoutCancel: () => undefined,
         // timeToRefresh: 60,
-        timeToRefreshCancel: (() => undefined)
-    }
+        timeToRefreshCancel: () => undefined,
+    },
     // fbUser: null,
 });
 export const state = newAuth();

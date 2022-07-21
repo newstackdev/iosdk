@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/routing/index.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,WAAW,CAAC;AACrC,OAAO,OAAO,MAAM,WAAW,CAAC;AAChC,OAAO,KAAK,MAAM,SAAS,CAAC;AAE5B,eAAe;IACX,OAAO;IACP,OAAO;IACP,KAAK;CACR,CAAA"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/overmind/routing/index.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,WAAW,CAAC;AACrC,OAAO,OAAO,MAAM,WAAW,CAAC;AAChC,OAAO,KAAK,MAAM,SAAS,CAAC;AAE5B,eAAe;IACb,OAAO;IACP,OAAO;IACP,KAAK;CACN,CAAC"}

@@ -7,6 +7,6 @@ export const LoadMore = ({ loadMore }) => {
     useEffect(() => {
         isVisible && loadMore && loadMore();
     }, [isVisible]);
-    return _jsx("div", { ref: currentElement, children: _jsx(Spin, {}) });
+    return (_jsx("div", { ref: currentElement, children: _jsx(Spin, {}) }));
 };
 //# sourceMappingURL=LoadMore.js.map

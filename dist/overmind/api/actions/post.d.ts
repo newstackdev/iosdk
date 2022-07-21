@@ -1,5 +1,5 @@
-import { MoodReadResponse, PostCreateRequest, PostReadResponse } from "@newlife/newlife-creator-client-api";
 import { Action } from "../../../types";
+import { MoodReadResponse, PostCreateRequest, PostReadResponse, PostRemoteMetaProxyResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const read: Action<{
     id: string;
 }>;
@@ -18,3 +18,6 @@ export declare const rate: Action<{
     contextType: string;
     contextValue: string;
 }>;
+export declare const getRemoteMeta: Action<{
+    url: string;
+}, PostRemoteMetaProxyResponse>;

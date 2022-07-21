@@ -1,4 +1,8 @@
 import { AUTH_FLOW_STATUS } from "../auth/state";
+const firebaseTestRecaptcha = {
+    apiKey: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+    secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
+};
 export const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
     const auth = effects.firebase.initialize(state.config.settings.firebaseConfig);
     setTimeout(() => (state.auth.initialized = true), 700);
@@ -9,13 +13,17 @@ export const logout = async ({ effects, state }) => {
     state.firebase.token = "";
 };
 export const refreshApiToken = async ({ state, actions, effects }) => {
-    const token = state.firebase.user ? (await state.firebase.user.getIdToken(true)) : "";
+    const token = state.firebase.user ? await state.firebase.user.getIdToken(true) : "";
     if (!token)
         return actions.auth.logout();
     state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHENTICATED, state.auth.status);
     state.firebase.token = token;
     effects.api.updateToken(token);
-    state.auth.tokens["firebase"] = { tokenType: "firebase", token, logout: actions.firebase.logout };
+    state.auth.tokens["firebase"] = {
+        tokenType: "firebase",
+        token,
+        logout: actions.firebase.logout,
+    };
     // actions.auth.newlifeAuthorize();
 };
 export const handleAuthChange = async ({ actions, state, effects }, fbUser) => {
@@ -41,7 +49,7 @@ export const requestEmailLink = async ({ state, actions, effects }, { email }) =
     await effects.firebase.requestEmailAuthCode({ email });
 };
 export const signInWithEmailLink = async ({ state, actions, effects }) => {
-    const email = window.localStorage.getItem('emailForSignIn') || "";
+    const email = window.localStorage.getItem("emailForSignIn") || "";
     if (!email)
         return false;
     await effects.firebase.signInWithEmailLink(email, window.location.href); // state.routing.location); // with react-router, location.href is the landing url; using the router internal
@@ -62,7 +70,10 @@ export const requestToken = async ({ state, actions, effects }, { phone }) => {
             actions.auth.logout();
         }
     }, 120 * 1000);
-    state.auth.timers.authTimeoutCancel = () => { clearTimeout(timeout); clearInterval(int); };
+    state.auth.timers.authTimeoutCancel = () => {
+        clearTimeout(timeout);
+        clearInterval(int);
+    };
     try {
         await effects.firebase.requestPhoneAuthCode({ phone });
     }
@@ -75,13 +86,17 @@ export const requestToken = async ({ state, actions, effects }, { phone }) => {
 };
 export const verifyPhone = async ({ state, actions, effects }, { phoneVerificationCode }) => {
     state.auth.status = AUTH_FLOW_STATUS.SUBMITTED;
-    const r = await effects.firebase.submitPhonVerificationCode({ phoneVerificationCode });
+    const r = await effects.firebase.submitPhonVerificationCode({
+        phoneVerificationCode,
+    });
     effects.firebase.clearRecaptchaVerifier();
     actions.auth.resetAuthTimer();
     if (r)
         state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED;
     else {
-        effects.ux.notification.error({ message: "Something went wrong, please try again" });
+        effects.ux.notification.error({
+            message: "Something went wrong, please try again",
+        });
         await actions.auth.logout({ noRouting: true });
     }
 };

@@ -533,7 +533,7 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({
 					</Row>
 				</div>
 			</Modal>
-			<Button onClick={powerup} className="powerup-btn">
+			<Button onClick={powerup} className="primary-green-btn">
 				<p
 					className="paragraph-2b"
 					style={{ lineHeight: 0, margin: 0 }}

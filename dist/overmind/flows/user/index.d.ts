@@ -1,9 +1,13 @@
 declare const _default: {
     state: import("overmind/lib/internalTypes").SubType<{
         create: {
-            form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+            form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                couponCode?: string | undefined;
+            }>;
             justCreated: boolean;
             legacyToken: string;
+            legacyUsername: string;
+            isLegacyUpdateOngoing: boolean;
             formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
             wizard: ({
                 current: "SELECT_DOMAIN";

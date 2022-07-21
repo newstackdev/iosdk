@@ -4,6 +4,6 @@ export { App };
 export { overmind };
 export default {
     App,
-    overmind
+    overmind,
 };
 //# sourceMappingURL=iosdk.js.map

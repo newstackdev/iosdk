@@ -1,23 +1,23 @@
-import { UserReadPrivateResponse } from '@newlife/newlife-creator-client-api';
-import { Configuration } from 'src/config';
+import { Configuration } from "../../../../config";
+import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 declare type States = {
-    current: 'SELECT_DOMAIN';
+    current: "SELECT_DOMAIN";
     hasNext: boolean;
     hasPrev: false;
 } | {
-    current: 'AUTHENTICATE';
+    current: "AUTHENTICATE";
     hasNext: boolean;
     hasPrev: boolean;
 } | {
-    current: 'SUBSCRIBE';
+    current: "SUBSCRIBE";
     hasNext: boolean;
     hasPrev: boolean;
 } | {
-    current: 'CREATE_USER';
+    current: "CREATE_USER";
     hasNext: boolean;
     hasPrev: boolean;
 } | {
-    current: 'DONE';
+    current: "DONE";
     hasNext: false;
     hasPrev: false;
 };
@@ -29,7 +29,9 @@ export declare type WizardInput = {
     formUsernameIsAvailable: string;
     user: UserReadPrivateResponse | null;
     legacyToken: string;
+    isLegacyUpdateOngoing: boolean;
     featureFlags: Configuration["featureFlags"];
+    couponCode: string;
 };
 declare type BaseState = {
     current: string;
@@ -37,13 +39,13 @@ declare type BaseState = {
     hasPrev: boolean;
 };
 declare type Events = {
-    type: 'NEXT';
+    type: "NEXT";
     data: WizardInput;
 } | {
-    type: 'PREV';
+    type: "PREV";
     data: WizardInput;
 } | {
-    type: 'UPDATE';
+    type: "UPDATE";
     data: WizardInput;
 };
 export declare const Wizard: {

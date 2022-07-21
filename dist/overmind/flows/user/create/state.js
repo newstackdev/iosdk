@@ -10,8 +10,10 @@ export const state = {
     form: {},
     justCreated: false,
     legacyToken: "",
+    legacyUsername: "",
+    isLegacyUpdateOngoing: false,
     formUsernameIsAvailable: "",
-    wizard: Wizard.create({ current: 'SELECT_DOMAIN', hasNext: false, hasPrev: false }, { current: 'SELECT_DOMAIN', hasNext: false, hasPrev: false })
+    wizard: Wizard.create({ current: "SELECT_DOMAIN", hasNext: false, hasPrev: false }, { current: "SELECT_DOMAIN", hasNext: false, hasPrev: false }),
     // {
     //     step: {
     //         current: DOMAIN_PRESALE_STEPS.SELECT_DOMAIN as DOMAIN_PRESALE_STEPS,

@@ -1,5 +1,3 @@
-import { state } from "./state";
-export default {
-    state
-};
+// import { state } from "./state";
+export {};
 //# sourceMappingURL=index.js.map

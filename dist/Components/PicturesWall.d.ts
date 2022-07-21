@@ -1,12 +1,13 @@
-import React, { ReactElement } from "react";
-import { UploadFile } from "antd/lib/upload/interface";
 import { EventHandler, NLView } from "../types";
+import { UploadFile } from "antd/lib/upload/interface";
+import React, { ReactElement } from "react";
 export declare class PicturesWall extends React.Component<React.ComponentPropsWithRef<React.ElementType & {
     onChange: EventHandler;
+    onContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     uploadText: string;
     setContentType: React.Dispatch<React.SetStateAction<string>>;
     contentType: string;
-    children: ReactElement;
+    children?: ReactElement;
     name: string;
 }>> {
     state: {

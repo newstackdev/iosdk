@@ -1,129 +1,141 @@
-import { User } from "firebase/auth";
-import { Action } from "../../types";
 import { AUTH_FLOW_STATUS } from "../auth/state";
+import { Action } from "../../types";
+import { User } from "firebase/auth";
 
-export const onInitializeOvermind: Action<undefined> = async ({
-    effects, state, actions, reaction
-}) => {
-    const auth = effects.firebase.initialize(state.config.settings.firebaseConfig);
-
-    setTimeout(() => (state.auth.initialized = true), 700);
-
-    auth.onAuthStateChanged((u) => actions.firebase.handleAuthChange(u));
+const firebaseTestRecaptcha = {
+  apiKey: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+  secret: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
 };
 
-export const logout : Action = async ({ effects, state }) => {
-    await effects.firebase.logout();
-    state.firebase.token = "";
-}
+export const onInitializeOvermind: Action<undefined> = async ({ effects, state, actions, reaction }) => {
+  const auth = effects.firebase.initialize(state.config.settings.firebaseConfig);
+
+  setTimeout(() => (state.auth.initialized = true), 700);
+
+  auth.onAuthStateChanged((u) => actions.firebase.handleAuthChange(u));
+};
+
+export const logout: Action = async ({ effects, state }) => {
+  await effects.firebase.logout();
+  state.firebase.token = "";
+};
 
 export const refreshApiToken: Action = async ({ state, actions, effects }) => {
-    const token = state.firebase.user ? (await state.firebase.user.getIdToken(true)) : "";
+  const token = state.firebase.user ? await state.firebase.user.getIdToken(true) : "";
 
-    if (!token)
-        return actions.auth.logout();
+  if (!token) return actions.auth.logout();
 
-    state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHENTICATED, state.auth.status);
+  state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHENTICATED, state.auth.status);
 
-    state.firebase.token = token;
-    effects.api.updateToken(token);
+  state.firebase.token = token;
+  effects.api.updateToken(token);
 
-    state.auth.tokens["firebase"] = { tokenType: "firebase",  token, logout: actions.firebase.logout };
-    // actions.auth.newlifeAuthorize();
+  state.auth.tokens["firebase"] = {
+    tokenType: "firebase",
+    token,
+    logout: actions.firebase.logout,
+  };
+  // actions.auth.newlifeAuthorize();
 };
 
 export const handleAuthChange: Action<User | null> = async ({ actions, state, effects }, fbUser) => {
-    const userChanged = state.firebase.user?.uid !== fbUser?.uid;
+  const userChanged = state.firebase.user?.uid !== fbUser?.uid;
 
-    if (fbUser) {
-        await actions.firebase.setFbUser({ user: fbUser });
+  if (fbUser) {
+    await actions.firebase.setFbUser({ user: fbUser });
 
-        await actions.firebase.refreshApiToken();
+    await actions.firebase.refreshApiToken();
 
-        const timeout = setTimeout(() => {
-            actions.firebase.refreshApiToken();
-        }, 30 * 60000);
-        state.auth.timers.timeToRefreshCancel = () => clearTimeout(timeout);
+    const timeout = setTimeout(() => {
+      actions.firebase.refreshApiToken();
+    }, 30 * 60000);
+    state.auth.timers.timeToRefreshCancel = () => clearTimeout(timeout);
 
-        if(userChanged)
-            await actions.api.auth.authorize();
-    }
-    else {
-        // if(state.auth.user.id)
-        if(state.auth.status === AUTH_FLOW_STATUS.REQUESTED)
-            actions.auth.logout({ noRouting: true });
+    if (userChanged) await actions.api.auth.authorize();
+  } else {
+    // if(state.auth.user.id)
+    if (state.auth.status === AUTH_FLOW_STATUS.REQUESTED) actions.auth.logout({ noRouting: true });
 
-        state.auth.timers.timeToRefreshCancel()
-    }
+    state.auth.timers.timeToRefreshCancel();
+  }
 };
 
-export const requestEmailLink: Action<{ email: string}> = async ({ state, actions, effects }, { email }) => {
-    await effects.firebase.requestEmailAuthCode({ email });
-}
+export const requestEmailLink: Action<{ email: string }> = async ({ state, actions, effects }, { email }) => {
+  await effects.firebase.requestEmailAuthCode({ email });
+};
 
 export const signInWithEmailLink: Action<{ email: string }, boolean> = async ({ state, actions, effects }) => {
-    const email : string = window.localStorage.getItem('emailForSignIn') || "";
-    if(!email)
-        return false
-    await effects.firebase.signInWithEmailLink(email, window.location.href); // state.routing.location); // with react-router, location.href is the landing url; using the router internal
-    state.auth.status = AUTH_FLOW_STATUS.REQUESTED;
-    return true;
-}
+  const email: string = window.localStorage.getItem("emailForSignIn") || "";
+  if (!email) return false;
+  await effects.firebase.signInWithEmailLink(email, window.location.href); // state.routing.location); // with react-router, location.href is the landing url; using the router internal
+  state.auth.status = AUTH_FLOW_STATUS.REQUESTED;
+  return true;
+};
 
 export const requestToken: Action<{ phone: string }> = async ({ state, actions, effects }, { phone }) => {
-    if (!phone)
-        return effects.ux.message.warning("No phone provided")
+  if (!phone) return effects.ux.message.warning("No phone provided");
 
-    effects.firebase.initRecaptchaVerifier(); // ok unless we want another name for recaptcha invoking button
+  effects.firebase.initRecaptchaVerifier(); // ok unless we want another name for recaptcha invoking button
 
+  actions.auth.resetAuthTimer();
+
+  const int = setInterval(() => actions.auth.reduceTimer(), 1000);
+  const timeout = setTimeout(() => {
     actions.auth.resetAuthTimer();
+    clearInterval(int);
 
-    const int = setInterval(() => actions.auth.reduceTimer(), 1000)
-    const timeout = setTimeout(() => {
-        actions.auth.resetAuthTimer()
-        clearInterval(int);
-
-        if (state.auth.status != AUTH_FLOW_STATUS.AUTHENTICATED) {
-            effects.ux.message.warning("Authentication was taking too long. Please try again.")
-            actions.auth.logout();
-        }
-    }, 120 * 1000);
-
-    state.auth.timers.authTimeoutCancel = () => { clearTimeout(timeout); clearInterval(int); }
-
-    try {
-        await effects.firebase.requestPhoneAuthCode({ phone });
-    } catch(ex) {
-        effects.ux.message.warning("Please try again.")
-        state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
-        // actions.auth.logout({ noRouting: true });
+    if (state.auth.status != AUTH_FLOW_STATUS.AUTHENTICATED) {
+      effects.ux.message.warning("Authentication was taking too long. Please try again.");
+      actions.auth.logout();
     }
-    state.auth.status = AUTH_FLOW_STATUS.RECEIVED;
-}
+  }, 120 * 1000);
 
-export const verifyPhone: Action<{ phoneVerificationCode: string }> = async ({ state, actions, effects }, { phoneVerificationCode }) => {
-    state.auth.status = AUTH_FLOW_STATUS.SUBMITTED;
+  state.auth.timers.authTimeoutCancel = () => {
+    clearTimeout(timeout);
+    clearInterval(int);
+  };
 
-    const r = await effects.firebase.submitPhonVerificationCode({ phoneVerificationCode });
+  try {
+    await effects.firebase.requestPhoneAuthCode({ phone });
+  } catch (ex) {
+    effects.ux.message.warning("Please try again.");
+    state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
+    // actions.auth.logout({ noRouting: true });
+  }
+  state.auth.status = AUTH_FLOW_STATUS.RECEIVED;
+};
 
-    effects.firebase.clearRecaptchaVerifier();
+export const verifyPhone: Action<{ phoneVerificationCode: string }> = async (
+  { state, actions, effects },
+  { phoneVerificationCode },
+) => {
+  state.auth.status = AUTH_FLOW_STATUS.SUBMITTED;
 
-    actions.auth.resetAuthTimer();
+  const r = await effects.firebase.submitPhonVerificationCode({
+    phoneVerificationCode,
+  });
 
-    if (r)
-        state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED
-    else {
-        effects.ux.notification.error({ message: "Something went wrong, please try again" })
-        await actions.auth.logout({ noRouting: true });
-    }
-}
+  effects.firebase.clearRecaptchaVerifier();
 
-export const initRecaptchaVerifier: Action<{ containerOrId?: string | HTMLElement }> = ({ effects }, { containerOrId }) => {
-    effects.firebase.initRecaptchaVerifier(containerOrId);
-}
+  actions.auth.resetAuthTimer();
+
+  if (r) state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED;
+  else {
+    effects.ux.notification.error({
+      message: "Something went wrong, please try again",
+    });
+    await actions.auth.logout({ noRouting: true });
+  }
+};
+
+export const initRecaptchaVerifier: Action<{
+  containerOrId?: string | HTMLElement;
+}> = ({ effects }, { containerOrId }) => {
+  effects.firebase.initRecaptchaVerifier(containerOrId);
+};
 
 export const setFbUser: Action<{ user: User }> = async ({ state, actions, effects }, { user }) => {
-    state.firebase.user = user;
-}
+  state.firebase.user = user;
+};
 
 export default {};

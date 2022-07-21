@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Input, Form } from "antd";
-import { useForm } from "antd/lib/form/Form";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { Form, Input } from "antd";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { useActions } from "../../overmind";
+import { useForm } from "antd/lib/form/Form";
 export const UserInvite = () => {
     const [form] = useForm();
     const actions = useActions();

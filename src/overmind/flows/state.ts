@@ -1,6 +1,6 @@
 export const routing = {
-    preLoginRoute: "",
-    breadcrumbs: [],
-    history,
-    location: ""
-}
+  preLoginRoute: "",
+  breadcrumbs: [],
+  history,
+  location: "",
+};

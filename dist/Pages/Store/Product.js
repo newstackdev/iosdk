@@ -1,30 +1,28 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { loadStripe, } from "@stripe/stripe-js";
-import { PaymentElement, useElements, useStripe, } from "@stripe/react-stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import { Form } from "antd";
-import { useEffect, useState } from "react";
-import { useActions, useAppState, useEffects } from "../../overmind";
-import { useForm } from "antd/lib/form/Form";
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
-import { IndeterminateProgress, } from "../../Components/IndeterminateProgress";
+import { Form, Input } from "antd";
+import { Elements } from "@stripe/react-stripe-js";
+import { IndeterminateProgress } from "../../Components/IndeterminateProgress";
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { ProgressButton } from "../../Components/ProgressButton";
+import { loadStripe } from "@stripe/stripe-js";
 import { config } from "../../config";
+import { estimateUsernamePrice } from "../../utils/username";
+import { useActions, useAppState, useEffects } from "../../overmind";
+import { useEffect, useState } from "react";
+import { useForm } from "antd/lib/form/Form";
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(`${config.settings.stripe.publicKey}`);
-export async function handlePaymentThatRequiresCustomerAction(stripe, { subscription, invoice, priceId, paymentMethodId, isRetry, }) {
+export async function handlePaymentThatRequiresCustomerAction(stripe, { subscription, invoice, priceId, paymentMethodId, isRetry }) {
     if (subscription && subscription.status === "active") {
         // Subscription is active, no customer actions required.
         return { subscription, priceId, paymentMethodId };
     }
     // If it's a first payment attempt, the payment intent is on the subscription latest invoice.
     // If it's a retry, the payment intent will be on the invoice itself.
-    let paymentIntent = invoice
-        ? invoice.payment_intent
-        : subscription.latest_invoice.payment_intent;
-    if (paymentIntent.status === "requires_action" ||
-        (isRetry === true && paymentIntent.status === "requires_payment_method")) {
+    let paymentIntent = invoice ? invoice.payment_intent : subscription.latest_invoice.payment_intent;
+    if (paymentIntent.status === "requires_action" || (isRetry === true && paymentIntent.status === "requires_payment_method")) {
         try {
             const result = await stripe.confirmCardPayment(paymentIntent.client_secret, {
                 payment_method: paymentMethodId,
@@ -89,7 +87,7 @@ export async function createSubscription(stripe, api, { customerId, paymentMetho
     //     showCardError(error);
     // })
 }
-const CheckoutForm = ({ embedded, setNext, }) => {
+const CheckoutForm = ({ embedded, setNext }) => {
     const stripe = useStripe();
     const elements = useElements();
     const state = useAppState();
@@ -109,12 +107,11 @@ const CheckoutForm = ({ embedded, setNext, }) => {
     };
     return (
     // <Elements stripe={stripePromise} options={options}>
-    _jsxs(Form, { form: form, onFinish: () => actions.payments.pay({ stripe, elements }), children: [_jsx(Form.Item, { name: "payment", children: _jsx("div", { style: { minHeight: 142 }, children: _jsx(PaymentElement, { onChange: onPaymentElementChanged }) }) }), _jsx(Form.Item, { hidden: embedded, children: _jsx(ProgressButton, { progressText: "Processing payment...", type: "primary", actionName: "payments.pay", htmlType: "submit", disabled: !stripe || !elements, children: "Submit" }) })] })
+    _jsxs(Form, { form: form, onFinish: () => actions.payments.pay({ stripe, elements }), children: [_jsxs("div", { className: "text-center", children: [_jsx(Input, { onChange: (e) => actions.flows.user.create.updateForm({ couponCode: e.target.value }), placeholder: "Enter a coupon code here" }), _jsx("br", {}), _jsx("br", {}), _jsx("br", {})] }), _jsx(Form.Item, { name: "payment", children: _jsx("div", { style: { minHeight: 142 }, children: _jsx(PaymentElement, { onChange: onPaymentElementChanged }) }) }), _jsx(Form.Item, { hidden: embedded, children: _jsx(ProgressButton, { progressText: "Processing payment...", type: "primary", actionName: "payments.pay", htmlType: "submit", disabled: !stripe || !elements, children: "Submit" }) })] })
     // </Elements>
     );
 };
-const estimateUsernamePrice = (priceId) => ~~(8 * (10 ** (5 - (priceId.length - 3))));
-export const Product = ({ embedded, setNext, }) => {
+export const Product = ({ embedded, setNext }) => {
     const [flowState, setFlowState] = useState({ options: { clientSecret: "" }, intent: {} });
     const state = useAppState();
     const actions = useActions();
@@ -123,9 +120,7 @@ export const Product = ({ embedded, setNext, }) => {
     const price = estimateUsernamePrice(requestedUsername);
     console.log(requestedUsername);
     useEffect(() => {
-        if (!state.indicators.isWorking &&
-            !state.api.auth.user?.id &&
-            state.auth.status === AUTH_FLOW_STATUS.AUTHENTICATED) {
+        if (!state.indicators.isWorking && !state.api.auth.user?.id && state.auth.status === AUTH_FLOW_STATUS.AUTHENTICATED) {
             actions.flows.user.create.preregisterCreate({ noRouting: true });
         }
     }, [state.api.auth.user, state.auth.status, state.indicators.isWorking]);

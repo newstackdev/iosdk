@@ -1,9 +1,9 @@
 import * as actions from "./actions";
-import effects from "./effects";
 import { state } from "./state";
+import effects from "./effects";
 
 export default {
-    actions,
-    effects,
-    state
-}
+  actions,
+  effects,
+  state,
+};

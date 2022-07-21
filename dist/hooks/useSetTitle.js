@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useActions } from "../overmind";
+import { useEffect } from "react";
 export const useSetTitle = (title) => {
     const actions = useActions();
     useEffect(() => {

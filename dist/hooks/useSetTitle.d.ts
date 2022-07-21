@@ -1,2 +1,2 @@
-export declare const useSetTitle: (title?: string | undefined) => void;
+export declare const useSetTitle: (title?: string) => void;
 export default useSetTitle;

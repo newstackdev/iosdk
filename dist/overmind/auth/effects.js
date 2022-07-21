@@ -4,7 +4,7 @@ import { fetch } from "./effects/fetch";
 export default {
     // Firebase,
     // Api,
-    fetch
+    fetch,
 };
 // export default {}
 //# sourceMappingURL=effects.js.map

@@ -4,17 +4,17 @@ const exposeIndicators = ({ state }, { actionName }) => {
     st.isWorking = st._isWorking > 0;
     const sp = st._specific[actionName];
     // if(actionName == "api.post.attachToMoods")
-    console.log(`indicators.${actionName}`, sp);
+    // console.log(`indicators.${actionName}`, sp);
     st.specific[actionName] = sp;
     // console.log(`indicators.specific ${actionName} ${st._specific[actionName]}`)
 };
 const isWorkingActionDebounced = pipe(debounce(300), exposeIndicators);
 const isWorkingAction = ({ actions, state }, { actionName, n }) => {
     const st = state.indicators;
-    const __isWorking = st._isWorking + ((n > 0) ? 1 : -1);
+    const __isWorking = st._isWorking + (n > 0 ? 1 : -1);
     const _isWorking = Math.max(__isWorking, 0);
     const isWorking = _isWorking > 0;
-    const ___specific = (st._specific[actionName] || 0) + ((n > 0) ? 1 : -1);
+    const ___specific = (st._specific[actionName] || 0) + (n > 0 ? 1 : -1);
     const _specific = Math.max(___specific, 0);
     // const isWorkingSpecific = _specific > 0;
     st.isWorking = isWorking;
@@ -58,12 +58,12 @@ export default {
         _isWorking: 0,
         isWorking: true,
         _specific: {},
-        specific: {}
+        specific: {},
     },
     actions: {
         // onInitializeOvermind,
         isWorking: isWorkingAction,
-        isWorkingActionDebounced
-    }
+        isWorkingActionDebounced,
+    },
 };
 //# sourceMappingURL=index.js.map

@@ -1,9 +1,9 @@
-import { newlifeBaseUrl } from "../../../config";
+// import { newlifeBaseUrl } from "../../../config";
 import { CreatorApi } from "../../../types";
-const baseUrl = newlifeBaseUrl;
+// const baseUrl = newlifeBaseUrl;
 export const Websocket = () => {
     const state = {
-        socket: null
+        socket: null,
     };
     const toggle = async (url) => {
         if (state.socket)
@@ -17,12 +17,13 @@ export const Websocket = () => {
 export const Api = (() => {
     let api;
     return {
-        initialize() {
+        initialize(baseUrl) {
             api = new CreatorApi({
-                baseUrl, securityWorker: (securityData) => {
+                baseUrl,
+                securityWorker: (securityData) => {
                     console.log("Token is ", securityData?.token);
-                    return (!securityData ? {} : { headers: { Authorization: securityData.token } });
-                }
+                    return !securityData ? {} : { headers: { Authorization: securityData.token } };
+                },
             });
             return api;
         },
@@ -42,7 +43,7 @@ export const Api = (() => {
                 alert(ex.error.errorMessage);
                 throw ex;
             }
-        }
+        },
     };
 })();
 //# sourceMappingURL=newlife.js.map

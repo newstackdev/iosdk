@@ -1,59 +1,43 @@
-import { ReactElement } from "react";
-import { Link } from "react-router-dom";
-import { useVisibilityOnce } from "../../hooks/useVisibility";
-import { contentImageUrl, ImageComponent } from "./ImageMediaComponent";
-import { TextMediaComponent } from "./TextMediaComponent";
 import { ContentElement, ContentImageProps } from "./types";
-import { contentVideoUrl, VideoComponent } from "./VideoMediaComponent";
+import { ImageComponent, useContentImageUrl } from "./ImageMediaComponent";
+import { Link } from "react-router-dom";
+import { Profile } from "../Icons/Profile";
+import { ReactElement } from "react";
+import { TextMediaComponent } from "./TextMediaComponent";
+import { VideoComponent, useContentVideoUrl } from "./VideoMediaComponent";
+import { contentImageUrl } from "../Image";
+import { useVisibilityOnce } from "../../hooks/useVisibility";
 
-const withLink = (element: ReactElement, to?: string) =>
-	to ? <Link to={to}>{element}</Link> : element;
+const withLink = (element: ReactElement, to?: string) => (to ? <Link to={to}>{element}</Link> : element);
 
 const contentTypeElements: Record<string, ContentElement> = {
-	default: ImageComponent,
-	"video/mp4": VideoComponent,
-	"text/plain": TextMediaComponent,
+  default: ImageComponent,
+  "video/mp4": VideoComponent,
+  "text/plain": TextMediaComponent,
 };
 
-const mediaComponentUrlResolvers: Record<
-	string,
-	(props: ContentImageProps) => string
-> = {
-	default: contentImageUrl,
-	"video/mp4": contentVideoUrl,
-	// "text/html": content
+const mediaComponentUrlResolvers: Record<string, (props: ContentImageProps) => string> = {
+  default: useContentImageUrl,
+  "video/mp4": useContentVideoUrl,
+  // "text/html": content
 };
 
-export const getMediaComponentUrl = (props: ContentImageProps) =>
-	(
-		mediaComponentUrlResolvers[props.contentType || ""] ||
-		mediaComponentUrlResolvers.default
-	)(props);
+export const useMediaComponentUrl = (props: ContentImageProps) =>
+  (mediaComponentUrlResolvers[props.contentType || ""] || mediaComponentUrlResolvers.default)(props);
 
 export const MediaComponent: ContentElement = (props) => {
-	const { contentType, thumbnail } = props;
-	const cte = contentTypeElements[contentType || ""];
-	const ContentTypeElement = cte || contentTypeElements.default;
-	const [isVisible, currentElement] = useVisibilityOnce<HTMLDivElement>(150);
+  const { contentType, thumbnail } = props;
+  const cte = contentTypeElements[contentType || ""];
+  const ContentTypeElement = cte || contentTypeElements.default;
+  const [isVisible, currentElement] = useVisibilityOnce<HTMLDivElement>(150);
 
-	const isThumbnail = thumbnail ?? true;
+  const isThumbnail = thumbnail ?? true;
 
-	if (!isThumbnail)
-		return (
-			<ContentTypeElement
-				{...{ ...props, thumbnail: thumbnail ?? true, isVisible }}
-			/>
-		);
+  if (!isThumbnail) return <ContentTypeElement {...{ ...props, thumbnail: thumbnail ?? true, isVisible }} />;
 
-	return (
-		<div
-			ref={currentElement}
-			style={{ overflow: "hidden" }}
-			className="ant-image-size"
-		>
-			<ContentTypeElement
-				{...{ ...props, thumbnail: isThumbnail, isVisible }}
-			/>
-		</div>
-	);
+  return (
+    <div ref={currentElement} style={{ overflow: "hidden" }} className="ant-image-size">
+      <ContentTypeElement {...{ ...props, thumbnail: isThumbnail, isVisible }} />
+    </div>
+  );
 };

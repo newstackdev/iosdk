@@ -1,35 +1,34 @@
-
-import auth from "./auth";
-import routing from "./routing";
 import api from "./api";
+import auth from "./auth";
+import chromeext from "./chromeext";
+import evm from "./evm";
 import firebase from "./firebase";
-import ux from "./ux";
 import flows from "./flows";
-import indicators from './indicators';
-import websockets from './websockets';
-import lists from './lists';
-import newcoin from './newcoin';
-import chromeext from './chromeext';
-import payments from './payments';
-import evm from './evm';
+import indicators from "./indicators";
+import lists from "./lists";
+import newcoin from "./newcoin";
+import payments from "./payments";
+import routing from "./routing";
+import ux from "./ux";
+import websockets from "./websockets";
 
 export const standardModules = {
-    indicators,
-    auth,
-    routing,
-    firebase,
-    websockets,
-    payments,
-    evm,
+  indicators,
+  auth,
+  routing,
+  firebase,
+  websockets,
+  payments,
+  evm,
 
-    ux,
-    chromeext,
+  ux,
+  chromeext,
 
-    api,
-    lists,
-    flows,
+  api,
+  lists,
+  flows,
 
-    newcoin
+  newcoin,
 
-    // ...(custom ? { custom } : {})
+  // ...(custom ? { custom } : {})
 };

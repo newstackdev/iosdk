@@ -1,11 +1,9 @@
-import Logo from "./Components/Icons/Logo";
-import { Header, Layout, TopMenu } from "./Layout/Layout";
 import { AuthWidget } from "./Pages/AuthWidget";
+import { Header, Layout, TopMenu } from "./Layout/Layout";
 import { ROUTE_ACCESS_LEVELS } from "./overmind/routing/state";
 import { get } from "lodash";
-const currentHost = window.location.hostname === "localhost"
-    ? "web-dev.newlife.io"
-    : window.location.hostname;
+import Logo from "./Components/Icons/Logo";
+const currentHost = window.location.hostname === "localhost" ? "web-dev.newlife.io" : window.location.hostname;
 const stages = {
     "web-dev.newlife.io": "eu-dev",
     "test.newlife.io": "eu-sit",
@@ -13,9 +11,10 @@ const stages = {
     "www.newlife.io": "eu-prod",
     "newlife.io": "eu-prod",
     "web-dev.unsid.org": "eu-dev",
+    "dao.newmoon.ac": "eu-prod",
 };
-const stage = stages[currentHost];
-const newlifeBaseUrls = {
+export const stage = stages[currentHost];
+const apiBaseUrls = {
     "eu-dev": "https://api-eu-dev.newlife.io/creator",
     "eu-sit": "https://api-eu-sit.newlife.io/creator",
     "eu-prod": "https://api-eu-prod.newlife.io/creator",
@@ -61,51 +60,12 @@ const firebaseConfigs = {
         measurementId: "G-YMT320RGLJ",
     },
 };
-// with env:
-// ----
-// "eu-dev": {
-// 	apiKey: process.env.REACT_APP_FIREBASE_KEY || "",
-// 	authDomain: "newlifeio.firebaseapp.com",
-// 	projectId: "newlifeio",
-// 	storageBucket: "newlifeio.appspot.com",
-// 	messagingSenderId: "360722214510",
-// 	appId: process.env.REACT_APP_FIREBASE_APP_ID || "",
-// 	measurementId: "G-PJWYRPZSNM",
-// },
-// "eu-sit": {
-// 	apiKey: process.env.REACT_APP_FIREBASE_KEY || "",
-// 	authDomain: "newlifeio.firebaseapp.com",
-// 	projectId: "newlifeio",
-// 	storageBucket: "newlifeio.appspot.com",
-// 	messagingSenderId: "360722214510",
-// 	appId: process.env.REACT_APP_FIREBASE_APP_ID || "",
-// 	measurementId: "G-PJWYRPZSNM",
-// },
-// "eu-prod": {
-// 	apiKey: process.env.REACT_APP_FIREBASE_KEY || "",
-// 	authDomain: "newlifeio-prod.firebaseapp.com",
-// 	projectId: "newlifeio-prod",
-// 	storageBucket: "newlifeio-prod.appspot.com",
-// 	messagingSenderId: "666370792765",
-// 	appId: process.env.REACT_APP_FIREBASE_APP_ID || "",
-// 	measurementId: "G-YMT320RGLJ",
-// },
-// v1: {
-// 	apiKey: process.env.REACT_APP_NEWLIFE_V1_FIREBASE_API_KEY || "",
-// 	authDomain: "newlifeio-prod.firebaseapp.com",
-// 	projectId: "newlifeio-prod",
-// 	storageBucket: "newlifeio-prod.appspot.com",
-// 	messagingSenderId: "666370792765",
-// 	appId: process.env.REACT_APP_NEWLIFE_V1_FIREBASE_APP_ID || "",
-// 	measurementId: "G-YMT320RGLJ",
-// },
-// ----
-const newlifeMediaBuckets = {
+const mediaBuckets = {
     "eu-dev": `https://eu-dev-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
     "eu-sit": `https://eu-sit-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
     "eu-prod": `https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`, // images/${sizer}${src}
 };
-const newlifeWebsocketsServers = {
+const websocketsServers = {
     "eu-dev": `wss://wsapi-eu-dev.newlife.io/creator`,
     "eu-sit": `wss://wsapi-eu-sit.newlife.io/creator`,
     "eu-prod": `wss://wsapi-eu-prod.newlife.io/creator`,
@@ -117,51 +77,60 @@ const stripeKeys = {
 };
 export const APP_DOMAIN = "life.nco";
 export const firebaseConfig = firebaseConfigs[stage];
-export const newlifeBaseUrl = newlifeBaseUrls[stage];
-export const newlifeMediaBucket = newlifeMediaBuckets[stage];
-export const newlifeWebsocketsServer = newlifeWebsocketsServers[stage];
+export const apiBaseUrl = apiBaseUrls[stage];
+export const mediaBucket = mediaBuckets[stage];
+const websocketsServer = websocketsServers[stage];
 export const stripeKey = stripeKeys[stage];
 console.log("Stage", stage);
 console.log("Firebase config", firebaseConfig);
 export const config = {
     env: {
-        stage
+        stage,
     },
     settings: {
         newcoin: {
             daoId: "43",
-            daoDomain: "testaaagt.io",
-            poolId: ""
+            daoDomain: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "testaaab1.io") : "dx.io",
+            displayDaoDomain: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "life.nco") : "test-net-main-dao-dx.io",
+            poolId: "",
         },
         firebaseConfig,
-        newlife: {
-            baseUrl: newlifeBaseUrl,
-            mediaBucket: newlifeMediaBucket,
-            websocketsServer: newlifeWebsocketsServer,
+        newgraph: {
+            baseUrl: apiBaseUrl,
+            mediaBucket,
+            websocketsServer,
         },
         routing: {
-            routeAccessLevels: ROUTE_ACCESS_LEVELS
+            routeAccessLevels: ROUTE_ACCESS_LEVELS,
         },
         stripe: {
-            publicKey: stripeKey
-        }
+            publicKey: stripeKey,
+        },
+        indicators: {
+            // setting indicators for all actions for progress is too costly, we filter using this setting
+            isWatchable: (actionName) => /^(api|lists|auth|firebase|payments|newcoin)/.test(actionName),
+        },
     },
     routes: {
         useDefaultRoutes: true,
-        overrides: {},
-        noBackButton: ["/explore"],
+        overrides: {
+        // ...(true || currentHost === "dao.newmoon.ac" ? {
+        //   "/explore": "/dao/newmoon"
+        // } : {})
+        },
+        noBackButton: ["/explore", "/post-create", "/proposals", "/user/invite"],
         defaultRoute: {
-            condition: state => {
+            condition: (state) => {
                 return state.api.auth.authorized && ["registered", "admitted", "premium"].includes(state.api.auth.user.status);
             },
-            defaultLocation: _state => "/"
-        }
+            defaultLocation: (_state) => "/",
+        },
     },
     components: {
         layout: {
             Layout: Layout,
             TopMenu: TopMenu,
-            Header: Header
+            Header: Header,
         },
         auth: {
             AuthWidget: AuthWidget,
@@ -172,8 +141,8 @@ export const config = {
     },
     featureFlags: {
         onboarding: {
-            premiumDomains: true
-        }
-    }
+            premiumDomains: true,
+        },
+    },
 };
 //# sourceMappingURL=config.js.map

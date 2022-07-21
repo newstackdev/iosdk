@@ -6,11 +6,12 @@ export const initWeb3 = () => {
     if (!web3js) {
         web3js = new Web3(ethereum);
     }
-    ;
 };
 initWeb3();
 export const connect = async () => {
-    const r = await web3js?.givenProvider.request({ method: 'eth_requestAccounts' });
+    const r = await web3js?.givenProvider.request({
+        method: "eth_requestAccounts",
+    });
     await ethereum.enable();
     account_address = r.toString();
     console.log("account:", r);
@@ -21,7 +22,7 @@ export const sendSignedMessage = async () => {
         collectionAddress: "100",
         nftIndex: "10",
         timestamp: Date.now(),
-        address: account_address
+        address: account_address,
     };
     const payload = JSON.stringify(m);
     const signature = await web3js?.eth.personal.sign(payload, account_address, "");

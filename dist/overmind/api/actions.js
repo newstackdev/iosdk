@@ -1,10 +1,10 @@
-import * as mood from "./actions/mood";
-import * as user from "./actions/user";
-import * as post from "./actions/post";
-import { AUTH_FLOW_STATUS } from "../auth/state";
 import * as auth from "./actions/auth";
+import * as mood from "./actions/mood";
+import * as post from "./actions/post";
+import * as user from "./actions/user";
+import { AUTH_FLOW_STATUS } from "../auth/state";
 const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
-    state.api.client = effects.api.initialize(state.config.settings.newlife.baseUrl);
+    state.api.client = effects.api.initialize(state.config.settings.newgraph.baseUrl);
     // reaction(
     //     (state) => state.firebase.user,
     //     async (fbUser) => {
@@ -20,7 +20,6 @@ const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
             console.log("Not yet authorized");
             return;
         }
-        ;
         actions.websockets.toggleWebSocket();
         await actions.api.user.getMoods({ id: state.api.auth.user?.id });
         state.api.auth.moods = [...(state.api.cache.users.byId[state.api.auth.user?.id || ""]?.moods || [])];
@@ -32,7 +31,7 @@ export default {
     auth,
     user,
     mood,
-    post
+    post,
 };
 // export default namespaced({
 //     user: { actions: user },

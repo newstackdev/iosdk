@@ -1,10 +1,11 @@
-import { BcCreateDaoProposal, BcCreateDaoRequest } from "@newlife/newlife-creator-client-api";
 import { Action } from "../../types";
+import { BcCreateDaoProposal, BcCreateDaoRequest, BcCreateWhitelistDaoProposal } from "@newcoin-foundation/iosdk-newgraph-client-js";
+export declare const progressTest: Action;
 export declare const getAccountBalance: Action<{
-    user: {
+    user?: {
         username?: string;
     };
-}, any>;
+} | undefined, any>;
 export declare const getPoolInfo: Action<{
     pool: {
         owner?: string;
@@ -22,18 +23,46 @@ export declare const daoGetProposals: Action<{
     daoOwner: string;
     proposal_id?: string;
 }, any>;
+export declare const daoGetWhitelistProposals: Action<{
+    daoId?: string;
+    daoOwner: string;
+    proposal_id?: string;
+}, any>;
 export declare const daoCreate: Action<BcCreateDaoRequest, any>;
 export declare const daoCreateProposal: Action<BcCreateDaoProposal, any>;
+export declare const daoCreateWhitelistProposal: Action<BcCreateWhitelistDaoProposal, any>;
 export declare const daoApproveProposal: Action<{
-    daoOwner: string;
-    proposalId: string;
+    dao_owner: string;
+    proposal_id: string;
+}, any>;
+export declare const daoApproveWhitelistProposal: Action<{
+    dao_owner: string;
+    proposal_id: string;
 }, any>;
 export declare const daoVoteProposal: Action<{
     dao_owner: any;
     proposal_id: any;
     option: any;
     quantity: any;
+    proposal_type: any;
 }, any>;
 export declare const voterListVotes: Action<{
     voter?: string;
 } | undefined, any>;
+export declare const daoGetWhitelist: Action<{
+    daoOwner?: string;
+} | undefined, any>;
+export declare const daoExecuteWhitelistProposal: Action<{
+    dao_id: string;
+    proposal_id: number;
+    proposal_author: string;
+}, any>;
+export declare const daoExecuteProposal: Action<{
+    dao_owner: string;
+    dao_id: string;
+    proposal_id: number;
+    proposal_author: string;
+}, any>;
+export declare const daoWithdrawVoteDeposit: Action<{
+    vote_id: string;
+}, any>;

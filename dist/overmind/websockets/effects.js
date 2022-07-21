@@ -1,6 +1,6 @@
 export default (upd) => {
     const state = {
-        socket: null
+        socket: null,
     };
     let pingInterval;
     let pingCounter = 0;
@@ -18,31 +18,31 @@ export default (upd) => {
     const stopPing = () => {
         clearInterval(pingInterval);
     };
-    const toggle = async (token) => {
-        const url = upd(token);
+    const toggle = async (wsServer, token) => {
+        const url = upd(wsServer, token);
         if (state.url === url)
             return;
         state.url = url;
         if (state.socket) {
-            state.socket.removeEventListener('message', processPong);
-            state.socket.removeEventListener('open', startPing);
-            state.socket.removeEventListener('close', stopPing);
+            state.socket.removeEventListener("message", processPong);
+            state.socket.removeEventListener("open", startPing);
+            state.socket.removeEventListener("close", stopPing);
             state.socket.close();
             state.socket = null;
         }
         stopPing();
         if (token && url) {
             state.socket = new WebSocket(state.url);
-            state.socket.addEventListener('open', startPing);
+            state.socket.addEventListener("open", startPing);
             // effects.ux.message.info('websockets open');
             //     startPing();
             // });
-            state.socket.addEventListener('close', stopPing);
+            state.socket.addEventListener("close", stopPing);
             //  (ev) => {
             //     // effects.ux.message.info('websockets close');
             //     stopPing();
             // });
-            state.socket.addEventListener('message', processPong);
+            state.socket.addEventListener("message", processPong);
         }
     };
     state.toggle = toggle;

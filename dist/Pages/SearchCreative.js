@@ -1,11 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Button, Col, Form, Input, Row, Space, Tag, List, } from "antd";
+import { Button, Col, Form, Input, List, Row, Space, Tag } from "antd";
+import { ItemGrid } from "../Components/ItemGrid";
+import { SearchItemWidget } from "../Components/SearchItemWidget";
 import { Spin } from "../Components/Spin";
-import React, { useEffect } from "react";
 import { useActions, useAppState } from "../overmind";
 import { useLocation } from "react-router-dom";
-import { SearchItemWidget } from "../Components/SearchItemWidget";
-import { ItemGrid } from "../Components/ItemGrid";
+import React, { useEffect } from "react";
 // TODO: Maybe move to utils or something
 function useQuery() {
     const { search } = useLocation();
@@ -67,9 +67,7 @@ export const SearchCreative = () => {
                     overflow: "auto",
                     scrollbarWidth: "thin",
                 }, children: _jsx(Space, { children: state.lists.creativeSearch.tags.items.map((aesthetic) => (_jsx(Tag, { onClick: () => search(tags, aesthetic), style: { cursor: "pointer" }, children: aesthetic }))) }) }), _jsx(ItemGrid, { items: items, render: (m, index) => _jsx(SearchItemWidget, { item: m, index: index }), loadMore: maybeLoadMore }), state.indicators.isWorking ? (_jsx(Spin, {})) : !items.length && lastQueried ? (_jsx(List, { size: "large", dataSource: [], loading: state.indicators.isWorking, locale: {
-                    emptyText: lastQueried.tags === ""
-                        ? "Search something!"
-                        : `No results for '${lastQueried.tags}'`,
+                    emptyText: lastQueried.tags === "" ? "Search something!" : `No results for '${lastQueried.tags}'`,
                 } })) : ("")] }));
 };
 export default SearchCreative;

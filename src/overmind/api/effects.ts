@@ -1,20 +1,23 @@
-import { ErrorResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
 import { CreatorApi } from "../../types";
+import { ErrorResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 
 // const baseUrl = newlifeBaseUrl; //"https://api-eu-sit.newlife.io/creator";
 
 export default (() => {
   let api: CreatorApi;
   return {
-    initialize(baseUrl) {
+    initialize(baseUrl: string) {
       api = new CreatorApi({
-        baseUrl, securityWorker: (securityData: { token: string } | null) => {
-          return (!securityData ? {} : { headers: { Authorization: securityData.token } })
-        }
+        baseUrl,
+        securityWorker: (securityData: { token: string } | null) => {
+          return !securityData ? {} : { headers: { Authorization: securityData.token } };
+        },
       });
       return api;
     },
-    updateToken(token: string) { api.setSecurityData({ token }) },
+    updateToken(token: string) {
+      api.setSecurityData({ token });
+    },
     async authorize(): Promise<UserReadPrivateResponse> {
       try {
         const r = await api.user.currentList();
@@ -28,6 +31,6 @@ export default (() => {
         // alert(ex.error.errorMessage);
         throw ex;
       }
-    }
-  }
+    },
+  };
 })();

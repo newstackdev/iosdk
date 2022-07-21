@@ -1,58 +1,46 @@
+import { Button, Checkbox, Col, Input, Progress, Radio, Row, Select, Tooltip, Upload, notification } from "antd";
 import {
-  PostCreateRequest,
   MoodReadResponse,
+  PostCreateRequest,
   PostReadResponse,
   UserReadPrivateResponse,
-} from "@newlife/newlife-creator-client-api";
-import {
-  Button,
-  Checkbox,
-  Col,
-  Input,
-  notification,
-  Progress,
-  Radio,
-  Row,
-  Select,
-  Tooltip,
-  Upload,
-} from "antd";
-import Form from "antd/lib/form";
+} from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { NLView } from "../../types";
+import { PicturesWall } from "../../Components/PicturesWall";
+import { useActions, useAppState, useEffects } from "../../overmind";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+import Form from "antd/lib/form";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
-import { NLView } from "../../types";
-import { useActions, useAppState, useEffects } from "../../overmind";
-import { PicturesWall } from "../../Components/PicturesWall";
 
 import { MoodWidget } from "../../Components/MoodWidget";
 
-import { LICENSES } from "../../constants";
-import { SelectMood } from "../../Components/SelectMood";
-import { RowCheckbox } from "../../Components/RowCheckbox";
+import { AddButton } from "../../Components/Icons/AddButton";
+import { AddFolder } from "../../Components/Icons/AddFolder";
+import { ContentImage } from "../../Components/Image";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { CrossCircle } from "../../Components/Icons/CrossCircle";
+import { ExitButton } from "../../Components/Icons/ExitButton";
 import { IndeterminateProgress } from "../../Components/IndeterminateProgress";
-import { ProgressButton } from "../../Components/ProgressButton";
+import { Info } from "../../Components/Icons/Info";
+import { LICENSES } from "../../constants";
+import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
 import { MoodCreateModal } from "../Mood/MoodCreate";
 import { MoodsGrid } from "../Mood/MoodsGrid";
-import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
-import TextArea from "antd/lib/input/TextArea";
-import { AddButton } from "../../Components/Icons/AddButton";
-import Switch from "react-switch";
-import { Info } from "../../Components/Icons/Info";
-import { useForm } from "antd/lib/form/Form";
-import PostCreateHeader from "./PostCreateHeader";
-import PostCreateInfo, { LicenseProps } from "./PostCreateInfo";
-import { ExitButton } from "../../Components/Icons/ExitButton";
-import { AddFolder } from "../../Components/Icons/AddFolder";
-import Modal from "antd/lib/modal/Modal";
-import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import { NFTLargeIcon } from "../../Components/Icons/NFTLargeIcon";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { RowCheckbox } from "../../Components/RowCheckbox";
+import { SelectMood } from "../../Components/SelectMood";
+import { useEmbed } from "../../hooks/useEmbed";
+import { useForm } from "antd/lib/form/Form";
 import Avatar from "antd/lib/avatar/avatar";
-import { ContentImage } from "../../Components/Image";
-import { ContentPreview } from "../../Components/ContentPreview";
+import Modal from "antd/lib/modal/Modal";
+import PostCreateHeader from "./PostCreateHeader";
+import PostCreateInfo, { LicenseProps } from "./PostCreateInfo";
+import Switch from "react-switch";
+import TextArea from "antd/lib/input/TextArea";
 
 const initialLicense = { name: LICENSES[0][0], value: LICENSES[0][1] };
 
@@ -70,8 +58,7 @@ export const PostCreate: NLView = (props) => {
 
   const [form] = useForm();
 
-  const [mintConfirmationOpen, setMintConfirmationOpen] =
-    useState<boolean>(false);
+  const [mintConfirmationOpen, setMintConfirmationOpen] = useState<boolean>(false);
   const [selectedLicense, setSelectedLicense] = useState<LicenseProps>({
     name: LICENSES[0][0],
     value: LICENSES[0][1],
@@ -82,18 +69,23 @@ export const PostCreate: NLView = (props) => {
 
   const [contentType, setContentType] = useState("");
   const [mintNFTswitch, setMintNFTswitch] = useState<boolean>(false);
-  const [previewPostSwitch, setPreviewPostSwitch] = useState(false);
+  const [embedSwitch, setEmbedSwitch] = useState(true);
+  const [isEmbedBtnVisible, setIsEmbedBtnVisible] = useState(false);
   const [content, setContent] = useState("");
 
   const user: UserReadPrivateResponse | null = state.api.auth.user;
 
   // balance check
 
-  const balances = state.newcoin.account?.acc_balances || [];
-  const ncoBalance = Number((balances[0] || "").replace(/ NCO$/, "")) || 0;
+  // const balances = state.newcoin.account?.acc_balances || [];
+  const mainPoolBalances = state.newcoin?.mainPool?.acc_balances || [];
+  const blnc = mainPoolBalances[0]?.replace(/ GNCO/, "") || 0; // || "")?.replace(/ GNCO/, "") || 0;
+  const ncoBalance = Number(blnc); //(balances[0] || "").replace(/ NCO$/, "")) || 0;
 
   // const [moods, setMoods] = useState<MoodReadResponse[]>([]);
   const [post, setPost] = useState<PostReadResponse>({});
+
+  const { isLoading, error, embedContent } = useEmbed(content, "200", "350");
 
   const moods = state.api.auth.moods || [];
 
@@ -101,14 +93,22 @@ export const PostCreate: NLView = (props) => {
 
   useEffect(() => {
     actions.routing.setBreadcrumbs([{ text: "post" }, { text: "create" }]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (contentType === "text/plain" && !isLoading && !isEmpty(embedContent) && isEmpty(error)) {
+      setIsEmbedBtnVisible(true);
+      setEmbedSwitch(true);
+    } else {
+      setIsEmbedBtnVisible(false);
+      setEmbedSwitch(false);
+    }
+  }, [contentType, error, isLoading, embedContent, content]);
 
   const onFinish = async (values: PostCreateRequest & { file: FileList }) => {
     console.log("Success:", values);
 
-    if (mintNFTswitch && !mintConfirmationOpen)
-      return setMintConfirmationOpen(true);
+    if (mintNFTswitch && !mintConfirmationOpen) return setMintConfirmationOpen(true);
 
     setMintConfirmationOpen(false);
 
@@ -118,9 +118,7 @@ export const PostCreate: NLView = (props) => {
 
         // const contentType = mime.lookup(extname(f.));
         if (!f.type) {
-          return effects.ux.message.warning(
-            "Unrecognized/unsupported content type. Upload something else."
-          );
+          return effects.ux.message.warning("Unrecognized/unsupported content type. Upload something else.");
         }
       }
 
@@ -128,20 +126,16 @@ export const PostCreate: NLView = (props) => {
         ...values,
         contentType,
         doMint: mintNFTswitch ? "true" : "",
+        embed: embedSwitch && isEmbedBtnVisible ? "true" : "",
         license: selectedLicense.value,
       };
-
       const p = await actions.api.post.create({ postForm });
       if (!p) return;
 
       setMoodMode(true);
       setPost(p);
     } catch (ex) {
-      setErrMsg(
-        get(ex, "error.errorMessage.details") ||
-          get(ex, "message") ||
-          "unknown error"
-      );
+      setErrMsg(get(ex, "error.errorMessage.details") || get(ex, "message") || "unknown error");
     }
   };
 
@@ -150,11 +144,11 @@ export const PostCreate: NLView = (props) => {
       if (contentType === "text/plain") {
         setContent(e.currentTarget.value);
         if (isEmpty(e.currentTarget.value)) {
-          setPreviewPostSwitch(false);
+          setEmbedSwitch(false);
         }
       }
     },
-    [contentType]
+    [contentType],
   );
 
   const onFinishFailed = (errorInfo: any) => {
@@ -185,6 +179,7 @@ export const PostCreate: NLView = (props) => {
             <PostCreateHeader
               contentType={contentType}
               setContentType={setContentType}
+              onChangeContent={onChangeContentHandler}
             />
           }
           info={
@@ -195,103 +190,42 @@ export const PostCreate: NLView = (props) => {
               setIsLicense={setIsLicense}
               mintConfirmationOpen={mintConfirmationOpen}
               ncoBalance={ncoBalance}
+              embedSwitch={embedSwitch}
+              content={embedContent || ""}
+              contentType={contentType}
+              isLoading={isLoading}
             />
           }
         >
           <div className="post-create-form-width">
-            <Form.Item
-              required={true}
-              name="title"
-              rules={[
-                {
-                  required: true,
-                  message: "A couple of words here please",
-                },
-              ]}
-            >
-              <Row>
-                <p className="header-5" style={{ marginBottom: "20px" }}>
-                  Title
-                </p>
-                <Input placeholder="A few words🌙" />
-              </Row>
-            </Form.Item>
-            <Form.Item
-              required={true}
-              name={contentType ? "content" : "description"}
-              rules={[
-                {
-                  required: contentType === "content" ? true : false,
-                  message: "A couple of words here please",
-                },
-              ]}
-            >
-              <Row>
-                <p className="header-5" style={{ marginBottom: "20px" }}>
-                  {contentType ? "Post" : "Description"}
-                </p>
-                <Input.TextArea
-                  placeholder={
-                    contentType ? "A new idea?✨" : "What's it about?✨"
-                  }
-                  onChange={onChangeContentHandler}
-                  value={content}
-                />
-              </Row>
-            </Form.Item>
-            {contentType === "text/plain" ? (
-              <>
-                <Row
-                  align="middle"
-                  style={{
-                    marginBottom: "10px",
-                  }}
-                >
-                  <p className="header-5">Preview post</p>
-                  <Tooltip
-                    placement="right"
-                    title="Preview post with possible embed content. First URL in the post will be embedded if possible. Currently supporting youtube and twitter."
-                  >
-                    <span>
-                      <Info
-                        color={
-                          ncoBalance === 0
-                            ? mintNTFcolor.purple
-                            : mintNTFcolor.white
-                        }
-                      />
-                    </span>
-                  </Tooltip>
-                </Row>
+            {(contentType !== "text/plain" || mintNFTswitch) && (
+              <Form.Item
+                required={true}
+                name="title"
+                rules={[
+                  {
+                    required: true,
+                    message: "A couple of words here please",
+                  },
+                ]}
+              >
                 <Row>
-                  <Switch
-                    onChange={() => setPreviewPostSwitch((p) => !p)}
-                    checked={previewPostSwitch}
-                    checkedIcon={<></>}
-                    uncheckedIcon={<></>}
-                    onColor={
-                      ncoBalance === 0
-                        ? mintNTFcolor.purple
-                        : mintNTFcolor.green
-                    }
-                    offColor={
-                      ncoBalance === 0
-                        ? mintNTFcolor.purple
-                        : mintNTFcolor.default
-                    }
-                    disabled={isEmpty(content)}
-                  />
+                  <p className="header-5" style={{ marginBottom: "20px" }}>
+                    Title
+                  </p>
+                  <Input placeholder="A few words🌙" />
                 </Row>
-                {previewPostSwitch && (
-                  <ContentPreview
-                    content={content}
-                    embedContentHeight="200"
-                    embedContentWidth="350"
-                  />
-                )}
-              </>
-            ) : (
-              false
+              </Form.Item>
+            )}
+            {contentType !== "text/plain" && (
+              <Form.Item required={false} name={"description"}>
+                <Row>
+                  <p className="header-5" style={{ marginBottom: "20px" }}>
+                    Description
+                  </p>
+                  <Input.TextArea placeholder={"What's it about?✨"} />
+                </Row>
+              </Form.Item>
             )}
             {/* <Form.Item
 						name="license"
@@ -328,18 +262,10 @@ export const PostCreate: NLView = (props) => {
                       ? "You do not have enough balance to mint your NFT! Top up!"
                       : "Mint your content as an NFT on the Newcoin Network! For now, you can't trade this!"
                   }
-                  overlayClassName={
-                    ncoBalance === 0 ? "tooltip-zero-balance" : ""
-                  }
+                  overlayClassName={ncoBalance === 0 ? "tooltip-zero-balance" : ""}
                 >
                   <span>
-                    <Info
-                      color={
-                        ncoBalance === 0
-                          ? mintNTFcolor.purple
-                          : mintNTFcolor.white
-                      }
-                    />
+                    <Info color={ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.white} />
                   </span>
                 </Tooltip>
               </Row>
@@ -348,12 +274,8 @@ export const PostCreate: NLView = (props) => {
                 checked={mintNFTswitch}
                 checkedIcon={<></>}
                 uncheckedIcon={<></>}
-                onColor={
-                  ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.green
-                }
-                offColor={
-                  ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.default
-                }
+                onColor={ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.green}
+                offColor={ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.default}
                 disabled={ncoBalance === 0 ? true : false}
               />
             </Form.Item>
@@ -365,10 +287,7 @@ export const PostCreate: NLView = (props) => {
                 }}
               >
                 <p className="header-5">Creative License</p>
-                <Tooltip
-                  placement="right"
-                  title="Share your content with No Rights Reserved with Creative Commons."
-                >
+                <Tooltip placement="right" title="Share your content with No Rights Reserved with Creative Commons.">
                   <span>
                     <Info color={mintNTFcolor.white} />
                   </span>
@@ -401,6 +320,30 @@ export const PostCreate: NLView = (props) => {
                 </span>
               )}
             </Form.Item>
+            {isEmbedBtnVisible ? (
+              <Form.Item name="embed">
+                <Row
+                  align="middle"
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
+                  <p className="header-5">Embed</p>
+                </Row>
+                <Row>
+                  <Switch
+                    onChange={() => setEmbedSwitch((p) => !p)}
+                    checked={embedSwitch}
+                    checkedIcon={<></>}
+                    uncheckedIcon={<></>}
+                    onColor={ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.green}
+                    offColor={ncoBalance === 0 ? mintNTFcolor.purple : mintNTFcolor.default}
+                  />
+                </Row>
+              </Form.Item>
+            ) : (
+              false
+            )}
           </div>
         </ContentLayout>
       </Form>
@@ -419,10 +362,7 @@ export const PostCreate: NLView = (props) => {
       >
         <Row style={{ width: "100%" }}>
           <Col style={{ marginRight: "20px" }}>
-            <Avatar
-              src={<ContentImage {...user} />}
-              className="avatar-image-top-creators"
-            />
+            <Avatar src={<ContentImage {...user} />} className="avatar-image-top-creators" />
           </Col>
           <Col>
             <p className="paragraph-1r">your NFT</p>
@@ -434,9 +374,7 @@ export const PostCreate: NLView = (props) => {
             <p className="header-3">Ready to mint!</p>
           </Col>
           <Col style={{ marginBottom: "20px" }}>
-            <p className="paragraph-2r">
-              You are about to mint your NFT on Newcoin Protocol!
-            </p>
+            <p className="paragraph-2r">You are about to mint your NFT on Newcoin Protocol!</p>
           </Col>
           <Col>
             <p className="paragraph-2r">Summary:</p>
@@ -445,7 +383,7 @@ export const PostCreate: NLView = (props) => {
             <p className="paragraph-2r">— 3% DAO fee</p>
           </Col>
         </Row>
-        <Row justify="space-between">
+        <Row justify="space-between" style={{ marginBottom: "30px" }}>
           <NFTLargeIcon />
         </Row>
         <ProgressButton
@@ -463,27 +401,14 @@ export const PostCreate: NLView = (props) => {
         </ProgressButton>
       </Modal>
 
-      <Form
-        className="app-main-full-width"
-        hidden={!moodMode}
-        onFinish={gtfooh}
-      >
+      <Form className="app-main-full-width" hidden={!moodMode} onFinish={gtfooh}>
         <Form.Item name="moods" style={{ marginBottom: "40px" }}>
           <SelectMood moods={moods} />
         </Form.Item>
 
-        <Form.Item
-          label=""
-          wrapperCol={{ offset: 0, span: 24 }}
-          className="text-right"
-        >
-          <ProgressButton
-            actionName="api.post.create"
-            type="primary"
-            htmlType="submit"
-            progressText="Creating post..."
-          >
-            Share
+        <Form.Item label="" wrapperCol={{ offset: 0, span: 24 }} className="text-right">
+          <ProgressButton actionName="api.post.create" type="primary" htmlType="submit" progressText="Creating post...">
+            Save
           </ProgressButton>
         </Form.Item>
       </Form>

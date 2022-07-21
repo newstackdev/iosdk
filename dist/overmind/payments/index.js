@@ -13,16 +13,22 @@ const pay = async ({ state, actions, effects }, { stripe, elements }) => {
         confirmParams: {
             return_url: `${loc.protocol}//${loc.hostname}${state.routing.location}`,
         },
-        redirect: "if_required"
+        redirect: "if_required",
     });
+    // if (confirmation.paymentIntent?.status === "succeeded") {
+    //   effects.ux.notification.open({
+    //     message: "Your purchase was successful.",
+    //   });
+    //   await actions.api.auth.authorize();
     if (confirmation.paymentIntent?.status === "succeeded") {
+        await new Promise((res) => setTimeout(res, 1000));
         effects.ux.notification.open({
-            message: "Success! You have subscribed. Please fill in a few more details.",
+            message: "Your purchase was successful.",
         });
         await actions.api.auth.authorize();
-        await actions.auth.fakeUserUpdate({
-            subscriptionStatus: "subscribed",
-        });
+        // await actions.auth.fakeUserUpdate({
+        //     subscriptionStatus: "subscribed",
+        // });
     }
     else
         effects.ux.notification.error({
@@ -30,9 +36,12 @@ const pay = async ({ state, actions, effects }, { stripe, elements }) => {
                 (confirmation.error?.message || ""),
         });
 };
+// }
+// }
+// };
 export default {
     actions: {
-        pay
-    }
+        pay,
+    },
 };
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
-import { Row, Col } from "antd";
-import { Spin } from "../Components/Spin";
+import { Col, Row } from "antd";
 import { ReactElement } from "react";
+import { Spin } from "./Spin";
 import { useAppState } from "../overmind";
 
 type LayedOutContent = {
@@ -11,11 +11,15 @@ type LayedOutContent = {
   customClass?: string;
   isPost?: boolean;
   isMood?: boolean;
+  position?: "top";
 };
 
-const ContentLayoutHorizontal: React.FunctionComponent<
-  React.PropsWithChildren<LayedOutContent>
-> = ({ header, info, children, isWorking }) => (
+const ContentLayoutHorizontal: React.FunctionComponent<React.PropsWithChildren<LayedOutContent>> = ({
+  header,
+  info,
+  children,
+  isWorking,
+}) => (
   <>
     <h2>{header}</h2>
     <Row gutter={18} wrap={true}>
@@ -30,12 +34,15 @@ const ContentLayoutHorizontal: React.FunctionComponent<
   </>
 );
 
-const ContentLayoutVertical: React.FunctionComponent<
-  React.PropsWithChildren<LayedOutContent>
-> = ({ header, info, children, isWorking }) => {
+const ContentLayoutVertical: React.FunctionComponent<React.PropsWithChildren<LayedOutContent>> = ({
+  header,
+  info,
+  children,
+  isWorking,
+}) => {
   const state = useAppState();
   return (
-    <div className="app-main-full-width" style={{ minHeight: "90vh" }}>
+    <div className="app-main-full-width">
       <div>{info}</div>
       <h2>{header}</h2>
       <div>{children}</div>
@@ -44,18 +51,27 @@ const ContentLayoutVertical: React.FunctionComponent<
   );
 };
 
-const ContentLayoutHorizontal3col: React.FunctionComponent<
-  React.PropsWithChildren<LayedOutContent>
-> = ({
+const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildren<LayedOutContent>> = ({
   header,
   info,
   children,
   isWorking,
   customClass = "",
+  position = "",
   isPost,
   isMood,
 }) => {
   const state = useAppState();
+  let customPosition = "";
+
+  switch (position) {
+    case "top":
+      customPosition = "app-content-align-vertically-top";
+      break;
+    default:
+      customPosition = "app-content-align-vertically";
+      break;
+  }
   // return <div className="app-main-full-width" style={{ minHeight: "90vh" }}>
   //     <div>{info}</div>
   //     <h2>{header}</h2>
@@ -74,16 +90,14 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<
       justify="space-between"
       gutter={16}
       className="app-main-full-width app-content-layout"
-      style={{ margin: 0, height: "100%" }}
+      style={isPost ? { margin: 0, height: "100vh" } : { margin: 0, height: "100%" }}
     >
       {header ? (
         <Col
           xs={24}
           lg={isPost ? 7 : isMood ? 6 : 4}
-          className={
-            isPost ? "text-left post-notification-column" : "text-left"
-          }
-          style={isPost ? { display: "flex" } : {}}
+          className={isPost ? "text-left post-notification-column" : "text-left"}
+          style={isPost ? { display: "flex", padding: 0, marginTop: 10 } : {}}
         >
           {header}
         </Col>
@@ -92,12 +106,16 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<
       )}
       <Col
         xs={24}
-        lg={
-          isPost ? 18 - extrasSpan : isMood ? 20 - extrasSpan : 24 - extrasSpan
-        }
+        lg={isPost ? 18 - extrasSpan : isMood ? 20 - extrasSpan : 24 - extrasSpan}
         className={`${customClass}`}
         style={
-          extrasSpan
+          isPost
+            ? {
+                width: "100%",
+                padding: 0,
+                display: "flex",
+              }
+            : extrasSpan
             ? { display: "flex" }
             : {
                 width: "100%",
@@ -106,15 +124,14 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<
               }
         }
       >
-        <div className="app-main-full-height">{children}</div>
+        <div className={`app-main-full-height ${customPosition}`}>{children}</div>
       </Col>
       {info ? (
-        <Col
-          xs={24}
-          lg={isPost ? 7 : isMood ? 6 : 4}
-          style={{ display: "flex" }}
-        >
-          <div style={{ width: "100%" }} className="text-left">
+        <Col xs={24} lg={isPost ? 7 : isMood ? 6 : 4} style={isPost ? { display: "flex", padding: 0 } : { display: "flex" }}>
+          <div
+            style={isPost ? { width: "100%", display: "flex", justifyContent: "end" } : { width: "100%" }}
+            className="text-left"
+          >
             {info}
           </div>
         </Col>

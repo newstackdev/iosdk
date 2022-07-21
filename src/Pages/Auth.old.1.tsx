@@ -7,13 +7,11 @@ export {};
 // import { initializeApp } from "firebase/app";
 // import { useAuthState } from 'react-firebase-hooks/auth';
 // import { Card, Col, Row } from "antd";
-// import { Api, UserReadPrivateResponse, ErrorResponse } from "@newlife/newlife-creator-client-api";
+// import { Api, UserReadPrivateResponse, ErrorResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 // import { useEffect, useState } from 'react';
 // import { useHistory } from 'react-router-dom';
 
-
 // const baseUrl = "https://api-eu-sit.newlife.io/creator";
-
 
 // // TODO: Add SDKs for Firebase products that you want to use
 // // https://firebase.google.com/docs/web/setup#available-libraries
@@ -29,7 +27,6 @@ export {};
 //   appId: "1:360722214510:web:d088a1e106fef50262007f",
 //   measurementId: "G-PJWYRPZSNM"
 // };
-
 
 // // Initialize Firebase
 // initializeApp(firebaseConfig);
@@ -81,7 +78,6 @@ export {};
 //   signOut?: () => void;
 // };
 
-
 // export function Auth(props: React.PropsWithChildren<{ onApiChanged: (v?: SecureApi, userInfo?: UserInfo) => any }>) {
 //   const [fbUser, loading, error] = useAuthState(auth);
 
@@ -96,7 +92,6 @@ export {};
 
 //   const history = useHistory();
 
-
 //   const clearStateAndSignOut = () => {
 //     signOut(auth);
 //     setPhoneNumber("");
@@ -110,7 +105,7 @@ export {};
 //   const loadCurrentUser = (async () => {
 //     if(currentUser || currentUserLoading || !fbUser || !fbUser.accessToken)
 //         return;
-    
+
 //     // setCurrentUserLoading(true);
 
 //     try {
@@ -147,10 +142,10 @@ export {};
 //       initRecaptchaVerifier();
 //       return
 //     }
-    
-//     if (!fbUser || !fbUser.accessToken) 
+
+//     if (!fbUser || !fbUser.accessToken)
 //       return
-    
+
 //     updateToken(fbUser.accessToken);
 
 //     setCurrentUserLoading(false);
@@ -214,4 +209,3 @@ export {};
 //     </div>
 //   );
 // }
-

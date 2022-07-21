@@ -1,10 +1,11 @@
+// import { User } from "@firebase/auth";
 import { AUTH_FLOW_STATUS } from "./state";
 export const logout = async ({ state, actions, effects }, { noRouting } = {}) => {
     state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
     state.auth.timers.authTimeoutCancel();
     state.auth.timers.timeToRefreshCancel();
     await actions.api.auth.logout();
-    Object.values(state.auth.tokens).forEach(t => t.logout());
+    Object.values(state.auth.tokens).forEach((t) => t.logout());
     // await effects.firebase.logout();
     // actions.routing.historyPush({ location: "/" });
     if (!noRouting)
@@ -19,7 +20,7 @@ export const reduceTimer = async ({ state, actions, effects }) => {
     state.auth.timers.authTimeout -= 1;
 };
 export const fakeUserUpdate = async ({ state, actions }, upd) => {
-    Object.assign(state.api.auth.user, upd);
+    Object.assign(state.api.auth.user, (upd || {}));
 };
 // export const newlifeLogout: Action<{ keepFbUser?: boolean } | undefined> = async ({ state, actions, effects }, config) => {
 //     if(!config?.keepFbUser) {

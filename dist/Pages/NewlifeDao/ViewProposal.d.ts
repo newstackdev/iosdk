@@ -1,4 +1,3 @@
-/// <reference types="react" />
 export declare const ViewProposalPage: () => JSX.Element;
 declare const ViewProposal: (props: {
     daoOwner: string;

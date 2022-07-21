@@ -7,16 +7,14 @@ declare const _default: {
         account: any;
         pools: any;
         mainPool: any;
-        daos: Record<string, {
-            proposals: import("@newlife/newlife-creator-client-api").BcListDaoProposalsResponse;
-        }>;
+        daos: Record<string, import("./state").DaoState>;
         cache: {
             accountHistory: Record<string, import("./types").HyperionAccountHistory>;
             pools: {
                 byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
                 byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
             };
-            votes: Record<string, import("@newlife/newlife-creator-client-api").BcDaoProposalVoteResponse>;
+            votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
         };
     };
 };

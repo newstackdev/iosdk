@@ -7,16 +7,14 @@ export default {};
 // import { getAuth, RecaptchaVerifier, signInWithEmailAndPassword, signInWithPhoneNumber, ConfirmationResult, UserCredential, signOut } from "firebase/auth";
 // import { initializeApp } from "firebase/app";
 // import { useAuthState } from 'react-firebase-hooks/auth';
-// import { ErrorResponse } from "@newlife/newlife-creator-client-api";
+// import { ErrorResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 
 // import { useEffect, useState } from 'react';
 // import { useHistory } from 'react-router-dom';
 // import { CreatorApi, UserInfo } from "../types";
 // import { useActions, useAppState } from "../overmind";
 
-
 // const baseUrl = "https://api-eu-sit.newlife.io/creator";
-
 
 // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
@@ -60,12 +58,10 @@ export default {};
 
 // const updateToken = (token: string) => creatorApi.setSecurityData({ token });
 
-
 // const layout = {
 //   labelCol: { span:7 },
 //   wrapperCol: { span: 9 },
 // };
-
 
 // export const Auth = (props: React.PropsWithChildren<{}>) => {
 //   // const state = useAppState();
@@ -93,7 +89,6 @@ export default {};
 //     setCredentials(undefined);
 //     // props.onApiChanged(undefined, undefined);
 //   }
-
 
 //   const requestPhoneAuthCode = async (v: { phone: string }) => {
 //     const verifier = await signInWithPhoneNumber(auth, v.phone, initRecaptchaVerifier());

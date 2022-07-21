@@ -40,7 +40,7 @@ import TopFolders from "./Components/TopFolders";
 import { LegacyImport } from "./Pages/User/LegacyImport";
 import Spotlights from "./Components/Spotlights";
 import { SearchCreativePost } from "./Pages/SearchCreativePost";
-import CommunityHistory from "./Pages/NewlifeDao/CommunityHistory";
+import CommunityHistory from "./Pages/Dao/CommunityHistory";
 import { Notifications } from "./Pages/Notifications/Notifications";
 import { SelectMoodForm } from "./Components/SelectMood";
 import { Header } from "antd/lib/layout/layout";

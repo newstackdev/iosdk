@@ -1,4 +1,4 @@
-import { UserCreateRequest } from "@newlife/newlife-creator-client-api";
+import { UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare enum DOMAIN_PRESALE_STEPS {
     SELECT_DOMAIN = 0,
     AUTHENTICATE = 1,
@@ -6,9 +6,13 @@ export declare enum DOMAIN_PRESALE_STEPS {
     DONE = 3
 }
 export declare const state: {
-    form: Partial<UserCreateRequest>;
+    form: Partial<UserCreateRequest & {
+        couponCode?: string | undefined;
+    }>;
     justCreated: boolean;
     legacyToken: string;
+    legacyUsername: string;
+    isLegacyUpdateOngoing: boolean;
     formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
     wizard: ({
         current: "SELECT_DOMAIN";

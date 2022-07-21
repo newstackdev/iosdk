@@ -1,5 +1,5 @@
 // import '../App.css';
-import { getAuth, RecaptchaVerifier, sendSignInLinkToEmail, signInWithEmailLink, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, getAuth, sendSignInLinkToEmail, signInWithEmailLink, signInWithPhoneNumber, } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 // import { firebaseConfig } from "../../config";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,16 +17,17 @@ export default (() => {
     let auth;
     let recaptcaVerifier = null;
     let confirmationResult;
-    const getRecaptchaVerifier = (containerOrId = 'sign-in-button') => {
-        return recaptcaVerifier || (recaptcaVerifier = new RecaptchaVerifier(containerOrId, {
-            'size': 'invisible',
-            'callback': (response) => {
-                // reCAPTCHA solved, allow signInWithPhoneNumber.
-                //alert(response);
-                // signInWithPhoneNumber
-                // onSignInSubmit()
-            }
-        }, auth));
+    const getRecaptchaVerifier = (containerOrId = "sign-in-button") => {
+        return (recaptcaVerifier ||
+            (recaptcaVerifier = new RecaptchaVerifier(containerOrId, {
+                size: "invisible",
+                callback: (response) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                    //alert(response);
+                    // signInWithPhoneNumber
+                    // onSignInSubmit()
+                },
+            }, auth)));
     };
     const clearRecaptchaVerifier = () => {
         if (!recaptcaVerifier)
@@ -40,20 +41,21 @@ export default (() => {
             auth = getAuth();
             return auth;
         },
-        initRecaptchaVerifier(containerOrId = 'sign-in-button') {
+        initRecaptchaVerifier(containerOrId = "sign-in-button") {
             clearRecaptchaVerifier();
             getRecaptchaVerifier(containerOrId);
         },
         clearRecaptchaVerifier,
         async requestPhoneAuthCode(v) {
-            return confirmationResult = await signInWithPhoneNumber(auth, v.phone, getRecaptchaVerifier());
+            return (confirmationResult = await signInWithPhoneNumber(auth, v.phone, getRecaptchaVerifier()));
         },
         async requestEmailAuthCode(v) {
             // signinwith
             const actionCodeSettings = {
+                // Legacy V1 login only
                 // URL you want to redirect back to. The domain (www.example.com) for this
                 // URL must be in the authorized domains list in the Firebase Console.
-                url: window.location.href + '?email=email',
+                url: window.location.href + "?email=email",
                 // This must be true.
                 handleCodeInApp: true,
                 // iOS: {
@@ -97,7 +99,7 @@ export default (() => {
         },
         async logout() {
             auth && (await auth.signOut());
-        }
+        },
     };
 })();
 //# sourceMappingURL=effects.js.map

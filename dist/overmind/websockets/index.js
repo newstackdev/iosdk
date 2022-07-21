@@ -1,19 +1,21 @@
-import { pipe, debounce, filter } from "overmind";
-import websocket from "./effects";
+import { debounce, filter, pipe } from "overmind";
 import { uniq } from "lodash";
-import { newlifeWebsocketsServer } from "../../config";
+import websocket from "./effects";
+// import { newlifeWebsocketsServer } from "../../config";
 import { capFirst } from "../../utils/capFirst";
 const toggleWebSocket = pipe(debounce(500), async ({ state, effects, actions }) => {
     if (!state.api.auth.authorized)
         return;
     const token = state.firebase.token;
-    effects.websockets.newlife.toggle(token);
+    effects.websockets.newlife.toggle(state.config.settings.newgraph.websocketsServer, token);
     if (!token || !effects.websockets.newlife.socket)
         return;
-    const res = (await state.api.client.user.activityStreamList()) || { data: { Items: [] } };
+    const res = (await state.api.client.user.activityStreamList()) || {
+        data: { Items: [] },
+    };
     const items = [...((res.data || {}).Items || [])].reverse();
     items.forEach((ev) => actions.websockets.processIncoming({ msg: JSON.stringify(ev) }));
-    effects.websockets.newlife.socket.addEventListener('message', (ev) => {
+    effects.websockets.newlife.socket.addEventListener("message", (ev) => {
         if (ev.data === "pong")
             return;
         actions.websockets.processIncoming({ msg: ev.data });
@@ -21,7 +23,8 @@ const toggleWebSocket = pipe(debounce(500), async ({ state, effects, actions }) 
         // effects.ux.notification.open({ message: ev.data });
     });
 });
-const processIncomingNewcoin = pipe(filter((_, { event: { type } }) => type === 'newcoin'), 
+const processIncomingNewcoin = //({ reaction, actions, state }, { msg })
+ pipe(filter((_, { event: { type } }) => type === "newcoin"), 
 // filter((_, { event: { payload } }) => (get(payload, "inbound.0.value.label") != "session")),
 ({ state, effects }, { event }) => {
     const msg = event.payload.message;
@@ -30,7 +33,7 @@ const processIncomingNewcoin = pipe(filter((_, { event: { type } }) => type === 
         title: event.updated + " newcoin: " + msgCore,
         link: ``,
         description: msg.error || `You ${msgCore.split(/_/)[1]} some stake.`,
-        original: event
+        original: event,
     };
     // effects.ux.message.info(msgCore);
     state.websockets.messages.activityStream.unshift(asMsg);
@@ -44,11 +47,15 @@ const modelProcessors = {
         // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
     },
     post: ({ actions, state }, p) => {
-        state.api.cache.posts[p.id ?? ""] = { ...state.api.cache.posts[p.id ?? ""], ...p };
+        state.api.cache.posts[p.id ?? ""] = {
+            ...state.api.cache.posts[p.id ?? ""],
+            ...p,
+        };
     },
-    mood: () => { }
+    mood: () => { },
 };
-const processIncomingModelUpdated = pipe(filter((_, { event: { type } }) => type === 'modelUpdated'), 
+const processIncomingModelUpdated = //({ reaction, actions, state }, { msg })
+ pipe(filter((_, { event: { type } }) => type === "modelUpdated"), 
 // filter((_, { event: { payload } }) => (get(payload, "inbound.0.value.label") != "session")),
 (ctx, { event }) => {
     const { state } = ctx;
@@ -66,16 +73,21 @@ const processIncomingModelUpdated = pipe(filter((_, { event: { type } }) => type
     const asMsg = {
         title: event.updated + " " + what + " updated",
         link: `/${event.model}/${event.payload.value.id}`,
-        description: !rels.length ?
-            `Your ${what.toLowerCase()} got updated: ${(event.payload.updatedProps || []).join(", ")}` :
-            `${what}'s ${rels.join(", ")} got updated.`,
-        original: event
+        description: !rels.length
+            ? `Your ${what.toLowerCase()} got updated: ${(event.payload.updatedProps || []).join(", ")}`
+            : `${what}'s ${rels.join(", ")} got updated.`,
+        original: event,
     };
     return state.websockets.messages.activityStream.unshift(asMsg);
 });
 const processIncoming = ({ reaction, actions, state }, { msg }) => {
     try {
         const ev = JSON.parse(msg);
+        // if(ev.message == "Endpoint request timed out")
+        // {
+        //   actions.firebase.refreshApiToken();
+        //   return;
+        // }
         // state.websockets.messages.incoming.unshift(ev)
         actions.websockets.processIncomingModelUpdated({ event: ev });
         actions.websockets.processIncomingNewcoin({ event: ev });
@@ -97,21 +109,21 @@ const actions = {
     toggleWebSocket,
     processIncoming,
     processIncomingModelUpdated,
-    processIncomingNewcoin
+    processIncomingNewcoin,
 };
 export default {
     state: {
         socket: null,
-        url: newlifeWebsocketsServer,
+        // url: newlifeWebsocketsServer,
         messages: {
             incoming: [],
             activityStream: [],
-            newcoin: []
-        }
+            newcoin: [],
+        },
     },
     actions,
     effects: {
-        newlife: websocket((token) => `${newlifeWebsocketsServer}?token=${token}`)
-    }
+        newlife: websocket((wsServer, token) => `${wsServer}?token=${token}`),
+    },
 };
 //# sourceMappingURL=index.js.map

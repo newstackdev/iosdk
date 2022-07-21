@@ -1,9 +1,12 @@
-import { createOvermind } from 'overmind';
-import { createStateHook, createActionsHook, createEffectsHook, createReactionHook } from 'overmind-react';
-import { EventType } from 'overmind/lib/internalTypes';
-import { config as omConfig } from './overmind';
+import { config as omConfig } from "./overmind";
+import { EventType } from "overmind/lib/internalTypes";
+import { createActionsHook, createEffectsHook, createReactionHook, createStateHook } from "overmind-react";
+import { createOvermind } from "overmind";
 export const overmind = (cfg) => {
     // const appConfig = { state: cfg };
+    const isWatchable = cfg?.settings?.indicators?.isWatchable || (() => false);
+    // (actionName: string) =>
+    //     /^(api|lists|auth|firebase|payments|newcoin)/.test(actionName);
     const om = createOvermind(omConfig(cfg || {}), { delimiter: "!" });
     om.eventHub.on(EventType.ACTION_START, (e) => {
         // if(/^(indicators|websockets)/.test(e.actionName))
@@ -23,5 +26,4 @@ export const useAppState = createStateHook();
 export const useActions = createActionsHook();
 export const useEffects = createEffectsHook();
 export const useReaction = createReactionHook();
-const isWatchable = (actionName) => /^(api|lists|auth|firebase|payments|newcoin)/.test(actionName);
 //# sourceMappingURL=index.js.map

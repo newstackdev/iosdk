@@ -1,42 +1,36 @@
-import { User } from "@firebase/auth";
-import { MoodReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newlife/newlife-creator-client-api";
-import { Action } from "../../types";
+// import { User } from "@firebase/auth";
 import { AUTH_FLOW_STATUS, state } from "./state";
+import { Action } from "../../types";
+import { MoodReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 
 export const logout: Action<{ noRouting?: boolean } | undefined> = async ({ state, actions, effects }, { noRouting } = {}) => {
-    state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
-    state.auth.timers.authTimeoutCancel();
-    state.auth.timers.timeToRefreshCancel();
+  state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
+  state.auth.timers.authTimeoutCancel();
+  state.auth.timers.timeToRefreshCancel();
 
-    await actions.api.auth.logout();
+  await actions.api.auth.logout();
 
-    Object.values(state.auth.tokens).forEach(t => t.logout());
+  Object.values(state.auth.tokens).forEach((t) => t.logout());
 
-    // await effects.firebase.logout();
+  // await effects.firebase.logout();
 
-    // actions.routing.historyPush({ location: "/" });
-    if(!noRouting)
-        window.location.replace("/");
+  // actions.routing.historyPush({ location: "/" });
+  if (!noRouting) window.location.replace("/");
 };
 
 export const resetAuthTimer: Action = async ({ state, actions, effects }) => {
-    state.auth.timers.authTimeout = 120;
-    state.auth.timers.authTimeoutCancel && state.auth.timers.authTimeoutCancel();
-    state.auth.timers.authTimeoutCancel = () => undefined;
+  state.auth.timers.authTimeout = 120;
+  state.auth.timers.authTimeoutCancel && state.auth.timers.authTimeoutCancel();
+  state.auth.timers.authTimeoutCancel = () => undefined;
 };
 
 export const reduceTimer: Action = async ({ state, actions, effects }) => {
-    state.auth.timers.authTimeout -= 1;
+  state.auth.timers.authTimeout -= 1;
 };
 
 export const fakeUserUpdate: Action<UserReadPrivateResponse> = async ({ state, actions }, upd) => {
-    Object.assign(state.api.auth.user, upd);
+  Object.assign(state.api.auth.user as any, (upd || {}) as any);
 };
-
-
-
-
-
 
 // export const newlifeLogout: Action<{ keepFbUser?: boolean } | undefined> = async ({ state, actions, effects }, config) => {
 //     if(!config?.keepFbUser) {
@@ -53,12 +47,10 @@ export const fakeUserUpdate: Action<UserReadPrivateResponse> = async ({ state, a
 //     effects.websockets.newlife.socket?.close();
 // }
 
-
 // export const setPreloginRoute: Action<undefined> = ({ state,  actions,  effects }) => {
 //     const p = window.location.pathname;
 //     state.routing.preLoginRoute = p === "/auth" ? "" : p;
 // };
-
 
 // export const getCurrent: Action<undefined> = async ({ state, actions, effects }) => {
 //     try {
@@ -83,7 +75,7 @@ export const fakeUserUpdate: Action<UserReadPrivateResponse> = async ({ state, a
 //             console.log("Not yet authorized")
 //             return;
 //         }
-        
+
 //         actions.websockets.toggleWebSocket()
 
 //         await actions.api.user.getMoods({ id: state.auth.user?.id });
@@ -98,7 +90,7 @@ export const fakeUserUpdate: Action<UserReadPrivateResponse> = async ({ state, a
 //         if (!id || state.auth.status < AUTH_FLOW_STATUS.AUTHORIZED) {
 //             return; //actions.auth.newlifeLogout();
 //         }
-        
+
 //         // await actions.auth.refreshApiToken();
 //         // await actions.auth.newlifeAuthorize();
 
@@ -111,10 +103,6 @@ export const fakeUserUpdate: Action<UserReadPrivateResponse> = async ({ state, a
 //     // state.userInfo = userInfo;
 //     state.api.client = client;
 // };
-
-
-
-
 
 // export const wrapPromise: Action<Promise<unknown>> = ({ state,  actions,  effects }, value) => {
 //     state.indicators._inProgressCounter++;

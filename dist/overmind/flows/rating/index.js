@@ -10,7 +10,7 @@ export const deepLikeInit = ({ state, effects }) => {
         startTime: Date.now(),
         isRating: true,
         rated: false,
-        value: 0
+        value: 0,
     };
 };
 export const deepLikeStart = ({ actions, state, effects }, { event }) => {
@@ -22,7 +22,8 @@ export const deepLikeStart = ({ actions, state, effects }, { event }) => {
         event.stopPropagation();
         event.stopImmediatePropagation();
     }
-    if (rs.value) // rs.rated || 
+    if (rs.value)
+        // rs.rated ||
         return;
     rs.rated = false;
     rs.value = 1;
@@ -50,20 +51,19 @@ export const deepLikeStop = ({ state, effects }) => {
     state.flows.rating.interval.stop();
 };
 export const onInitializeOvermind = ({ actions, state }) => {
-    const nextValue = () => {
-    };
+    const nextValue = () => { };
     state.flows.rating.keyBinding.setEventHandlers({
         onKeyDown: (event) => actions.flows.rating.deepLikeStart({ event }),
         onKeyUp: () => {
             actions.flows.rating.deepLikeStop();
-        }
+        },
     });
 };
 const effects = {
     initInterval: (ms) => {
         let interval = null;
         const stop = () => {
-            (interval !== null && clearInterval(interval));
+            interval !== null && clearInterval(interval);
             interval = null;
             console.log("cleared interval");
         };
@@ -98,8 +98,8 @@ const effects = {
             console.log("keydown, repeat: " + kbdEvent?.repeat);
             onKeyDown(e);
         };
-        document.addEventListener('keydown', keyDown);
-        document.addEventListener('keyup', keyUp);
+        document.addEventListener("keydown", keyDown);
+        document.addEventListener("keyup", keyUp);
         const remove = () => {
             onKeyUp = undefined;
             onKeyDown = undefined;
@@ -112,10 +112,10 @@ const effects = {
         return {
             // add,
             remove,
-            setEventHandlers
+            setEventHandlers,
             // bindTouchClick
         };
-    }
+    },
 };
 const state = {
     _value: 0,
@@ -124,18 +124,18 @@ const state = {
     isRating: false,
     rated: false,
     interval: effects.initInterval(VOTE_POLLING_INTERVAL),
-    keyBinding: effects.onceKeyBinding([32])
+    keyBinding: effects.onceKeyBinding([32]),
 };
 const actions = {
     deepLikeInit,
     deepLikeStart,
     deepLikeStep,
     deepLikeStop,
-    onInitializeOvermind
+    onInitializeOvermind,
 };
 export default {
     state,
     actions,
-    effects
+    effects,
 };
 //# sourceMappingURL=index.js.map

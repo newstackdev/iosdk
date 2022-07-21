@@ -1,19 +1,22 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { Button, Tag, Tooltip } from "antd";
-import { useEffect, useRef, useState } from "react";
-import { MaskedInput } from "antd-mask-input";
-import { ContentLayout } from "../../Components/ContentLayout";
-import { useActions, useAppState } from "../../overmind";
-import Paragraph from "antd/lib/typography/Paragraph";
-import { Auth } from "../Auth/Auth";
-import { Product } from "../Store/Product";
-import { UserCreate } from "../User/UserCreate";
-import { ProgressButton } from "../../Components/ProgressButton";
-import { Link } from "react-router-dom";
 import { AppearingComponent } from "../../Components/Appearing";
-import { SpaceSpin } from "../../Components/Spin";
-import SupportBox from "../../Components/SupportBox";
+import { Auth } from "../Auth/Auth";
+import { Button, Tag, Tooltip } from "antd";
+import { ContentLayout } from "../../Components/ContentLayout";
 import { Done } from "./Done";
+import { Link } from "react-router-dom";
+import { MaskedInput } from "antd-mask-input";
+import { Product } from "../Store/Product";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { useEffect, useRef, useState } from "react";
+import { SpaceSpin } from "../../Components/Spin";
+import { UserCreate } from "../User/UserCreate";
+import { estimateUsernamePrice } from "../../utils/username";
+import { useActions, useAppState } from "../../overmind";
+import HashtagSelector from "./pages/HashtagSelector";
+import Paragraph from "antd/lib/typography/Paragraph";
+import SupportBox from "../../Components/SupportBox";
+import UserSelector from "./pages/UserSelector";
 // const InputWithPostfix:  NLView<InputProps & { postFix: string }>= ({ postFix, ...props }) => {
 //     const [val, setVal] = useState<string>(postFix);
 //     return <Input
@@ -36,17 +39,18 @@ const DomainSelector = () => {
     // 	}
     //  }, [state.api.auth.user]);
     const username = state.flows.user.create.form.username || "";
+    const domainPrice = () => estimateUsernamePrice(username);
     const isPaidUsername = () => {
         const len = username.replace(/\.io/, "").length;
-        return len > 0 && len < 5;
+        return len > 1 && len <= 5;
     };
-    return (_jsxs(ContentLayout, { children: [_jsx(MaskedInput, { ref: el, className: fuia === "unavailable"
-                    ? "nl-domain-presale__masked-input masked-input-error"
-                    : "nl-domain-presale__masked-input", defaultValue: state.flows.user.create.form.username?.replace(/\.io$/, "") || "", size: "large", mask: "xxxxxxxxx.IO", placeholderChar: "\u200C", onChange: (v) => {
+    const isOneChar = () => {
+        const len = username.replace(/\.io/, "").length;
+        return len === 1;
+    };
+    return (_jsxs(ContentLayout, { children: [_jsx(MaskedInput, { ref: el, className: fuia === "unavailable" ? "nl-domain-presale__masked-input masked-input-error" : "nl-domain-presale__masked-input", defaultValue: state.flows.user.create.form.username?.replace(/\.io$/, "") || "", size: "large", mask: "xxxxxxxxx.IO", placeholderChar: "\u200C", onChange: (v) => {
                     actions.flows.user.create.updateForm({
-                        username: v.target.value
-                            .replace(/\u200c/g, "")
-                            .toLowerCase(),
+                        username: v.target.value.replace(/\u200c/g, "").toLowerCase(),
                     });
                 }, formatCharacters: {
                     x: {
@@ -57,13 +61,8 @@ const DomainSelector = () => {
                             return char.toLowerCase();
                         },
                     },
-                } }), _jsx(SpaceSpin, { isRotating: fuia === "checking" }), fuia === "unavailable" && (_jsxs(Tag, { className: "u-margin-top-medium", children: ["Name is ", fuia] })), _jsxs(Paragraph, { className: "paragraph-2r nl-domain-presale__footer-paragraph", children: [isPaidUsername() ? (_jsxs(AppearingComponent, { seconds: 1, children: [_jsx("br", {}), state.config.featureFlags.onboarding.premiumDomains ?
-                                _jsx(_Fragment, { children: "Premium usernames shorter than 5 characters must be purchased. Click Next to continue." }) :
-                                _jsxs(_Fragment, { children: ["For early access please contact\u00A0", _jsx("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "our support team" }), "."] })] })) : (""), state.flows.user.create.legacyToken &&
-                        (state.flows.user.create.form.displayName !==
-                            state.flows.user.create.form.username ||
-                            fuia === "unavailable") ? (_jsxs(_Fragment, { children: [_jsx(Tooltip, { title: _jsx(_Fragment, { children: "Your Newlife identity is now a part of the Newcoin ecosystem and provides access to many exciting services. You may keep your current username as the display name on Newlife on the next dialog." }), children: _jsx("span", { children: "Why is my username changing?" }) }), "\u00A0", _jsxs("a", { href: "/", onClick: () => actions.flows.user.create.stopLegacyImport(), children: ["I am not", " ", state.flows.user.create.form.displayName ||
-                                        state.flows.user.create.form.username] })] })) : ("")] })] }));
+                } }), _jsx(SpaceSpin, { isRotating: fuia === "checking" }), fuia === "unavailable" && _jsxs(Tag, { className: "u-margin-top-medium", children: ["Name is ", fuia] }), _jsxs(Paragraph, { className: "paragraph-2r nl-domain-presale__footer-paragraph", children: [isOneChar() ? (_jsxs(AppearingComponent, { seconds: 1, children: ["To purchase a one character domain please", " ", _jsx("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "contact us" }), "."] })) : (_jsx(_Fragment, {})), isPaidUsername() && !state.flows.user.create.legacyToken ? (_jsxs(AppearingComponent, { seconds: 1, children: [_jsx("br", {}), state.config.featureFlags.onboarding.premiumDomains ? (_jsxs(_Fragment, { children: ["Premium usernames of 5 and fewer characters must be purchased.", _jsx("br", {}), "Estimated price: ", domainPrice(), _jsx("br", {}), "Click Next to continue."] })) : (_jsxs(_Fragment, { children: ["For early access please contact\u00A0", _jsx("a", { href: "https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ", target: "_new", children: "our support team" }), "."] }))] })) : (""), state.flows.user.create.legacyToken &&
+                        (state.flows.user.create.form.displayName !== state.flows.user.create.form.username || fuia === "unavailable") ? (_jsxs(_Fragment, { children: [_jsx(Tooltip, { title: _jsx(_Fragment, { children: "Your Newlife identity is now a part of the Newcoin ecosystem and provides access to many exciting services. You may keep your current username as the display name on Newlife on the next dialog." }), children: _jsx("span", { children: "Why is my username changing?" }) }), "\u00A0", _jsxs("a", { href: "/", onClick: () => actions.flows.user.create.stopLegacyImport(), children: ["I am not ", state.flows.user.create.form.displayName || state.flows.user.create.form.username] })] })) : ("")] })] }));
 };
 //: Record<string, { title: string, content: ReactElement | EmbeddableControl }>
 const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
@@ -75,7 +74,7 @@ const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
         },
         AUTHENTICATE: {
             title: "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS",
-            content: (_jsx(Auth, { embedded: true, setNext: setNext, setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit })),
+            content: _jsx(Auth, { embedded: true, setNext: setNext, setIsErrorSubmit: setIsErrorSubmit, isErrorSubmit: isErrorSubmit }),
             action: "",
         },
         SUBSCRIBE: {
@@ -88,10 +87,22 @@ const InitSteps = (setNext, isErrorSubmit, setIsErrorSubmit) => {
             action: "api.user.create",
             content: (_jsx(UserCreate, { embedded: true, setNext: setNext, hideUsername: true, noRouing: true, setIsErrorSubmit: setIsErrorSubmit })),
         },
+        //TODO implement
+        USER_SELECTOR: {
+            title: "",
+            action: "api.user.userSelector",
+            content: _jsx(UserSelector, {}),
+        },
+        HASHTAG_SELECTOR: {
+            title: "",
+            action: "",
+            content: _jsx(HashtagSelector, {}),
+        },
+        //TODO implement
         DONE: {
             title: "",
             content: _jsx(Done, {}),
-            action: "",
+            action: "api.user.create",
         },
     };
 };
@@ -123,16 +134,8 @@ export const DomainPresale = () => {
             state.firebase.token))
         return _jsx(_Fragment, {});
     return (_jsxs(_Fragment, { children: [_jsxs(ContentLayout, { customClass: "app-content-layout", children: [currentSlide.content, _jsx("div", { className: "app-control-surface", children: next || wizard.hasNext ? (currentSlide.action ? (_jsx(ProgressButton, { type: "primary", progressText: "Processing...", actionName: currentSlide.action, onClick: () => {
-                                return next
-                                    ? next.command()
-                                    : actions.flows.user.create.wizardStepNext();
-                            }, isErrorSubmit: isErrorSubmit, children: next ? next.text : "Next" })) : (_jsx(Button, { type: "primary", disabled: isErrorSubmit, onClick: () => next
-                                ? next.command()
-                                : actions.flows.user.create.wizardStepNext(), className: isErrorSubmit
-                                ? "disabled-submit-button"
-                                : "", children: next ? next.text : "Next" }))) : (_jsx(_Fragment, {})) }), !state.flows.user.create.legacyToken &&
-                        !state.auth.authenticated &&
-                        wizard.matches("SELECT_DOMAIN") && (_jsx("div", { className: "app-main-full-width u-margin-top-medium text-center", children: _jsx(Button, { type: "primary", className: "big-button", children: _jsx(Link, { to: "/auth/newlife-members", className: "header-1b", children: "I'm an early Newlife member!" }) }) })), _jsx("div", { className: "u-margin-top-large", children: _jsx(SupportBox, {}) })] }), _jsxs("div", { 
+                                return next ? next.command() : actions.flows.user.create.wizardStepNext();
+                            }, isErrorSubmit: isErrorSubmit, children: next ? next.text : "Next" })) : (_jsx(Button, { type: "primary", disabled: isErrorSubmit, onClick: () => (next ? next.command() : actions.flows.user.create.wizardStepNext()), className: isErrorSubmit ? "disabled-submit-button" : "", children: next ? next.text : "Next" }))) : (_jsx(_Fragment, {})) }), !state.flows.user.create.legacyToken && !state.auth.authenticated && wizard.matches("SELECT_DOMAIN") && (_jsx("div", { className: "app-main-full-width u-margin-top-medium u-margin-bottom-mega text-center", children: _jsx(Button, { type: "primary", className: "big-button", children: _jsx(Link, { to: "/auth/newlife-members", className: "header-1b", children: "I'm an early Newlife member!" }) }) })), _jsx(SupportBox, {})] }), _jsxs("div", { 
                 // hidden={!wizard.matches("SELECT_DOMAIN")}
                 className: "nl-domain-presale__info-text__wrapper", children: [_jsx(Paragraph, { className: "paragraph-2r nl-domain-presale__footer-paragraph", children: footerTitle }), wizard.matches("SELECT_DOMAIN") && (_jsx(Paragraph, { className: "nl-domain-presale__footer-paragraph paragraph-2r", children: "9 characters max: a-z and 1-5" }))] })] }));
 };

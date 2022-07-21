@@ -1,42 +1,49 @@
-import { NCPoolsInfo } from "@newcoin-foundation/newcoin-sdk";
-import { BcApproveDaoProposalRequest, BcDaoProposalVoteRequest, BcDaoProposalVoteResponse, BcListDaoProposalsResponse } from "@newlife/newlife-creator-client-api";
+import {
+  BcDaoProposalVoteResponse,
+  BcListDaoProposalsResponse,
+  BcListDaoWhitelistResponse,
+} from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { HyperionAccountHistory } from "./types";
+import { NCPoolsInfo } from "@newcoin-foundation/newcoin-sdk";
 
 export interface PoolInfo {
-    rows:     Row[];
-    more:     boolean;
-    next_key: string;
+  rows: Row[];
+  more: boolean;
+  next_key: string;
 }
 
 export interface Row {
-    id:               number;
-    code:             string;
-    owner:            string;
-    description:      string;
-    total:            Total;
-    creation_date:    Date;
-    last_update_date: Date;
+  id: number;
+  code: string;
+  owner: string;
+  description: string;
+  total: Total;
+  creation_date: Date;
+  last_update_date: Date;
 }
 
 export interface Total {
-    quantity: string;
-    contract: string;
+  quantity: string;
+  contract: string;
 }
 
+export type DaoState = {
+  proposals: BcListDaoProposalsResponse;
+  whitelistProposals: BcListDaoProposalsResponse;
+  whitelist: BcListDaoWhitelistResponse;
+};
 
 export default {
-    account: {} as any,
-    pools: {} as any,
-    mainPool: {} as any,
-    daos: {} as Record<string, {
-        proposals: BcListDaoProposalsResponse,
-    }>,
-    cache: {
-        accountHistory: {} as Record<string, HyperionAccountHistory>,
-        pools: {
-            byCode: {} as Record<string, NCPoolsInfo>,
-            byOwner: {} as Record<string, NCPoolsInfo>
-        },
-        votes: {} as Record<string, BcDaoProposalVoteResponse>
-    }
-}
+  account: {} as any,
+  pools: {} as any,
+  mainPool: {} as any,
+  daos: {} as Record<string, DaoState>,
+  cache: {
+    accountHistory: {} as Record<string, HyperionAccountHistory>,
+    pools: {
+      byCode: {} as Record<string, NCPoolsInfo>,
+      byOwner: {} as Record<string, NCPoolsInfo>,
+    },
+    votes: {} as Record<string, BcDaoProposalVoteResponse>,
+  },
+};

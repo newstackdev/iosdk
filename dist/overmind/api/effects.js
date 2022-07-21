@@ -5,13 +5,16 @@ export default (() => {
     return {
         initialize(baseUrl) {
             api = new CreatorApi({
-                baseUrl, securityWorker: (securityData) => {
-                    return (!securityData ? {} : { headers: { Authorization: securityData.token } });
-                }
+                baseUrl,
+                securityWorker: (securityData) => {
+                    return !securityData ? {} : { headers: { Authorization: securityData.token } };
+                },
             });
             return api;
         },
-        updateToken(token) { api.setSecurityData({ token }); },
+        updateToken(token) {
+            api.setSecurityData({ token });
+        },
         async authorize() {
             try {
                 const r = await api.user.currentList();
@@ -26,7 +29,7 @@ export default (() => {
                 // alert(ex.error.errorMessage);
                 throw ex;
             }
-        }
+        },
     };
 })();
 //# sourceMappingURL=effects.js.map

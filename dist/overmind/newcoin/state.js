@@ -7,9 +7,9 @@ export default {
         accountHistory: {},
         pools: {
             byCode: {},
-            byOwner: {}
+            byOwner: {},
         },
-        votes: {}
-    }
+        votes: {},
+    },
 };
 //# sourceMappingURL=state.js.map

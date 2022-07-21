@@ -1,17 +1,17 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { Col, Row } from "antd";
-import Avatar from "antd/lib/avatar/avatar";
-import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router";
+import Avatar from "antd/lib/avatar/avatar";
 // import { PremiumContent } from "../Components/PremiumContent";
-import { useFolderStakeInfo } from "../../hooks/useBlockchainInfo";
-import { ContentLayout } from "../../Components/ContentLayout";
-import { ThreeDots } from "../../Components/Icons/ThreeDots";
 import { ContentImage } from "../../Components/Image";
-import { TopFoldersGrid } from "../../Components/TopFolders";
-import { useCachedMood, useCachedMoodPosts, useCachedPool, useCachedUser, } from "../../hooks/useCached";
-import { useAppState } from "../../overmind";
+import { ContentLayout } from "../../Components/ContentLayout";
 import { MoodsGridRow } from "./MoodsGrid";
+import { ThreeDots } from "../../Components/Icons/ThreeDots";
+import { TopFoldersGrid } from "../../Components/TopFolders";
+import { useAppState } from "../../overmind";
+import { useCachedMood, useCachedMoodPosts, useCachedPool, useCachedUser } from "../../hooks/useCached";
+import { useFolderStakeInfo } from "../../hooks/useBlockchainInfo";
 // const useFolderStakeInfo = (folder: MoodReadResponse) => {
 // 	const moodDetails = useCachedMood(folder, true);
 // 	const state = useAppState();
@@ -51,17 +51,12 @@ export const Mood = () => {
                     }, children: [_jsxs(Col, { style: {
                                 alignItems: "center",
                                 display: "flex",
-                            }, children: [_jsx("span", { style: {
-                                        marginRight: "10px",
-                                        display: "flex",
-                                    } }), _jsx(Link, { to: `/user/${state.api.auth.user?.username}`, style: { marginLeft: "10px" }, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: "avatar-image-header" }) }), _jsx(Link, { to: `/user/${user.username}`, className: "paragraph-1b", style: { marginLeft: "20px" }, children: user.username })] }), _jsx(Col, { style: {
+                            }, children: [_jsx(Link, { to: `/user/${user.username}`, style: { marginLeft: "10px" }, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: "avatar-image-header" }) }), _jsx(Link, { to: `/user/${user.username}`, className: "paragraph-1b", style: { marginLeft: "20px" }, children: user.username })] }), _jsx(Col, { style: {
                                 alignItems: "center",
                                 display: "flex",
-                            }, children: _jsx(ThreeDots, {}) })] }), _jsxs(Row, { style: { marginBottom: "40px" }, children: [_jsx("p", { className: "paragraph-2b", children: moodDetails.title }), _jsx("p", { className: "paragraph-2r", children: moodDetails.description || "" })] }), _jsx(Row, { children: stakeInfo.toAccess ?
-                        (!stakeInfo.currentUserEligible ?
-                            _jsxs(_Fragment, { children: [_jsx("hr", {}), _jsx("p", { className: "paragraph-2r", children: _jsxs(_Fragment, { children: ["This content is accessible only to members of ", user.username, " dao.", _jsx("br", {}), _jsx("br", {}), _jsxs("div", { children: ["Stake to access: ", stakeInfo.toAccess || "", " "] }), _jsxs("div", { children: ["Your stake: ", stakeInfo.currentUserStake] }), _jsxs("div", { children: ["Stake to enter: ", stakeInfo.currentUserNeeds] })] }) })] })
-                            : _jsxs("p", { children: [_jsx("hr", {}), "You are eligible to access this premium folder"] }))
-                        : _jsx(_Fragment, {}) })] }), isMood: true, children: _jsx(TopFoldersGrid, { mood: mood, noFolder: true, postNumber: 3, title: "Moods" }) }));
+                            }, children: _jsx(ThreeDots, {}) })] }), _jsxs(Row, { style: { marginBottom: "40px" }, children: [_jsx("p", { className: "paragraph-2b", children: moodDetails.title }), _jsx("p", { className: "paragraph-2r", children: moodDetails.description || "" })] }), _jsx(Row, { children: stakeInfo.toAccess ? (!stakeInfo.currentUserEligible ? (_jsxs(_Fragment, { children: [_jsx("hr", {}), _jsx("p", { className: "paragraph-2r", children: _jsxs(_Fragment, { children: ["This content is accessible only to members of ", user.username, " dao.", _jsx("br", {}), _jsx("br", {}), _jsxs("div", { children: ["Stake to access: ", stakeInfo.toAccess || "", " "] }), _jsxs("div", { children: ["Your stake: ", stakeInfo.currentUserStake] }), _jsxs("div", { children: ["Stake to enter: ", stakeInfo.currentUserNeeds] })] }) })] })) : (_jsxs("p", { children: [_jsx("hr", {}), "You are eligible to access this premium folder"] }))) : (_jsx(_Fragment, {})) })] }), isMood: true, children: _jsx(TopFoldersGrid, { mood: mood, noFolder: true, maxPosts: 3, 
+            // postNumber={3}
+            title: "Moods" }) }));
 };
 export const MoodDetailed = () => {
     const { moodId: id } = useParams();

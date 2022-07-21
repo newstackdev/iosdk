@@ -1,5 +1,5 @@
-import { Stripe, StripeElements } from "@stripe/stripe-js";
 import { Action } from "../../types";
+import { Stripe, StripeElements } from "@stripe/stripe-js";
 declare const _default: {
     actions: {
         pay: Action<{

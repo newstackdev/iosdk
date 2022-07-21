@@ -1,5 +1,5 @@
-import { omit } from "lodash";
 import { debounce, pipe } from "overmind";
+import { omit } from "lodash";
 export const read = async ({ state, actions, effects }, { id }) => {
     const r = await state.api.client.post.postList({ id });
     if (!r.data)
@@ -11,12 +11,14 @@ export const read = async ({ state, actions, effects }, { id }) => {
     state.api.cache.posts[id] = omit(r.data, isProcessing ? ["contentUrl"] : []);
     actions.api.mood.cache({ moods: r.data.moods });
 };
-export const create = async ({ state, actions, effects }, { postForm }) => {
+export const create = pipe(async ({ state, actions, effects }, { postForm }) => {
     // await state.api.client.post.postCreate(post);
-    const shouldUpload = !postForm.contentType;
+    const shouldUpload = postForm.contentType !== "text/plain";
     if (!shouldUpload) {
         if (!postForm.content)
-            return effects.ux.notification.open({ message: "Write something smart here." });
+            return effects.ux.notification.open({
+                message: "Write something smart here.",
+            });
         const p = await state.api.client.post.postCreate(postForm);
         return p.data;
     }
@@ -24,7 +26,9 @@ export const create = async ({ state, actions, effects }, { postForm }) => {
         const f = postForm.file[0];
         // const contentType = mime.lookup(extname(f.));
         if (!f.type) {
-            return effects.ux.notification.open({ message: "Unrecognized/unsupported content type. Upload something else." });
+            return effects.ux.notification.open({
+                message: "Unrecognized/unsupported content type. Upload something else.",
+            });
         }
         const p = await state.api.client.post.postCreate(postForm);
         const uploadInfo = await state.api.client.post.uploadCreate({
@@ -38,7 +42,7 @@ export const create = async ({ state, actions, effects }, { postForm }) => {
         };
         const r = await fetch(uploadInfo.data.url, {
             method: "PUT",
-            body: f,
+            body: f.originFileObj,
         });
         if (r.status == 200) {
             effects.ux.notification.open({ message: "Success!" });
@@ -53,7 +57,7 @@ export const create = async ({ state, actions, effects }, { postForm }) => {
         // setErrMsg(get(ex, "error.errorMessage.details") || get(ex, "message") || "unknown error");
         effects.ux.notification.open({ message: "Somethink wend wronk!" });
     }
-};
+});
 export const attachToMoods = async ({ state, actions, effects }, { moods, post }) => {
     const pid = post.id || "";
     console.log("attachToMoods: enter");
@@ -75,7 +79,8 @@ export const attachToMoods = async ({ state, actions, effects }, { moods, post }
     console.log(`attachToMoods: done caching ${moods.length} moods`);
     return Promise.resolve();
 };
-export const rate = pipe(// mood?: MoodReadResponse 
+export const rate = pipe(
+// mood?: MoodReadResponse
 debounce(300), async ({ state, actions, effects }, { post, amount, contextType, contextValue }) => {
     const t = post.title || post.content || "";
     const mt = t.length <= 30 ? t : t.substring(0, 30) + "...";
@@ -83,12 +88,18 @@ debounce(300), async ({ state, actions, effects }, { post, amount, contextType, 
         const res = await state.api.client.post.rateCreate({
             targetId: post.id,
             value: amount || 1,
-            ...(contextType ? ({ contextType, contextValue }) : {})
+            ...(contextType ? { contextType, contextValue } : {}),
         });
-        effects.ux.message.info(`You voted ${amount}`);
+        effects.ux.message.info(`You voted ${amount}%`);
     }
     catch (ex) {
         effects.ux.message.error(ex.error.errorMessage);
     }
 });
+export const getRemoteMeta = async ({ state }, { url }) => {
+    const res = await state.api.client.post.utilsRemoteMetaProxyList({
+        url: url,
+    });
+    return res.data;
+};
 //# sourceMappingURL=post.js.map

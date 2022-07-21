@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import { Stripe } from "@stripe/stripe-js";
 import { EmbeddableControl } from "../../types";
+import { Stripe } from "@stripe/stripe-js";
 declare type CreateSubscriptionReq = {
     customerId: string;
     paymentMethodId: string;
@@ -27,7 +27,7 @@ declare type ProcessPaymentReq = {
     paymentMethodId: string;
     isRetry: boolean;
 };
-export declare function handlePaymentThatRequiresCustomerAction(stripe: Stripe, { subscription, invoice, priceId, paymentMethodId, isRetry, }: ProcessPaymentReq): Promise<{
+export declare function handlePaymentThatRequiresCustomerAction(stripe: Stripe, { subscription, invoice, priceId, paymentMethodId, isRetry }: ProcessPaymentReq): Promise<{
     subscription: {
         status: string;
         latest_invoice: Invoice;
@@ -45,5 +45,5 @@ export declare function handlePaymentThatRequiresCustomerAction(stripe: Stripe, 
     paymentMethodId: string;
 } | undefined>;
 export declare function createSubscription(stripe: Stripe, api: any, { customerId, paymentMethodId, priceId }: CreateSubscriptionReq): Promise<CreateSubscriptionRes | undefined>;
-export declare const Product: ({ embedded, setNext, }: React.PropsWithChildren<EmbeddableControl>) => JSX.Element;
+export declare const Product: ({ embedded, setNext }: React.PropsWithChildren<EmbeddableControl>) => JSX.Element;
 export {};

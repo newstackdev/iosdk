@@ -1,9 +1,9 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import { Upload, Modal, Row } from "antd";
-import React from "react";
-import { Image } from "./Icons/Image";
-import { Edit } from "./Icons/Edit";
 import { CrossCircle } from "./Icons/CrossCircle";
+import { Edit } from "./Icons/Edit";
+import { Input, Modal, Row, Upload } from "antd";
+import Form from "antd/lib/form";
+import React from "react";
 // type File = { status: UploadFileStatus, originFileObj: Blob, preview: string, url: string, name: string } & UploadFile;
 // type FileList = File[];
 function getBase64(file) {
@@ -32,8 +32,7 @@ export class PicturesWall extends React.Component {
         this.setState({
             previewImage: file.url || file.preview,
             previewVisible: true,
-            previewTitle: file.name ||
-                file.url.substring(file.url.lastIndexOf("/") + 1),
+            previewTitle: file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
             value: file,
         });
     };
@@ -43,15 +42,27 @@ export class PicturesWall extends React.Component {
     };
     render() {
         const { previewVisible, previewImage, fileList, previewTitle } = this.state;
-        const uploadButton = (_jsx(Row, { style: { alignItems: "flex-start" }, justify: "space-between", children: this.props.children ? this.props.children : _jsx(Image, {}) }));
-        return (_jsxs(_Fragment, { children: [_jsx(Upload
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                , { 
+        const { contentType } = this.props;
+        return (_jsx(_Fragment, { children: contentType === "text/plain" ? (_jsx(Form.Item, { required: true, name: "content", rules: [
+                    {
+                        required: true,
+                        message: "A couple of words here please",
+                    },
+                ], children: _jsx(Input.TextArea, { placeholder: "What's on your mind?", style: {
+                        padding: "15px 19px",
+                        height: 377,
+                        borderRadius: 8,
+                    }, className: "paragraph-2b", onChange: this.props.onContentChange }) })) : (_jsxs(_Fragment, { children: [_jsx(Upload
                     // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType: "picture-card", fileList: fileList, 
-                    // onPreview={this.handlePreview}
-                    onChange: this.handleChange, beforeUpload: () => false, openFileDialogOnClick: this.props.contentType === "text/plain" ? false : true, children: fileList.length > 0 ? null : this.props.name ===
-                        "avatar" ? (_jsx(Row, { children: _jsx(Edit, {}) })) : (uploadButton) }), _jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: previewVisible, title: previewTitle, footer: null, onCancel: this.handleCancel, children: _jsx("img", { alt: "example", style: { width: "100%" }, src: previewImage }) })] }));
+                    , { 
+                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        listType: "picture-card", fileList: fileList, 
+                        // onPreview={this.handlePreview}
+                        onChange: this.handleChange, beforeUpload: () => false, 
+                        // customRequest={({ file, onSuccess }) => {
+                        //   onSuccess && onSuccess(() => ({ body: "ok", xhr: {} as XMLHttpRequest }));
+                        // }}
+                        openFileDialogOnClick: true, children: fileList.length > 0 ? null : this.props.name === "avatar" ? (_jsx(Row, { style: { textAlign: "left" }, children: _jsx(Edit, {}) })) : (_jsx("div", { className: "paragraph-2b", style: { fontSize: 17 }, children: "Drag and drop content here!" })) }), _jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: previewVisible, title: previewTitle, footer: null, onCancel: this.handleCancel, children: _jsx("img", { alt: "example", style: { width: "100%" }, src: previewImage }) })] })) }));
     }
 }
 export const PictureWallFormItem = ({ onChange, uploadText }) => {

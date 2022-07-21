@@ -1,16 +1,16 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
-import Form from "antd/lib/form";
-import { useEffect } from "react";
-import { useActions, useAppState } from "../../overmind";
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
 import { ContentLayout } from "../../Components/ContentLayout";
-import PhoneForm from "./UI-Components/forms/PhoneForm";
+import { useActions, useAppState } from "../../overmind";
+import { useEffect } from "react";
 import CodeForm from "./UI-Components/forms/CodeForm";
+import Form from "antd/lib/form";
+import PhoneForm from "./UI-Components/forms/PhoneForm";
 export const layout = {
     labelCol: { span: 0 },
     wrapperCol: { span: 24 },
 };
-export const Auth = ({ embedded, setNext, setIsErrorSubmit, }) => {
+export const Auth = ({ embedded, setNext, setIsErrorSubmit }) => {
     const state = useAppState();
     const actions = useActions();
     const [phoneForm] = Form.useForm();
@@ -45,11 +45,11 @@ export const Auth = ({ embedded, setNext, setIsErrorSubmit, }) => {
     // 		);
     const FragmentWrapper = ({ children }) => {
         if (state.routing.location === "/auth")
-            return (_jsx(ContentLayout, { customClass: "app-content-layout", children: children }));
+            return _jsx(ContentLayout, { customClass: "app-content-layout", children: children });
         else {
             return _jsx(_Fragment, { children: children });
         }
     };
-    return (_jsxs(FragmentWrapper, { children: [_jsx("div", { id: "sign-in-button" }), _jsx(PhoneForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), _jsx(CodeForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), _jsx("div", { className: "u-margin-top-large support-box__fix-height", hidden: embedded })] }));
+    return (_jsxs(FragmentWrapper, { children: [_jsx("div", { id: "sign-in-button" }), _jsx(PhoneForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), _jsx(CodeForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), _jsx("div", { className: "support-box__fix-height", hidden: embedded })] }));
 };
 //# sourceMappingURL=Auth.js.map

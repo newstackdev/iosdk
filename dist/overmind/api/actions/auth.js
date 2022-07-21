@@ -15,7 +15,6 @@ export const authorize = async ({ state, actions, effects }) => {
         state.api.auth.attempted = true;
         return;
     }
-    ;
     if (!user.username)
         return;
     actions.newcoin.getAccountBalance({ user });
@@ -26,14 +25,15 @@ export const authorize = async ({ state, actions, effects }) => {
         actions.lists.top.posts();
     }
     state.auth.status = state.api.auth.user?.username ? AUTH_FLOW_STATUS.AUTHORIZED : AUTH_FLOW_STATUS.AUTHENTICATED;
-    actions.routing.routeAfterAuth();
+    setTimeout(() => {
+        actions.routing.routeAfterAuth();
+    });
 };
 export const logout = async ({ state, actions, effects }, config) => {
     if (!config?.keepFbUser) {
         state.firebase.token = "";
         state.firebase.user = null;
     }
-    ;
     state.api.auth.user = {};
     state.api.cache.stakeHistory = [];
     effects.api.updateToken("");

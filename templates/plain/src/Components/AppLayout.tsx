@@ -1,14 +1,18 @@
 import { useActions, useAppState } from "../overmind/overmind";
 import { NLView } from "@newcoin-foundation/iosdk/dist/types";
 import { Layout, Row, Col, Button, Menu } from "antd";
-const { Header, Footer, Sider, Content } = Layout;
 import { Link } from "react-router-dom";
+import { useOvermindRouting } from "../hooks/useOvermindRouting";
+
+const { Header, Footer, Sider, Content } = Layout;
+
 
 export const AppLayout: NLView = ({ children }) => {
   const state = useAppState();
   const actions = useActions();
   const user = state.api.auth.user?.username || state.firebase.user?.phoneNumber;
-
+  useOvermindRouting();
+  
   return <Layout>
     <Header>
       <Row>

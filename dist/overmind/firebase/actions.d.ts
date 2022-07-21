@@ -1,5 +1,5 @@
-import { User } from "firebase/auth";
 import { Action } from "../../types";
+import { User } from "firebase/auth";
 export declare const onInitializeOvermind: Action<undefined>;
 export declare const logout: Action;
 export declare const refreshApiToken: Action;

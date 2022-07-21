@@ -1,4 +1,5 @@
-import createBrowserHistory from 'history/createBrowserHistory'
+import { createBrowserHistory } from "history";
+
 // import { createBrowserHistory } from "history";
 
 const customHistory = createBrowserHistory();

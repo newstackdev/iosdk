@@ -1,1 +1,1 @@
-{"version":3,"file":"iosdk.js","sourceRoot":"","sources":["../src/iosdk.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,GAAG,EAAE,MAAM,OAAO,CAAC;AAC5B,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AAEtC,OAAO,EAAE,GAAG,EAAE,CAAC;AACf,OAAO,EAAE,QAAQ,EAAE,CAAC;AAEpB,eAAe;IACX,GAAG;IACH,QAAQ;CACX,CAAA"}
+{"version":3,"file":"iosdk.js","sourceRoot":"","sources":["../src/iosdk.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,GAAG,EAAE,MAAM,OAAO,CAAC;AAC5B,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AAEtC,OAAO,EAAE,GAAG,EAAE,CAAC;AACf,OAAO,EAAE,QAAQ,EAAE,CAAC;AAEpB,eAAe;IACb,GAAG;IACH,QAAQ;CACT,CAAC"}

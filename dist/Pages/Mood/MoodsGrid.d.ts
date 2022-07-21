@@ -1,4 +1,4 @@
-import { MoodReadResponse } from "@newlife/newlife-creator-client-api";
+import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { NLView } from "../../types";
 declare type MoodsGridParams = {
     title?: string;

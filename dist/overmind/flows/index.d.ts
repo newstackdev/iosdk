@@ -2,9 +2,13 @@ declare const _default: {
     state: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
             create: {
-                form: Partial<import("@newlife/newlife-creator-client-api").UserCreateRequest>;
+                form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                    couponCode?: string | undefined;
+                }>;
                 justCreated: boolean;
                 legacyToken: string;
+                legacyUsername: string;
+                isLegacyUpdateOngoing: boolean;
                 formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
                 wizard: ({
                     current: "SELECT_DOMAIN";
@@ -93,6 +97,12 @@ declare const _default: {
             };
             latestMode: number;
         };
+        vote: {
+            options: {
+                votingContainer: any;
+            };
+            latestMode: number;
+        };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
@@ -113,6 +123,7 @@ declare const _default: {
         };
         userJourney: unknown;
         stake: unknown;
+        vote: unknown;
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         user: import("overmind/lib/internalTypes").SubType<{
@@ -135,6 +146,7 @@ declare const _default: {
             onInitializeOvermind: import("../../types").Action<undefined, void>;
         };
         stake: typeof import("./stake/actions");
+        vote: typeof import("./vote/actions");
     }, object>;
 };
 export default _default;

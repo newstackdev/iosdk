@@ -1,6 +1,6 @@
 import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
-import { useEffect, useState } from "react";
 import { secondsClock } from "../utils/clock";
+import { useEffect, useState } from "react";
 export const AppearingComponent = ({ seconds, children, onShow }) => {
     const [p, setP] = useState(Date.now());
     const [diff, setDiff] = useState(0);

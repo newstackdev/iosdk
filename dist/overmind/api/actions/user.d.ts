@@ -1,7 +1,9 @@
-import { UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newlife/newlife-creator-client-api";
 import { Action } from "../../../types";
+import { MoodReadResponse, UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const cache: Action<{
     user: UserReadPublicResponse;
+    force?: boolean;
+    moods?: MoodReadResponse;
 }>;
 export declare const read: Action<{
     id?: string;
@@ -22,7 +24,7 @@ export declare const getMoods: Action<{
 export declare const stake: Action<{
     user: UserReadPublicResponse;
     amount: string;
-}>;
+}, any>;
 export declare const invite: Action<{
     userInvite: UserInviteRequest;
 }>;
@@ -30,7 +32,18 @@ export declare const powerup: Action<{
     user: UserReadPublicResponse;
     amount: number;
 }>;
+export declare const powerUpMultiple: Action<{
+    users: UserReadPublicResponse[];
+    amount?: number;
+}>;
 export declare const getPowerups: Action<{
     user: UserReadPublicResponse;
 }>;
 export declare const getCurrent: Action<undefined>;
+export declare const checkLinkHash: Action<{
+    hash: string;
+}>;
+export declare const checkNft: Action<{
+    collectionAddr: string;
+    nftId: number;
+}>;
