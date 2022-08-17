@@ -11,6 +11,7 @@ type LayedOutContent = {
   customClass?: string;
   isPost?: boolean;
   isMood?: boolean;
+  isVote?: boolean;
   position?: "top";
 };
 
@@ -60,6 +61,7 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
   position = "",
   isPost,
   isMood,
+  isVote,
 }) => {
   const state = useAppState();
   let customPosition = "";
@@ -72,6 +74,7 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
       customPosition = "app-content-align-vertically";
       break;
   }
+  const layoutWrapperClassName = "app-main-full-width app-content-layout";
   // return <div className="app-main-full-width" style={{ minHeight: "90vh" }}>
   //     <div>{info}</div>
   //     <h2>{header}</h2>
@@ -89,27 +92,25 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
     <Row
       justify="space-between"
       gutter={16}
-      className="app-main-full-width app-content-layout"
-      style={isPost ? { margin: 0, height: "100vh" } : { margin: 0, height: "100%" }}
+      className={isVote ? layoutWrapperClassName + " " + "app-post-page-layout" : layoutWrapperClassName}
+      style={{ margin: 0, height: "100%" }}
     >
-      {header ? (
+      {header && (
         <Col
           xs={24}
-          lg={isPost ? 7 : isMood ? 6 : 4}
-          className={isPost ? "text-left post-notification-column" : "text-left"}
-          style={isPost ? { display: "flex", padding: 0, marginTop: 10 } : {}}
+          lg={isVote ? 5 : isPost ? 7 : isMood ? 1 : 4}
+          className={isVote ? "text-left post-notification-column" : "text-left"}
+          style={isVote ? { display: "flex", padding: 0, marginTop: 10 } : {}}
         >
           {header}
         </Col>
-      ) : (
-        ""
       )}
       <Col
         xs={24}
-        lg={isPost ? 18 - extrasSpan : isMood ? 20 - extrasSpan : 24 - extrasSpan}
+        lg={isPost || isVote ? 18 - extrasSpan : isMood ? 27 - extrasSpan : 24 - extrasSpan}
         className={`${customClass}`}
         style={
-          isPost
+          isVote
             ? {
                 width: "100%",
                 padding: 0,
@@ -127,9 +128,9 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
         <div className={`app-main-full-height ${customPosition}`}>{children}</div>
       </Col>
       {info ? (
-        <Col xs={24} lg={isPost ? 7 : isMood ? 6 : 4} style={isPost ? { display: "flex", padding: 0 } : { display: "flex" }}>
+        <Col xs={24} lg={isVote ? 9 : isPost ? 7 : 4} style={isVote ? { display: "flex", padding: 0 } : { display: "flex" }}>
           <div
-            style={isPost ? { width: "100%", display: "flex", justifyContent: "end" } : { width: "100%" }}
+            style={isVote ? { width: "100%", display: "flex", justifyContent: "end" } : { width: "100%" }}
             className="text-left"
           >
             {info}

@@ -9,13 +9,14 @@ import {
   UserReadPublicResponse,
   UserUpdateRequest,
 } from "@newcoin-foundation/iosdk-newgraph-client-js";
-import { debounce, pipe, throttle } from "overmind";
+import { debounce, json, pipe, throttle } from "overmind";
 import { get } from "lodash";
 
-export const cache: Action<{ user: UserReadPublicResponse; force?: boolean; moods?: MoodReadResponse }> = async (
-  { state, actions, effects },
-  { user, force },
-) => {
+export const cache: Action<{
+  user: UserReadPublicResponse & { moods?: MoodReadResponse[] };
+  force?: boolean;
+  moods?: MoodReadResponse;
+}> = async ({ state, actions, effects }, { user, force }) => {
   // moods.forEach(m => m.author = ur.data)
   let { id, username } = { id: "", username: "", ...user };
   const cache = state.api.cache.users;
@@ -23,7 +24,7 @@ export const cache: Action<{ user: UserReadPublicResponse; force?: boolean; mood
   if (!id && !username) return;
 
   !id && (id = cache.byUsername[username].id || "");
-  !username && (username = cache.byId[id].username || "");
+  !username && (username = cache.byId[id]?.username || "");
 
   // mr.data.value?.forEach(m => (m.id && (state.api.cache.moods[m.id] = { ...state.api.cache.moods[m.id], ...m })));
 
@@ -33,10 +34,12 @@ export const cache: Action<{ user: UserReadPublicResponse; force?: boolean; mood
   } catch (ex) {
     console.log(ex);
   }
-  const isNewer =
-    force || !curr || !curr.moods?.length || new Date(user?.updated || 0).getTime() - new Date(curr?.updated || 0).getTime() > 0;
 
-  if (!isNewer) return;
+  const isNewer = !curr?.id || new Date(user?.updated || 0).getTime() - new Date(curr?.updated || 0).getTime() > 0;
+
+  const shouldUpdate = force || !curr || (!curr.moods?.length && user.moods?.length) || isNewer;
+
+  if (!shouldUpdate) return;
 
   const mr = curr?.moods?.length || 0 > 4 ? curr?.moods : (await state.api.client.user.moodsList({ id })).data?.value;
 
@@ -55,7 +58,10 @@ export const cache: Action<{ user: UserReadPublicResponse; force?: boolean; mood
     cache.byUsername[username] = { ...curr, ...user, moods };
   }
 
-  state.api.auth.user?.id === user.id && (state.api.auth.user = Object.assign({}, cache.byId[id])); //state.api.auth.user, user));
+  if (isNewer) {
+    state.api.auth.user?.id === user.id &&
+      (state.api.auth.user = Object.assign({}, json(state.api.auth.user) || {}, cache.byId[id]));
+  } //state.api.auth.user, user));
 };
 const inProgress: Record<string, any> = {};
 
@@ -102,9 +108,7 @@ export const create: Action<{
       !noRouting && actions.routing.historyPush({ location: "/auth" });
       return;
     }
-
     user.phone = pn;
-
     const nu = preregisterCreate
       ? await state.api.client.user.preregisterCreate(user)
       : await state.api.client.user.userCreate({
@@ -123,6 +127,8 @@ export const create: Action<{
 
     state.flows.user.create.justCreated = true;
     state.flows.user.create.isLegacyUpdateOngoing = false;
+    state.flows.user.create.progressedSteps = [];
+    actions.routing.historyPush({ location: "/explore" });
   } catch (ex) {
     effects.ux.message.error(JSON.stringify(get(ex, "error.errorMessage.details") || get(ex, "message")));
   }
@@ -155,10 +161,9 @@ export const update: Action<{ user: UserUpdateRequest; file?: any }> = async ({ 
 
     effects.ux.message.info(`Successfully updated profile avatar. Processing the image, this will take up to a minute.`);
   }
-
   actions.api.user.cache({
     force: true,
-    user: { ...user, id, ...(hasUpload ? { contentUrl: "PROCESSING" } : {}) },
+    user: { ...state.api.auth.user, ...user, id, ...(hasUpload ? { contentUrl: "PROCESSING" } : {}) },
   });
 };
 
@@ -229,8 +234,17 @@ export const stake: Action<{ user: UserReadPublicResponse; amount: string }, any
   },
 );
 
-export const invite: Action<{ userInvite: UserInviteRequest }> = ({ state }, { userInvite }) => {
-  const rate = state.api.client.user.inviteCreate(userInvite);
+export const invite: Action<{ userInvite: UserInviteRequest }, string | undefined> = async (
+  { state, effects }: Context,
+  { userInvite },
+) => {
+  try {
+    const response = await state.api.client.user.inviteCreate(userInvite);
+    //@ts-ignore
+    return response.data.invitation?.hash;
+  } catch (ex) {
+    effects.ux.message.error(((ex as any).error as ErrorResponse).errorMessage);
+  }
 };
 
 export const powerup: Action<{ user: UserReadPublicResponse; amount: number }> = pipe(
@@ -296,11 +310,11 @@ export const getPowerups: Action<{ user: UserReadPublicResponse }> = pipe(
 
 export const getCurrent: Action<undefined> = async ({ state, actions, effects }) => {
   try {
-    state.routing.simpleHistory[0].search
-      .slice(1)
-      .split(/&/)
-      .map((kv) => kv.split(/=/))
-      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+    // (state.routing.simpleHistory || [{ search: "" }])[0].search
+    //   .slice(1)
+    //   .split(/&/)
+    //   .map((kv) => kv.split(/=/))
+    //   .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 
     state.api.auth.user = (await state.api.client.user.currentList()).data;
     state.auth.status = state.api.auth.user.username ? AUTH_FLOW_STATUS.AUTHORIZED : state.auth.status;

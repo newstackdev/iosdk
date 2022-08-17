@@ -30,7 +30,7 @@ export const authorize = async ({ state, actions, effects }) => {
     });
 };
 export const logout = async ({ state, actions, effects }, config) => {
-    if (!config?.keepFbUser) {
+    if (!config?.keepFbUser && state.firebase) {
         state.firebase.token = "";
         state.firebase.user = null;
     }

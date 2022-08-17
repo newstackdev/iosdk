@@ -28,7 +28,7 @@ export const SelectMood = ({ moods, onChange, limit, title }) => {
         }, children: _jsx("div", { style: { width: "90%", margin: "0 auto" }, children: _jsx(MoodCreateModal, { onCreated: (v) => v?.id && toggle(v) }) }) }));
     return (_jsx(ItemGrid, { items: [{}, ...checkMoods], limit: limit, 
         // titleLink="/save-folder"
-        title: "Add to a folder", 
+        title: title, 
         // setSelectedFolder={setSelectedFolder}
         // selectedFolder={selectedFolder}
         render: (m, index) => {

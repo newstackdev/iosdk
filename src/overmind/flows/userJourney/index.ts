@@ -7,7 +7,9 @@ const state = {
 const setFlag: Action<{ flag: string; value: string }> = ({ state }, { flag, value }) => {
   state.flows.userJourney.flags[flag] = value;
 
-  window.localStorage.setItem("iosdk_flags", JSON.stringify(state.flows.userJourney.flags));
+  if (flag !== "walletShown") {
+    window.localStorage.setItem("iosdk_flags", JSON.stringify(state.flows.userJourney.flags));
+  }
 };
 
 const onInitializeOvermind: Action = ({ state }) => {

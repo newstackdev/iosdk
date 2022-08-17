@@ -30,7 +30,7 @@ const DefaultPrivateContentView: IOView<{
       style={{
         background: "rgba(0,0,0,.3)",
         padding: "20px",
-        borderRadius: 30,
+        borderRadius: "8px",
         width: "auto",
         maxWidth: "min(100vw,600px)",
         marginLeft: "auto",

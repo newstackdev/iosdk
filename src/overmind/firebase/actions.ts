@@ -119,8 +119,10 @@ export const verifyPhone: Action<{ phoneVerificationCode: string }> = async (
 
   actions.auth.resetAuthTimer();
 
-  if (r) state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED;
-  else {
+  if (r) {
+    state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED;
+    actions.flows.user.create.wizardStepNext();
+  } else {
     effects.ux.notification.error({
       message: "Something went wrong, please try again",
     });

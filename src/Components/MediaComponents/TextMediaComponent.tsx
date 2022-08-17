@@ -9,20 +9,22 @@ export const TextMediaComponent: ContentElement = ({ content, thumbnail, embed }
   const { isLoading, error, embedContent } = useEmbed(findFirstUrl(content), "500", "650");
 
   return (
-    <div
+    <p
       style={
         thumbnail
           ? { paddingTop: 50, width: "100%" }
-          : isEmpty(embedContent) || !embed
-          ? { fontSize: "min(3vh,3vw)", wordBreak: "break-word" }
-          : {
-              fontSize: "min(10vh,10vw)",
-              lineHeight: "1em",
-              width: "400px",
-            }
+          : // : isEmpty(embedContent) || !embed
+            // ? { fontSize: "min(3vh,3vw)", wordBreak: "break-word", lineHeight: "1.3em" }
+            // : {
+            //     fontSize: "min(10vh,10vw)",
+            //     lineHeight: "1.3em",
+            //     width: "400px",
+            //   }
+            {}
       }
+      className="header-2"
     >
       {isLoading ? <Spin /> : isEmpty(error) && embedContent && embed ? <ContentPreview content={embedContent} /> : content}
-    </div>
+    </p>
   );
 };

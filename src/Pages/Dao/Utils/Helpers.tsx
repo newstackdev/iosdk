@@ -49,7 +49,7 @@ export const useGetAuthorizedActions = ({ daoOwner, proposalId, proposal, currUs
   const vote = votes?.find(
     (row) => row.dao_id == proposal.dao_id && row.proposal_id == proposalId && row.lock_end_date == proposal.vote_end,
   );
-  const isWhitelisted = useCachedDaoWhitelist(daoOwner).rows?.some((row) => row.user == currUser);
+  const isWhitelisted = useCachedDaoWhitelist(daoOwner).rows?.some((user) => user == currUser);
   const beforeExpiry = Number(timeData.time_left_seconds) >= 0;
 
   let { status_tag, action_type } = {
@@ -67,7 +67,10 @@ export const useGetAuthorizedActions = ({ daoOwner, proposalId, proposal, currUs
         action_type = "Approve";
       }
     } else if (!isOwner) {
-      if (beforeExpiry) {
+      if (!isWhitelisted) {
+        action_type = "GetWhitelisted";
+        beforeExpiry ? (status_tag = "created") : (status_tag = "expired");
+      } else if (beforeExpiry) {
         status_tag = "created";
         action_type = "View";
       } else {
@@ -91,7 +94,7 @@ export const useGetAuthorizedActions = ({ daoOwner, proposalId, proposal, currUs
         action_type = alreadyVoted ? "Withdraw" : "Execute";
       }
     } else if (!isOwner) {
-      if (Number(timeData.time_left_seconds) >= 0) {
+      if (beforeExpiry) {
         status_tag = "live";
         if (!isWhitelisted) {
           action_type = "GetWhitelisted";
@@ -104,7 +107,11 @@ export const useGetAuthorizedActions = ({ daoOwner, proposalId, proposal, currUs
         }
       } else {
         status_tag = "expired";
-        action_type = alreadyVoted ? "Withdraw" : "View";
+        if (!isWhitelisted) {
+          action_type = "GetWhitelisted";
+        } else {
+          action_type = alreadyVoted ? "Withdraw" : "View";
+        }
       }
     }
   }

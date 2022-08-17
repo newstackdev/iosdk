@@ -7,6 +7,7 @@ import { namespaced } from "overmind/config";
 import { Configuration, PartialConfiguration, config as defaultConfig } from "../config";
 import { merge } from "lodash";
 import { standardModules } from "./standardModules";
+import firebase from "./firebase";
 
 // export type
 export const config = (cfg: PartialConfiguration) => {
@@ -15,6 +16,7 @@ export const config = (cfg: PartialConfiguration) => {
   };
   return namespaced({
     ...standardModules,
+    firebase,
     config: _cfg,
   });
 };

@@ -17,10 +17,10 @@ const roundCurrency = (vals: string[]) => {
 };
 
 export const Wallet: IOView<{
-  setVisible: (v: boolean) => void | Promise<void>;
   walletShown: boolean;
-}> = ({ setVisible, walletShown }) => {
+}> = ({ walletShown }) => {
   const state = useAppState();
+  const actions = useActions();
   const user = state.api.auth.user;
   const ncoBalance = state.newcoin.account;
   const gncoBalance = state.newcoin.mainPool;
@@ -29,6 +29,13 @@ export const Wallet: IOView<{
   if (!user) return <></>;
 
   const rowGutter = !(ncoBalance.length === 0 && gncoBalance.length === 0) ? 0 : 24;
+  // const walletShown = !!state.flows.userJourney.flags.walletShown;
+
+  const setVisible = (value: boolean) =>
+    actions.flows.userJourney.setFlag({
+      flag: "walletShown",
+      value: value ? "true" : "",
+    });
 
   return (
     <div
@@ -84,21 +91,28 @@ export const Wallet: IOView<{
   );
 };
 
-export const WalletWidget: IOView<{ walletShown: boolean; setVisible: (v: boolean) => void | Promise<void> }> = ({
-  walletShown,
-  setVisible,
-}) => {
-  // useEffect(() => {
-  // 	// setVisible(false);
-  // 	actions.ux.setLayout({ walletShown: true  })
-  // }, [state.flows.stake.latestMode]);
+export const WalletWidget: IOView = () => {
+  const state = useAppState();
+  const actions = useActions();
+
+  const walletShown = !!state.flows.userJourney.flags.walletShown;
+
+  const setVisible = (value: boolean) =>
+    actions.flows.userJourney.setFlag({
+      flag: "walletShown",
+      value: value ? "true" : "",
+    });
+
+  useEffect(() => {
+    setVisible(false);
+  }, []);
   return (
     <div>
       <Dropdown
         visible={walletShown}
         // onVisibleChange={(val) => setVisible(val)}
         overlayStyle={{}}
-        overlay={<Wallet setVisible={setVisible} walletShown={walletShown} />}
+        overlay={<Wallet walletShown={walletShown} />}
       >
         <div onClick={() => setVisible(!walletShown)}>
           <NCOLogo />

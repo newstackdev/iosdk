@@ -14,7 +14,7 @@ import isEmpty from "lodash/isEmpty";
 export const CrossCircleErr = ({ children }) => {
     return (_jsxs(_Fragment, { children: [children, _jsx("div", { className: "error-circle-form ", children: _jsx(CrossCircle, {}) })] }));
 };
-export const UserCreate = ({ hideUsername, noRouing, embedded, setNext, setIsErrorSubmit }) => {
+export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
     const state = useAppState();
     const actions = useActions();
     const effects = useEffects();
@@ -24,7 +24,6 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext, setIsErr
     useEffect(() => {
         actions.routing.setBreadcrumbs([{ text: "Create your profile" }]);
         // For imported users, if they have email, they should not be able to change it
-        console.log(state.flows.user.create.form.email);
         setIsEmailAvailable(!isEmpty(state.flows.user.create.form.email));
     }, []);
     const setNextEmbedded = () => {
@@ -42,11 +41,9 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext, setIsErr
         console.log("Creating:", values);
         try {
             await form.validateFields();
-            setIsErrorSubmit(false);
         }
         catch (e) {
             console.log(e.errorFields.length);
-            setIsErrorSubmit(true);
             return;
         }
         actions.flows.user.create.create({
@@ -70,6 +67,7 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext, setIsErr
                     // @ts-ignore
                     ({ ...r, [c.name[0]]: c.value || c.values }), sf);
                     actions.flows.user.create.updateForm(upd);
+                    sessionStorage.setItem("cachedOnboarding", JSON.stringify(state.flows.user.create));
                 }, initialValues: sf, children: [_jsx(Form.Item, { name: "couponCode", hidden: true, rules: [
                             {
                             // required: !hideUsername,
@@ -96,10 +94,12 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext, setIsErr
                             },
                         ], children: _jsx(Input, { placeholder: "name", suffix: _jsx(CrossCircleErr, {}) }) }), _jsx(Form.Item, { name: "email", rules: [
                             {
+                                required: true,
                                 pattern: new RegExp(re),
                                 message: "Please input valid email.",
                             },
-                        ], children: _jsx(Input, { placeholder: "email", suffix: _jsx(CrossCircleErr, {}), disabled: isEmailAvailable }) }), _jsx(Form.Item, { name: "description", children: _jsx(Input.TextArea, { placeholder: "bio" }) }), _jsx(Form.Item, { name: "website", children: _jsx(Input, { placeholder: "website" }) }), _jsx(Form.Item, { name: "instagram", children: _jsx(Input, { placeholder: "instagram" }) }), _jsx(Form.Item, { name: "tumblr", children: _jsx(Input, { placeholder: "tumblr" }) }), _jsx(Form.Item, { name: "soundcloud", children: _jsx(Input, { placeholder: "soundcloud" }) }), _jsx(Form.Item, { name: "twitter", children: _jsx(Input, { placeholder: "twitter" }) }), _jsx(Form.Item, { name: "consentPrivacyPolicy", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, rules: [
+                        ], children: _jsx(Input, { placeholder: "email", suffix: _jsx(CrossCircleErr, {}), disabled: isEmailAvailable &&
+                                (isEmpty(sessionStorage.getItem("cachedOnboarding")) || state.flows.user.create.isLegacyUpdateOngoing) }) }), _jsx(Form.Item, { name: "description", children: _jsx(Input.TextArea, { placeholder: "bio" }) }), _jsx(Form.Item, { name: "website", children: _jsx(Input, { placeholder: "website" }) }), _jsx(Form.Item, { name: "instagram", children: _jsx(Input, { placeholder: "instagram" }) }), _jsx(Form.Item, { name: "tumblr", children: _jsx(Input, { placeholder: "tumblr" }) }), _jsx(Form.Item, { name: "soundcloud", children: _jsx(Input, { placeholder: "soundcloud" }) }), _jsx(Form.Item, { name: "twitter", children: _jsx(Input, { placeholder: "twitter" }) }), _jsx(Form.Item, { name: "consentPrivacyPolicy", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, rules: [
                             {
                                 required: true,
                                 message: "please confirm",

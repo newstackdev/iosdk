@@ -1,12 +1,37 @@
-.view-proposal-summary-p {
-  .header-4;
-  .u-margin-bottom-small;
+.view-proposal-row-wrapper {
+  column-gap:25px;
 }
 
-.view-proposal-by-p {
+.view-proposal-type-p {
   .header-4;
-  font-size: 20px;
-  .u-margin-bottom-medium;
+  .u-margin-bottom-large;
+  opacity: 85%;
+}
+
+.view-proposal-row-dao-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: bold;
+  gap:25px;
+}
+
+.view-proposal-row-username {
+  font-size: 25px;
+}
+
+.view-proposal-summary-p {
+  .u-margin-bottom-small;
+  padding: 3%;
+  background-color: #272626;
+  border-radius: 8px;
+  .u-margin-top-large;
+
+  .p {
+    .u-margin-bottom-medium;
+    .header-1r !important;
+    font-size: 25px;
+  }
 }
 
 .view-proposal-avi-ctn {
@@ -20,4 +45,19 @@
   font-size: 35px;
   .u-margin-left-medium;
   .u-margin-right-medium;
+}
+
+.view-proposal-votes-ctn {
+  width: 100%;
+  opacity: 85%;
+}
+
+.view-proposal-embed-container {
+  width: 300px;
+  max-height: 450px;
+  .ant-card-meta-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+  }
 }

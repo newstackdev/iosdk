@@ -6,5 +6,4 @@ export declare const CrossCircleErr: NLView<{
 export declare const UserCreate: NLView<EmbeddableControl & {
     hideUsername?: boolean;
     noRouing?: boolean;
-    setIsErrorSubmit: React.Dispatch<React.SetStateAction<boolean>>;
 }>;

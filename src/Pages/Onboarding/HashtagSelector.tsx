@@ -1,11 +1,12 @@
 import { Col, Row } from "antd";
-import { ContentLayout } from "../../../Components/ContentLayout";
-import { ProgressButton } from "../../../Components/ProgressButton";
-import { WhitelistPreview } from "../../../Components/WhitelistPreview";
-import { useAppState } from "../../../overmind";
+import { ContentLayout } from "../../Components/ContentLayout";
+import { IOView } from "../../types";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { WhitelistPreview } from "../../Components/WhitelistPreview";
+import { useAppState } from "../../overmind";
 import { useState } from "react";
 
-const HashtagSelector = () => {
+const HashtagSelector: IOView = () => {
   const state = useAppState();
   const [activeTags, setActiveTags] = useState([] as string[]);
 

@@ -1,6 +1,8 @@
 // import "./styles/UserInviteInfo.less";
-import { Button, Col, FormInstance, Modal, Row } from "antd";
+import { Button, Col, FormInstance, Input, Modal, Row } from "antd";
+import { Clipboard } from "../../Components/Icons/Clipboard";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { QRCodeSVG } from "qrcode.react";
 import { useAppState } from "../../overmind";
@@ -10,13 +12,17 @@ const UserInviteInfo = ({
   invitedUsername,
   setStatus,
   form,
+  hash,
 }: {
   invitedUsername?: string;
   setStatus: React.Dispatch<React.SetStateAction<"start" | "inprogress" | "failed" | "done">>;
   form: FormInstance<any>;
+  hash: string | undefined;
 }) => {
   const state = useAppState();
   const [visible, setVisible] = useState<boolean>(true);
+  const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false);
+  const [showCopyText, setShowCopyText] = useState<boolean>(false);
 
   const user = state.api.auth.user;
 
@@ -36,13 +42,53 @@ const UserInviteInfo = ({
     >
       <ContentLayout>
         <Row className="text-center user-invite-info_modal-root-row">
-          <Col className="user-invite-info_modal-center-text-col">
-            {invitedUsername && <p className="header-1 text-center">you invited {invitedUsername}</p>}
-          </Col>
-          <Col className="user-invite-info_modal-center-text-col">
-            <p className="header-1b text-center">{numberOfInvites} invites left</p>
-          </Col>
+          <Row style={{ flexDirection: "column-reverse" }}>
+            <Col className="user-invite-info_modal-center-text-col">
+              {invitedUsername && <p className="header-1 text-center">you invited {invitedUsername}</p>}
+            </Col>
+            <Col className="user-invite-info_modal-center-text-col">
+              <p className="header-1b text-center">{numberOfInvites} invites left</p>
+            </Col>
+          </Row>
           <Col className="user-invite-info_modal-footer-col">
+            {hash && showCopyText ? (
+              <div style={{ position: "relative", cursor: "pointer" }}>
+                <CopyToClipboard text={window.location.origin + `?invite=${hash}`}>
+                  <Row
+                    onClick={() => {
+                      setCopiedToClipboard(true);
+                    }}
+                  >
+                    <Input
+                      type="primary"
+                      className="nl-user-unvite-input-hash"
+                      // @ts-ignore
+                      placeholder={hash}
+                    />
+                    <span style={{ position: "absolute", bottom: "11px", right: "0px" }}>
+                      <Clipboard fill={copiedToClipboard ? "#d7ff65" : "#fff"} />
+                    </span>
+                    {copiedToClipboard && (
+                      <div style={{ position: "absolute", top: "43px" }}>
+                        <p className="paragraph-3r" style={{ color: "#d7ff65" }}>
+                          Copied to clipboard!
+                        </p>
+                      </div>
+                    )}
+                  </Row>
+                </CopyToClipboard>
+              </div>
+            ) : (
+              <Button
+                type="primary"
+                className="u-margin-top-large"
+                onClick={() => {
+                  setShowCopyText(true);
+                }}
+              >
+                Get an invite link
+              </Button>
+            )}
             <Button
               type="primary"
               className="u-margin-top-large"

@@ -7,6 +7,7 @@ declare type LayedOutContent = {
     customClass?: string;
     isPost?: boolean;
     isMood?: boolean;
+    isVote?: boolean;
     position?: "top";
 };
 export declare const ContentLayout: import("react").FunctionComponent<import("react").PropsWithChildren<LayedOutContent>>;

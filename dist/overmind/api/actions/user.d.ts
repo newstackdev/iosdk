@@ -1,7 +1,9 @@
 import { Action } from "../../../types";
 import { MoodReadResponse, UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const cache: Action<{
-    user: UserReadPublicResponse;
+    user: UserReadPublicResponse & {
+        moods?: MoodReadResponse[];
+    };
     force?: boolean;
     moods?: MoodReadResponse;
 }>;
@@ -27,7 +29,7 @@ export declare const stake: Action<{
 }, any>;
 export declare const invite: Action<{
     userInvite: UserInviteRequest;
-}>;
+}, string | undefined>;
 export declare const powerup: Action<{
     user: UserReadPublicResponse;
     amount: number;

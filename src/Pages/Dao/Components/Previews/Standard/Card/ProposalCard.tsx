@@ -14,42 +14,46 @@ export const ProposalCard = (props: { proposal; daoOwner }) => {
   const { verifiedUsers } = useVerified([props.proposal.proposer || ""]);
   const isUserVerified = verifiedUsers && props.proposal.proposer && verifiedUsers.includes(props.proposal.proposer);
 
+  const yesVotes = Number(props.proposal.vote_yes?.quantity?.split(" ")[0]);
+  const noVotes = Number(props.proposal.vote_no?.quantity?.split(" ")[0]);
+
+  const proposalSummaryArr = props.proposal.summary?.split("#");
+  const proposalSummary = proposalSummaryArr ? proposalSummaryArr[0] : "";
+  let proposalType = proposalSummaryArr && proposalSummaryArr[1];
+  proposalType = proposalType == "undefined" ? "feature" : proposalType;
+
   return (
     <Link to={`/dao/${props.daoOwner}/proposal/${props.proposal.id}`}>
-      <Col className={"proposal-list-card-wrapper"}>
-        <Row className="u-dao-card-top-details-wrapper" align={"middle"} justify={"space-between"}>
-          <Row className="u-dao-card-top-details-left" align={"middle"}>
-            <p className={"proposal-list-id-p"}>#{props.proposal.id}</p>
-            <span className={"proposal-list-hands-icon-span"}>
-              <Hands />
-            </span>
-            <p className={"proposal-list-title-p"}>{props.proposal.title}</p>
+      <Col className={"card-wrapper"}>
+        <div className={"card-top"}>
+          <Row align={"middle"}>
+            <p className="header-5 u-margin-right-medium">#{props.proposal.id}</p>
+            <Hands />
+            <p className="card-title header-5 u-margin-left-medium">{props.proposal.title}</p>
           </Row>
+          <Row align={"middle"}>
+            <p className="">#{proposalType}</p>
+          </Row>
+        </div>
+        <p className="u-margin-top-15">
+          {timeData.time_left_seconds > 0 ? "Ending" : "Ended"} {timeData.time_left_from_now}{" "}
+        </p>
+        <p className="paragraph-1b u-margin-top-30"> {yesVotes + noVotes} votes </p>
+        <ProgressBar width={"100%"} proposal={props.proposal} />
+        <Row align={"bottom"} justify={"space-between"}>
+          <p className=""> {yesVotes} yes votes </p>
+          <p className=""> {noVotes} no votes </p>
         </Row>
-        <Col className={"u-dao-card-mid-details-wrapper"}>
-          <p className="paragraph-2b">YES votes: {props.proposal.vote_yes?.quantity}</p>
-          <p className="paragraph-2b">NO votes: {props.proposal.vote_no?.quantity} </p>
-          <ProgressBar width={"350px"} proposal={props.proposal} />
-          <p className="proposal-list-time-left-p">Ending in: {timeData.time_left_from_now} </p>
-        </Col>
-        <p className={"proposal-list-summary-p"}> {props.proposal.summary}</p>
-        <p className={"proposal-list-props.proposal-by-p"}>proposal by</p>
-        <Row className={"u-dao-card-btm-details-wrapper"}>
-          <Col className={"proposal-list-card-btm-user-details-left-ctn"}>
-            <Link className={"proposal-list-props.proposal-avi-link"} to={`/user/${props.proposal.proposer}`}>
-              {" "}
-              <Avatar src={<ContentImage {...proposerObj} />} className="proposal-list-props.proposal-avi-cmpt" />
-            </Link>
-          </Col>
-          <Col className={"proposal-list-card-btm-user-details-right-ctn"}>
-            <p className={"proposal-list-card-btm-user-display-name-p"}>{props.proposal.proposer}</p>
-            {isUserVerified && (
-              <span className="u-margin-left-medium">
-                <VerifiedIcon />
-              </span>
-            )}
-            <p className="view-proposal-user-full-name-p">{proposerObj.fullName}</p>
-          </Col>
+        <p className="card-summary u-dao-header-2r u-margin-top-15"> {proposalSummary}</p>
+        <Row className="u-margin-top-small" align={"middle"} justify={"space-between"}>
+          <p className="">proposal by</p>
+          <Link className={""} to={`/user/${props.proposal.proposer}`}>
+            {" "}
+            <Avatar src={<ContentImage {...proposerObj} />} className="proposal-list-props.proposal-avi-cmpt" />
+          </Link>
+          <p className="">{props.proposal.proposer}</p>
+          {isUserVerified && <VerifiedIcon />}
+          <p className="">{proposerObj.fullName}</p>
         </Row>
       </Col>
     </Link>

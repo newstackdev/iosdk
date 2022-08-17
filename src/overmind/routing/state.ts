@@ -1,11 +1,15 @@
 import { AUTH_FLOW_STATUS, AUTH_FLOW_STATUS_TYPE } from "../auth/state";
 import { History } from "history";
 import { Link } from "../../types";
+import { State } from "../overmind";
 import { derived } from "overmind";
+import { isEmpty } from "lodash";
 import history from "../../history";
 
-export const ROUTE_ACCESS_LEVELS: Record<string, (st: AUTH_FLOW_STATUS_TYPE) => boolean> = {
-  "/": (_st) => true,
+const ROUTE_ACCESS_LEVELS_ONBOARDING = ["create", "subscribe", "domain", "auth"];
+
+export const ROUTE_ACCESS_LEVELS: Record<string, (st: AUTH_FLOW_STATUS_TYPE, gst: State) => boolean> = {
+  "/": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
   "/profile": (st) => st > AUTH_FLOW_STATUS.ANONYMOUS,
   "/auth": (st) => true, //st <= AUTH_FLOW_STATUS.AUTHENTICATED,
   "/auth/newlife-members": (st) => true,
@@ -13,10 +17,22 @@ export const ROUTE_ACCESS_LEVELS: Record<string, (st: AUTH_FLOW_STATUS_TYPE) => 
   "/DomainPresale": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
   "/terms_of_service": () => true,
   "/privacy_policy": () => true,
+  "/signup/notInvited": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
 
-  ...",link,nft,link-verify,nft-verify,domain,subsribe,create,powerup"
+  ...",link,nft,link-verify,nft-verify,domain,subscribe,create,powerup,auth"
     .split(/,/)
-    .map((r) => ({ [`/signup${r ? "/" : ""}${r}`]: (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED }))
+    .map((r) => ({
+      [`/signup${r ? "/" : ""}${r}`]: (st, gst: State) => {
+        if (
+          (gst.flows.user.create.isLegacyUpdateOngoing || !isEmpty(gst.flows.user.create.progressedSteps)) &&
+          ROUTE_ACCESS_LEVELS_ONBOARDING.includes(r)
+        ) {
+          return true;
+        }
+
+        return st < AUTH_FLOW_STATUS.AUTHENTICATED;
+      },
+    }))
     .reduce((r, c) => ({ ...r, ...c }), {}),
 };
 
@@ -31,7 +47,7 @@ const state = {
     const _specificAccess = gst.config.settings.routing.routeAccessLevels[st.location.split(/\?/)[0]];
     const _wildcard = gst.config.settings.routing.routeAccessLevels["*"];
     const specificAccess = _specificAccess || _wildcard;
-    const isAllowed = (!specificAccess && gst.api.auth.authorized) || (specificAccess && specificAccess(gst.auth.status));
+    const isAllowed = (!specificAccess && gst.api.auth.authorized) || (specificAccess && specificAccess(gst.auth.status, gst));
 
     console.log("isAllowed", isAllowed);
 

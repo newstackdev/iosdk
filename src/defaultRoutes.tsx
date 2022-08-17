@@ -1,26 +1,19 @@
 import { About } from "./Pages/About";
 import { Auth } from "./Pages/Auth/Auth";
-import { Component, useEffect } from "react";
-import { DomainPresale } from "./Pages/DomainPresale/DomainPresale";
+import { Authenticate } from "./Pages/Onboarding/Authenticate";
+import { CreateUser } from "./Pages/Onboarding/CreateUser";
+import { DomainSelector, Done, LinkHash } from "./Pages/Onboarding";
 import { JoinDao } from "./Pages/JoinDao";
 import { LegacyImport } from "./Pages/User/LegacyImport";
 import { Mood } from "./Pages/Mood/Mood";
 import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import { NLView } from "./types";
-import {
-  OnboardingCreate,
-  OnboardingDomain,
-  OnboardingLink,
-  OnboardingNft,
-  OnboardingPowerup,
-  OnboardingSubscribe,
-  OnboardingVerifyLink,
-  OnboardingVerifyNft,
-} from "./Pages/OnboardingV2";
+import { NotInvited } from "./Pages/Onboarding/NotInvited";
 import { Post, PostInTags } from "./Pages/Post/Post";
-import { PostCreate } from "./Pages/Post/PostCreate";
+import { PostCreate } from "./Pages/Post/components/PostCreate";
 import { Privacy } from "./Pages/Privacy";
 import { Product } from "./Pages/Store/Product";
+import { ProposalsPage } from "./Pages/Dao/Views/Proposals/ProposalList";
 import { Route } from "react-router-dom";
 import { SearchCreativePost } from "./Pages/SearchCreativePost";
 import { SelectMoodForm } from "./Components/SelectMood";
@@ -30,25 +23,22 @@ import { UserCreate } from "./Pages/User/UserCreate";
 import { UserInvite } from "./Pages/User/UserInvite";
 import { UserStake } from "./Components/UserWidget";
 import { UserUpdate } from "./Pages/User/UserUpdate";
+import { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
 import { ViewWhitelistProposalPage } from "./Pages/Dao/Views/WhitelistProposalView/ViewWhitelistProposal";
 import { useActions, useAppState } from "./overmind";
+import { useEffect } from "react";
 import Creators, { TopCreators } from "./Components/Creators";
 import DaoCreate from "./Pages/Dao/Views/DaoCreate/DaoCreate";
 import Explore from "./Pages/Explore/Explore";
-import HashtagSelector from "./Pages/DomainPresale/pages/HashtagSelector";
 import MyMoods from "./Pages/Mood/MyMoods";
 import NewProposal from "./Pages/Dao/Views/NewProposal/NewProposal";
 import Notifications from "./Components/Icons/Notifications";
-import ProposalList, { ProposalsPage } from "./Pages/Dao/Views/Proposals/ProposalList";
 import SearchCreative from "./Pages/SearchCreative";
 import SearchTag from "./Pages/Tag/TagSearch";
 import Spotlights from "./Components/Spotlights";
 import TopFolders from "./Components/TopFolders";
 import TopHashtags from "./Components/TopHashtags";
-import UserSelector from "./Pages/DomainPresale/pages/UserSelector";
 import UserTop from "./Pages/User/Top";
-import ViewProposal, { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
-import Whitelist from "./Pages/Dao/Components/Previews/Member/MemberRow";
 
 type HostDef = {
   hosts: string[];
@@ -72,21 +62,21 @@ const HostToDomain: HostDef[] = [
   {
     hosts: ["newlink.page"],
     components: {
-      Root: DomainPresale,
+      Root: LinkHash,
       Explore: UserTop,
     },
   },
   {
     hosts: ["localhost", "www.newlife.io", "web.newlife.io", "web-dev.newlife.io", "share.newlife.io", "test.newlife.io"],
     components: {
-      Root: DomainPresale,
+      Root: LinkHash,
       Explore: Explore,
     },
   },
   {
     hosts: ["unsid.org", "web-dev.unsid.org"],
     components: {
-      Root: DomainPresale,
+      Root: LinkHash,
       Explore: () => (
         <>
           You are good to go.
@@ -112,7 +102,7 @@ const HostToDomain: HostDef[] = [
   {
     hosts: ["dao.newmoon.ac"],
     components: {
-      Root: DomainPresale,
+      Root: LinkHash,
       Explore: () => {
         const actions = useActions();
         useEffect(() => {
@@ -184,25 +174,18 @@ export const DEFAULT_ROUTES = [
 
   // DAO
 
-  <OverridableRoute key="dvp" exact path="/dao/:daoOwner/proposal/:id" component={ViewProposalPage} />,
-  <OverridableRoute key="dssac" exact path="/dao/:daoOwner/whitelist-proposal/:id" component={ViewWhitelistProposalPage} />,
-  // <OverridableRoute key="ds" exact path="/dao/:daoOwner" component={ProposalsPage} />,
-  <OverridableRoute key="ds" exact path="/dao/:daoOwner/proposals/:type?" component={ProposalsPage} />,
-  <OverridableRoute key="dg" exact path="/dao/:daoOwner/new-proposal" component={NewProposal} />,
-  // <OverridableRoute key="drp" exact path="/dao/proposal/:id" component={ViewProposal} />,
-  <OverridableRoute key="dcp" exact path="/dao/:daoOwner/proposal-create" component={NewProposal} />,
-  <OverridableRoute key="dc" exact path="/dao/create" component={DaoCreate} />,
-  <OverridableRoute key="dpl" exact path="/dao/:daoOwner" component={ProposalsPage} />,
-  <OverridableRoute key="dsae" exact path="/dao/:daoOwner/whitelist/members" component={Whitelist} />,
+  <OverridableRoute key="da" exact path="/dao/:daoOwner/proposal/:id" component={ViewProposalPage} />,
+  <OverridableRoute key="db" exact path="/dao/:daoOwner/member-proposal/:id" component={ViewWhitelistProposalPage} />,
+  <OverridableRoute key="dc" exact path="/dao/:daoOwner/proposals/:type?" component={ProposalsPage} />,
+  <OverridableRoute key="dd" exact path="/dao/:daoOwner/new-proposal" component={NewProposal} />,
+  <OverridableRoute key="de" exact path="/dao/create" component={DaoCreate} />,
+  <OverridableRoute key="df" exact path="/dao/:daoOwner" component={ProposalsPage} />,
 
   // Onboarding v2
-  <OverridableRoute key="su" exact path="/signup" component={OnboardingLink} />, // here be the choice of nft or invite link
-  <OverridableRoute key="sul" exact path="/signup/link" component={OnboardingLink} />,
-  <OverridableRoute key="sun" exact path="/signup/nft" component={OnboardingNft} />,
-  <OverridableRoute key="sulv" exact path="/signup/link-verify" component={OnboardingVerifyLink} />,
-  <OverridableRoute key="sunv" exact path="/signup/nft-verify" component={OnboardingVerifyNft} />,
-  <OverridableRoute key="sud" exact path="/signup/domain" component={OnboardingDomain} />,
-  <OverridableRoute key="sus" exact path="/signup/subscribe" component={OnboardingSubscribe} />,
-  <OverridableRoute key="suc" exact path="/signup/create" component={OnboardingCreate} />,
-  <OverridableRoute key="sup" exact path="/signup/powerup" component={OnboardingPowerup} />,
+  <OverridableRoute key="sulv" exact path="/signup/auth" component={Authenticate} />,
+  <OverridableRoute key="sud" exact path="/signup/domain" component={DomainSelector} />,
+  <OverridableRoute key="sus" exact path="/signup/subscribe" component={Product} />,
+  <OverridableRoute key="suc" exact path="/signup/create" component={CreateUser} />,
+  <OverridableRoute key="sudn" exact path="/signup/done" component={Done} />,
+  <OverridableRoute key="suni" exact path="/signup/notInvited" component={NotInvited} />,
 ];

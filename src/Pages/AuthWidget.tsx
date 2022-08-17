@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Menu, Row } from "antd";
+import { Avatar, Button, Col, Dropdown, Menu, Row } from "antd";
 import { ContentImage } from "../Components/Image";
 import { Link } from "react-router-dom";
 import { LogOut } from "../Components/Icons/LogOut";
@@ -11,14 +11,35 @@ import SubMenu from "antd/lib/menu/SubMenu";
 export const AuthWidget: NLView = () => {
   const state = useAppState();
   const actions = useActions();
+  const isAuthorized = state.api.auth.authorized;
 
   const user: UserReadPrivateResponse | null = state.api.auth.user;
   const u = useCachedUser({ id: user?.id }, true);
 
-  const profileLink = (title = state.api.auth.userDisplayHandler) =>
+  const profileLink = (mobile?: boolean) =>
     state.auth.authenticated ? (
       !state.api.auth.authorized ? (
-        <Avatar src={<ContentImage {...u} />} className="avatar-image-header" />
+        mobile ? (
+          <Button key="sub4" onClick={() => actions.auth.logout()} style={{ padding: 0 }}>
+            <Row>
+              <span className="u-margin-right-small">Sign out</span>
+              <LogOut />
+            </Row>
+          </Button>
+        ) : (
+          <Dropdown
+            overlay={
+              <Menu.Item key="sub4" onClick={() => actions.auth.logout()} style={{ padding: 0 }}>
+                <Row>
+                  <span className="u-margin-right-small">Sign out</span>
+                  <LogOut />
+                </Row>
+              </Menu.Item>
+            }
+          >
+            <Avatar src={<ContentImage {...u} />} className="avatar-image-header" />
+          </Dropdown>
+        )
       ) : (
         <Row
           style={{
@@ -30,10 +51,11 @@ export const AuthWidget: NLView = () => {
         >
           <Col>
             <Link to={`/user/${state.api.auth.user?.username}`}>
-              <Avatar src={<ContentImage {...u} />} className="avatar-image-header" />
+              <Avatar src={<ContentImage {...u} menuAvatar />} className="avatar-image-header" />
               <span className="paragraph-1r navbar-mobile-text">Profile</span>
             </Link>
           </Col>
+
           <Col className="mobile-menu-show text-right">
             {/* <span
 							hidden={!state.auth.authenticated}
@@ -42,9 +64,6 @@ export const AuthWidget: NLView = () => {
 						>
 							metamask
 						</span> */}
-            <span hidden={!state.auth.authenticated} onClick={() => actions.auth.logout()}>
-              <LogOut />
-            </span>
           </Col>
         </Row>
       )
@@ -59,54 +78,23 @@ export const AuthWidget: NLView = () => {
     );
 
   return (
-    <Menu.Item style={{ padding: 0 }} className="app-full-width-mobile">
-      <SubMenu
-        key="sub1"
-        className="sub-menu-show"
-        title={profileLink()}
-        style={{
-          opacity: 1,
-          position: "relative",
-          pointerEvents: "all",
-          overflowY: "inherit",
-          padding: 0,
-        }}
-      >
-        {state.auth.authenticated ? (
-          <>
-            <Menu.Item hidden={state.api.auth.authorized} key="sub3" style={{ padding: 0 }}>
-              {state.api.auth.authorized ? "" : <>{state.api.auth.userDisplayHandler}</>}
-            </Menu.Item>
-            {!/^(www\.)?newlife\.io$/.test(window.location.host) ? (
-              <Menu.Item
-                hidden={!state.auth.authenticated}
-                key="sub31"
-                style={{ padding: 0 }}
-                // onClick={() => actions.evm.connect()}
-                className="submenu-text submenu-text-disabled"
-              >
-                Metamask
-              </Menu.Item>
-            ) : (
-              <></>
-            )}
-            <Menu.Item key="sub4" onClick={() => actions.auth.logout()} className="submenu-text" style={{ padding: 0 }}>
-              <span className="u-margin-right-small">Sign out</span>
-              <LogOut />
-            </Menu.Item>
-            {/* <Menu.Item hidden={!state.auth.status} key="sub3">
-							{profileLink("priv
+    <>
+      <Menu.Item className="app-full-width-mobile">
+        <Menu.Item className="sub-menu-show">{profileLink()}</Menu.Item>
 
-							ate profile", true)}
-						</Menu.Item> */}
-          </>
-        ) : (
-          <></>
-        )}
-      </SubMenu>
-      <Menu.Item key="pl" className="mobile-menu-show" style={{ width: "100%", order: 1, padding: 0 }}>
-        {profileLink()}
+        <Menu.Item key="pl" className="mobile-menu-show" style={{ width: "100%", order: 1, padding: 0 }}>
+          {profileLink()}
+        </Menu.Item>
       </Menu.Item>
-    </Menu.Item>
+      {isAuthorized && (
+        <Menu.Item>
+          <Button onClick={() => actions.routing.historyPush({ location: "/user/invite" })} className="stroke-btn-green">
+            <p className="paragraph-2b" style={{ lineHeight: 0, margin: 0, padding: 0 }}>
+              Invite a friend
+            </p>
+          </Button>
+        </Menu.Item>
+      )}
+    </>
   );
 };

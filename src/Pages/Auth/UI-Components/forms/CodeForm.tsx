@@ -23,11 +23,11 @@ const CodeForm: NLView<{
       hidden={state.auth.status !== AUTH_FLOW_STATUS.RECEIVED}
       name="basic"
       initialValues={{ phoneVerificationCode: "" }} // 111111
-      onFinish={({ phoneVerificationCode }) =>
-        actions.firebase.verifyPhone({
+      onFinish={async ({ phoneVerificationCode }) => {
+        await actions.firebase.verifyPhone({
           phoneVerificationCode,
-        })
-      }
+        });
+      }}
       autoComplete="off"
     >
       <Form.Item

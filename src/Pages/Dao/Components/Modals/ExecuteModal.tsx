@@ -40,11 +40,12 @@ export const ExecuteModal = ({ proposal_type, dao_owner, dao_id, proposal_id, pr
     proposal_type == "whitelist"
       ? await actions.newcoin.daoGetWhitelistProposals({ daoOwner: dao_owner, proposal_id: proposal_id })
       : await actions.newcoin.daoGetProposals({ daoOwner: dao_owner, proposal_id: proposal_id });
+    actions.routing.historyPush({ location: `/dao/${dao_owner}/proposals` });
   };
 
   return (
     <div style={{ color: "white" }}>
-      <Button className={"u-dao-view-btn"} onClick={() => setMode(executionStates.start)}>
+      <Button className={"power-up-btn"} onClick={() => setMode(executionStates.start)}>
         {"Execute"}
       </Button>
 
@@ -58,22 +59,27 @@ export const ExecuteModal = ({ proposal_type, dao_owner, dao_id, proposal_id, pr
         closeIcon={<CrossCircle />}
         visible={mode == executionStates.start}
         onCancel={() => setMode(executionStates.disabled)}
-        className="nl-white-box-modal view-proposal-vote-ctn"
+        className="modal-ctn"
         footer={[]}
       >
-        <p>This proposal is ready to execute</p>
-        <p>
-          You are the owner of this dao. Please proceed to execute the proposal. Note the proposal will be deleted after
-          execution.
-        </p>
+        <h2>Execute this proposal!</h2>
+        <p>You need to execute this proposal for it to take effect!</p>
+
         <ProgressButton
           actionName={"newcoin." + (proposal_type == "whitelist" ? "daoExecuteWhitelistProposal" : "daoExecuteProposal")}
           progressText="Executing..."
-          type={"primary"}
           onClick={execute}
+          className={"confirm-btn"}
         >
           Execute
         </ProgressButton>
+
+        <Button onClick={() => setMode(executionStates.disabled)} className={"cancel-btn"}>
+          {" "}
+          Cancel
+        </Button>
+
+        <p>This is only on Testnet! Need help? Join our telegram group!</p>
       </Modal>
     </div>
   );

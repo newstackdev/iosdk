@@ -67,8 +67,6 @@ export const VoteModal: NLView<{
     }
   };
 
-  const exForm = <></>;
-
   return (
     <>
       <NewcoinRecept tx={tx} visible={_mode == VOTE_STEPS.DONE} onDone={endVoting}>
@@ -81,7 +79,7 @@ export const VoteModal: NLView<{
 
       {visible && (
         <>
-          <Button className={"u-dao-view-btn"} onClick={startVoting}>
+          <Button className={"power-up-btn"} onClick={startVoting}>
             Vote
           </Button>
 
@@ -91,28 +89,36 @@ export const VoteModal: NLView<{
               visible={_mode == VOTE_STEPS.SELECT}
               onOk={() => setMode(VOTE_STEPS.LOCK)}
               onCancel={() => setMode(VOTE_STEPS.DISABLED)}
-              className="nl-white-box-modal view-proposal-vote-ctn"
+              className="modal-ctn"
               footer={[]}
             >
-              <Col className={"view-proposal-vote-ctn"}>
-                <h1 className={"view-proposal-vote-h1"}>Give your vote </h1>
-                <p className={"view-proposal-vote-p"}>Vote on this proposal! 💚 🔮</p>
-                <Form.Item name={"option"}>
-                  <Select style={{ height: 55 }} bordered={false} placeholder={"topic"} defaultOpen={true}>
-                    <Select.Option value="YES">
-                      <Button className={"view-proposal-vote-btn-yes"} type={"primary"} onClick={() => setMode(VOTE_STEPS.LOCK)}>
-                        Yes
-                      </Button>
-                    </Select.Option>
-                    <Select.Option value="NO">
-                      <Button className={"view-proposal-vote-btn-no"} type={"primary"} onClick={() => setMode(VOTE_STEPS.LOCK)}>
-                        No
-                      </Button>
-                    </Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <p className={"paragraph-2r"}>This is only on Testnet! Need help? Join our telegram group!</p>
+              <h2>Give your vote!</h2>
+              <p>Vote on this proposal! 💚 🔮</p>
+
+              <Button
+                className={"confirm-btn"}
+                onClick={() => {
+                  setVoteValState("YES");
+                  setMode(VOTE_STEPS.LOCK);
+                }}
+              >
+                YES
+              </Button>
+
+              <Button
+                className={"cancel-btn"}
+                onClick={() => {
+                  setVoteValState("NO");
+                  setMode(VOTE_STEPS.LOCK);
+                }}
+              >
+                NO
+              </Button>
+
+              <p>
+                This is only on Testnet! Need help? Join our telegram group!
+                <a href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ">Join our telegram group!</a>
+              </p>
             </Modal>
 
             <Modal
@@ -120,33 +126,39 @@ export const VoteModal: NLView<{
               visible={_mode == VOTE_STEPS.LOCK}
               onOk={() => setMode(VOTE_STEPS.CONFIRM)}
               onCancel={() => setMode(VOTE_STEPS.DISABLED)}
-              className="nl-white-box-modal view-proposal-vote-ctn"
+              className="modal-ctn"
               footer={[]}
             >
-              <Col className={"view-proposal-vote-ctn"}>
-                <h1 className={"view-proposal-vote-h1"}>Give your vote </h1>
-                <p className={"view-proposal-vote-p"}>Lock a minimum of 1 ${pool.code} to confirm your vote!</p>
-                <Form.Item name="quantity">
-                  <Input placeholder={"100"} suffix={`$${ticker}`} onChange={(e) => setQuantityState(e.target.value)} />
-                </Form.Item>
+              <h2>Give your vote!</h2>
+              <p>Lock a minimum of 1 ${pool.code} to confirm your vote!</p>
 
-                <div className={"text-center"}>
-                  <Button
-                    disabled={!quantityState}
-                    type={"primary"}
-                    onClick={() => {
-                      setMode(VOTE_STEPS.CONFIRM);
-                    }}
-                  >
-                    {" "}
-                    Lock
-                  </Button>
-                </div>
+              <Form.Item name="quantity">
+                <Input placeholder={"100"} suffix={`$${ticker}`} onChange={(e) => setQuantityState(e.target.value)} />
+              </Form.Item>
 
-                <p className={"paragraph-2r nl-vertical-space-self"}>
-                  This is only on Testnet! Need help? Join our telegram group!
-                </p>
-              </Col>
+              <Button
+                className={"confirm-btn"}
+                onClick={() => {
+                  setMode(VOTE_STEPS.CONFIRM);
+                }}
+              >
+                Lock
+              </Button>
+
+              <Button
+                className={"cancel-btn"}
+                onClick={() => {
+                  setVoteValState("NO");
+                  setMode(VOTE_STEPS.DISABLED);
+                }}
+              >
+                Cancel
+              </Button>
+
+              <p>
+                This is only on Testnet! Need help? Join our telegram group!
+                <a href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ">Join our telegram group!</a>
+              </p>
             </Modal>
 
             <Modal
@@ -154,34 +166,37 @@ export const VoteModal: NLView<{
               visible={_mode == VOTE_STEPS.CONFIRM}
               onOk={() => setMode(VOTE_STEPS.VOTE)}
               onCancel={() => setMode(VOTE_STEPS.DISABLED)}
-              className="nl-white-box-modal view-proposal-vote-ctn"
+              className="modal-ctn"
               footer={[]}
             >
-              <Col className={"view-proposal-vote-ctn"}>
-                <h1 className={"view-proposal-vote-h1"}>Confirm your vote </h1>
-                <p className={"view-proposal-vote-p"}>
-                  Are you sure you want to lock {quantityState} ${ticker} to vote {voteValState}?
-                </p>
-                <Row justify={"center"}>
-                  <Button
-                    className={"view-proposal-vote-btn-yes"}
-                    type={"primary"}
-                    htmlType="submit"
-                    onClick={() => setMode(VOTE_STEPS.VOTE)}
-                  >
-                    Confirm
-                  </Button>
-                </Row>
-                <Row justify={"center"}>
-                  <Button className={"view-proposal-vote-btn-no"} type={"primary"} onClick={() => setMode(VOTE_STEPS.DISABLED)}>
-                    Cancel
-                  </Button>
-                </Row>
-                <p className={"paragraph-2r"}>
-                  This is only on Testnet! Need help?
-                  <a href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ">Join our telegram group!</a>
-                </p>
-              </Col>
+              <h2>Confirm your vote! </h2>
+              <p>
+                Are you sure you want to lock {quantityState} ${ticker} to vote {voteValState}
+              </p>
+
+              <Button
+                className={"confirm-btn"}
+                onClick={() => {
+                  setMode(VOTE_STEPS.VOTE);
+                }}
+              >
+                Confirm
+              </Button>
+
+              <Button
+                className={"cancel-btn"}
+                onClick={() => {
+                  setVoteValState("NO");
+                  setMode(VOTE_STEPS.DISABLED);
+                }}
+              >
+                Cancel
+              </Button>
+
+              <p>
+                This is only on Testnet! Need help? Join our telegram group!
+                <a href="https://t.me/joinchat/Ezz_sQzaOK2j977siawwGQ">Join our telegram group!</a>
+              </p>
             </Modal>
 
             <Modal
@@ -189,19 +204,24 @@ export const VoteModal: NLView<{
               visible={_mode == VOTE_STEPS.VOTE}
               onOk={() => setMode(VOTE_STEPS.DONE)}
               onCancel={() => setMode(VOTE_STEPS.DISABLED)}
-              className="nl-white-box-modal view-proposal-vote-ctn"
+              className="modal-ctn"
               footer={[]}
             >
-              <h1 className={"view-proposal-vote-h1"}>You Selected {voteValState}! </h1>
-              <p className={"view-proposal-vote-p"}>
+              <h2> You Selected {voteValState}! </h2>
+              <p>
                 You are locking <br />
                 <br />
                 <span className={"header-1r"}>
                   {quantityState} ${`${ticker}`}
                 </span>
               </p>
-              <p className={"paragraph-2r"}>This is only on Testnet! Need help? Join our telegram group!</p>
-              <ProgressButton actionName="newcoin.daoVoteProposal" progressText="Voting..." type={"primary"} onClick={vote}>
+
+              <ProgressButton
+                actionName="newcoin.daoVoteProposal"
+                progressText="Voting..."
+                onClick={vote}
+                className={"confirm-btn"}
+              >
                 {" "}
                 Vote
               </ProgressButton>

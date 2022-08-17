@@ -112,7 +112,7 @@ export class PicturesWall extends React.Component<
                 </Row>
               ) : (
                 <div className="paragraph-2b" style={{ fontSize: 17 }}>
-                  Drag and drop content here!
+                  Drag and drop content here!{<br />} JPEG, PNG, GIF
                 </div>
               )}
             </Upload>

@@ -4,8 +4,10 @@ import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-clie
 import { Callback, IOView, NLView } from "../../types";
 import { ContentImage } from "../../Components/Image";
 import { Searchicon } from "../../Components/Icons/Searchicon";
+import { Tag } from "antd-latest";
 import { UsersList } from "../../Components/UserWidget";
-import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
+import { VerifiedIcon } from "../..//Components/Icons/VerifiedIcon";
+import { VerifiedIconLight } from "../../Components/Icons/VerifiedIconLight";
 import { json } from "overmind";
 import { map, uniqBy, values } from "lodash";
 import { useActions, useAppState } from "../../overmind";
@@ -88,17 +90,17 @@ export const SearchWidget: NLView<{
   noNavigation?: boolean;
   onChange?: Callback;
   showSearch?: boolean;
+  setSelection?: React.Dispatch<React.SetStateAction<string>>;
+  selection?: string;
   // search: boolean;
   // setSearch: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch }) => {
+}> = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch, setSelection, selection }) => {
   const state = useAppState();
   const actions = useActions();
   const [query, setQuery] = useState<string>("");
-  const [selection, setSelection] = useState<string>("");
   const [visible, setVisible] = useState(false);
-  const [open, setOpen] = useState(true);
   const [mouseVisible, setMouseVisible] = useState(false);
-  const [justNavigated, setJustNavigated] = useState(false);
+  const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [filterState, setFilterState] = useState<"Member" | "Tag" | undefined>(undefined);
 
@@ -106,6 +108,8 @@ export const SearchWidget: NLView<{
   const foundTags = Array.from(new Set((state.lists.search.tags?.results?.value || []).map((t) => t.tag))) || [];
 
   const { verifiedUsers } = useVerified(map(foundUsers, "username"));
+
+  const [currVal, setCurrVal] = useState<string>("");
 
   useEffect(() => {
     const searchForResults = async () => {
@@ -124,8 +128,75 @@ export const SearchWidget: NLView<{
     searchForResults();
   }, [query]);
 
+  const _setSelection = (v: string = "") => {
+    setSelection && setSelection(v);
+    onChange && onChange(v);
+    setCurrVal(v);
+  };
+
+  const setInitialState = () => {
+    setQuery("");
+    // _setSelection && _setSelection("");
+  };
+
+  const onSearch = (query: string) => {
+    setQuery(query);
+    setOpen(true);
+  };
+
+  const onSelect = (value: string) => {
+    setOpen(false);
+    const mode = /^[@#]/.test(value[0]) ? value[0] : "#";
+    const v = value.replace(/^[@#]/, "");
+    const path = mode === "#" ? `/search?tags=${v}` : `/user/${v}`;
+
+    if (v === selection?.toString()) {
+      return;
+    }
+
+    if (!noNavigation)
+      actions.routing.historyPush({
+        location: path,
+      });
+    setVisible(false);
+
+    _setSelection(v);
+
+    setQuery("");
+  };
+
+  // const onDeselect = (value: string) => {
+  //   const v = value.replace(/^[@#]/, "");
+
+  //   setSelection && setSelection((p) => [...p.filter((pVal) => pVal !== v)]);
+  // };
+
+  const tagRender = (props) => {
+    const { label, value, closable, onClose } = props;
+
+    const onPreventMouseDown = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    return (
+      <Tag
+        color={value}
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={() => {
+          _setSelection();
+          onClose();
+        }}
+      >
+        {label}
+      </Tag>
+    );
+  };
+
   return (
     <Row align="bottom">
+      {/* {currVal} */}
       <div
         style={{ width: 30, margin: "16px 5px 0 5px" }}
         onClick={() => setVisible(!visible)}
@@ -140,9 +211,9 @@ export const SearchWidget: NLView<{
         ) : (
           <Select
             className="search-widget"
-            showSearch
+            mode={noNavigation ? "multiple" : undefined}
             allowClear
-            open={open && query.length >= 3}
+            showSearch
             clearIcon={
               !loading ? (
                 <div
@@ -152,7 +223,7 @@ export const SearchWidget: NLView<{
                     color: "white",
                   }}
                   className="paragraph-2b"
-                  onClick={() => setOpen(false)}
+                  onClick={() => setInitialState()}
                 >
                   Cancel
                 </div>
@@ -160,47 +231,27 @@ export const SearchWidget: NLView<{
                 <></>
               )
             }
-            value={selection || []}
+            // value={selection ? undefined : []}
+            // tagRender={tagRender}
+            searchValue={query}
             loading={loading}
-            defaultActiveFirstOption
-            filterOption={false}
             autoFocus
+            open={open}
             style={{ marginTop: 12, width: "min(350px,80vw)" }}
             placeholder="Search..."
-            onSearch={(v) => {
-              setQuery(v);
-              setOpen(true);
-              setJustNavigated(false);
-            }}
-            onBlur={() => setSelection("")}
-            onSelect={(val: string) => {
-              if (justNavigated) return;
-
-              const mode = /^[@#]/.test(val[0]) ? val[0] : "#";
-              const v = val.replace(/^[@#]/, "");
-              const path = mode === "#" ? `/search?tags=${v}` : `/user/${v}`;
-              setQuery("");
-
-              if (!noNavigation)
-                actions.routing.historyPush({
-                  location: path,
-                });
-
-              setSelection(v);
-              onChange && onChange(v);
-
-              setJustNavigated(true);
-              // if(mode === "@")
-            }}
+            onSearch={(query) => onSearch(query)}
+            onBlur={() => setInitialState()}
+            onSelect={(value: string) => onSelect(value)}
+            // onDeselect={onDeselect}
             dropdownRender={(menu) => (
-              <div>
+              <>
                 <Row
                   style={{
                     backgroundColor: "#A5A1A1",
                     padding: 10,
                   }}
                 >
-                  {foundUsers.length > 0 && foundTags.length > 0 ? (
+                  {foundUsers.length > 0 && foundTags.length > 0 && searchTags && searchUsers ? (
                     <>
                       <Col
                         className={filterState === "Member" ? "filter-tag filter-tag__active" : "filter-tag"}
@@ -222,13 +273,11 @@ export const SearchWidget: NLView<{
                       </Col>
                     </>
                   ) : (
-                    <Col className={"filter-tag"}>
-                      <p className="paragraph-2b">No filters available.</p>
-                    </Col>
+                    <></>
                   )}
                 </Row>
                 {menu}
-              </div>
+              </>
             )}
           >
             {foundUsers?.map((u) => {

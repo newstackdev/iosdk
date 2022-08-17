@@ -91,8 +91,10 @@ export const verifyPhone = async ({ state, actions, effects }, { phoneVerificati
     });
     effects.firebase.clearRecaptchaVerifier();
     actions.auth.resetAuthTimer();
-    if (r)
+    if (r) {
         state.auth.status = AUTH_FLOW_STATUS.AUTHENTICATED;
+        actions.flows.user.create.wizardStepNext();
+    }
     else {
         effects.ux.notification.error({
             message: "Something went wrong, please try again",

@@ -31,7 +31,6 @@ const onInitializeOvermind: Action = async ({ effects, state, actions, reaction 
         console.log("Not yet authorized");
         return;
       }
-
       actions.websockets.toggleWebSocket();
 
       await actions.api.user.getMoods({ id: state.api.auth.user?.id });

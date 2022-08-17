@@ -3,6 +3,7 @@ import { Button, Input } from "antd";
 import { CrossCircleErr } from "../../../User/UserCreate";
 import { FormInstance } from "antd";
 import { NLView } from "../../../../types";
+import { isEmpty } from "lodash";
 import { layout } from "../../Auth";
 import { useActions, useAppState } from "../../../../overmind";
 import { useState } from "react";
@@ -16,6 +17,16 @@ const PhoneForm: NLView<{
   const state = useAppState();
   const actions = useActions();
   const [customClassName, setCustomClassName] = useState("");
+  const phoneNumArr = state.flows.user.create.form.phone?.split("");
+  const maskedPhoneNum = phoneNumArr
+    ?.map((char, i) => {
+      if (i < phoneNumArr.length - 3 && i > 3) {
+        return "X";
+      }
+      return char;
+    })
+    .join("");
+  const isPhonePresent = !isEmpty(state.flows.user.create.form.phone);
 
   const reg = "^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,7}$";
 
@@ -27,7 +38,7 @@ const PhoneForm: NLView<{
       name="basic"
       initialValues={{ phone: "" }} // +420111111111
       onFinish={({ phone }) => {
-        actions.firebase.requestToken({ phone });
+        actions.firebase.requestToken({ phone: isPhonePresent && embedded ? state.flows.user.create.form.phone : phone });
         // phoneForm.resetFields();
       }}
       // onFinishFailed={onFinishFailed}
@@ -38,7 +49,7 @@ const PhoneForm: NLView<{
         name="phone"
         rules={[
           {
-            required: true,
+            required: !isPhonePresent,
             message: "The phone number is invalid.",
             pattern: new RegExp(reg),
           },
@@ -47,8 +58,10 @@ const PhoneForm: NLView<{
       >
         <Input
           className="text-center"
-          placeholder="enter phone number"
+          placeholder={isPhonePresent && embedded ? maskedPhoneNum : "enter phone number"}
+          disabled={isPhonePresent && embedded}
           suffix={<CrossCircleErr />}
+          autoFocus
           onChange={(values) => {
             if (!values.target.value.includes("+")) {
               phoneForm.setFieldsValue({

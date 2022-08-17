@@ -2,8 +2,9 @@ import { Action } from "../../../../types";
 import { Context, State } from "../../../overmind";
 import { UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { WizardInput } from "./wizardStateMachine";
+import { action } from "overmind/lib/operator";
 import { debounce, filter, pipe, throttle } from "overmind";
-import { get } from "lodash";
+import { get, isEmpty, isNil } from "lodash";
 // import { IReaction } from "overmind";
 
 const reduceState: (st: State) => WizardInput = ({
@@ -14,8 +15,9 @@ const reduceState: (st: State) => WizardInput = ({
     user: {
       create: {
         legacyToken,
-        form: { username, couponCode },
+        form: { username, couponCode, inviteHash, phone },
         formUsernameIsAvailable,
+        inviteHashVerified,
         isLegacyUpdateOngoing,
       },
     },
@@ -25,9 +27,12 @@ const reduceState: (st: State) => WizardInput = ({
     ...auth,
     ...{ authenticated },
     formUsername: username || "",
+    inviteHash: inviteHash || "",
     subscribed: !!auth.user?.subscriptionStatus?.startsWith("io-domain-sale"),
     formUsernameIsAvailable,
     user: auth.user,
+    formPhone: phone,
+    inviteHashVerified,
     legacyToken,
     isLegacyUpdateOngoing,
     featureFlags: featureFlags,
@@ -53,8 +58,11 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
     await actions.flows.user.create.startLegacyImport();
   }
 
-  reaction(reduceState, actions.flows.user.create._wizardReact);
+  if (!state.auth.authenticated && !state.api.auth.authorized && !isEmpty(state.firebase?.token)) {
+    actions.routing.historyPush({ location: "/" });
+  }
 
+  reaction(reduceState, actions.flows.user.create._wizardReact);
   reaction(
     (s) => ({ auth: s.api.auth, username: s.flows.user.create.form.username }),
     ({ username, auth }) => {
@@ -63,7 +71,7 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
   );
 };
 
-export const updateForm: Action<Partial<UserCreateRequest & { couponCode?: string }>> = //({ state }, val) =>
+export const updateForm: Action<Partial<UserCreateRequest & { couponCode?: string; inviteHash?: string }>> = //({ state }, val) =>
   pipe(
     // debounce(200),
     ({ state }, val) => {
@@ -102,7 +110,7 @@ export const startLegacyImport: Action = //({ state }, val) =>
     };
 
     actions.auth.logout({ noRouting: true });
-    actions.routing.historyPush({ location: "/" });
+    actions.routing.historyPush({ location: "/signup/domain" });
 
     window.localStorage.setItem("legacyAuthToken", JSON.stringify({ legacyToken, updated: Date.now() }));
   };
@@ -116,7 +124,7 @@ export const wizardStepPrev: Action = ({ state }) => {
   state.flows.user.create.wizard.send("PREV", reduceState(state));
 };
 
-const autoRedirectFrom = ["", "/", "/auth"];
+const autoRedirectFrom = ["", "/", "/auth", "/signup/auth", "/signup/domain", "/signup/create", "/signup/subscibe"];
 
 export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: WizardInput) =>
   pipe(debounce(300), ({ state, actions }: Context, i: WizardInput) => {
@@ -134,12 +142,26 @@ export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: Wiza
 
     state.flows.user.create.wizard.send("UPDATE", i);
 
-    const subscription = (state.api.auth.user?.subscriptionStatus || "").split(/_/);
-    if (subscription[0] === "io-domain-sale" && state.flows.user.create.form.username != subscription[1])
+    const subscription = (state.api.auth.user.subscriptionStatus || "").split(/_/);
+    if (subscription[0] === "io-domain-sale" && state.flows.user.create.form.username != subscription[1]) {
       actions.flows.user.create.updateForm({ username: subscription[1] });
+      if (!state.flows.user.create.isLegacyUpdateOngoing && !state.api.auth.authorized) {
+        actions.routing.historyPush({ location: "/signup/create" });
+      }
+    }
   });
 
-export const wizardStepNext: Action = ({ state }) => {
+export const wizardStepNext: Action = ({ state, actions }) => {
+  const { nextLink, hasNext, current, hasPrev } = state.flows.user.create.wizard;
+  if (!isEmpty(state.flows.user.create.wizard.nextLink)) {
+    actions.routing.historyPush({ location: state.flows.user.create.wizard.nextLink as string });
+  }
+
+  state.flows.user.create.progressedSteps = state.flows.user.create.progressedSteps.filter((step) => step.current !== current);
+  state.flows.user.create.progressedSteps.push({ nextLink, hasNext, current, hasPrev });
+
+  sessionStorage.setItem("cachedOnboarding", JSON.stringify(state.flows.user.create));
+
   state.flows.user.create.wizard.send("NEXT", reduceState(state));
   state.flows.user.create.wizard.send("UPDATE", reduceState(state));
 };
@@ -161,6 +183,7 @@ export const create: Action<{
   user: UserCreateRequest;
 }> = async ({ actions }, params) => {
   const u = await actions.api.user.create({ ...params });
+  sessionStorage.removeItem("cachedOnboarding");
   actions.flows.user.create.stopLegacyImport({ noRedirect: true });
 };
 
@@ -192,6 +215,19 @@ export const checkAvailability: Action<{ username: string }> = pipe(
   },
 );
 
-// const deriveAndSetStep : Action<{ processors: WizardStepsProcessors }> = (ctx, { processors }) => {
-//     const step: DOMAIN_PRESALE_STEPS = deriveStep(ctx, { processors });
-//     ctx.state.flows.user.create.wizard.step.current = step;
+export const verifyHash: Action<{ inviteHash: string }> = pipe(async ({ state, actions, effects }: Context, { inviteHash }) => {
+  try {
+    const res = (await state.api.client.user.inviteHashList({ hash: inviteHash })).data;
+    if (res) {
+      state.flows.user.create.inviteHashVerified = true;
+      //@ts-ignore
+      actions.flows.user.create.updateForm({ ...res });
+      actions.flows.user.create.wizardStepNext();
+    }
+  } catch (e) {
+    effects.ux.notification.error({
+      message: "Something went wrong, please try again",
+    });
+    actions.routing.historyPush({ location: "/signup/notInvited" });
+  }
+});

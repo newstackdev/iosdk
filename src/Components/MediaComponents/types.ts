@@ -28,4 +28,8 @@ type ContentElementOpts = {
   overrideContentUrl?: string;
 };
 
-export type ContentElement = NLView<ImageProps & ContentImageProps & ContentElementOpts>;
+type MenuAvatar = {
+  menuAvatar?: boolean;
+};
+
+export type ContentElement = NLView<ImageProps & ContentImageProps & ContentElementOpts & MenuAvatar>;

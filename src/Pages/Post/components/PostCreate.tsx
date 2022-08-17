@@ -5,35 +5,35 @@ import {
   PostReadResponse,
   UserReadPrivateResponse,
 } from "@newcoin-foundation/iosdk-newgraph-client-js";
-import { NLView } from "../../types";
-import { PicturesWall } from "../../Components/PicturesWall";
-import { useActions, useAppState, useEffects } from "../../overmind";
+import { NLView } from "../../../types";
+import { PicturesWall } from "../../../Components/PicturesWall";
+import { useActions, useAppState, useEffects } from "../../../overmind";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Form from "antd/lib/form";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 
-import { MoodWidget } from "../../Components/MoodWidget";
+import { MoodWidget } from "../../../Components/MoodWidget";
 
-import { AddButton } from "../../Components/Icons/AddButton";
-import { AddFolder } from "../../Components/Icons/AddFolder";
-import { ContentImage } from "../../Components/Image";
-import { ContentLayout } from "../../Components/ContentLayout";
-import { CrossCircle } from "../../Components/Icons/CrossCircle";
-import { ExitButton } from "../../Components/Icons/ExitButton";
-import { IndeterminateProgress } from "../../Components/IndeterminateProgress";
-import { Info } from "../../Components/Icons/Info";
-import { LICENSES } from "../../constants";
-import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
-import { MoodCreateModal } from "../Mood/MoodCreate";
-import { MoodsGrid } from "../Mood/MoodsGrid";
-import { NFTIcon } from "../../Components/Icons/NTFIcon";
-import { NFTLargeIcon } from "../../Components/Icons/NFTLargeIcon";
-import { ProgressButton } from "../../Components/ProgressButton";
-import { RowCheckbox } from "../../Components/RowCheckbox";
-import { SelectMood } from "../../Components/SelectMood";
-import { useEmbed } from "../../hooks/useEmbed";
+import { AddButton } from "../../../Components/Icons/AddButton";
+import { AddFolder } from "../../../Components/Icons/AddFolder";
+import { ContentImage } from "../../../Components/Image";
+import { ContentLayout } from "../../../Components/ContentLayout";
+import { CrossCircle } from "../../../Components/Icons/CrossCircle";
+import { ExitButton } from "../../../Components/Icons/ExitButton";
+import { IndeterminateProgress } from "../../../Components/IndeterminateProgress";
+import { Info } from "../../../Components/Icons/Info";
+import { LICENSES } from "../../../constants";
+import { LargeArrowBack } from "../../../Components/Icons/LargeArrowBack";
+import { MoodCreateModal } from "../../Mood/MoodCreate";
+import { MoodsGrid } from "../../Mood/MoodsGrid";
+import { NFTIcon } from "../../../Components/Icons/NTFIcon";
+import { NFTLargeIcon } from "../../../Components/Icons/NFTLargeIcon";
+import { ProgressButton } from "../../../Components/ProgressButton";
+import { RowCheckbox } from "../../../Components/RowCheckbox";
+import { SelectMood } from "../../../Components/SelectMood";
+import { useEmbed } from "../../../hooks/useEmbed";
 import { useForm } from "antd/lib/form/Form";
 import Avatar from "antd/lib/avatar/avatar";
 import Modal from "antd/lib/modal/Modal";

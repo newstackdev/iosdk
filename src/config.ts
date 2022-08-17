@@ -75,7 +75,7 @@ const firebaseConfigs: Record<string, FirebaseConfig> = {
 const mediaBuckets: Record<string, any> = {
   "eu-dev": `https://eu-dev-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
   "eu-sit": `https://eu-sit-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
-  "eu-prod": `https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`, // images/${sizer}${src}
+  "eu-prod": `https://cdn.newlife.io`, //`https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
 };
 
 const websocketsServers: Record<string, any> = {
@@ -106,6 +106,11 @@ export const config = {
     stage,
   },
   settings: {
+    app: {
+      // the current app
+      name: "newlife",
+      currentHost: currentHost,
+    },
     newcoin: {
       daoId: "43",
       daoDomain: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "testaaab1.io") : "dx.io", //"testaaagt.io", //has a proposal -> "jnidjeaor.io",
@@ -137,7 +142,7 @@ export const config = {
       //   "/explore": "/dao/newmoon"
       // } : {})
     },
-    noBackButton: ["/explore", "/post-create", "/proposals", "/user/invite"],
+    noBackButton: ["/explore", "/post-create", "/proposals", "/user/invite", "/signup/domain"],
     defaultRoute: {
       condition: (state) => {
         return state.api.auth.authorized && ["registered", "admitted", "premium"].includes(state.api.auth.user.status);

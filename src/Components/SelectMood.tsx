@@ -61,7 +61,7 @@ export const SelectMood: NLView<{
       items={[{}, ...checkMoods]}
       limit={limit}
       // titleLink="/save-folder"
-      title={"Add to a folder"}
+      title={title}
       // setSelectedFolder={setSelectedFolder}
       // selectedFolder={selectedFolder}
       render={(m, index) => {

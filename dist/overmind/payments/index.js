@@ -26,6 +26,7 @@ const pay = async ({ state, actions, effects }, { stripe, elements }) => {
             message: "Your purchase was successful.",
         });
         await actions.api.auth.authorize();
+        actions.flows.user.create.wizardStepNext();
         // await actions.auth.fakeUserUpdate({
         //     subscriptionStatus: "subscribed",
         // });

@@ -41,34 +41,43 @@ export const ApproveModal = ({ proposal_type, dao_owner, proposal_id }) => {
   };
 
   return (
-    <div style={{ color: "white" }}>
-      <Button className={"u-dao-view-btn"} onClick={() => setMode(approvalStates.start)}>
+    <div>
+      <Button className={"power-up-btn"} onClick={() => setMode(approvalStates.start)}>
         {"Approve"}
       </Button>
 
       <NewcoinRecept tx={tx} visible={mode == approvalStates.reciept} onDone={endApproving}>
         {" "}
-        <h1 className={"view-proposal-vote-h1"}>Nice! </h1>
-        <p className={"view-proposal-vote-p"}>You've approved this proposal.</p>
+        <h1>Nice! </h1>
+        <p>You've approved this proposal.</p>
       </NewcoinRecept>
 
       <Modal
         closeIcon={<CrossCircle />}
         visible={mode == approvalStates.start}
         onCancel={() => setMode(approvalStates.disabled)}
-        className="nl-white-box-modal view-proposal-vote-ctn"
+        className="modal-ctn"
         footer={[]}
       >
-        <p>This proposal is ready to approve</p>
-        <p>You are the owner of this dao. Please approve to activate the proposal.</p>
+        <h2>Approve this proposal!</h2>
+        <p>You need to approve this proposal for DAO members to be able to vote on it!</p>
+
         <ProgressButton
           actionName={"newcoin." + (proposal_type == "whitelist" ? "daoApproveWhitelistProposal" : "daoApproveProposal")}
           progressText="Approving..."
-          type={"primary"}
           onClick={approve}
+          className={"confirm-btn"}
         >
+          {" "}
           Approve
         </ProgressButton>
+
+        <Button onClick={() => setMode(approvalStates.disabled)} className={"cancel-btn"}>
+          {" "}
+          Cancel
+        </Button>
+
+        <p>This is only on Testnet! Need help? Join our telegram group!</p>
       </Modal>
     </div>
   );

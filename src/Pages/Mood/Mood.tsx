@@ -7,12 +7,17 @@ import Avatar from "antd/lib/avatar/avatar";
 import { ContentImage } from "../../Components/Image";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { IOView, NLView } from "../../types";
+import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
 import { MoodsGridRow } from "./MoodsGrid";
+import { Share } from "../../Components/Share";
 import { ThreeDots } from "../../Components/Icons/ThreeDots";
 import { TopFoldersGrid } from "../../Components/TopFolders";
-import { useAppState } from "../../overmind";
+import { useActions, useAppState } from "../../overmind";
 import { useCachedMood, useCachedMoodPosts, useCachedPool, useCachedUser } from "../../hooks/useCached";
 import { useCurrentUserStakeEligibility, useFolderStakeInfo } from "../../hooks/useBlockchainInfo";
+import { useEffect } from "react";
+import { useVotingStreamMood } from "../Post/Post";
+import PostReportModal from "../Post/components/PostModal";
 
 // const useFolderStakeInfo = (folder: MoodReadResponse) => {
 // 	const moodDetails = useCachedMood(folder, true);
@@ -35,16 +40,26 @@ import { useCurrentUserStakeEligibility, useFolderStakeInfo } from "../../hooks/
 
 export const Mood: NLView = () => {
   const { moodId: id } = useParams<{ moodId: string }>();
-
   const mood = useCachedMoodPosts({ id }, true);
   const moodDetails = useCachedMood({ id }, true);
-
   const user = useCachedUser(mood.author);
   const state = useAppState();
-
+  const actions = useActions();
   const pool = useCachedPool({ owner: user.username });
-
   const stakeInfo = useFolderStakeInfo(moodDetails);
+  const nextInStream = useVotingStreamMood(); //useVotingStreamTags();
+  const { currPost } = nextInStream;
+
+  // hide header
+  useEffect(() => {
+    actions.ux.setLayout({ headerShown: false });
+    actions.ux.setFooterVisibility({ footerShown: false });
+    return () => {
+      actions.ux.setLayout({ headerShown: false });
+      actions.ux.setFooterVisibility({ footerShown: true });
+    };
+  }, []);
+
   // {
   // 	..._stakeInfo,
   // 	currentUserNeeds: _stakeInfo.currentUserStake - _stakeInfo.toAccess,
@@ -55,47 +70,42 @@ export const Mood: NLView = () => {
   // 	return <>{JSON.stringify(moodDetails.stakeToAccess)}</>
   return (
     <ContentLayout
+      position="top"
+      isMood
       isWorking={!mood?.posts?.length}
       header={
-        <>
-          <Row
+        <Link to={"/explore"}>
+          <div className="logo-left-top" style={{ padding: "0px 20px" }}>
+            <state.config.components.icons.Logo />
+          </div>
+        </Link>
+      }
+      info={
+        <Row className="nl-post-info-column">
+          <Col
             style={{
-              justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: "40px",
+              display: "flex",
             }}
           >
-            <Col
-              style={{
-                alignItems: "center",
-                display: "flex",
-              }}
-            >
-              <Link to={`/user/${user.username}`} style={{ marginLeft: "10px" }}>
-                <Avatar src={<ContentImage {...user} />} className="avatar-image-header" />
-              </Link>
-              <Link to={`/user/${user.username}`} className="paragraph-1b" style={{ marginLeft: "20px" }}>
-                {user.username}
-              </Link>
-            </Col>
-            <Col
-              style={{
-                alignItems: "center",
-                display: "flex",
-              }}
-            >
-              <ThreeDots />
-            </Col>
-          </Row>
-          <Row style={{ marginBottom: "40px" }}>
+            <Link to={`/user/${user.username}`}>
+              <Avatar src={<ContentImage {...user} />} className="avatar-image-header" />
+            </Link>
+            <Link to={`/user/${user.username}`} className="paragraph-1b u-margin-left-medium">
+              {user.username}
+            </Link>
+          </Col>
+          <Col>
             <p className="paragraph-2b">{moodDetails.title}</p>
-            <p className="paragraph-2r">{moodDetails.description || ""}</p>
+            <p className="paragraph-2r" style={{ wordBreak: "break-all" }}>
+              {moodDetails.description || ""}
+            </p>
             {/* {moodDetails.stakeToAccess} */}
-          </Row>
-          <Row>
+          </Col>
+          <Col>
             {stakeInfo.toAccess ? (
               !stakeInfo.currentUserEligible ? (
-                <>
+                <span>
                   <hr />
                   <p className="paragraph-2r">
                     {
@@ -109,20 +119,31 @@ export const Mood: NLView = () => {
                       </>
                     }
                   </p>
-                </>
+                </span>
               ) : (
-                <p>
+                <span>
                   <hr />
                   You are eligible to access this premium folder
-                </p>
+                </span>
               )
             ) : (
               <></>
             )}
+          </Col>
+
+          <Row style={{ flex: 1 }} />
+
+          {/* infobox */}
+          <Row className="nl-post-info-column__infobox-wrapper">
+            <Col className="nl-post-info-column__infobox-wrapper__col">
+              <LargeArrowBack />
+              <Share currentPostProps={currPost} />
+              <PostReportModal />
+            </Col>
           </Row>
-        </>
+          {/* infobox */}
+        </Row>
       }
-      isMood
     >
       {/* <UserWidgetHeading user={mood.author || {}} /> */}
 
@@ -130,7 +151,6 @@ export const Mood: NLView = () => {
       <TopFoldersGrid
         mood={mood}
         noFolder={true}
-        maxPosts={3}
         // postNumber={3}
         title="Moods"
       />

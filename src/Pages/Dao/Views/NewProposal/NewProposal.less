@@ -1,48 +1,87 @@
-.new-proposal-type-dropdown {
-	border-bottom: solid white 2px;
-	outline: none !important;
+.new-proposal-form {
+	.ant-btn {
+		height: 40px;
+	}
+}
+
+.new-proposal-title {
+	.super-size;
+	.u-margin-bottom-large;
+
+}
+
+.type-dropdown {
+	border-bottom: 2px white solid;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+	border: none;
+	box-shadow: none !important;
+}
+
+.ant-select-arrow {
+	display: block;
 }
 
 .new-proposal-note {
 	width: 500px;
 }
 
-.new-proposal-whitelist-ctn {
-	width: auto;
-	max-width: 1100px;
-	overflow: hidden;
-	text-align: center;
+.dao-checks {
+	display: flex;
+	flex-direction: row;
+	.u-gap-30;
+
+	p {
+		.u-margin-left-medium;
+		width: 250px;
+	}
+	justify-content: space-around;
+
 }
-.new-proposal-creator {
-	font-family: @nlui-fontfam-ABC-favorit-lining-bold;
-	margin-right: 16px;
-	margin-bottom: 16px;
-	border: none !important;
-	border-left: none !important;
-	border-right: none !important;
+.vote-time-btns {
+	.u-margin-bottom-30;
+	.u-margin-top-medium;
+	.u-margin-left-small;
 }
 
-.new-proposal-creator:focus-within {
-	color: black !important;
+.new-proposal-custom-time {
+	.u-margin-top-medium;
+	.u-margin-bottom-medium;
+	.ant-btn;
+	border-radius: 12.5px !important;
+	height: 40px;
+	display: flex;
+	align-items: center;
 }
 
-.new-proposal-creator:checked {
-	color: black !important;
+.share-proposal-btn {
+	.u-margin-top-medium;
+	height: 60px !important;
+	width: 275px;
 }
 
-.new-proposal-creator:active {
-	color: black !important;
+.time-select-btn-active {
+	.stroke-btn-green;
+	.u-dao-view-btn;
 }
 
-.new-proposal-see-all-btn {
-	margin-top: 20px;
+.time-select-btn-active:focus {
+	.stroke-btn-green;
+	.u-dao-view-btn;
 }
 
-.new-proposal-note {
-	color: #959595;
-	text-align: center;
+.time-select-btn-inactive:focus{
+	.stroke-btn-green;
+	.u-dao-view-btn;
 }
 
-.new-proposal-search {
-	border: solid red 2px;
+.time-select-btn-inactive {
+	.u-dao-view-btn;
 }
+
+.new-proposal-summary {
+	padding-top: 10px;
+}
+
+

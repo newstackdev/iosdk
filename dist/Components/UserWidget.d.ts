@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Callback, NLView } from "../types";
+import { Callback, IOView, NLView } from "../types";
 import { STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
 import { UserFlowRoutes } from "../Pages/User/User";
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
@@ -67,7 +67,7 @@ export declare const PoolInfoDataRow: NLView<{
     };
     verifyIconLight?: boolean;
 }>;
-export declare const UserNewcoinPoolsParticipation: NLView<{
+export declare const UserNewcoinPoolsParticipation: IOView<{
     user?: UserReadPrivateResponse;
     onStakeStart?: Callback;
     isWalletUsage?: boolean;

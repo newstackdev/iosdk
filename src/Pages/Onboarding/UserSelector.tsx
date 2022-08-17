@@ -1,14 +1,14 @@
-import { Button } from "antd/lib/radio";
 import { Col, Row } from "antd";
-import { ContentLayout } from "../../../Components/ContentLayout";
-import { ProgressButton } from "../../../Components/ProgressButton";
-import { TopCreators } from "../../../Components/Creators";
-import { useActions, useAppState } from "../../../overmind";
-import React, { useState } from "react";
+import { ContentLayout } from "../../Components/ContentLayout";
+import { IOView } from "../../types";
+import { ProgressButton } from "../../Components/ProgressButton";
+import { TopCreators } from "../../Components/Creators";
+import { useActions, useAppState } from "../../overmind";
+import { useState } from "react";
 
 type Props = {};
 
-const UserSelector = (props: Props) => {
+const UserSelector: IOView = (props: Props) => {
   const state = useAppState();
   const actions = useActions();
   const [addedUsers, setAddedUsers] = useState<string[]>([]);

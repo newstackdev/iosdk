@@ -12,6 +12,7 @@ import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { User } from "@firebase/auth";
 import { assert } from "console";
+import { debounce } from "lodash";
 import { useActions, useAppState, useEffects } from "../../overmind";
 import { useForm } from "antd/lib/form/Form";
 import { useHistory } from "react-router-dom";
@@ -33,9 +34,8 @@ export const UserCreate: NLView<
   EmbeddableControl & {
     hideUsername?: boolean;
     noRouing?: boolean;
-    setIsErrorSubmit: React.Dispatch<React.SetStateAction<boolean>>;
   }
-> = ({ hideUsername, noRouing, embedded, setNext, setIsErrorSubmit }) => {
+> = ({ hideUsername, noRouing, embedded, setNext }) => {
   const state = useAppState();
   const actions = useActions();
   const effects = useEffects();
@@ -48,7 +48,6 @@ export const UserCreate: NLView<
   useEffect(() => {
     actions.routing.setBreadcrumbs([{ text: "Create your profile" }]);
     // For imported users, if they have email, they should not be able to change it
-    console.log(state.flows.user.create.form.email);
     setIsEmailAvailable(!isEmpty(state.flows.user.create.form.email));
   }, []);
 
@@ -72,10 +71,8 @@ export const UserCreate: NLView<
 
     try {
       await form.validateFields();
-      setIsErrorSubmit(false);
     } catch (e: any) {
       console.log(e.errorFields.length);
-      setIsErrorSubmit(true);
       return;
     }
 
@@ -116,6 +113,8 @@ export const UserCreate: NLView<
           );
 
           actions.flows.user.create.updateForm(upd as UserCreateRequest);
+
+          sessionStorage.setItem("cachedOnboarding", JSON.stringify(state.flows.user.create));
         }}
         initialValues={sf}
       >
@@ -184,12 +183,20 @@ export const UserCreate: NLView<
           name="email"
           rules={[
             {
+              required: true,
               pattern: new RegExp(re),
               message: "Please input valid email.",
             },
           ]}
         >
-          <Input placeholder="email" suffix={<CrossCircleErr />} disabled={isEmailAvailable} />
+          <Input
+            placeholder="email"
+            suffix={<CrossCircleErr />}
+            disabled={
+              isEmailAvailable &&
+              (isEmpty(sessionStorage.getItem("cachedOnboarding")) || state.flows.user.create.isLegacyUpdateOngoing)
+            }
+          />
         </Form.Item>
 
         {/* <Form.Item

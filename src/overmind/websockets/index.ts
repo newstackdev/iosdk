@@ -2,7 +2,7 @@ import { Action } from "../../types";
 import { Context } from "../overmind";
 import { PostReadResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { debounce, derived, filter, json, pipe } from "overmind";
-import { get, uniq } from "lodash";
+import { get, omit, uniq } from "lodash";
 import { message, notification } from "antd";
 import { state } from "../auth/state";
 import websocket, { WSState } from "./effects";
@@ -12,7 +12,10 @@ import { capFirst } from "../../utils/capFirst";
 const toggleWebSocket: Action = pipe(debounce(500), async ({ state, effects, actions }: Context) => {
   if (!state.api.auth.authorized) return;
 
-  const token = state.firebase.token;
+  const token = state.firebase?.token;
+
+  if (!token) return;
+
   effects.websockets.newlife.toggle(state.config.settings.newgraph.websocketsServer, token);
 
   if (!token || !effects.websockets.newlife.socket) return;
@@ -91,7 +94,9 @@ const modelProcessors = {
   user: ({ state, actions }: Context, u: UserReadPrivateResponse) => {
     const curr = state.api.cache.users.byId[u.id ?? ""];
 
-    actions.api.user.cache({ user: { ...curr, ...u } });
+    if (Object.keys(omit(u, ["id", "label"])).length) {
+      actions.api.user.cache({ user: { ...curr, ...u } });
+    }
     // state.api.cache.users.byId[u.id ?? ""] = { ...state.api.cache.users.byId[u.id ?? ""], ...u };
     // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
   },

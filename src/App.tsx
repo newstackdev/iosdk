@@ -27,7 +27,7 @@ const AppShell: NLView = ({ children }) => {
 
   return (
     <>
-      <div style={{ position: "sticky", top: "10px", zIndex: 999 }}>
+      <div style={{ position: "sticky", zIndex: 999 }}>
         {!flags["bannerDisabled"] && (
           <div id="rssBlock">
             <div className={flags["banner"] ? "banner banner-expand" : "banner"}>

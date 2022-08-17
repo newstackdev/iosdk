@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { Discord } from "./Icons/Discord";
 import { FacebookIcon } from "./Icons/FacebookIcon";
 import { Instagram } from "./Icons/Instagram";
@@ -49,19 +50,19 @@ export const SocialLink: NLView<{
   return disableLink ? (
     <span className="nl-socialIcon">{getSocialIcon()}</span>
   ) : user[platform] ? (
-    <a
-      href={getSocialLink()}
-      target="_blank"
-      rel="noreferrer"
-      className={`nl-socialIcon ${
-        user.verifiedSocialIds?.includes(platform) ? "nl-verifyIcon-active" : "nl-verifyIcon-disabled"
-      }`}
-    >
-      {platform === "youtube" ? console.log(user) : false}
-      <span className="paragraph-3b stroke-btn-white" style={{ padding: "7px" }}>
-        {platform}
-      </span>
-    </a>
+    <Button className="stroke-btn-white nl-user-widget-heading__social-btn">
+      <a
+        href={getSocialLink()}
+        target="_blank"
+        rel="noreferrer"
+        className={`nl-socialIcon ${
+          user.verifiedSocialIds?.includes(platform) ? "nl-verifyIcon-active" : "nl-verifyIcon-disabled"
+        }`}
+      >
+        {platform === "youtube" ? console.log(user) : false}
+        <span className="paragraph-3b ">{platform}</span>
+      </a>
+    </Button>
   ) : (
     <></>
   );

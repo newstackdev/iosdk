@@ -45,16 +45,22 @@ export const CreatorWidget: NLView<{
   const symbol = poolInfo.code;
 
   return (
-    <Link to={`/user/${user.username}`}>
+    <Link to={`/user/${user.username}`} style={{ width: "50%" }}>
       <Row className="bg-hover app-full-width" style={{ alignItems: "center", justifyContent: "space-between" }}>
-        <Col className="top-creators-first-col u-margin-left-medium" xs={14}>
+        <Col className="top-creators-first-col u-margin-left-medium" xs={15}>
           <Col>
             <Avatar src={<ContentImage {...user} />} className={avatarClassName} />
           </Col>
-
-          <Row align="bottom">
-            <Col className="top-creators-username">
-              <p className="top-creators-username__paragraph">
+          <Row align="bottom" style={{ overflow: "hidden" }}>
+            <Col className="top-creators-username" style={{ overflow: "hidden" }}>
+              <p
+                className="top-creators-username__paragraph"
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {user.username}
                 {isUserVerified ? (
                   <span className="u-margin-left-medium">
@@ -65,14 +71,21 @@ export const CreatorWidget: NLView<{
                 )}
               </p>
               {symbol && (
-                <p className="paragraph-1r">
-                  powering {creator.powering} {symbol}
+                <p
+                  className="paragraph-1r"
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellips",
+                  }}
+                >
+                  powering {creator.powering} ${symbol}
                 </p>
               )}
             </Col>
           </Row>
         </Col>
-        <Col className="top-creators-second-col">
+        <Col className="top-creators-second-col" xl={10}>
           <Col className="top-creators-number">
             <p
               className="header-1r top-creators-powered"
@@ -86,7 +99,8 @@ export const CreatorWidget: NLView<{
               {creator.powered}
             </p>
           </Col>
-          <Col xs={12} style={{ display: "flex", justifyContent: "flex-end", zIndex: 9999 }}>
+          <Col />
+          <Col style={{ display: "flex", justifyContent: "flex-end", zIndex: 9999 }}>
             {buttonType === "addUser" ? (
               <Button
                 onClick={() => {
@@ -129,15 +143,16 @@ export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users, button
     <>
       {title === undefined && (
         <Row style={{ width: "100%" }}>
-          {/* <LargeArrowBack /> */}
           <p className="header-2 u-margin-bottom-medium">Explore top creators</p>
         </Row>
       )}
       <div style={{ width: "100%" }}>
         {maxItems && maxItems !== 100 ? <Title title={title} href="/top/creators" /> : <></>}
-        <div className="top-creators-wrapper">
-          {users?.map((creator) => (
-            <CreatorWidget creator={creator} buttonType={buttonType} setAddedUsers={setAddedUsers!} addedUsers={addedUsers} />
+        <div className="top-creators-wrapper" style={title ? { display: "flex", flexWrap: "wrap" } : {}}>
+          {users?.map((creator, index) => (
+            <>
+              <CreatorWidget creator={creator} buttonType={buttonType} setAddedUsers={setAddedUsers!} addedUsers={addedUsers} />
+            </>
           ))}
         </div>
       </div>

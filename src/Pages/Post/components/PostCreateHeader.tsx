@@ -1,11 +1,11 @@
 import { Col, Row } from "antd";
-import { Image } from "../../Components/Icons/Image";
-import { NLView } from "../../types";
-import { PicturesWall } from "../../Components/PicturesWall";
-import { Text } from "../../Components/Icons/Text";
-import { Video } from "../../Components/Icons/Video";
+import { Image } from "../../../Components/Icons/Image";
+import { NLView } from "../../../types";
+import { PicturesWall } from "../../../Components/PicturesWall";
+import { Text } from "../../../Components/Icons/Text";
+import { Video } from "../../../Components/Icons/Video";
 import Form from "antd/lib/form";
-import SupportBox from "../../Components/SupportBox";
+import SupportBox from "../../../Components/SupportBox";
 
 const PostCreateHeader: NLView<{
   contentType: string;

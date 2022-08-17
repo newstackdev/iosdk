@@ -1,281 +1,299 @@
 @keyframes App-logo-spin {
-	0% {
-		transform: rotate(0deg);
-	}
-	25% {
-		transform: rotate(90deg);
-	}
-	50% {
-		transform: rotate(90deg);
-	}
-	75% {
-		transform: rotate(180deg);
-	}
-	100% {
-		transform: rotate(180deg);
-	}
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(90deg);
+  }
+
+  50% {
+    transform: rotate(90deg);
+  }
+
+  75% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(180deg);
+  }
 }
 
 @keyframes bounce {
-	0% {
-		transform: scale(1.1);
-		opacity: 1;
-	}
-	50% {
-		transform: scale(1.6);
-		opacity: 0.7;
-	}
-	60% {
-		transform: scale(0.6);
-		opacity: 1;
-	}
-	80% {
-		transform: scale(0.95);
-	}
-	100% {
-		transform: scale(0.85);
-	}
+  0% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.6);
+    opacity: 0.7;
+  }
+
+  60% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+
+  80% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(0.85);
+  }
 }
 
 .bounce {
-	animation: bounce 1s 0.5s;
-	transform: scale(0.85);
+  animation: bounce 1s 0.5s;
+  transform: scale(0.85);
 }
 
 .zoom-in-out-box {
-	// margin: 24px;
-	// width: 50px;
-	// height: 50px;
-	animation: zoom-in-zoom-out 1s ease infinite;
+  // margin: 24px;
+  // width: 50px;
+  // height: 50px;
+  animation: zoom-in-zoom-out 1s ease infinite;
 }
 
 @keyframes zoom-in-zoom-out {
-	0% {
-		transform: scale(1, 1);
-	}
-	50% {
-		transform: scale(1.2, 1.2);
-	}
-	100% {
-		transform: scale(1, 1);
-	}
+  0% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    transform: scale(1.2, 1.2);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
 }
 
 /* scrolling-left is continuous/repeatly text */
 @keyframes scrolling-left1 {
-	0% {
-		transform: translateX(100%);
-		-webkit-transform: translateX(100%);
-	}
-	100% {
-		transform: translateX(-100%);
-		-webkit-transform: translateX(-100%);
-	}
+  0% {
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+  }
 }
+
 @keyframes scrolling-left2 {
-	0% {
-		transform: translateX(0%);
-		-webkit-transform: translateX(0%);
-	}
-	100% {
-		transform: translateX(-200%);
-		-webkit-transform: translateX(-200%);
-	}
+  0% {
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-200%);
+    -webkit-transform: translateX(-200%);
+  }
 }
 
 @-webkit-keyframes scrolling-left1 {
-	0% {
-		-webkit-transform: translateX(100%);
-	}
-	100% {
-		-webkit-transform: translateX(-100%);
-	}
+  0% {
+    -webkit-transform: translateX(100%);
+  }
+
+  100% {
+    -webkit-transform: translateX(-100%);
+  }
 }
+
 @-webkit-keyframes scrolling-left2 {
-	0% {
-		-webkit-transform: translateX(0%);
-	}
-	100% {
-		-webkit-transform: translateX(-200%);
-	}
+  0% {
+    -webkit-transform: translateX(0%);
+  }
+
+  100% {
+    -webkit-transform: translateX(-200%);
+  }
 }
 
 .rotating {
-	transform-origin: 50% 50%;
-	animation: App-logo-spin infinite 2s linear;
-	.flex-center();
+  transform-origin: 50% 50%;
+  animation: App-logo-spin infinite 2s linear;
+  .flex-center();
 }
 
 .rotating-pulse {
-	transform-origin: 50% 50%;
-	animation: App-logo-spin infinite 4s linear,
-		zoom-in-zoom-out 1s ease infinite;
-	.flex-center();
+  transform-origin: 50% 50%;
+  animation: App-logo-spin infinite 4s linear, zoom-in-zoom-out 1s ease infinite;
+  .flex-center();
 }
 
 .text-small {
-	font-size: 0.7em;
+  font-size: 0.7em;
 }
 
 .text-center {
-	text-align: center;
+  text-align: center;
 }
 
 .text-left {
-	text-align: left;
+  text-align: left;
 }
 
 .text-right {
-	text-align: right;
+  text-align: right;
 }
 
 .text-bold {
-	font-weight: boldu;
+  font-weight: boldu;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-	.App-logo {
-		animation: App-logo-spin infinite 20s linear;
-	}
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
 .flex-center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .flex-center-top {
-	display: flex;
-	justify-content: start;
-	align-items: center;
+  display: flex;
+  justify-content: start;
+  align-items: center;
 }
 
 .u-margin-right-xs {
-	margin-right: 5px;
+  margin-right: 5px;
 }
 
 .u-margin-left-xs {
-	margin-left: 5px;
+  margin-left: 5px;
 }
 
 .u-margin-bottom-xs {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .u-margin-top-xs {
-	margin-top: 5px;
+  margin-top: 5px;
 }
 
 .u-margin-right-small {
-	margin-right: 10px;
+  margin-right: 10px;
 }
 
 .u-margin-left-small {
-	margin-left: 10px;
+  margin-left: 10px;
 }
 
 .u-margin-bottom-small {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .u-margin-top-small {
-	margin-top: 10px;
+  margin-top: 10px;
 }
 
 .u-margin-right-15 {
-	margin-right: 15px;
+  margin-right: 15px;
 }
 
 .u-margin-left-15 {
-	margin-left: 15px;
+  margin-left: 15px;
 }
 
 .u-margin-bottom-15 {
-	margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .u-margin-top-15 {
-	margin-top: 15px;
+  margin-top: 15px;
 }
 
 .u-margin-right-medium {
-	margin-right: 20px;
+  margin-right: 20px;
 }
 
 .u-margin-left-medium {
-	margin-left: 20px;
+  margin-left: 20px;
 }
 
 .u-margin-bottom-medium {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .u-margin-top-medium {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 .u-margin-right-30 {
-	margin-top: 30px;
+  margin-top: 30px;
 }
 
 .u-margin-left-30 {
-	margin-top: 30px;
+  margin-top: 30px;
 }
 
 .u-margin-bottom-30 {
-	margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .u-margin-top-30 {
-	margin-top: 30px;
+  margin-top: 30px;
 }
 
 .u-margin-top-large {
-	margin-top: 40px;
+  margin-top: 40px;
 }
 
 .u-margin-right-large {
-	margin-right: 40px;
+  margin-right: 40px;
 }
 
 .u-margin-left-large {
-	margin-left: 40px;
+  margin-left: 40px;
 }
 
 .u-margin-bottom-large {
-	margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 .u-margin-bottom-mega {
-	margin-bottom: 80px;
+  margin-bottom: 80px;
 }
 
 .u-margin-top-mega {
-	margin-top: 80px;
+  margin-top: 80px;
 }
 
 .u-margin-right-mega {
-	margin-right: 80px;
+  margin-right: 80px;
 }
 
 .u-margin-left-mega {
-	margin-left: 80px;
+  margin-left: 80px;
 }
 
 .u-gap-40 {
-	gap:40px;
+  gap: 40px;
+}
+
+.u-gap-30 {
+  gap: 30px;
 }
 
 .u-gap-20 {
-	gap:20px;
+  gap: 20px;
 }
 
 .u-gap-15 {
-	gap:15px;
+  gap: 15px;
 }
 
 .u-gap-10 {
-	gap:10px
+  gap: 10px;
 }
-

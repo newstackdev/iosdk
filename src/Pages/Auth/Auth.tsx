@@ -1,8 +1,10 @@
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
 import { ContentLayout } from "../../Components/ContentLayout";
-import { EmbeddableControl } from "../../types";
+import { EmbeddableControl, IOView } from "../../types";
+import { EmbeddableControlNextCommand } from "../../types";
+import { NextButton } from "../Onboarding";
 import { useActions, useAppState } from "../../overmind";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CodeForm from "./UI-Components/forms/CodeForm";
 import Form from "antd/lib/form";
 import PhoneForm from "./UI-Components/forms/PhoneForm";
@@ -12,9 +14,11 @@ export const layout = {
   wrapperCol: { span: 24 },
 };
 
-export const Auth = ({ embedded, setNext, setIsErrorSubmit }: React.PropsWithChildren<EmbeddableControl>) => {
+export const Auth: IOView<{ embedded: boolean }> = ({ embedded }) => {
   const state = useAppState();
   const actions = useActions();
+  const [nextCommand, setNextCommand] = useState<{ text: string; command: () => void }>();
+  const [isErrorSubmit, setIsErrorSubmit] = useState(false);
 
   const [phoneForm] = Form.useForm();
   const [codeForm] = Form.useForm();
@@ -24,13 +28,17 @@ export const Auth = ({ embedded, setNext, setIsErrorSubmit }: React.PropsWithChi
   }, []);
 
   useEffect(() => {
-    if (state.api.auth.authorized && state.routing.location === "/auth") actions.routing.historyPush({ location: "/explore" });
-  }, [state.api.auth.authorized, state.routing.location]);
+    if (
+      state.api.auth.authorized &&
+      (state.routing.location === "/auth" || state.routing.location === "/signup/auth") &&
+      !state.flows.user.create.isLegacyUpdateOngoing
+    )
+      actions.routing.historyPush({ location: "/explore" });
+  }, [state.api.auth.authorized, state.routing.location, state.flows.user.create.isLegacyUpdateOngoing]);
 
-  const _setNext = () => {
-    embedded &&
-      setNext &&
-      setNext(
+  useEffect(() => {
+    if (embedded) {
+      setNextCommand(
         state.auth.status === AUTH_FLOW_STATUS.ANONYMOUS
           ? {
               text: "Send verification",
@@ -40,20 +48,8 @@ export const Auth = ({ embedded, setNext, setIsErrorSubmit }: React.PropsWithChi
           ? { text: "Verify", command: () => codeForm.submit() }
           : undefined,
       );
-
-    return () => setNext && setNext(undefined);
-  };
-
-  useEffect(_setNext, [state.auth.status]);
-
-  // if (state.auth.authenticated && state.api.auth.user.id)
-  // 	if (state.auth.authenticated)
-  // 		return (
-  // 			<p>
-  // 				You are logged in. Go <Link to="/explore">explore</Link>!
-  // 			</p>
-  // 		);
-
+    }
+  }, [state.auth.status]);
   const FragmentWrapper = ({ children }) => {
     if (state.routing.location === "/auth") return <ContentLayout customClass="app-content-layout">{children}</ContentLayout>;
     else {
@@ -67,10 +63,7 @@ export const Auth = ({ embedded, setNext, setIsErrorSubmit }: React.PropsWithChi
       <PhoneForm setIsErrorSubmit={setIsErrorSubmit} embedded={embedded} phoneForm={phoneForm} />
       <CodeForm setIsErrorSubmit={setIsErrorSubmit} embedded={embedded} codeForm={codeForm} />
 
-      {/* TODO do we need this here? */}
-      {/* <div style={{ maxWidth: 640, margin: "auto" }}>
-				<IndeterminateProgressAction actionName="auth.firebaseVerifyPhone" />
-			</div> */}
+      {embedded && <NextButton nextProps={nextCommand} isErrorSubmit={isErrorSubmit} />}
       <div className="support-box__fix-height" hidden={embedded} />
     </FragmentWrapper>
   );

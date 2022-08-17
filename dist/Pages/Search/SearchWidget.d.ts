@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { Callback, NLView } from "../../types";
 export declare const UserSearchResultsWidget: NLView<{
@@ -13,4 +14,6 @@ export declare const SearchWidget: NLView<{
     noNavigation?: boolean;
     onChange?: Callback;
     showSearch?: boolean;
+    setSelection?: React.Dispatch<React.SetStateAction<string>>;
+    selection?: string;
 }>;

@@ -1,4 +1,4 @@
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { CrossCircle } from "./Icons/CrossCircle";
 import { Edit } from "./Icons/Edit";
 import { Input, Modal, Row, Upload } from "antd";
@@ -62,7 +62,7 @@ export class PicturesWall extends React.Component {
                         // customRequest={({ file, onSuccess }) => {
                         //   onSuccess && onSuccess(() => ({ body: "ok", xhr: {} as XMLHttpRequest }));
                         // }}
-                        openFileDialogOnClick: true, children: fileList.length > 0 ? null : this.props.name === "avatar" ? (_jsx(Row, { style: { textAlign: "left" }, children: _jsx(Edit, {}) })) : (_jsx("div", { className: "paragraph-2b", style: { fontSize: 17 }, children: "Drag and drop content here!" })) }), _jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: previewVisible, title: previewTitle, footer: null, onCancel: this.handleCancel, children: _jsx("img", { alt: "example", style: { width: "100%" }, src: previewImage }) })] })) }));
+                        openFileDialogOnClick: true, children: fileList.length > 0 ? null : this.props.name === "avatar" ? (_jsx(Row, { style: { textAlign: "left" }, children: _jsx(Edit, {}) })) : (_jsxs("div", { className: "paragraph-2b", style: { fontSize: 17 }, children: ["Drag and drop content here!", _jsx("br", {}), " JPEG, PNG, GIF"] })) }), _jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: previewVisible, title: previewTitle, footer: null, onCancel: this.handleCancel, children: _jsx("img", { alt: "example", style: { width: "100%" }, src: previewImage }) })] })) }));
     }
 }
 export const PictureWallFormItem = ({ onChange, uploadText }) => {

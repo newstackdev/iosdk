@@ -8,6 +8,9 @@ declare const _default: {
         setLayout: Action<{
             headerShown: boolean;
         }, void>;
+        setFooterVisibility: Action<{
+            footerShown: boolean;
+        }, void>;
     };
     effects: {
         notification: import("antd/lib/notification").NotificationApi;
@@ -16,6 +19,7 @@ declare const _default: {
     state: {
         layout: {
             headerShown: boolean;
+            footerShown: boolean;
         };
     };
 };

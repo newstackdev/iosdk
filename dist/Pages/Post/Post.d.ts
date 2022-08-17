@@ -1,5 +1,15 @@
 import { NLView } from "../../types";
-import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+export declare const useVotingStreamMood: () => {
+    nextPath: () => string;
+    currMood: MoodReadResponse & {
+        promise?: Promise<any> | null | undefined;
+    };
+    currPost: PostReadResponse;
+    index: number;
+    contextType: string;
+    contextValue: string;
+};
 declare const useVotingStreamTags: () => {
     nextPath: () => string;
     currPost: PostReadResponse;

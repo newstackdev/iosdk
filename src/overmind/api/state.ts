@@ -59,7 +59,7 @@ export default {
     status: AUTH_FLOW_STATUS.ANONYMOUS,
     attempted: false,
     userDisplayHandler: derived((state: AuthorizedUserState, rs: any) => {
-      return state.user?.username || (rs.firebase.user?.phoneNumber || "") + (state.user?.id ? "*" : "");
+      return state.user?.username || (rs.firebase?.user?.phoneNumber || "...") + (state.user?.id ? "*" : "");
     }),
     authorized: derived((s: AuthorizedUserState, rs: any) => rs.auth.status >= AUTH_FLOW_STATUS.AUTHORIZED),
     admitted: derived((s: AuthorizedUserState) => ["admitted", "registered"].includes(s.user?.status || "")),

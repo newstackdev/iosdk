@@ -1,8 +1,8 @@
 import { Button, Col, Modal, Row } from "antd";
-import { CrossCircle } from "../../Components/Icons/CrossCircle";
-import { NLView } from "../../types";
-import { RowCheckbox } from "../../Components/RowCheckbox";
-import { ThreeDots } from "../../Components/Icons/ThreeDots";
+import { CrossCircle } from "../../../Components/Icons/CrossCircle";
+import { NLView } from "../../../types";
+import { RowCheckbox } from "../../../Components/RowCheckbox";
+import { ThreeDots } from "../../../Components/Icons/ThreeDots";
 import { useState } from "react";
 
 const PostReportModal: NLView = ({ children }) => {

@@ -1,5 +1,5 @@
 import { namespaced } from "overmind/config";
-import create from "./create";
+import create from "./onboarding";
 
 export default namespaced({
   create,

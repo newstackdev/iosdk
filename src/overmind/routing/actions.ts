@@ -1,7 +1,9 @@
 // import { NONPOSTAUTHLOCATIONS } from "../../constants";
 import { Action, Link } from "../../types";
 import { History } from "history";
-import { ROUTE_ACCESS_LEVELS } from "./state";
+import { State } from "../overmind";
+import { States, Wizard, routesToCreateWizard } from "../flows/user/onboarding/wizardStateMachine";
+import isEmpty from "lodash/isEmpty";
 
 const naiveQSDecode = (search: string = ""): Record<string, string> =>
   search
@@ -32,7 +34,7 @@ export const routeAfterAuth: Action<undefined> = async ({ state, actions }) => {
     return;
   }
 
-  const nextRoute = !state.api.auth.authorized ? "/user-create" : state.routing.preLoginRoute || "/explore";
+  // const nextRoute = !state.api.auth.authorized ? "/user-create" : state.routing.preLoginRoute || "/explore";
   //  ||
   // (NONPOSTAUTHLOCATIONS.includes(p) ?
   //     "/explore" : p);
@@ -55,6 +57,26 @@ export const goBack: Action = ({ actions, state }) => {
   actions.routing.historyPush({ location: bh ? uriFromLocation(bh) : "/" });
 };
 
+const onRouteChangeWizard = (pathname: string, state: State) => {
+  const restrictedPrev = ["HASH_VERIFY", "AUTHENTICATE"];
+  if (!state.api.auth.authorized) {
+    if (!isEmpty(state.flows.user.create.progressedSteps)) {
+      if (routesToCreateWizard[pathname]) {
+        state.flows.user.create.progressedSteps = state.flows.user.create.progressedSteps.map((step, i) => {
+          if (step.current === routesToCreateWizard[pathname]) {
+            if (restrictedPrev.includes(routesToCreateWizard[pathname])) {
+              location.replace("/");
+              return;
+            }
+            state.flows.user.create.wizard = Wizard.create(step as States, step[i]);
+          }
+          return step;
+        });
+      }
+    }
+  }
+};
+
 export const onRouteChange: Action<{
   location: { pathname: string; search: string };
 }> = async ({ state, actions }, { location: { pathname, search } }) => {
@@ -62,6 +84,8 @@ export const onRouteChange: Action<{
   actions.routing.setPreloginRoute();
 
   state.routing.simpleHistory.push({ pathname, search });
+
+  onRouteChangeWizard(pathname, state);
 
   const lastBh = last(state.routing.backHistory);
   if (lastBh) {

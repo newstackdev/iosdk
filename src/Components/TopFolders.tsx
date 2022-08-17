@@ -18,7 +18,7 @@ const MAX_ALLOWED_POSTS = 5;
 
 export const TopFoldersGrid: NLView<{
   mood: MoodReadResponse;
-  maxPosts: number | undefined;
+  maxPosts?: number;
   title: string | undefined;
   noFolder?: boolean;
   wrap?: boolean;
@@ -43,11 +43,11 @@ export const TopFoldersGrid: NLView<{
           height: "auto",
           display: "flex",
           justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
-          // flexWrap: "unset",
+          flexWrap: "unset",
         }}
         wrap={true}
         className={`${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${
-          title === "Moods" ? "nl-mood-grid-row-four" : ""
+          title === "Moods" ? "nl-mood-grid-row-five" : ""
         }`}
       >
         {/* // folder */}

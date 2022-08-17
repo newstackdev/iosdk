@@ -78,7 +78,7 @@ export const Vote: NLView<{
 
   return (
     <ContentLayout
-      isPost={true}
+      isVote={true}
       header={
         <div
           style={{
@@ -117,7 +117,7 @@ export const Vote: NLView<{
     >
       <div className="nl-fullsize-image-container">
         <div
-          className="flex-center nl-fullsize-image app-main-full-height-only post-img-wrapper"
+          className="flex-center nl-fullsize-image app-main-full-height-only nl-post-img-wrapper"
           onMouseDown={touchClickVoteStart}
           onMouseUp={touchClickVoteStop}
           onTouchStart={touchClickVoteStart}
@@ -125,7 +125,7 @@ export const Vote: NLView<{
           onContextMenu={preventEvent}
         >
           {children}
-        </div>{" "}
+        </div>
       </div>
 
       {/* green line */}

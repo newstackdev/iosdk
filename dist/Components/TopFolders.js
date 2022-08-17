@@ -17,8 +17,8 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
                 height: "auto",
                 display: "flex",
                 justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
-                // flexWrap: "unset",
-            }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-four" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
+                flexWrap: "unset",
+            }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-five" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
                             justifyContent: "center",
                             flexDirection: "column",
                             aspectRatio: "1/1",

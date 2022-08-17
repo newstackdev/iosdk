@@ -2,11 +2,19 @@ import { IContext } from "overmind";
 import { PartialConfiguration } from "../config";
 export declare const config: (cfg: PartialConfiguration) => {
     state: import("overmind/lib/internalTypes").SubType<{
+        firebase: {
+            token: string;
+            user: import("@firebase/auth").User | null;
+        };
         config: {
             env: {
                 stage: string;
             };
             settings: {
+                app: {
+                    name: string;
+                    currentHost: string;
+                };
                 newcoin: {
                     daoId: string;
                     daoDomain: string;
@@ -20,7 +28,7 @@ export declare const config: (cfg: PartialConfiguration) => {
                     websocketsServer: any;
                 };
                 routing: {
-                    routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE) => boolean>;
+                    routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE, gst: import("overmind/lib/internalTypes").SubType<any, object>) => boolean>;
                 };
                 stripe: {
                     publicKey: any;
@@ -79,10 +87,6 @@ export declare const config: (cfg: PartialConfiguration) => {
             location: string;
             isAllowed: any;
         };
-        firebase: {
-            token: string;
-            user: import("@firebase/auth").User | null;
-        };
         websockets: {
             socket: WebSocket | null;
             messages: {
@@ -111,6 +115,7 @@ export declare const config: (cfg: PartialConfiguration) => {
         ux: {
             layout: {
                 headerShown: boolean;
+                footerShown: boolean;
             };
         };
         chromeext: unknown;
@@ -238,74 +243,7 @@ export declare const config: (cfg: PartialConfiguration) => {
         };
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
-                create: {
-                    form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
-                        couponCode?: string | undefined;
-                    }>;
-                    justCreated: boolean;
-                    legacyToken: string;
-                    legacyUsername: string;
-                    isLegacyUpdateOngoing: boolean;
-                    formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
-                    wizard: ({
-                        current: "SELECT_DOMAIN";
-                        hasNext: boolean;
-                        hasPrev: false;
-                    } | {
-                        current: "AUTHENTICATE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "SUBSCRIBE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "CREATE_USER";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "DONE";
-                        hasNext: false;
-                        hasPrev: false;
-                    }) & {
-                        current: string;
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } & import("overmind/lib/statemachine").MachineMethods<{
-                        current: "SELECT_DOMAIN";
-                        hasNext: boolean;
-                        hasPrev: false;
-                    } | {
-                        current: "AUTHENTICATE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "SUBSCRIBE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "CREATE_USER";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "DONE";
-                        hasNext: false;
-                        hasPrev: false;
-                    }, {
-                        type: "NEXT";
-                        data: import("./flows/user/create/wizardStateMachine").WizardInput;
-                    } | {
-                        type: "PREV";
-                        data: import("./flows/user/create/wizardStateMachine").WizardInput;
-                    } | {
-                        type: "UPDATE";
-                        data: import("./flows/user/create/wizardStateMachine").WizardInput;
-                    }, {
-                        current: string;
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    }>;
-                };
+                create: import("./flows/user/onboarding/state").IOnboarding;
             }, object>;
             rating: {
                 _value: number;
@@ -355,12 +293,11 @@ export declare const config: (cfg: PartialConfiguration) => {
                 votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
+        unsid: {
+            token: string;
+        };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
-        config: unknown;
-        indicators: unknown;
-        auth: typeof import("./auth/effects");
-        routing: {};
         firebase: {
             initialize(firebaseConfig: import("@firebase/app").FirebaseOptions): import("@firebase/auth").Auth;
             initRecaptchaVerifier(containerOrId?: string | HTMLElement): void;
@@ -377,6 +314,10 @@ export declare const config: (cfg: PartialConfiguration) => {
             }): Promise<import("@firebase/auth").UserCredential | undefined>;
             logout(): Promise<void>;
         };
+        config: unknown;
+        indicators: unknown;
+        auth: typeof import("./auth/effects");
+        routing: {};
         websockets: {
             newlife: import("./websockets/effects").WSState;
         };
@@ -415,8 +356,10 @@ export declare const config: (cfg: PartialConfiguration) => {
             vote: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
+        unsid: {};
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
+        firebase: typeof import("./firebase/actions");
         config: unknown;
         indicators: {
             isWorking: import("../types").Action<{
@@ -429,7 +372,6 @@ export declare const config: (cfg: PartialConfiguration) => {
         };
         auth: typeof import("./auth/actions");
         routing: typeof import("./routing/actions");
-        firebase: typeof import("./firebase/actions");
         websockets: {
             toggleWebSocket: import("../types").Action<undefined, void>;
             processIncoming: import("../types").Action<{
@@ -476,6 +418,9 @@ export declare const config: (cfg: PartialConfiguration) => {
             setLayout: import("../types").Action<{
                 headerShown: boolean;
             }, void>;
+            setFooterVisibility: import("../types").Action<{
+                footerShown: boolean;
+            }, void>;
         };
         chromeext: typeof import("./chromeext/actions");
         api: {
@@ -508,7 +453,7 @@ export declare const config: (cfg: PartialConfiguration) => {
         };
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
-                create: typeof import("./flows/user/create/actions");
+                create: typeof import("./flows/user/onboarding/actions");
             }, object>;
             rating: {
                 deepLikeInit: import("../types").Action<undefined, void>;
@@ -530,6 +475,13 @@ export declare const config: (cfg: PartialConfiguration) => {
             vote: typeof import("./flows/vote/actions");
         }, object>;
         newcoin: typeof import("./newcoin/actions");
+        unsid: {
+            onInitializeOvermind: import("../types").Action<undefined, void>;
+            authorize: import("../types").Action<{
+                jwt: string;
+            }, void>;
+            logout: import("../types").Action<undefined, void>;
+        };
     }, object>;
 };
 export declare type State = ReturnType<typeof config>["state"];

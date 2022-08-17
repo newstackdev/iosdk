@@ -40,29 +40,6 @@ export declare const standardModules: {
             isAllowed: any;
         };
     };
-    firebase: {
-        actions: typeof import("./firebase/actions");
-        effects: {
-            initialize(firebaseConfig: import("@firebase/app").FirebaseOptions): import("@firebase/auth").Auth;
-            initRecaptchaVerifier(containerOrId?: string | HTMLElement): void;
-            clearRecaptchaVerifier: () => void;
-            requestPhoneAuthCode(v: {
-                phone: string;
-            }): Promise<import("@firebase/auth").ConfirmationResult>;
-            requestEmailAuthCode(v: {
-                email: string;
-            }): Promise<void>;
-            signInWithEmailLink(email: string, emailLink: string): Promise<void>;
-            submitPhonVerificationCode(v: {
-                phoneVerificationCode: string;
-            }): Promise<import("@firebase/auth").UserCredential | undefined>;
-            logout(): Promise<void>;
-        };
-        state: {
-            token: string;
-            user: import("@firebase/auth").User | null;
-        };
-    };
     websockets: {
         state: {
             socket: WebSocket | null;
@@ -143,6 +120,9 @@ export declare const standardModules: {
             setLayout: import("../types").Action<{
                 headerShown: boolean;
             }, void>;
+            setFooterVisibility: import("../types").Action<{
+                footerShown: boolean;
+            }, void>;
         };
         effects: {
             notification: import("antd/lib/notification").NotificationApi;
@@ -151,6 +131,7 @@ export declare const standardModules: {
         state: {
             layout: {
                 headerShown: boolean;
+                footerShown: boolean;
             };
         };
     };
@@ -321,74 +302,7 @@ export declare const standardModules: {
     flows: {
         state: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
-                create: {
-                    form: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
-                        couponCode?: string | undefined;
-                    }>;
-                    justCreated: boolean;
-                    legacyToken: string;
-                    legacyUsername: string;
-                    isLegacyUpdateOngoing: boolean;
-                    formUsernameIsAvailable: "" | "available" | "checking" | "unavailable";
-                    wizard: ({
-                        current: "SELECT_DOMAIN";
-                        hasNext: boolean;
-                        hasPrev: false;
-                    } | {
-                        current: "AUTHENTICATE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "SUBSCRIBE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "CREATE_USER";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "DONE";
-                        hasNext: false;
-                        hasPrev: false;
-                    }) & {
-                        current: string;
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } & import("overmind/lib/statemachine").MachineMethods<{
-                        current: "SELECT_DOMAIN";
-                        hasNext: boolean;
-                        hasPrev: false;
-                    } | {
-                        current: "AUTHENTICATE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "SUBSCRIBE";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "CREATE_USER";
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    } | {
-                        current: "DONE";
-                        hasNext: false;
-                        hasPrev: false;
-                    }, {
-                        type: "NEXT";
-                        data: import("./flows/user/create/wizardStateMachine").WizardInput;
-                    } | {
-                        type: "PREV";
-                        data: import("./flows/user/create/wizardStateMachine").WizardInput;
-                    } | {
-                        type: "UPDATE";
-                        data: import("./flows/user/create/wizardStateMachine").WizardInput;
-                    }, {
-                        current: string;
-                        hasNext: boolean;
-                        hasPrev: boolean;
-                    }>;
-                };
+                create: import("./flows/user/onboarding/state").IOnboarding;
             }, object>;
             rating: {
                 _value: number;
@@ -447,7 +361,7 @@ export declare const standardModules: {
         }, object>;
         actions: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
-                create: typeof import("./flows/user/create/actions");
+                create: typeof import("./flows/user/onboarding/actions");
             }, object>;
             rating: {
                 deepLikeInit: import("../types").Action<undefined, void>;
@@ -486,5 +400,18 @@ export declare const standardModules: {
                 votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
+    };
+    unsid: {
+        actions: {
+            onInitializeOvermind: import("../types").Action<undefined, void>;
+            authorize: import("../types").Action<{
+                jwt: string;
+            }, void>;
+            logout: import("../types").Action<undefined, void>;
+        };
+        state: {
+            token: string;
+        };
+        effects: {};
     };
 };

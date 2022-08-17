@@ -5,7 +5,7 @@ mkdir $1
 cd $1
 yarn add @newcoin-foundation/iosdk @types/react@17.0.44
 
-template=${2-default}
+template=${2-plain}
 
 rsync -av node_modules/@newcoin-foundation/iosdk/templates/$template/ .
 

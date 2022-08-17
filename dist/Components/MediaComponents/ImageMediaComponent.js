@@ -3,6 +3,7 @@ import { Image as ADImage } from "antd";
 import { Blurhash } from "react-blurhash";
 import { Profile } from "../Icons/Profile";
 import { Spin } from "../Spin";
+import { isEmpty } from "lodash";
 import { useAppState } from "../../overmind";
 const imageSizes = {
     small: "500",
@@ -17,7 +18,7 @@ export const useContentImageUrl = ({ id, contentUrl, size }) => {
     return contentUrl ? `${state.config.settings.newgraph.mediaBucket}/images/${id}/${sizer}${contentUrl}` : "";
 };
 export const ImageComponent = (props) => {
-    const { size, blurHash, width, height, neverHide, isVisible, overrideContentUrl, thumbnail,
+    const { size, blurHash, width, height, neverHide, isVisible, overrideContentUrl, menuAvatar, thumbnail,
     // imgSize
      } = props;
     const _sizer = imageSizes[size || ""];
@@ -27,10 +28,20 @@ export const ImageComponent = (props) => {
     const placeholder = blurHash ? _jsx(Blurhash, { hash: blurHash, width: width, height: height }) : true;
     // if (true)
     // 	return <div>{overrideContentUrl?.toString() || "x"}</div>
-    if (/^(processing|failed)$/.test(props.contentUrl || ""))
+    if (/^(processing|failed)$/.test(props.contentUrl || "") || isEmpty(imgUrl))
         return (_jsxs("div", { children: [_jsx("br", {}), _jsx(Spin, {})] }));
-    else if (!props.contentUrl)
+    else if (imgUrl === "" && menuAvatar)
         return _jsx(Profile, {});
+    else if (imgUrl === "" && menuAvatar !== true)
+        return (_jsx("div", { style: {
+                backgroundColor: "#424242",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "10px",
+                borderRadius: "8px",
+            } }));
     else
         return (_jsx(ADImage, { ...props, 
             // ref={props.ref}

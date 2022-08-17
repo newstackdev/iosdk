@@ -9,9 +9,11 @@ import Form from "antd/lib/form";
 const CodeForm = ({ setIsErrorSubmit, embedded, codeForm }) => {
     const state = useAppState();
     const actions = useActions();
-    return (_jsxs(Form, { form: codeForm, ...layout, hidden: state.auth.status !== AUTH_FLOW_STATUS.RECEIVED, name: "basic", initialValues: { phoneVerificationCode: "" }, onFinish: ({ phoneVerificationCode }) => actions.firebase.verifyPhone({
-            phoneVerificationCode,
-        }), autoComplete: "off", children: [_jsx(Form.Item, { label: "Phone verification", name: "phoneVerificationCode", rules: [
+    return (_jsxs(Form, { form: codeForm, ...layout, hidden: state.auth.status !== AUTH_FLOW_STATUS.RECEIVED, name: "basic", initialValues: { phoneVerificationCode: "" }, onFinish: async ({ phoneVerificationCode }) => {
+            await actions.firebase.verifyPhone({
+                phoneVerificationCode,
+            });
+        }, autoComplete: "off", children: [_jsx(Form.Item, { label: "Phone verification", name: "phoneVerificationCode", rules: [
                     {
                         required: true,
                         message: "Enter your verification code",

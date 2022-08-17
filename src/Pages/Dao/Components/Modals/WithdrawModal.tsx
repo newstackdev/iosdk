@@ -34,8 +34,8 @@ export const WithdrawForm = ({ vote_id, quantity }) => {
 
   return (
     <div style={{ color: "white" }}>
-      <Button className={"u-dao-view-btn"} onClick={() => setMode(withdrawStates.start)}>
-        Withdraw {quantity || ""}
+      <Button className={"power-up-btn"} onClick={() => setMode(withdrawStates.start)}>
+        Withdraw {Math.round(quantity) || ""}
       </Button>
       &nbsp;
       <NewcoinRecept tx={tx} visible={mode == withdrawStates.reciept} onDone={endWithdrawing}>
@@ -47,21 +47,29 @@ export const WithdrawForm = ({ vote_id, quantity }) => {
         closeIcon={<CrossCircle />}
         visible={mode == withdrawStates.start && quantity}
         onCancel={() => setMode(withdrawStates.disabled)}
-        className="nl-white-box-modal view-proposal-vote-ctn"
+        className="modal-ctn"
         footer={[]}
       >
-        <p>Your vote for this expired proposal is ready to be withdrawn</p>
-        <br />
+        <h2>This proposal has expired!</h2>
+        <p>Your vote is ready to be withdrawn</p>
+
         {quantity && (
           <ProgressButton
             actionName={"newcoin.daoWithdrawVoteDeposit"}
             progressText="Withdrawing..."
-            type={"primary"}
             onClick={withdraw}
+            className={"confirm-btn"}
           >
-            Withdraw {quantity}
+            Withdraw {Math.round(quantity)}
           </ProgressButton>
         )}
+
+        <Button onClick={() => setMode(withdrawStates.disabled)} className={"cancel-btn"}>
+          {" "}
+          Cancel
+        </Button>
+
+        <p>This is only on Testnet! Need help? Join our telegram group!</p>
       </Modal>
     </div>
   );

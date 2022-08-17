@@ -2,7 +2,7 @@ import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 export declare const TopFoldersGrid: NLView<{
     mood: MoodReadResponse;
-    maxPosts: number | undefined;
+    maxPosts?: number;
     title: string | undefined;
     noFolder?: boolean;
     wrap?: boolean;

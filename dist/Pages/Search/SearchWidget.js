@@ -2,8 +2,9 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import { Avatar, Col, Row, Select } from "antd";
 import { ContentImage } from "../../Components/Image";
 import { Searchicon } from "../../Components/Icons/Searchicon";
+import { Tag } from "antd-latest";
 import { UsersList } from "../../Components/UserWidget";
-import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
+import { VerifiedIcon } from "../..//Components/Icons/VerifiedIcon";
 import { json } from "overmind";
 import { map, uniqBy } from "lodash";
 import { useActions, useAppState } from "../../overmind";
@@ -42,20 +43,19 @@ const SearchResultsByMode = {
     "@": UserSearchResultsWidget,
     "#": TagsAutosuggestWidget,
 };
-export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch }) => {
+export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch, setSelection, selection }) => {
     const state = useAppState();
     const actions = useActions();
     const [query, setQuery] = useState("");
-    const [selection, setSelection] = useState("");
     const [visible, setVisible] = useState(false);
-    const [open, setOpen] = useState(true);
     const [mouseVisible, setMouseVisible] = useState(false);
-    const [justNavigated, setJustNavigated] = useState(false);
+    const [open, setOpen] = useState(true);
     const [loading, setLoading] = useState(false);
     const [filterState, setFilterState] = useState(undefined);
     const foundUsers = state.lists.search.users?.results?.value || [];
     const foundTags = Array.from(new Set((state.lists.search.tags?.results?.value || []).map((t) => t.tag))) || [];
     const { verifiedUsers } = useVerified(map(foundUsers, "username"));
+    const [currVal, setCurrVal] = useState("");
     useEffect(() => {
         const searchForResults = async () => {
             if (query.length < 3)
@@ -68,39 +68,69 @@ export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onCh
         };
         searchForResults();
     }, [query]);
-    return (_jsxs(Row, { align: "bottom", children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), onMouseOver: () => setMouseVisible(true), onMouseOut: () => setMouseVisible(false), children: _jsx(Searchicon, {}) }), _jsx("div", { children: !(showSearch || visible) && !mouseVisible ? (_jsx(_Fragment, {})) : (_jsxs(Select, { className: "search-widget", showSearch: true, allowClear: true, open: open && query.length >= 3, clearIcon: !loading ? (_jsx("div", { style: {
+    const _setSelection = (v = "") => {
+        setSelection && setSelection(v);
+        onChange && onChange(v);
+        setCurrVal(v);
+    };
+    const setInitialState = () => {
+        setQuery("");
+        // _setSelection && _setSelection("");
+    };
+    const onSearch = (query) => {
+        setQuery(query);
+        setOpen(true);
+    };
+    const onSelect = (value) => {
+        setOpen(false);
+        const mode = /^[@#]/.test(value[0]) ? value[0] : "#";
+        const v = value.replace(/^[@#]/, "");
+        const path = mode === "#" ? `/search?tags=${v}` : `/user/${v}`;
+        if (v === selection?.toString()) {
+            return;
+        }
+        if (!noNavigation)
+            actions.routing.historyPush({
+                location: path,
+            });
+        setVisible(false);
+        _setSelection(v);
+        setQuery("");
+    };
+    // const onDeselect = (value: string) => {
+    //   const v = value.replace(/^[@#]/, "");
+    //   setSelection && setSelection((p) => [...p.filter((pVal) => pVal !== v)]);
+    // };
+    const tagRender = (props) => {
+        const { label, value, closable, onClose } = props;
+        const onPreventMouseDown = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+        return (_jsx(Tag, { color: value, onMouseDown: onPreventMouseDown, closable: closable, onClose: () => {
+                _setSelection();
+                onClose();
+            }, children: label }));
+    };
+    return (_jsxs(Row, { align: "bottom", children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), onMouseOver: () => setMouseVisible(true), onMouseOut: () => setMouseVisible(false), children: _jsx(Searchicon, {}) }), _jsx("div", { children: !(showSearch || visible) && !mouseVisible ? (_jsx(_Fragment, {})) : (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
                             position: "absolute",
                             right: -10,
                             color: "white",
-                        }, className: "paragraph-2b", onClick: () => setOpen(false), children: "Cancel" })) : (_jsx(_Fragment, {})), value: selection || [], loading: loading, defaultActiveFirstOption: true, filterOption: false, autoFocus: true, style: { marginTop: 12, width: "min(350px,80vw)" }, placeholder: "Search...", onSearch: (v) => {
-                        setQuery(v);
-                        setOpen(true);
-                        setJustNavigated(false);
-                    }, onBlur: () => setSelection(""), onSelect: (val) => {
-                        if (justNavigated)
-                            return;
-                        const mode = /^[@#]/.test(val[0]) ? val[0] : "#";
-                        const v = val.replace(/^[@#]/, "");
-                        const path = mode === "#" ? `/search?tags=${v}` : `/user/${v}`;
-                        setQuery("");
-                        if (!noNavigation)
-                            actions.routing.historyPush({
-                                location: path,
-                            });
-                        setSelection(v);
-                        onChange && onChange(v);
-                        setJustNavigated(true);
-                        // if(mode === "@")
-                    }, dropdownRender: (menu) => (_jsxs("div", { children: [_jsx(Row, { style: {
+                        }, className: "paragraph-2b", onClick: () => setInitialState(), children: "Cancel" })) : (_jsx(_Fragment, {})), 
+                    // value={selection ? undefined : []}
+                    // tagRender={tagRender}
+                    searchValue: query, loading: loading, autoFocus: true, open: open, style: { marginTop: 12, width: "min(350px,80vw)" }, placeholder: "Search...", onSearch: (query) => onSearch(query), onBlur: () => setInitialState(), onSelect: (value) => onSelect(value), 
+                    // onDeselect={onDeselect}
+                    dropdownRender: (menu) => (_jsxs(_Fragment, { children: [_jsx(Row, { style: {
                                     backgroundColor: "#A5A1A1",
                                     padding: 10,
-                                }, children: foundUsers.length > 0 && foundTags.length > 0 ? (_jsxs(_Fragment, { children: [_jsx(Col, { className: filterState === "Member" ? "filter-tag filter-tag__active" : "filter-tag", onClick: () => {
+                                }, children: foundUsers.length > 0 && foundTags.length > 0 && searchTags && searchUsers ? (_jsxs(_Fragment, { children: [_jsx(Col, { className: filterState === "Member" ? "filter-tag filter-tag__active" : "filter-tag", onClick: () => {
                                                 setFilterState("Member");
                                                 setVisible(true);
                                             }, children: _jsx("p", { className: "paragraph-2b", children: "Member" }) }), _jsx(Col, { className: filterState === "Tag" ? "filter-tag filter-tag__active" : "filter-tag", onClick: () => {
                                                 setFilterState("Tag");
                                                 setVisible(true);
-                                            }, children: _jsx("p", { className: "paragraph-2b", children: "Hashtag" }) })] })) : (_jsx(Col, { className: "filter-tag", children: _jsx("p", { className: "paragraph-2b", children: "No filters available." }) })) }), menu] })), children: [foundUsers?.map((u) => {
+                                            }, children: _jsx("p", { className: "paragraph-2b", children: "Hashtag" }) })] })) : (_jsx(_Fragment, {})) }), menu] })), children: [foundUsers?.map((u) => {
                             const isUserVerified = verifiedUsers && u.username && verifiedUsers.includes(u.username);
                             if (filterState === "Tag")
                                 return;

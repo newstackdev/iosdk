@@ -1,6 +1,6 @@
 import "./App.less";
 import "./Pages/Auth/styles/AuthForms.less";
-import "./Pages/DomainPresale/styles/DomainPresale.less";
+import "./Pages/Onboarding/styles/DomainPresale.less";
 import "./index.css";
 import { config } from "./config";
 import { overmind } from "./overmind";

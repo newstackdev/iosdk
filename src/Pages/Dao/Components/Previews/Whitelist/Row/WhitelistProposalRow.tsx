@@ -2,6 +2,7 @@ import { ApproveModal } from "../../../Modals/ApproveModal";
 import { Avatar, Button, Col, Row } from "antd";
 import { ContentImage } from "../../../../../../Components/Image";
 import { ExecuteModal } from "../../../Modals/ExecuteModal";
+import { GetWhitelistedModal } from "../../../Modals/GetWhitelistedModal";
 import { Hands, ProgressBar } from "../../../Icons";
 import { Link } from "react-router-dom";
 import { StakeModal } from "../../../Modals/StakeModal";
@@ -18,6 +19,8 @@ export const WhitelistProposalRow = (props: { daoOwner; buttonType; proposal; pr
   const currUser = state.api.auth.user?.username || "";
   const daoOwner = props.daoOwner || state.config.settings.newcoin.daoDomain;
   const proposalId = props.proposal.id;
+  const yesVotes = Number(props.proposal.vote_yes?.quantity?.split(" ")[0]);
+  const noVotes = Number(props.proposal.vote_no?.quantity?.split(" ")[0]);
 
   const proposal = useCachedDaoWhitelistProposal({
     daoOwner,
@@ -41,7 +44,7 @@ export const WhitelistProposalRow = (props: { daoOwner; buttonType; proposal; pr
   const isUserVerified = verifiedUsers && proposer && verifiedUsers.includes(proposer);
 
   return (
-    <Link to={`/dao/${props.daoOwner}/whitelist-proposal/${proposalId}`}>
+    <Link to={`/dao/${props.daoOwner}/member-proposal/${proposalId}`}>
       <Row className={"wlst-row-wrapper"} justify={"space-between"}>
         <Row align={"top"} className={"u-dao-gap-40"}>
           <Col>
@@ -59,9 +62,11 @@ export const WhitelistProposalRow = (props: { daoOwner; buttonType; proposal; pr
               <Avatar src={<ContentImage {...newMember} />} className="wlst-member-avi" />
               <p className={"wlst-member-username"}> {(proposal as any).user}</p>
             </Link>
-            <p className="paragraph-2b">YES votes: {proposal.vote_yes?.quantity}</p>
-            <p className="u-margin-bottom-15 paragraph-2b">NO votes: {proposal.vote_no?.quantity} </p>
-            <ProgressBar width={"642px"} proposal={proposal} />
+            <Row align={"middle"} justify={"space-between"} className={"view-proposal-votes-ctn"}>
+              <p className="paragraph-2b"> {yesVotes} yes votes </p>
+              <p className="paragraph-2b"> {noVotes} no votes </p>
+            </Row>
+            <ProgressBar width={"750px"} proposal={proposal} />
             <p className="paragraph-2b">
               {timeData.time_left_seconds > 0 ? "Ending" : "Ended"} {timeData.time_left_from_now}{" "}
             </p>
@@ -70,71 +75,16 @@ export const WhitelistProposalRow = (props: { daoOwner; buttonType; proposal; pr
 
         <Col>
           <Row justify={"end"}>
-            {props.buttonType ? (
-              <Link to={`/dao/${daoOwner}/proposal/${proposal.id}`}>
-                <Button className={"u-dao-view-btn"}>View</Button>
-              </Link>
-            ) : (
-              <Row className={"proposal-list-btns-ctn"}>
-                <Button className={`u-dao-proposal-${status_tag}-tag-status-btn u-margin-right-medium`}>
-                  <span>{status_tag}</span>
-                </Button>
-                {["View", "GetWhitelisted", "SeeOthers"].includes(action_type) && !props.embedded && (
-                  <Link to={`/dao/${daoOwner}/proposal/${proposal.id}`}>
-                    <Button className={"u-dao-view-btn"}>View</Button>
-                  </Link>
-                )}
-                <StakeModal visible={action_type == "Stake"} daoOwner={daoOwner} />
-                {action_type == "Approve" && (
-                  <ApproveModal proposal_type={"standart"} dao_owner={daoOwner} proposal_id={proposal.id} />
-                )}
-                <VoteModal
-                  proposal_type={"standart"}
-                  daoOwner={daoOwner}
-                  proposal={proposal}
-                  proposalId={proposal.id}
-                  visible={action_type == "Vote"}
-                />
-                {["Withdraw", "Execute"].includes(action_type) && vote?.id && (
-                  <WithdrawForm vote_id={vote?.id} quantity={vote?.quantity?.quantity} />
-                )}
-                {/* {(action_type == "GetWhitelisted") &&
-                    <Link to={`/dao/${daoOwner}/proposals/${proposal.id}`} >
-                        <Button className={"u-dao-view-btn"}>View</Button>
-                    </Link>
-                }(
-                {(action_type == "SeeOthers") &&
-                    <Link to={`/dao/${daoOwner}/proposals/${proposal.id}`} >
-                        <Button className={"u-dao-view-btn"}>View (seeOthers)</Button>
-                    </Link>
-                } */}
-                {action_type == "Execute" && (
-                  <ExecuteModal
-                    dao_owner={daoOwner}
-                    proposal_type={"standart"}
-                    dao_id={proposal.id}
-                    proposal_id={proposal.id}
-                    proposal_author={proposal.proposer}
-                  />
-                )}
-                {action_type == "Voted" && (
-                  <Button className={"u-dao-view-btn"}>
-                    <small>Voted {vote?.quantity?.quantity}</small>
-                  </Button>
-                )}
-              </Row>
-            )}
+            <Link to={`/dao/${daoOwner}/proposal/${proposal.id}`}>
+              <Button className={"u-dao-view-btn"}>View</Button>
+            </Link>
           </Row>
           <Row align={"middle"} className={"wlst-row-usr-details"}>
             <Link className={""} to={`/user/${proposal.proposer}`}>
               <Avatar src={<ContentImage {...proposerObj} />} />
             </Link>
             <p className={"header-3"}>{proposal.proposer} </p>
-            {isUserVerified && (
-              <span>
-                <VerifiedIcon />
-              </span>
-            )}
+            {isUserVerified && <VerifiedIcon />}
           </Row>
         </Col>
       </Row>

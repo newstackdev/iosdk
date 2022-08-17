@@ -3,7 +3,7 @@ import { Form, Input } from "antd";
 import { IUserInvite } from "./interfaces/IUser";
 import { NLView } from "../../types";
 import { ProgressButton } from "../../Components/ProgressButton";
-import { SOCIAL_MEDIA } from "../../Components/UserWidget";
+import { SocialMediaInputs } from "src/Components/Input/SocialMediaInputs";
 import { Spin } from "../../Components/Spin";
 import { useActions } from "../../overmind";
 import { useForm } from "antd/lib/form/Form";
@@ -15,11 +15,13 @@ export const UserInvite: NLView = () => {
   const actions = useActions();
   const [status, setStatus] = useState<"start" | "inprogress" | "failed" | "done">("start");
   const [fullName, setFullName] = useState<string | undefined>(undefined);
+  const [hash, setHash] = useState<string | undefined>();
 
   const onFinish = async (data: IUserInvite) => {
     try {
       setFullName(data.fullName);
-      await actions.api.user.invite({ userInvite: data });
+      const responseHash = await actions.api.user.invite({ userInvite: data });
+      setHash(responseHash);
       setStatus("done");
     } catch (ex) {
       setStatus("failed");
@@ -37,7 +39,7 @@ export const UserInvite: NLView = () => {
     case "failed":
       return <div>Something went wrong</div>;
     case "done":
-      return <UserInviteInfo invitedUsername={fullName} setStatus={setStatus} form={form} />;
+      return <UserInviteInfo invitedUsername={fullName} setStatus={setStatus} form={form} hash={hash} />;
     case "start":
       return (
         <ContentLayout customClass="text-center">
@@ -46,6 +48,7 @@ export const UserInvite: NLView = () => {
           </p>
           <Form
             name="basic"
+            className={"nl-user-invite-form"}
             form={form}
             // labelCol={{ span: 6 }}
             wrapperCol={{ span: 24 }}
@@ -54,7 +57,6 @@ export const UserInvite: NLView = () => {
             // onFinishFailed={onFinishFailed}
             autoComplete="off"
             initialValues={{}}
-            style={{ width: "40%" }}
           >
             <Form.Item
               name="fullName"
@@ -90,11 +92,7 @@ export const UserInvite: NLView = () => {
             >
               <Input placeholder="email" />
             </Form.Item>
-            {SOCIAL_MEDIA.map((social) => (
-              <Form.Item name={social} key={social}>
-                <Input placeholder={social} />
-              </Form.Item>
-            ))}
+            <SocialMediaInputs />
             <Form.Item>
               <div className="u-margin-top-large">
                 <ProgressButton actionName="api.user.invite" progressText="Inviting user..." type="primary" htmlType="submit">

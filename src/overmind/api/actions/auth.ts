@@ -38,7 +38,7 @@ export const authorize: Action<undefined> = async ({ state, actions, effects }) 
 };
 
 export const logout: Action<{ keepFbUser?: boolean } | undefined> = async ({ state, actions, effects }, config) => {
-  if (!config?.keepFbUser) {
+  if (!config?.keepFbUser && state.firebase) {
     state.firebase.token = "";
     state.firebase.user = null;
   }

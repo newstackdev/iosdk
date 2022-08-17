@@ -1,12 +1,14 @@
 import { debounce, filter, pipe } from "overmind";
-import { uniq } from "lodash";
+import { omit, uniq } from "lodash";
 import websocket from "./effects";
 // import { newlifeWebsocketsServer } from "../../config";
 import { capFirst } from "../../utils/capFirst";
 const toggleWebSocket = pipe(debounce(500), async ({ state, effects, actions }) => {
     if (!state.api.auth.authorized)
         return;
-    const token = state.firebase.token;
+    const token = state.firebase?.token;
+    if (!token)
+        return;
     effects.websockets.newlife.toggle(state.config.settings.newgraph.websocketsServer, token);
     if (!token || !effects.websockets.newlife.socket)
         return;
@@ -42,7 +44,9 @@ const processIncomingNewcoin = //({ reaction, actions, state }, { msg })
 const modelProcessors = {
     user: ({ state, actions }, u) => {
         const curr = state.api.cache.users.byId[u.id ?? ""];
-        actions.api.user.cache({ user: { ...curr, ...u } });
+        if (Object.keys(omit(u, ["id", "label"])).length) {
+            actions.api.user.cache({ user: { ...curr, ...u } });
+        }
         // state.api.cache.users.byId[u.id ?? ""] = { ...state.api.cache.users.byId[u.id ?? ""], ...u };
         // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
     },

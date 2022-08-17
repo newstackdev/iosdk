@@ -1,8 +1,8 @@
 import { Checkbox, Col, Row } from "antd";
-import { ContentPreview } from "../../Components/EmbedContent/ContentPreview";
-import { LICENSES } from "../../constants";
-import { NLView } from "../../types";
-import { ProgressButton } from "../../Components/ProgressButton";
+import { ContentPreview } from "../../../Components/EmbedContent/ContentPreview";
+import { LICENSES } from "../../../constants";
+import { NLView } from "../../../types";
+import { ProgressButton } from "../../../Components/ProgressButton";
 import isEmpty from "lodash/isEmpty";
 
 export type LicenseProps = { name: string; value: string };
@@ -43,12 +43,11 @@ const PostCreateInfo: NLView<{
         <div
           style={{
             width: "100%",
-            height: "100%",
             display: "flex",
             justifyContent: "end",
             flexDirection: "column",
-            textAlign: "center",
-            alignItems: "center",
+            textAlign: "end",
+            alignItems: "end",
           }}
         >
           {embedSwitch && contentType === "text/plain" && !isEmpty(content) && !isLoading && <ContentPreview content={content} />}

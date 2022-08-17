@@ -14,7 +14,7 @@ import useForm from "antd/lib/form/hooks/useForm";
 import { Ebene } from "../../Components/Icons/Ebene";
 import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
-import PostReportModal from "./PostModal";
+import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
 import { BlockExplorerLink } from "../../Components/Links";
 import { Clipboard } from "../../Components/Icons/Clipboard";
@@ -31,7 +31,7 @@ import { findFirstUrl } from "../../utils/urlHelpers";
 import { json } from "overmind";
 import { useVerified } from "../../hooks/useVerified";
 
-const useVotingStreamMood = () => {
+export const useVotingStreamMood = () => {
   const { moodId, postId, id } = useParams<{
     moodId: string;
     postId: string;
@@ -277,6 +277,14 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           polygons: JSON.parse(t._rel?.find((r) => r.source === "vision")?.polygons || "[]"),
         })) || [];
 
+    useEffect(() => {
+      actions.ux.setFooterVisibility({ footerShown: false });
+
+      return () => {
+        actions.ux.setFooterVisibility({ footerShown: true });
+      };
+    }, []);
+
     return (
       <>
         <Vote
@@ -299,68 +307,50 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
             };
           }}
           info={
-            <Row className="post-info-column">
-              <Col>
-                <p className="header-2 u-margin-bottom-medium" hidden={currPost.title === null ? true : false}>
-                  {currPost.title}
-                </p>
-              </Col>
-              <Col
-                style={{
-                  textAlign: "right",
-                  padding: 10,
-                  flex: 0.3,
-                }}
-              >
-                <Link
-                  to={`/user/${username}`}
-                  style={{
-                    wordBreak: "break-all",
-                    maxWidth: "100%",
-                    minHeight: "1.5em",
-                    textAlign: "left",
-                    display: "flex",
-                    alignItems: "left",
-                    flexDirection: "column",
-                  }}
-                >
+            <Row className="nl-post-info-column">
+              {currPost.title && (
+                <Col>
+                  <p className="header-2 u-margin-bottom-medium">{currPost.title}</p>
+                </Col>
+              )}
+              <Col style={{ flex: 0.3, overflow: "overlay" }} className="text-right">
+                <Link to={`/user/${username}`} className="nl-post-info-column__user-info">
                   <span className="paragraph-2b u-margin-bottom-medium">
                     {username}
                     {isVerifiedUser && <VerifiedIcon style={{ marginRight: 20 }} />}
                   </span>
                   <span className="paragraph-2r">{currPost.description}</span>
                 </Link>
+                {currPost.author?.newcoinPoolTx && (
+                  <Row className="paragraph-2u u-margin-top-medium" align="bottom">
+                    <a
+                      href={"https://explorer-dev.newcoin.org/account/" + currPost.author?.username}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Creator pool
+                    </a>
+                    <Ebene />
+                  </Row>
+                )}
+                {currPost?.author?.newcoinPoolTx && (
+                  <Row className="u-margin-top-medium text-left">
+                    {currPost.newcoinMintTx === "REQUESTED" ? (
+                      /* + currPost.newcoinMintTx || ""*/
+                      <p className="paragraph-2b">Minting NFT...</p>
+                    ) : currPost.newcoinMintTx === "FAILED" ? (
+                      <p className="paragraph-2b">NFT Minting failed, please contact us for more details</p>
+                    ) : (
+                      <>
+                        <BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
+                          See minted NFT
+                        </BlockExplorerLink>
+                        <NFTIcon />
+                      </>
+                    )}
+                  </Row>
+                )}
               </Col>
-              {currPost.author?.newcoinPoolTx ? (
-                <Row className="paragraph-2u" align="bottom" style={{ marginTop: "20px" }}>
-                  <a
-                    href={"https://explorer-dev.newcoin.org/account/" + currPost.author?.username}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Creator pool
-                  </a>
-                  <Ebene />
-                </Row>
-              ) : (
-                ""
-              )}
-              {currPost.newcoinMintTx && (
-                <Row className="paragraph-2b" align="bottom">
-                  {currPost.newcoinMintTx === "REQUESTED" ? (
-                    "Minting NFT..." /* + currPost.newcoinMintTx || ""*/
-                  ) : currPost.newcoinMintTx === "FAILED" ? (
-                    <>NFT Minting failed, please contact us for more details</>
-                  ) : (
-                    <>
-                      <BlockExplorerLink explorer="newcoin" id={currPost.newcoinMintTx}>
-                        See minted NFT
-                      </BlockExplorerLink>
-                      <NFTIcon />
-                    </>
-                  )}
-                </Row>
-              )}
 
               {/* <CopyToClipboard text={url}>
 							<Tooltip
@@ -383,77 +373,51 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
 									<Clipboard />
 								</button>
 							</Tooltip>
-						</CopyToClipboard> */}
+						  </CopyToClipboard> */}
 
               {/* Tags */}
               {isEyeOpened && currPost.tags?.length ? (
-                <>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      cursor: "pointer",
-                      flex: 0.4,
-                      alignContent: "center",
-                      padding: 20,
-                    }}
-                  >
-                    {[
-                      ...visionTags?.sort(bySumScore),
-                      ...nonVisionTags
-                        // 	?.sort(bySumScore)
-                        .slice(0, Math.max(0, 20 - visionTags.length)),
-                    ]
-                      // ?.slice(0, 10)
-                      ?.map((t) => {
-                        const tag = t.value;
-                        const score = (sumScore(t["_rel"]) * 100).toFixed(0);
+                <Row className="nl-post-info-column__tags-wrapper">
+                  {[
+                    ...visionTags?.sort(bySumScore),
+                    ...nonVisionTags
+                      // 	?.sort(bySumScore)
+                      .slice(0, Math.max(0, 20 - visionTags.length)),
+                  ]
+                    // ?.slice(0, 10)
+                    ?.map((t) => {
+                      const tag = t.value;
+                      const score = (sumScore(t["_rel"]) * 100).toFixed(0);
 
-                        return (
-                          <Row
-                            onMouseOver={() => setHilightTag(visionTags.filter((s) => s.value === t.value))}
-                            onMouseOut={() => setHilightTag([])}
-                            className="paragraph-3b tag"
-                            style={{
-                              backgroundColor: t.polygons?.length ? "#b3ff00" : "white",
-                            }}
-                          >
-                            <div className="u-margin-right-xs">{score}%</div>
-                            <p>{tag}</p>
-                          </Row>
-                        );
-                      })}
-                  </div>
-                </>
+                      return (
+                        <Row
+                          onMouseOver={() => setHilightTag(visionTags.filter((s) => s.value === t.value))}
+                          onMouseOut={() => setHilightTag([])}
+                          className="paragraph-3b nl-post-info-column__infobox-wrapper__col__tag"
+                          style={{
+                            backgroundColor: t.polygons?.length ? "#c9fd50" : "#fcfcf3",
+                          }}
+                        >
+                          <div className="u-margin-right-xs">{score}%</div>
+                          <p>{tag}</p>
+                        </Row>
+                      );
+                    })}
+                </Row>
               ) : (
-                <div style={{ flex: 0.4 }}></div>
+                <Row style={{ flex: 0.4 }} />
               )}
-              {isEyeOpened && currPost.tags?.length === undefined && <>no tags found.</>}
+              {isEyeOpened && currPost.tags?.length === undefined && <p className="paragraph-2b">no tags found.</p>}
               {/* Tags */}
 
               {/* infobox */}
-              <Row
-                style={{
-                  flex: 0.3,
-                  alignContent: "end",
-                }}
-              >
-                <Col
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "baseline",
-                    borderTop: "1px solid white",
-                    padding: 10,
-                  }}
-                >
+              <Row className="nl-post-info-column__infobox-wrapper">
+                <Col className="nl-post-info-column__infobox-wrapper__col">
                   <LargeArrowBack />
                   {currPost.tags?.length ? (
                     isEyeOpened ? (
                       <span
-                        className="u-margin-left-small"
-                        style={{ cursor: "pointer" }}
+                        className="u-margin-left-small cursor-pointer"
                         onClick={() => {
                           setHilightTag([]);
                           setIsEyeOpened(false);
@@ -464,7 +428,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
                         <EyeOpen />
                       </span>
                     ) : (
-                      <span style={{ cursor: "pointer" }} onClick={() => setIsEyeOpened(true)}>
+                      <span className="cursor-pointer" onClick={() => setIsEyeOpened(true)}>
                         <EyeClosed />
                       </span>
                     )
@@ -475,6 +439,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
                   <PostReportModal />
                 </Col>
               </Row>
+              {/* infobox */}
             </Row>
           }
         >
@@ -485,11 +450,9 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           )}
           {hilightTag?.length ? <SvgPolygons visionTags={hilightTag} /> : <></>}
         </Vote>
-        {
-          <div hidden={state.flows.rating.value !== 100} className="app-main-full-width">
-            <SelectMoodForm onFinish={addToMoods} title="Select a folder to share to" />
-          </div>
-        }
+        <div hidden={state.flows.rating.value !== 100} className="app-main-full-width">
+          <SelectMoodForm onFinish={addToMoods} title="Add a folder" />
+        </div>
       </>
     );
   };

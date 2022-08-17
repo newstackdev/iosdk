@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Button } from "antd";
 import { Discord } from "./Icons/Discord";
 import { FacebookIcon } from "./Icons/FacebookIcon";
 import { Instagram } from "./Icons/Instagram";
@@ -38,6 +39,6 @@ export const SocialLink = ({ platform, user, disableLink }) => {
                 return `https://${platform}.com/${user[platform]}`;
         }
     };
-    return disableLink ? (_jsx("span", { className: "nl-socialIcon", children: getSocialIcon() })) : user[platform] ? (_jsxs("a", { href: getSocialLink(), target: "_blank", rel: "noreferrer", className: `nl-socialIcon ${user.verifiedSocialIds?.includes(platform) ? "nl-verifyIcon-active" : "nl-verifyIcon-disabled"}`, children: [platform === "youtube" ? console.log(user) : false, _jsx("span", { className: "paragraph-3b stroke-btn-white", style: { padding: "7px" }, children: platform })] })) : (_jsx(_Fragment, {}));
+    return disableLink ? (_jsx("span", { className: "nl-socialIcon", children: getSocialIcon() })) : user[platform] ? (_jsx(Button, { className: "stroke-btn-white nl-user-widget-heading__social-btn", children: _jsxs("a", { href: getSocialLink(), target: "_blank", rel: "noreferrer", className: `nl-socialIcon ${user.verifiedSocialIds?.includes(platform) ? "nl-verifyIcon-active" : "nl-verifyIcon-disabled"}`, children: [platform === "youtube" ? console.log(user) : false, _jsx("span", { className: "paragraph-3b ", children: platform })] }) })) : (_jsx(_Fragment, {}));
 };
 //# sourceMappingURL=SocialLink.js.map

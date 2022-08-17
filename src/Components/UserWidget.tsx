@@ -1,7 +1,7 @@
 // import "./styles/UserWidget.less";
 import { Avatar, Button, Col, Input, List, Modal, Row, Slider, Tooltip } from "antd";
 import { BlockExplorerLink } from "../Components/Links";
-import { Callback, NLView } from "../types";
+import { Callback, IOView, NLView } from "../types";
 import { ContentImage } from "../Components/Image";
 import { CrossCircle } from "../Components/Icons/CrossCircle";
 import { DataRow } from "../Components/DataRow";
@@ -116,6 +116,12 @@ export const UserStake: NLView<{
   const stakeDelta = (membershipValue || 0) - (preStakeValue || 0);
 
   const hasDao = !!poolInfo.code; // && /\.(io|nco)$/.test(user?.username || "");
+
+  const closeWallet = () =>
+    actions.flows.userJourney.setFlag({
+      flag: "walletShown",
+      value: "",
+    });
 
   useEffect(() => {
     setMode(mode ?? STAKE_STEPS.DISABLED);
@@ -306,7 +312,7 @@ export const UserStake: NLView<{
           </Col>
           <Col span={24} className="u-margin-top-large">
             <Button
-              className="nl-button-primary stake-button-modal"
+              className="stake-button-modal"
               onClick={() => {
                 setMode(STAKE_STEPS.CONFIRM);
               }}
@@ -367,9 +373,12 @@ export const UserStake: NLView<{
       ) : (
         <ProgressButton
           actionName="api.user.stake"
-          onClick={() => startStaking()}
-          className="nl-button-primary"
+          onClick={() => {
+            closeWallet();
+            startStaking();
+          }}
           progressText="Staking..."
+          type="primary"
         >
           {buttonText || "Stake"}
         </ProgressButton>
@@ -570,14 +579,16 @@ export const UserWidgetHeading: NLView<{
       : `https://web-dev.newlife.io${user?.username}`;
   const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
   const daoProposals = useCachedDaoProposals({ daoOwner });
+  const poolInfo = useCachedPool({ owner: user?.username });
+
+  const symbol = poolInfo.code;
+
+  const isDAOMember = ((state.newcoin.pools || {})[symbol] || 0) / 1000;
 
   if (!user) return <></>;
   // return <Card title={""}
   // cover={<ContentImage width="100%" src={user.contentUrl} />}
   // >
-
-  const poolInfo = useCachedPool({ owner: user?.username });
-  const symbol = poolInfo.code;
 
   let poweredNumber: string | number = u.powered || 0;
   let poweringNumber: string | number = u.powering || 0;
@@ -706,11 +717,7 @@ export const UserWidgetHeading: NLView<{
         >
           <Col xs={24} xl={24} className="username">
             <Row className="user-widget-heading__powering" style={{ justifyContent: "space-between" }}>
-              <Col
-                onClick={() => setActiveKey && setActiveKey("Powered")}
-                className="user-widget-heading__powerup-number"
-                style={{ marginRight: "2%" }}
-              >
+              <Col onClick={() => setActiveKey && setActiveKey("Powered")} className="user-widget-heading__powerup-number">
                 <span>
                   <p className="header-1r">{poweredNumber}</p>
                   <p className="paragraph-2r">powered by</p>
@@ -724,7 +731,10 @@ export const UserWidgetHeading: NLView<{
               </Col>
               <Col xs={12} sm={12} className="powerup text-right">
                 <UserPowerup user={u} />
-                {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
+                <div style={{ width: "100px", textAlign: "center", margin: "0 0 0 auto" }}>
+                  {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
+                  {isDAOMember && <p className="paragraph-2r">staked</p>}
+                </div>
                 {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
                 <Row style={{ justifyContent: "flex-end", alignItems: "center" }} className="u-margin-top-medium">
                   <Share urlToShare={URL} user={user} />
@@ -994,7 +1004,7 @@ export const PoolInfoDataRow: NLView<{
   // <>${poolInfo?.owner} {JSON.stringify(poolInfo)}</>;
 };
 
-export const UserNewcoinPoolsParticipation: NLView<{
+export const UserNewcoinPoolsParticipation: IOView<{
   user?: UserReadPrivateResponse;
   onStakeStart?: Callback;
   isWalletUsage?: boolean;

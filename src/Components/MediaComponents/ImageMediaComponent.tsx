@@ -1,11 +1,10 @@
-import { Image as ADImage, ImageProps, Skeleton } from "antd";
+import { Image as ADImage } from "antd";
 import { Blurhash } from "react-blurhash";
 import { ContentElement, ContentImageProps, Sizes } from "./types";
 import { Profile } from "../Icons/Profile";
 import { Spin } from "../Spin";
-import { previewImg } from "./constants";
+import { isEmpty } from "lodash";
 import { useAppState } from "../../overmind";
-import React from "react";
 
 const imageSizes: Record<Sizes, string> = {
   small: "500",
@@ -32,6 +31,7 @@ export const ImageComponent: ContentElement = (props) => {
     neverHide,
     isVisible,
     overrideContentUrl,
+    menuAvatar,
     thumbnail,
     // imgSize
   } = props;
@@ -45,14 +45,28 @@ export const ImageComponent: ContentElement = (props) => {
 
   // if (true)
   // 	return <div>{overrideContentUrl?.toString() || "x"}</div>
-  if (/^(processing|failed)$/.test(props.contentUrl || ""))
+  if (/^(processing|failed)$/.test(props.contentUrl || "") || isEmpty(imgUrl))
     return (
       <div>
         <br />
         <Spin />
       </div>
     );
-  else if (!props.contentUrl) return <Profile />;
+  else if (imgUrl === "" && menuAvatar) return <Profile />;
+  else if (imgUrl === "" && menuAvatar !== true)
+    return (
+      <div
+        style={{
+          backgroundColor: "#424242",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "10px",
+          borderRadius: "8px",
+        }}
+      ></div>
+    );
   else
     return (
       <ADImage
