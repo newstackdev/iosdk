@@ -14,8 +14,9 @@ Blockchain development is hard. Managing authorization, users, content and relat
 ### Project starter
 
 Please visit the newstack console. The alpha environment is at [console-dev.newstack.dev](https://console-dev.newstack.dev)).
+
 You don't strictly have to register your application on Newstack to use iosdk, but this approach is going to make your life easier, 
-if you are planning to use other services in the ecosystem.
+if you are planning to use the powerful services the Newstack ecosystem is offering.
 
 Use this if starting a project from scratch. This stage involves 
 
