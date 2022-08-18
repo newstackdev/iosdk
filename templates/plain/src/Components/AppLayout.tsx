@@ -54,6 +54,6 @@ export const AppLayout: NLView = ({ children }) => {
         }
       </Content>
     </Layout>
-    <Footer>Footer</Footer>
+    <Footer>This application is based on <a href="https://github.com/Newcoin-Foundation/iosdk" target="_blank">iosdk</a>.</Footer>
   </Layout>
 }
