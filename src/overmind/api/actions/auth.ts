@@ -1,7 +1,9 @@
 import { AUTH_FLOW_STATUS } from "../../auth/state";
 import { Action } from "../../../types";
 
-export const authorize: Action<undefined> = async ({ state, actions, effects }) => {
+export const authorize: Action<{ token?: string } | undefined> = async ({ state, actions, effects }, params) => {
+  params?.token && effects.api.updateToken(params.token);
+
   state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHORIZING, state.auth.status);
 
   try {

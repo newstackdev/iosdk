@@ -480,7 +480,7 @@ export declare const config: (cfg: PartialConfiguration) => {
             authorize: import("../types").Action<{
                 jwt: string;
             }, void>;
-            logout: import("../types").Action<undefined, void>;
+            signOut: import("../types").Action<undefined, void>;
         };
     }, object>;
 };

@@ -6,8 +6,7 @@ export const Home = () => {
     return <>
         {state.api?.auth?.user?.id ?
             <>
-                Authenticated as {state.api?.auth?.user?.username || state.firebase.user?.phoneNumber}<br />
-
+                Welcome to {state.config.settings.app.name}
             </>
             : "please sign in"}
 

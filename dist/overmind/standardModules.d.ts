@@ -407,7 +407,7 @@ export declare const standardModules: {
             authorize: import("../types").Action<{
                 jwt: string;
             }, void>;
-            logout: import("../types").Action<undefined, void>;
+            signOut: import("../types").Action<undefined, void>;
         };
         state: {
             token: string;

@@ -3,15 +3,14 @@ import { Action } from "../../types";
 const authorize: Action<{ jwt: string }> = async ({ state, effects, actions }, { jwt }) => {
   const unsidJwt = `unsid ${jwt}`;
 
-  effects.api.updateToken(unsidJwt);
   state.unsid.token = unsidJwt;
 
   window.localStorage.setItem("unsid-auth-token", jwt);
 };
 
-const logout: Action = async ({ state, effects, actions }) => {
+const signOut: Action = async ({ state, effects, actions }) => {
   //   actions.api.auth.logout();
-  //   actions.firebase.logout();
+  //   actions.firebcdse.logout();
   state.unsid.token = "";
   window.localStorage.setItem("unsid-auth-token", "");
 };
@@ -32,7 +31,7 @@ const unsidApplication = {
   actions: {
     onInitializeOvermind,
     authorize,
-    logout,
+    signOut,
   },
   state: {
     token: "" as string,

@@ -1,5 +1,7 @@
 import { newcounter } from "./newcounter";
+import { app } from "./app/";
 
-export const app = {
-    newcounter
+export default {
+    app,
+    newcounter // a very basic state demo
 };

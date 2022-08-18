@@ -480,7 +480,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             authorize: import("../types").Action<{
                 jwt: string;
             }, void>;
-            logout: import("../types").Action<undefined, void>;
+            signOut: import("../types").Action<undefined, void>;
         };
     }, object>;
 }>;
@@ -608,7 +608,9 @@ export declare const useActions: () => {
     api: {
         onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
         auth: {
-            readonly authorize: (payload?: undefined) => void | Promise<void>;
+            readonly authorize: (payload?: {
+                token?: string | undefined;
+            } | undefined) => void | Promise<void>;
             readonly logout: (payload?: {
                 keepFbUser?: boolean | undefined;
             } | undefined) => void | Promise<void>;
@@ -864,7 +866,7 @@ export declare const useActions: () => {
         authorize: (payload: {
             jwt: string;
         }) => void | Promise<void>;
-        logout: (payload?: undefined) => void | Promise<void>;
+        signOut: (payload?: undefined) => void | Promise<void>;
     };
 };
 export declare const useEffects: () => import("overmind/lib/internalTypes").SubType<{

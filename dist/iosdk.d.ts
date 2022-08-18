@@ -484,7 +484,7 @@ declare const _default: {
                     authorize: import("./types").Action<{
                         jwt: string;
                     }, void>;
-                    logout: import("./types").Action<undefined, void>;
+                    signOut: import("./types").Action<undefined, void>;
                 };
             }, object>;
         }>;
@@ -1086,7 +1086,7 @@ declare const _default: {
                 authorize: import("./types").Action<{
                     jwt: string;
                 }, void>;
-                logout: import("./types").Action<undefined, void>;
+                signOut: import("./types").Action<undefined, void>;
             };
         }, object>;
     }>;

@@ -1,5 +1,6 @@
 import { AUTH_FLOW_STATUS } from "../../auth/state";
-export const authorize = async ({ state, actions, effects }) => {
+export const authorize = async ({ state, actions, effects }, params) => {
+    params?.token && effects.api.updateToken(params.token);
     state.auth.status = Math.max(AUTH_FLOW_STATUS.AUTHORIZING, state.auth.status);
     try {
         state.api.auth.user = await effects.api.authorize();

@@ -8,7 +8,10 @@
     "start": "concurrently  \"overmind-devtools\" \"craco start --verbose\"",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "postinstall": "rm -rf node_modules/@newcoin-foundation/iosdk/node_modules/@types/",
+		"why is postinstall deleting some @types?": 
+      "@types/react version mismatch between some components causes iosdk to install the next version under its node_modules which confuses overmind. to be resolved by upgrading antd and some others"
   },
   "browserslist": {
     "production": [

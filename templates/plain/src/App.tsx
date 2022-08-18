@@ -17,18 +17,23 @@ import {
 } from "react-router-dom";
 import { Explore } from './Pages/Explore';
 import { AppLayout } from "./Components/AppLayout";
+import { Home } from "./Pages/Home";
+import { SignOut } from "./Pages/SignOut";
 
+
+const om = overmind();
 
 
 export const App: NLView = () => {
   return (
-    <Provider value={overmind}>
+    <Provider value={om}>
       <Router>
         <AppLayout>
-          <Switch>
+        <Switch>
+            <Route key="h" exact path="/home" component={Home} />
             <Route key="e" exact path="/explore" component={Explore} />
             <Route key="nc" exact path="/counter" component={NewCounter} />
-            <Route key="a" exact path="/auth" component={Auth} />
+            <Route key="a" exact path="/signout" component={SignOut} />
           </Switch>
         </AppLayout>
       </Router>
