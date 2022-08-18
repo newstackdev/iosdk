@@ -13,6 +13,10 @@ Blockchain development is hard. Managing authorization, users, content and relat
 ## Installation
 ### Project starter
 
+Please visit the newstack console. The alpha environment is at [console-dev.newstack.dev](https://console-dev.newstack.dev)).
+You don't strictly have to register your application on Newstack to use iosdk, but this approach is going to make your life easier, 
+if you are planning to use other services in the ecosystem.
+
 Use this if starting a project from scratch. This stage involves 
 
 ```
@@ -20,6 +24,7 @@ Use this if starting a project from scratch. This stage involves
 ```
 
 This will generate a demo [craco](https://github.com/gsoft-inc/craco)-based project. (craco is a layer on top of create-react-app that allows easier customization of webpack, among other things overriding lesscss variables used by ant-design styles).
+
 
 Run ``` craco start ``` to start the demo app.
 

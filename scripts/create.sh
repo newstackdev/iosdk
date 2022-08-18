@@ -27,10 +27,18 @@ X=$(cat <<NODE
 NODE
 );
 
+touch .env
+
 echo "$X" | node > ./package.json.new;
 mv ./package.json.new ./package.json;
 
-echo Done. Run:
+echo Done.
+echo 
+echo What\'s next?
+echo ------------- 
+echo 1. Make sure you\'ve created your application at https://console-dev.newstack.dev
+echo 2. Remember to configure .env variables, please see https://console-dev.newstack.dev/instructions for instructions.
+echo 3. Run:
 echo 
 echo cd "$1"
 echo yarn start
