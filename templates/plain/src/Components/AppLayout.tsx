@@ -30,10 +30,13 @@ export const AppLayout: NLView = ({ children }) => {
       <Sider>
         <Menu>
           <Menu.Item>
-            <Link to="/counter">Counter</Link>
+            <Link to="/home">Home</Link>
           </Menu.Item>
           <Menu.Item>
             <Link to="/explore">Explore</Link>
+          </Menu.Item>
+          <Menu.Item>
+            <Link to="/counter">Counter</Link>
           </Menu.Item>
           {loggedIn && <Menu.Item>
             <Link to="/signout">Sign Out</Link>
