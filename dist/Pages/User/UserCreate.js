@@ -10,7 +10,24 @@ import { RowCheckbox } from "../../Components/RowCheckbox";
 import { useActions, useAppState, useEffects } from "../../overmind";
 import { useForm } from "antd/lib/form/Form";
 import isEmpty from "lodash/isEmpty";
-// ({ embedded, setNext } : React.PropsWithChildren<EmbeddableControl>) => {
+import pick from "lodash/pick";
+const defaultCreateFormValues = [
+    "consentEmail",
+    "consentTestgroup",
+    "description",
+    "discord",
+    "displayName",
+    "email",
+    "facebook",
+    "id",
+    "instagram",
+    "pinterest",
+    "soundcloud",
+    "tumblr",
+    "twitter",
+    "website",
+    "youtube",
+];
 export const CrossCircleErr = ({ children }) => {
     return (_jsxs(_Fragment, { children: [children, _jsx("div", { className: "error-circle-form ", children: _jsx(CrossCircle, {}) })] }));
 };
@@ -44,6 +61,17 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
         }
         catch (e) {
             console.log(e.errorFields.length);
+            return;
+        }
+        if (state.flows.user.create.metamaskFlow) {
+            await actions.api.user.update({
+                user: {
+                    ...pick(state.api.auth.user, defaultCreateFormValues),
+                    id: state.api.auth.user.id || "",
+                    ...values,
+                },
+            });
+            actions.routing.historyPush({ location: "/explore" });
             return;
         }
         actions.flows.user.create.create({
@@ -98,8 +126,7 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
                                 pattern: new RegExp(re),
                                 message: "Please input valid email.",
                             },
-                        ], children: _jsx(Input, { placeholder: "email", suffix: _jsx(CrossCircleErr, {}), disabled: isEmailAvailable &&
-                                (isEmpty(sessionStorage.getItem("cachedOnboarding")) || state.flows.user.create.isLegacyUpdateOngoing) }) }), _jsx(Form.Item, { name: "description", children: _jsx(Input.TextArea, { placeholder: "bio" }) }), _jsx(Form.Item, { name: "website", children: _jsx(Input, { placeholder: "website" }) }), _jsx(Form.Item, { name: "instagram", children: _jsx(Input, { placeholder: "instagram" }) }), _jsx(Form.Item, { name: "tumblr", children: _jsx(Input, { placeholder: "tumblr" }) }), _jsx(Form.Item, { name: "soundcloud", children: _jsx(Input, { placeholder: "soundcloud" }) }), _jsx(Form.Item, { name: "twitter", children: _jsx(Input, { placeholder: "twitter" }) }), _jsx(Form.Item, { name: "consentPrivacyPolicy", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, rules: [
+                        ], children: _jsx(Input, { placeholder: "email", suffix: _jsx(CrossCircleErr, {}), disabled: isEmailAvailable && state.flows.user.create.isLegacyUpdateOngoing }) }), _jsx(Form.Item, { name: "description", children: _jsx(Input.TextArea, { placeholder: "bio" }) }), _jsx(Form.Item, { name: "website", children: _jsx(Input, { placeholder: "website" }) }), _jsx(Form.Item, { name: "twitter", children: _jsx(Input, { placeholder: "twitter" }) }), _jsx(Form.Item, { name: "discord", children: _jsx(Input, { placeholder: "discord" }) }), _jsx(Form.Item, { name: "instagram", children: _jsx(Input, { placeholder: "instagram" }) }), _jsx(Form.Item, { name: "tumblr", children: _jsx(Input, { placeholder: "tumblr" }) }), _jsx(Form.Item, { name: "soundcloud", children: _jsx(Input, { placeholder: "soundcloud" }) }), _jsx("p", { className: "paragraph-2r u-margin-top-medium u-margin-bottom-medium", children: "You can add or edit socials later!" }), _jsx(Form.Item, { name: "consentPrivacyPolicy", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, rules: [
                             {
                                 required: true,
                                 message: "please confirm",

@@ -6,7 +6,7 @@ import { Tabs } from "antd";
 import { UserNewcoinInfo, UserNewcoinPoolsParticipation, UserWidgetHeading } from "../../Components/UserWidget";
 import { json } from "overmind";
 import { useActions, useAppState } from "../../overmind";
-import { useCachedPool, useCachedPost, useCachedPowerups, useCachedUser } from "../../hooks/useCached";
+import { useCachedMoods, useCachedPool, useCachedPost, useCachedPowerups, useCachedUser } from "../../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useSetTitle } from "../../hooks/useSetTitle";
@@ -35,6 +35,7 @@ export const User: NLView = () => {
   useSetTitle(user?.username);
 
   // const moodList = user.moods || [];
+  // const cachedMoods = state.api.cache.moods[user?.id || ""];
   const moodList = json(user.moods || []).sort((m1, m2) => (m1.stakeToAccess || 0) - (m2.stakeToAccess || 0));
 
   const powerups = useCachedPowerups(user, true) as PowerupsCacheItem;
@@ -91,6 +92,7 @@ export const User: NLView = () => {
           <CreatorsList
             users={powerups?.out?.value?.sort((a, b) => (b.powered || 0) - (a.powered || 0)).slice(0, 20) || []}
             title=""
+            to="top/creators"
           />
         </>
       );

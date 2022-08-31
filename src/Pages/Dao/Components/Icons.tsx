@@ -6,7 +6,7 @@ const relativePercentage = (a, b) => percentageOfTotal(a, a + b) || 1;
 
 export const ProgressBar = ({ proposal, width }) => (
   <Progress
-    style={{ width: width || "642px" }}
+    style={{ width: width || "100%" }}
     strokeColor={"#C46EF7"}
     percent={100} // pink color
     success={{
@@ -17,8 +17,8 @@ export const ProgressBar = ({ proposal, width }) => (
   />
 );
 
-export const Hands = ({ width, height }: React.SVGProps<SVGSVGElement>) => (
-  <svg width={width || "35"} height={height || 35} viewBox="0 0 57 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const Hands = ({ width, height, styles }) => (
+  <svg className={styles || ""} viewBox="0 0 57 36" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M47.5545 9.31651H36.0743C35.6008 9.31651 35.1467 9.12019 34.8119 8.77075C34.4771 8.42131 34.2891 7.94736 34.2891 7.45318C34.2891 6.95899 34.4771 6.48504 34.8119 6.1356C35.1467 5.78616 35.6008 5.58984 36.0743 5.58984H47.5545C48.028 5.58984 48.4821 5.78616 48.8169 6.1356C49.1516 6.48504 49.3397 6.95899 49.3397 7.45318C49.3397 7.94736 49.1516 8.42131 48.8169 8.77075C48.4821 9.12019 48.028 9.31651 47.5545 9.31651Z"
       fill="#FCFCF3"

@@ -123,7 +123,7 @@ export const config = {
         //   "/explore": "/dao/newmoon"
         // } : {})
         },
-        noBackButton: ["/explore", "/post-create", "/proposals", "/user/invite", "/signup/domain"],
+        noBackButton: ["/explore", "/post-create", "/proposals", "/user/invite", "/signup/domain", "/"],
         defaultRoute: {
             condition: (state) => {
                 return state.api.auth.authorized && ["registered", "admitted", "premium"].includes(state.api.auth.user.status);

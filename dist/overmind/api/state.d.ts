@@ -1,6 +1,6 @@
 import { AUTH_FLOW_STATUS_TYPE } from "../auth/state";
 import { CreatorApi } from "../../types";
-import { MoodReadResponse, PagedRatedResponseUser, PostReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PagedRatedResponseUser, PostReadResponse, UserInvitationPagedListReadPublicResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 export declare const api: CreatorApi;
 export declare type PowerupsCacheItem = {
     in: PagedRatedResponseUser;
@@ -18,6 +18,7 @@ declare type State = {
         admitted: boolean;
         userDisplayHandler: string;
         attempted: boolean;
+        inviteesList: UserInvitationPagedListReadPublicResponse;
     };
     cache: {
         users: {

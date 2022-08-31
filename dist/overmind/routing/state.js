@@ -3,6 +3,7 @@ import { derived } from "overmind";
 import { isEmpty } from "lodash";
 import history from "../../history";
 const ROUTE_ACCESS_LEVELS_ONBOARDING = ["create", "subscribe", "domain", "auth"];
+const ROUTE_ACCESS_LEVELS_METAMASK = ["create", "domain", "auth"];
 export const ROUTE_ACCESS_LEVELS = {
     "/": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
     "/profile": (st) => st > AUTH_FLOW_STATUS.ANONYMOUS,
@@ -12,16 +13,18 @@ export const ROUTE_ACCESS_LEVELS = {
     "/DomainPresale": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
     "/terms_of_service": () => true,
     "/privacy_policy": () => true,
+    "/signup/metamask": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
     "/signup/notInvited": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
-    ...",link,nft,link-verify,nft-verify,domain,subscribe,create,powerup,auth"
+    ..."domain,subscribe,create,powerup,auth"
         .split(/,/)
         .map((r) => ({
         [`/signup${r ? "/" : ""}${r}`]: (st, gst) => {
-            if ((gst.flows.user.create.isLegacyUpdateOngoing || !isEmpty(gst.flows.user.create.progressedSteps)) &&
-                ROUTE_ACCESS_LEVELS_ONBOARDING.includes(r)) {
+            if (((gst.flows.user.create.isLegacyUpdateOngoing || !isEmpty(gst.flows.user.create.progressedSteps)) &&
+                ROUTE_ACCESS_LEVELS_ONBOARDING.includes(r)) ||
+                (ROUTE_ACCESS_LEVELS_METAMASK.includes(r) && gst.flows.user.create.metamaskFlow)) {
                 return true;
             }
-            return st < AUTH_FLOW_STATUS.AUTHENTICATED;
+            return false;
         },
     }))
         .reduce((r, c) => ({ ...r, ...c }), {}),

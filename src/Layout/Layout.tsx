@@ -248,7 +248,6 @@ export const TopMenu: NLView = () => {
 				</Link>
 			</Menu.Item> */}
     </Menu>
-    // </div>
   );
 };
 

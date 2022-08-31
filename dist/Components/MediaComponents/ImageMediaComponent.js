@@ -3,7 +3,6 @@ import { Image as ADImage } from "antd";
 import { Blurhash } from "react-blurhash";
 import { Profile } from "../Icons/Profile";
 import { Spin } from "../Spin";
-import { isEmpty } from "lodash";
 import { useAppState } from "../../overmind";
 const imageSizes = {
     small: "500",
@@ -28,7 +27,7 @@ export const ImageComponent = (props) => {
     const placeholder = blurHash ? _jsx(Blurhash, { hash: blurHash, width: width, height: height }) : true;
     // if (true)
     // 	return <div>{overrideContentUrl?.toString() || "x"}</div>
-    if (/^(processing|failed)$/.test(props.contentUrl || "") || isEmpty(imgUrl))
+    if (/^(processing|failed)$/.test(props.contentUrl || ""))
         return (_jsxs("div", { children: [_jsx("br", {}), _jsx(Spin, {})] }));
     else if (imgUrl === "" && menuAvatar)
         return _jsx(Profile, {});

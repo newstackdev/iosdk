@@ -215,28 +215,22 @@ export const LegacyLogin: NLView = () => {
         <></>
       )}
       {status === STATUS.LINK_REQUESTED && (
-        <>
-          <p className="super-size font-variant-none text-center">check your inbox</p>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <div>
-            <SupportBox />
+        <ContentLayout customClass="app-content-layout">
+          <p className="super-size text-center nl-legacyImport-title">check your inbox</p>
+          <div className="nl-onboarding-form" />
+          <div className="nl-onboarding-footer">
+            <p className="paragraph-3b text-center nl-legacyImport-checkYourEmail-description">
+              <Link to="/">I don't have an account yet!</Link>
+              <div className="section-divider" />
+              <SupportBox />
+            </p>
           </div>
-          <div className="section-divider" />
-
-          <p className="paragraph-3b text-center">
-            <Link to="#">I don't have an account yet!</Link>
-          </p>
-        </>
+        </ContentLayout>
       )}
       {status === STATUS.NONE && !state.api.auth.user?.id ? (
         <>
-          <p className="super-size text-center">join newlife.IO</p>
-
           <ContentLayout customClass="app-content-layout">
+            <p className="super-size text-center nl-legacyImport-title">Import account</p>
             <Form
               form={form}
               name="basic"
@@ -244,6 +238,7 @@ export const LegacyLogin: NLView = () => {
               onFinish={onFinish}
               // onFinishFailed={onFinishFailed}
               autoComplete="off"
+              className="nl-onboarding-form"
             >
               <Form.Item
                 name="email"
@@ -253,27 +248,30 @@ export const LegacyLogin: NLView = () => {
                     message: "Please input valid email.",
                   },
                 ]}
+                className="nl-onboarding-form-item"
               >
-                <Input placeholder="email" />
+                <Input placeholder="e-mail" className="nl-onboarding-input nl-legacyImport-email-input" />
               </Form.Item>
-              <Form.Item>
-                <div className="text-center">
-                  <ProgressButton
-                    actionName="auth.firebaseRequestEmailLink"
-                    type="primary"
-                    htmlType="submit"
-                    progressText="Connecting..."
-                  >
-                    Connect my account
-                  </ProgressButton>
-                </div>
-              </Form.Item>
-              <p className="paragraph-2b text-center">
-                <Link to="/">I don't have an account yet!</Link>
-              </p>
-              <div className="section-divider" />
-              <SupportBox />
             </Form>
+            <div className="nl-onboarding-footer">
+              <div className="text-center">
+                <ProgressButton
+                  actionName="auth.firebaseRequestEmailLink"
+                  type="primary"
+                  htmlType="submit"
+                  progressText="Connecting..."
+                >
+                  Connect my account
+                </ProgressButton>
+              </div>
+              <div>
+                <p className="paragraph-2b text-center">
+                  <Link to="/">I don't have an account yet!</Link>
+                </p>
+                <div className="section-divider" />
+                <SupportBox />
+              </div>
+            </div>
           </ContentLayout>
         </>
       ) : (

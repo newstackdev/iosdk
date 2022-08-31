@@ -1,71 +1,8 @@
 import { HyperionAccountHistory } from "../overmind/newcoin/types";
-import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserInvitationPagedListReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { PowerupsCacheItem } from "../overmind/api/state";
-export declare const useCachedUser: (user?: {
-    id?: string;
-    username?: string;
-}, force?: boolean) => {
-    moods: MoodReadResponse[] | undefined;
-    newcoinTicker?: string | undefined;
-    youtube?: string | undefined;
-    powered?: number | undefined;
-    displayName?: string | undefined;
-    newcoinAccTx?: string | undefined;
-    latitude?: number | undefined;
-    description?: string | undefined;
-    newcoinPoolId?: string | undefined;
-    tumblr?: string | undefined;
-    aspectRatio?: number | undefined;
-    instagram?: string | undefined;
-    medium?: string | undefined;
-    newcoinActivePublicKey?: string | undefined;
-    soundcloud?: string | undefined;
-    newcoinPublicKey?: string | undefined;
-    powering?: number | undefined;
-    snapchat?: string | undefined;
-    apple?: string | undefined;
-    twitter?: string | undefined;
-    newcoinOwnerPublicKey?: string | undefined;
-    tiktok?: string | undefined;
-    reddit?: string | undefined;
-    youtubeId?: string | undefined;
-    id?: string | undefined;
-    newcoinPoolStake?: number | undefined;
-    contentType?: string | undefined;
-    signal?: string | undefined;
-    longitude?: number | undefined;
-    newcoinPublisherPublicKey?: string | undefined;
-    website?: string | undefined;
-    created?: string | undefined;
-    spotify?: string | undefined;
-    facebook?: string | undefined;
-    facebookId?: string | undefined;
-    fullName?: string | undefined;
-    telegram?: string | undefined;
-    pinterest?: string | undefined;
-    verifiedSocialIds?: string[] | undefined;
-    newcoinPoolTx?: string | undefined;
-    license?: string | undefined;
-    contentUrl?: string | undefined;
-    discord?: string | undefined;
-    blurHash?: string | undefined;
-    consentEmail?: string | undefined;
-    updated?: string | undefined;
-    username?: string | undefined;
-};
-export declare const useCachedPost: ({ id }: {
-    id?: string | undefined;
-}, force?: boolean) => import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse;
-export declare const useCachedMood: ({ id }: {
-    id?: string | undefined;
-}, force?: boolean) => MoodReadResponse & {
-    promise?: Promise<any> | null | undefined;
-};
-export declare const useCachedMoodPosts: ({ id }: {
-    id?: string | undefined;
-}, force?: boolean) => MoodReadResponse & {
-    promise?: Promise<any> | null | undefined;
-};
+import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from "./useCached1";
+export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
 export declare const useCachedMoods: (moods?: {
     id?: string;
 }[], force?: boolean) => MoodReadResponse[];
@@ -197,3 +134,4 @@ export declare const useCachedDaoWhitelistProposal: ({ daoOwner, proposalId }: {
     } | undefined;
     status?: string | undefined;
 };
+export declare const useCachedInvitees: () => UserInvitationPagedListReadPublicResponse;

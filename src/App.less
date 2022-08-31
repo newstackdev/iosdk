@@ -20,6 +20,7 @@
 @import "Pages/Dao/Components/Modals/_Modals";
 @import "Pages/Dao/Components/Previews/Standard/ViewProposalPageRow/ViewProposalRow";
 @import "Pages/Dao/Components/Previews/Standard/Card/ProposalCard";
+@import "Pages/Dao/Components/Previews/Member/Card/MemberCard";
 
 @import "Pages/Dao/Views/Proposals/ProposalList";
 @import "Pages/Dao/Views/NewProposal/NewProposal";
@@ -499,7 +500,7 @@ p {
 .top-creators-wrapper {
   justify-content: space-between;
 
-  &>div:not(:first-child) {
+  & > div:not(:first-child) {
     margin-top: 20px;
   }
 
@@ -1013,6 +1014,18 @@ textarea {
   }
 }
 
+.navbar-signin-wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.signout-btn {
+  margin-left: auto;
+}
+
 .post-create-form-width {
   width: 65%;
   flex: 1;
@@ -1324,7 +1337,7 @@ textarea {
 .stake-button-modal:active {
   color: @darkgrey;
   border: 2px solid @darkgrey;
-  font-weight: bold !important;;
+  font-weight: bold !important;
 }
 
 .title {
@@ -1607,12 +1620,22 @@ textarea {
 // Domain Presale
 
 .nl-domain-presale__masked-input {
-  font-size: clamp(20px, 120px, 9.8vw);
+  margin-bottom: 24px;
+  @media screen and (min-width: 451px) {
+    font-size: clamp(20px, 120px, 9.8vw);
+  }
+
+  @media screen and (max-width: 450px) {
+    font-size: clamp(20px, 9vw, 9.8vw);
+  }
+}
+
+.nl-domain-presale__masked-input,
+.nl-onboarding-input {
   text-align: center;
   width: 70%;
   height: auto !important;
-  margin-top: 80px;
-  border-bottom-width: 13px !important;
+  border-bottom-width: 3px !important;
   font-variant: none;
 }
 
@@ -1620,16 +1643,19 @@ textarea {
   text-align: end !important;
 }
 
+.nl-domain-presale__masked-input:focus::placeholder {
+  color: @green !important;
+}
+
 .nl-domain-presale__footer-paragraph {
   text-align: center;
   width: 100%;
-  margin: 0 auto;
   color: @lightGrey;
+  margin-bottom: 40px !important;
 }
 
 .nl-domain-presale__info-text__wrapper {
-  width: 35%;
-  margin: 40px auto 0 auto;
+  width: 313px;
 }
 
 // Post
@@ -1727,9 +1753,10 @@ textarea {
 
 .nl-user-unvite-input-hash {
   cursor: pointer;
+  border-color: @green!important;
   &::placeholder {
     width: 300px;
-    color: @green;
+    color: @green!important;
   }
   &:active::placeholder,
   &:focus::placeholder,
@@ -1744,4 +1771,124 @@ textarea {
   @media screen and(max-width:428px) {
     width: 100%;
   }
+}
+
+.nl-onboarding-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  height: 10vw;
+
+  .nl-onboarding-input-hash {
+    font-size: clamp(15px, 3.4vw, 9.8vw);
+
+    @media screen and (max-width: 610px) {
+      font-size: clamp(5px, 3.1vw, 9.8vw) !important;
+    }
+  }
+
+  .nl-onboarding-input-fontSize(@subsctractMaxValue, @increaseMinValue) {
+    @media screen and (min-width: 1259px) {
+      font-size: clamp(20px + @increaseMinValue, 8vw - @subsctractMaxValue - 2px, 9.8vw) !important;
+    }
+
+    @media screen and (max-width: 1258px) {
+      font-size: clamp(13px + @increaseMinValue, 8vw - @subsctractMaxValue - 2.2px, 9.8vw) !important;
+    }
+
+    @media screen and (max-width: 830px) {
+      font-size: clamp(13px + @increaseMinValue, 8vw - @subsctractMaxValue - 2.4px, 9.8vw) !important;
+    }
+
+    @media screen and (max-width: 650px) {
+      font-size: clamp(13px + @increaseMinValue, 8vw - @subsctractMaxValue - 2.6px, 9.8vw) !important;
+    }
+
+    @media screen and (max-width: 530px) {
+      font-size: clamp(13px + @increaseMinValue, 8vw - @subsctractMaxValue - 2.8px, 9.8vw) !important;
+    }
+
+    @media screen and (max-width: 470px) {
+      font-size: clamp(13px + @increaseMinValue, 8vw - @subsctractMaxValue - 3.4px, 9.8vw) !important;
+    }
+  }
+
+  .nl-onboarding-phone-code-placeholder() {
+    &:active::placeholder,
+    &:focus::placeholder,
+    &:visited::placeholder {
+      color: @green!important;
+    }
+  }
+
+  .nl-onboarding-input-code {
+    input,
+    .ant-input-suffix {
+      .nl-onboarding-input-fontSize(0.5vw, 0);
+      .nl-onboarding-phone-code-placeholder();
+    }
+  }
+
+  .nl-onboarding-input-phone {
+    input,
+    .ant-input-suffix {
+      .nl-onboarding-input-fontSize(0, 0);
+      .nl-onboarding-phone-code-placeholder();
+    }
+  }
+
+  .nl-legacyImport-email-input {
+    .nl-onboarding-input-fontSize(4vw, 5px);
+    .nl-onboarding-phone-code-placeholder();
+    text-align: left;
+  }
+
+  .nl-onboarding-input-phone-disabled {
+    .nl-onboarding-input-fontSize(0, 0);
+  }
+
+  .nl-onboarding-form-item {
+    width: 100%;
+
+    .ant-form-item-control-input-content {
+      text-align: center;
+    }
+
+    .ant-form-item-explain-error {
+      width: 70%;
+      margin: auto;
+    }
+  }
+}
+
+.nl-onboarding-link {
+  color: @lightGrey !important;
+}
+
+.nl-onboarding-title {
+  height: 26px;
+  margin: 80px 0 160px 0;
+  @media screen and(max-width:428px) {
+    margin: 80px 0 80px 0;
+  }
+}
+
+.nl-onboarding-footer {
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.nl-legacyImport-title {
+  margin-top: 60px;
+  margin-bottom: 50px;
+}
+
+.nl-legacyImport-checkYourEmail-description {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
 }

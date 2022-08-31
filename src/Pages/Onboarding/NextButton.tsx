@@ -1,6 +1,5 @@
 import { Button } from "antd";
 import { IOView } from "../../types";
-import { Link } from "react-router-dom";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { useActions, useAppState } from "../../overmind";
 import { useEffect, useState } from "react";
@@ -10,56 +9,36 @@ import SupportBox from "../../Components/SupportBox";
 const InitSteps = () => {
   return {
     HASH_VERIFY: {
-      title: "Enter hash or nft credentials",
       link: "/",
       action: "flows.user.create.verifyHash",
     },
     AUTHENTICATE: {
-      title: "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS",
-      link: "/signup/auth", //<Auth embedded={true} setNext={setNext} setIsErrorSubmit={setIsErrorSubmit} isErrorSubmit={isErrorSubmit} />,
+      link: "/signup/auth",
       action: "",
     },
     SELECT_DOMAIN: {
-      title: "Choose your permanent domain name. This cannot be changed or deleted, and you own it.",
       link: "/signup/domain",
       action: "",
     },
     SUBSCRIBE: {
       title: "",
       action: "payments.pay",
-      link: "/signup/subscribe", //<Product embedded={true} setNext={setNext} />,
+      link: "/signup/subscribe",
     },
     CREATE_USER: {
       title: "",
       action: "api.user.create",
       link: "/",
-      //<UserCreate embedded={true} setNext={setNext} hideUsername={true} noRouing={true} setIsErrorSubmit={setIsErrorSubmit} />
     },
-    // //TODO implement
-    // USER_SELECTOR: {
-    //   title: "",
-    //   action: "api.user.userSelector",
-    //   link: <UserSelector />,
-    // },
-    // HASHTAG_SELECTOR: {
-    //   title: "",
-    //   action: "",
-    //   link: <HashtagSelector />,
-    // },
-    // //TODO implement
-    // DONE: {
-    //   title: "",
-    //   content: <Done />,
-    //   action: "api.user.create",
-    // },
   };
 };
 
 export const NextButton: IOView<{
   isErrorSubmit?: boolean;
-  nextProps?: { command: () => void; text: string };
+  nextProps?: { command: () => void | Promise<void>; text: string };
   visible?: boolean;
-}> = ({ isErrorSubmit = false, nextProps, visible = true }) => {
+  contentDescription?: React.ReactNode | string;
+}> = ({ isErrorSubmit = false, nextProps, visible = true, contentDescription }) => {
   const actions = useActions();
   const state = useAppState();
 
@@ -80,7 +59,6 @@ export const NextButton: IOView<{
     if (isMember) actions.routing.historyPush({ location: "/explore" });
   }, [isMember]);
 
-  const footerTitle = steps[wizard.current].title;
   if (
     isMember ||
     (state.indicators.isWorking &&
@@ -92,7 +70,7 @@ export const NextButton: IOView<{
     return <></>;
 
   return (
-    <>
+    <div className="nl-onboarding-footer">
       <div className="app-control-surface">
         {visible ? (
           next || wizard.hasNext ? (
@@ -124,26 +102,10 @@ export const NextButton: IOView<{
         ) : null}
       </div>
 
-      {!state.flows.user.create.legacyToken &&
-        !state.auth.authenticated &&
-        wizard.matches("HASH_VERIFY") &&
-        state.routing.location === "/" && (
-          <div className="app-main-full-width u-margin-top-medium u-margin-bottom-mega text-center">
-            <Button type="primary" className="big-button" style={{ width: "100%" }}>
-              <Link to="/auth/newlife-members" className="header-1b">
-                I'm an early Newlife member!
-              </Link>
-            </Button>
-          </div>
-        )}
-      <SupportBox />
-
       <div className="nl-domain-presale__info-text__wrapper">
-        <Paragraph className="paragraph-2r nl-domain-presale__footer-paragraph">{footerTitle}</Paragraph>
-        {wizard.matches("SELECT_DOMAIN") && (
-          <Paragraph className="nl-domain-presale__footer-paragraph paragraph-2r">9 characters max: a-z and 1-5</Paragraph>
-        )}
+        <Paragraph className="paragraph-2r nl-domain-presale__footer-paragraph">{contentDescription}</Paragraph>
+        <SupportBox />
       </div>
-    </>
+    </div>
   );
 };

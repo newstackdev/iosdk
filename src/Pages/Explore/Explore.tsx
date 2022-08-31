@@ -4,8 +4,9 @@ import { ItemGrid } from "../../Components/ItemGrid";
 import { MoodWidget } from "../../Components/MoodWidget";
 import { MoodsGrid } from "../Mood/MoodsGrid";
 import { NLView } from "../../types";
-import { useActions, useAppState } from "../../overmind";
+import { useActions, useAppState, useEffects } from "../../overmind";
 import { useEffect } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import Creators, { TopCreators } from "../../Components/Creators";
 import FolderClosed from "../../Components/Icons/Folder/Closed";
 import Spotlights from "../../Components/Spotlights";
@@ -15,6 +16,7 @@ import TopHashtags from "../../Components/TopHashtags";
 export const Explore: NLView = () => {
   const state = useAppState();
   const actions = useActions();
+  const effects = useEffects();
 
   const moods = state.lists.top.moods.items;
 
@@ -22,14 +24,11 @@ export const Explore: NLView = () => {
     !moods.length && actions.lists.top.moods();
   }, []);
 
-  const users = state.lists.top.users.items;
+  // const users = state.lists.top.users.items;
 
-  useEffect(() => {
-    !users.length && actions.lists.top.users();
-  }, []);
-
-  // if(true)
-  // 	return <NewcoinRecept visible={true} tx="hello">Here is your receipt</NewcoinRecept>;
+  // useEffect(() => {
+  //   !users.length && actions.lists.top.users();
+  // }, []);
 
   // return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
   return (
@@ -47,7 +46,7 @@ export const Explore: NLView = () => {
 				loadMore={actions.lists.top.moods}
 				title={moods?.length ? "Top moods today" : ""}
 			/> */}
-      <TopCreators maxItems={4} title={"Explore top creators"} users={users} />
+      <TopCreators maxItems={4} title={"Explore top creators"} users={[]} to="/top/creators" />
       <TopHashtags maxItems={3} title={"Explore top hashtags"} />
       <TopFolders
         title={"Explore more folders"}

@@ -9,7 +9,7 @@ export enum DOMAIN_PRESALE_STEPS {
   CREATE_USER,
   DONE,
 }
-type usernameAvailability = "available" | "checking" | "unavailable" | "";
+type usernameAvailability = "available" | "checking" | "unavailable" | "availableOnOpenSea" | "";
 
 export interface IOnboarding {
   justCreated: boolean;
@@ -19,11 +19,10 @@ export interface IOnboarding {
   isLegacyUpdateOngoing: boolean;
   progressedSteps: BaseState[] | [];
   formUsernameIsAvailable: usernameAvailability;
+  metamaskFlow: boolean;
   form: Partial<UserCreateRequest & { couponCode?: string; inviteHash?: string }>;
   wizard: Statemachine<States, Events, BaseState>;
 }
-
-const cachedOnboarding: IOnboarding = JSON.parse(sessionStorage.getItem("cachedOnboarding") || "null");
 
 const defaultState = {
   form: {} as Partial<UserCreateRequest & { couponCode?: string; inviteHash?: string }>,
@@ -31,8 +30,9 @@ const defaultState = {
   inviteHashVerified: false,
   legacyToken: "",
   legacyUsername: "",
+  metamaskFlow: false,
   isLegacyUpdateOngoing: false,
-  formUsernameIsAvailable: "" as "available" | "checking" | "unavailable" | "",
+  formUsernameIsAvailable: "" as "available" | "checking" | "unavailable" | "availableOnOpenSea" | "",
   progressedSteps: [],
   wizard: Wizard.create(
     { current: "HASH_VERIFY", hasNext: false, hasPrev: false },
@@ -40,23 +40,4 @@ const defaultState = {
   ),
 };
 
-export const state: IOnboarding = cachedOnboarding
-  ? {
-      ...defaultState,
-      form: cachedOnboarding.form,
-      wizard: Wizard.create(
-        {
-          current: "HASH_VERIFY",
-          hasNext: !isEmpty(cachedOnboarding.form.inviteHash),
-          hasPrev: false,
-          nextLink: !isEmpty(cachedOnboarding.form.inviteHash) ? "" : "/signup/auth",
-        },
-        {
-          current: "HASH_VERIFY",
-          hasNext: !isEmpty(cachedOnboarding.form.inviteHash),
-          hasPrev: false,
-          nextLink: isEmpty(cachedOnboarding.form.inviteHash) ? "" : "/signup/auth",
-        },
-      ),
-    }
-  : defaultState;
+export const state: IOnboarding = defaultState;

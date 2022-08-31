@@ -45,7 +45,7 @@ export const ImageComponent: ContentElement = (props) => {
 
   // if (true)
   // 	return <div>{overrideContentUrl?.toString() || "x"}</div>
-  if (/^(processing|failed)$/.test(props.contentUrl || "") || isEmpty(imgUrl))
+  if (/^(processing|failed)$/.test(props.contentUrl || ""))
     return (
       <div>
         <br />

@@ -5,16 +5,38 @@ import { debounce, pipe } from "overmind";
 export const cache: Action<{
   moods?: (MoodReadResponse & { promise?: Promise<any> })[];
   overwrite?: boolean;
-}> = ({ state, actions, effects }, { moods, overwrite }) => {
+}> = async ({ state, actions, effects }, { moods, overwrite }) => {
   if (!moods) return;
 
   if ((moods as any).id && !(moods instanceof Array)) moods = [moods];
+
+  /* dexie cache */
+  await Promise.all(
+    moods.map(async (m) => {
+      if (!m.posts || m.promise) return Promise.resolve();
+
+      return Promise.all([
+        actions.api.post.cache({ posts: m.posts }),
+        actions.cache.store({ label: "folder", value: m }),
+        actions.cache.storeEdgeMultiple({
+          fromLabel: "folder",
+          toLabel: "post",
+          from: [m],
+          to: m.posts,
+        }),
+      ]);
+      // await actions.api.post.cache({ posts: m.posts });
+      // await ;
+    }),
+  );
 
   moods.forEach((m) => {
     const id = m.id || "";
     const curr = state.api.cache.moods[id] || {};
 
     if (!m.promise) {
+      m.posts && actions.api.post.cache({ posts: m.posts });
+
       m.posts?.forEach(
         (p) =>
           p.id &&
@@ -25,7 +47,7 @@ export const cache: Action<{
       );
     }
 
-    const currPosts = m.posts;
+    // const currPosts = m.posts;
 
     state.api.cache.moods[id] = {
       ...curr,
@@ -55,11 +77,11 @@ export const read: Action<{ id?: string }> = async ({ state, actions, effects },
 
   const promise = state.api.client.mood.moodList({ id });
 
-  actions.api.mood.cache({ moods: [{ id, promise }] });
+  await actions.api.mood.cache({ moods: [{ id, promise }] });
 
   const r = await promise;
 
-  actions.api.mood.cache({ moods: [r.data] });
+  await actions.api.mood.cache({ moods: [r.data] });
   //state.api.cache.moods[id] = r.data;
 };
 
@@ -73,7 +95,7 @@ export const getPosts: Action<MoodReadResponse> = async ({ state, actions, effec
   const r = await state.api.client.mood.postsList({ id: mood.id });
 
   // state.api.cache.moods[id] = { ...state.api.cache.moods[id], posts: uniqBy(r.data.value, p => p.id) };
-  actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });
+  await actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });
   r.data.value?.forEach((p) => p.id && (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p }));
 
   // state.api.users[id] = {
@@ -86,7 +108,7 @@ export const create: Action<{ mood: MoodCreateRequest }, MoodReadResponse> = pip
   debounce(100),
   async ({ state, actions, effects }, { mood }) => {
     const m = await state.api.client.mood.moodCreate(mood);
-    actions.api.mood.cache({ moods: [m.data] });
+    await actions.api.mood.cache({ moods: [m.data] });
     state.api.auth.moods.push(m.data);
     return m.data;
   },

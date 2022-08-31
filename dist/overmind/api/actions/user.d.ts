@@ -30,6 +30,7 @@ export declare const stake: Action<{
 export declare const invite: Action<{
     userInvite: UserInviteRequest;
 }, string | undefined>;
+export declare const getUserInvitesList: Action<any, void>;
 export declare const powerup: Action<{
     user: UserReadPublicResponse;
     amount: number;

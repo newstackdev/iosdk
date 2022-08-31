@@ -26,6 +26,7 @@ export const User = () => {
     const user = useCachedUser({ username }, true);
     useSetTitle(user?.username);
     // const moodList = user.moods || [];
+    // const cachedMoods = state.api.cache.moods[user?.id || ""];
     const moodList = json(user.moods || []).sort((m1, m2) => (m1.stakeToAccess || 0) - (m2.stakeToAccess || 0));
     const powerups = useCachedPowerups(user, true);
     const powering = powerups?.out?.value?.length || "";
@@ -43,7 +44,7 @@ export const User = () => {
         case "Powered":
             return (_jsxs(_Fragment, { children: [_jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey }), _jsx(Creators, { users: powerups?.in?.value?.sort((a, b) => (b.powered || 0) - (a.powered || 0)).slice(0, 20) || [], title: "" })] }));
         case "Powering":
-            return (_jsxs(_Fragment, { children: [_jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey }), _jsx(CreatorsList, { users: powerups?.out?.value?.sort((a, b) => (b.powered || 0) - (a.powered || 0)).slice(0, 20) || [], title: "" })] }));
+            return (_jsxs(_Fragment, { children: [_jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey }), _jsx(CreatorsList, { users: powerups?.out?.value?.sort((a, b) => (b.powered || 0) - (a.powered || 0)).slice(0, 20) || [], title: "", to: "top/creators" })] }));
         default:
             return _jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey });
     }

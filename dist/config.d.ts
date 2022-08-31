@@ -98,6 +98,7 @@ export declare const config: {
                         admitted: boolean;
                         userDisplayHandler: string;
                         attempted: boolean;
+                        inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
                     };
                     cache: {
                         users: {
@@ -262,8 +263,20 @@ export declare const config: {
                         votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
                     };
                 };
-                unsid: {
+                newsafe: {
                     token: string;
+                };
+                cache: {
+                    readonly db: {
+                        ready: boolean;
+                        nodes: import("dexie").Dexie;
+                        edges: import("dexie").Dexie.Table<any, any>;
+                    };
+                    ready: boolean;
+                    _db: () => {
+                        nodes: import("dexie").Dexie;
+                        edges: import("dexie").Dexie.Table<any, any>;
+                    };
                 };
             }, object>) => boolean>;
         };

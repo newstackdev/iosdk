@@ -1,5 +1,5 @@
-import { useCachedMood } from "../../../../hooks/useCached";
-import TopFolders from "../../../../Components/TopFolders";
+import { useCachedMood } from "../../../hooks/useCached";
+import TopFolders from "../../../Components/TopFolders";
 
 export const ProposalFolder = ({ proposal }: { proposal: { url?: string } }) => {
   const maybeProposalFolderId = (proposal.url?.match(/newlife.io\/folder\/([^\/]+)$/) || [])[1];

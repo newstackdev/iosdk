@@ -15,8 +15,6 @@ export const NotInvited: IOView = () => {
       <p>
         Running into trouble? Get in touch on our <a href="https://t.me/newcoinprotocol">Telegram channel</a>.
       </p>
-      {/* Sorry you are not invited.<br />
-        Share on social media to receive invites.</div> */}
     </ContentLayout>
   );
 };

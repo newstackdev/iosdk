@@ -1,10 +1,11 @@
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Input } from "antd";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { IOView } from "../../types";
+import { Link, useLocation } from "react-router-dom";
 import { NextButton } from "./NextButton";
 import { useActions, useAppState } from "../../overmind";
 import { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { validUrl } from "../../utils/urlHelpers";
 import isEmpty from "lodash/isEmpty";
 
 export const LinkHash: IOView = () => {
@@ -22,8 +23,12 @@ export const LinkHash: IOView = () => {
   };
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(queryString);
+    actions.api.auth.logout();
+  }, []);
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(queryString);
+    actions.flows.user.create.stopMetamaskFlow();
     if (!isEmpty(urlParams.get("invite"))) {
       actions.flows.user.create.updateForm({ inviteHash: urlParams.get("invite") as string });
       done();
@@ -33,29 +38,46 @@ export const LinkHash: IOView = () => {
 
   const onChangeHandler = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      actions.flows.user.create.updateForm({ inviteHash: e.target.value });
+      let val = e.target.value;
+      if (validUrl(e.target.value)) {
+        const params = new URL(e.target.value).searchParams;
+        val = params.get("invite") || e.target.value;
+      }
+      actions.flows.user.create.updateForm({ inviteHash: val });
     },
     [actions],
   );
   return (
     <ContentLayout>
-      Enter your secret invite key:
-      <Form onFinish={done}>
+      <div className="nl-onboarding-title">Enter your invite key</div>
+      <Form onFinish={done} className="nl-onboarding-form">
         <Input
           name="hash"
-          className="u-margin-top-large"
+          className="nl-onboarding-input nl-onboarding-input-hash ant-form ant-form-item"
           onChange={onChangeHandler}
           defaultValue={state.flows.user.create.form.inviteHash}
           style={{ textAlign: "center" }}
         />
-        <Col className="u-margin-top-large">
-          <NextButton
-            isErrorSubmit={isErrorSubmit}
-            nextProps={{ text: "Next", command: () => done() }}
-            visible={!isEmpty(state.flows.user.create.form.inviteHash)}
-          />
-        </Col>
       </Form>
+      <Col>
+        <NextButton
+          isErrorSubmit={isErrorSubmit}
+          nextProps={{ text: "Next", command: () => done() }}
+          visible={!isEmpty(state.flows.user.create.form.inviteHash)}
+          contentDescription={
+            !state.flows.user.create.legacyToken && !state.auth.authenticated ? (
+              <div>
+                Enter hash or nft credentials. Or
+                <Link to="/auth/newlife-members" className="paragraph-2u nl-onboarding-link">
+                  {" "}
+                  click here{" "}
+                </Link>
+                if you are a member from the Newlife mobile app.
+              </div>
+            ) : null
+          }
+        />
+      </Col>
     </ContentLayout>
   );
 };

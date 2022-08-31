@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { IOView } from "../types";
 import { useAppState } from "../overmind";
 
-export const UnsidAuth: IOView<{
+export const NewsafeAuth: IOView<{
   redirectPath?: string;
   redirectUrl?: string;
 }> = ({ children, redirectPath, redirectUrl }) => {
@@ -14,21 +14,28 @@ export const UnsidAuth: IOView<{
     referer: hostname,
     redirectUrl: redirectUrl || redirectPath || `https://${hostname}`,
   };
-  const unsidUrl = `https://auth-dev.unsid.org/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;
+  const newsafeUrl = `https://auth-dev.newsafe.org/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;
 
   return (
     <>
       {children || (
         <>
           {params.requestor && <h1 className="text-center">{`Welcome to ${state.config.settings.app.name}`}</h1>}
-          <h2 className="text-center">This service is using UNSID - the distributed identity service for access management.</h2>
+          <h2 className="text-center">
+            This service is using NEWSAFE
+            <br />
+            the distributed identity and access management service.
+          </h2>
 
           <br />
           {params.requestor ? (
             <>
-              <h2 className="text-center">Please sign in using your account at auth.unsid.org</h2>
+              <h2 className="text-center">Please sign in using your account at auth.newsafe.org</h2>
               <div className="text-center">
-                <Button style={{ fontSize: 30, height: 60, marginTop: 60 }} onClick={() => ((window.location as any) = unsidUrl)}>
+                <Button
+                  style={{ fontSize: 30, height: 60, marginTop: 60 }}
+                  onClick={() => ((window.location as any) = newsafeUrl)}
+                >
                   Sign In
                 </Button>
               </div>

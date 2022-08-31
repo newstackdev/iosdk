@@ -20,13 +20,17 @@ export const getLocalTimeData = (proposal) => {
   const voteStartDateLocal = new Date(proposal.vote_start + "Z").toUTCString();
   const voteEndDateLocal = new Date(proposal.vote_end + "Z").toUTCString();
   const timeLeftInSeconds = moment(proposal.vote_end + "Z").diff(moment(), "seconds");
-  const timeLeftFromNow = moment(new Date(proposal.vote_end + "Z")).fromNow();
+  const timeLeftInSecondsStart = moment(proposal.vote_start + "Z").diff(moment(), "seconds");
+  const timeLeftFromStart = moment(new Date(proposal.vote_start + "Z")).fromNow();
+  const timeLeftFromEnd = moment(new Date(proposal.vote_end + "Z")).fromNow();
 
   return {
     time_start_date: voteStartDateLocal,
     time_end_date: voteEndDateLocal,
     time_left_seconds: timeLeftInSeconds,
-    time_left_from_now: timeLeftFromNow,
+    time_left_from_now: timeLeftFromEnd,
+    time_to_start: timeLeftFromStart,
+    time_to_start_secs: timeLeftInSecondsStart,
   };
 };
 
@@ -51,6 +55,7 @@ export const useGetAuthorizedActions = ({ daoOwner, proposalId, proposal, currUs
   );
   const isWhitelisted = useCachedDaoWhitelist(daoOwner).rows?.some((user) => user == currUser);
   const beforeExpiry = Number(timeData.time_left_seconds) >= 0;
+  const beforeStart = Number(timeData.time_to_start_secs) >= 0;
 
   let { status_tag, action_type } = {
     status_tag: "",
@@ -79,7 +84,10 @@ export const useGetAuthorizedActions = ({ daoOwner, proposalId, proposal, currUs
       }
     }
   } else if (proposal.status == "approved") {
-    if (isOwner) {
+    if (beforeStart) {
+      status_tag = "starting";
+      action_type = "View";
+    } else if (isOwner) {
       if (beforeExpiry) {
         status_tag = "live";
         if (hasStaked && !alreadyVoted) {

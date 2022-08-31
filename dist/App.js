@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Button } from "antd";
 import { CrossCircle } from "./Components/Icons/CrossCircle";
 import { DEFAULT_ROUTES } from "./defaultRoutes";
@@ -19,6 +19,8 @@ const AppShell = ({ children }) => {
         // })
         return cancel;
     }, []);
+    if (!state.cache.ready)
+        return _jsx(_Fragment, { children: "IndexedDb not ready" });
     return (_jsxs(_Fragment, { children: [_jsxs("div", { style: { position: "sticky", zIndex: 999 }, children: [!flags["bannerDisabled"] && (_jsx("div", { id: "rssBlock", children: _jsx("div", { className: flags["banner"] ? "banner banner-expand" : "banner", children: _jsxs("div", { className: "banner-text-box", children: [!flags["banner"] ? (_jsxs("p", { style: { overflow: "hidden" }, children: [_jsx("span", { className: "paragraph-1r marqueeStyle", children: "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Any voting actions and proposals you hand in will only be beta tests on the Newcoin Testnet. Go to our Telegram group to hear more about the next steps and the Newcoin Testnet. Your username on testnet is however your username on mainnet. Pick your name and reserve it now!" }), _jsx("span", { className: "paragraph-1r marqueeStyle2", children: "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Any voting actions and proposals you hand in will only be beta tests on the Newcoin Testnet. Go to our Telegram group to hear more about the next steps and the Newcoin Testnet. Your username on testnet is however your username on mainnet. Pick your name and reserve it now!" })] })) : (_jsx("p", { className: "paragraph-1r", style: { margin: "10px" }, children: "Any voting actions and proposals you hand in will only be beta tests on the Newcoin Testnet. Go to our Telegram group to hear more about the next steps and the Newcoin Testnet. Your username on testnet is however your username on mainnet. Pick your name and reserve it now!" })), _jsx("span", { style: {
                                             marginLeft: "20px",
                                             display: "flex",

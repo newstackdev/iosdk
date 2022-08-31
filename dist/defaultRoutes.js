@@ -4,11 +4,13 @@ import { Auth } from "./Pages/Auth/Auth";
 import { Authenticate } from "./Pages/Onboarding/Authenticate";
 import { CreateUser } from "./Pages/Onboarding/CreateUser";
 import { DomainSelector, Done, LinkHash } from "./Pages/Onboarding";
+import { InviteesList, UserInvite } from "./Pages/User/UserInvite";
 import { JoinDao } from "./Pages/JoinDao";
 import { LegacyImport } from "./Pages/User/LegacyImport";
 import { Mood } from "./Pages/Mood/Mood";
 import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import { NotInvited } from "./Pages/Onboarding/NotInvited";
+import { OnboardingTypeSelector } from "./Pages/Onboarding/OnboardingTypeSelector";
 import { Post, PostInTags } from "./Pages/Post/Post";
 import { PostCreate } from "./Pages/Post/components/PostCreate";
 import { Privacy } from "./Pages/Privacy";
@@ -20,7 +22,6 @@ import { SelectMoodForm } from "./Components/SelectMood";
 import { TOS } from "./Pages/TOS";
 import { User } from "./Pages/User/User";
 import { UserCreate } from "./Pages/User/UserCreate";
-import { UserInvite } from "./Pages/User/UserInvite";
 import { UserStake } from "./Components/UserWidget";
 import { UserUpdate } from "./Pages/User/UserUpdate";
 import { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
@@ -66,7 +67,7 @@ const HostToDomain = [
         hosts: ["unsid.org", "web-dev.unsid.org"],
         components: {
             Root: LinkHash,
-            Explore: () => (_jsxs(_Fragment, { children: ["You are good to go.", _jsx("br", {}), "Use your UNSID to access the apps in the Newcoin ecosystem:", _jsx("br", {}), _jsx("br", {}), _jsxs("ul", { children: [_jsx("li", { children: _jsx("a", { href: "https://web.newlife.io", children: "newlife.IO" }) }), _jsx("li", { children: _jsx("a", { href: "https://web.newlife.io", children: "newthis.IO" }) }), _jsx("li", { children: _jsx("a", { href: "https://web.newlife.io", children: "newthat.OI" }) })] })] })),
+            Explore: () => (_jsxs(_Fragment, { children: ["You are good to go.", _jsx("br", {}), "Use Newsafe to access the apps in the Newcoin ecosystem:", _jsx("br", {}), _jsx("br", {}), _jsxs("ul", { children: [_jsx("li", { children: _jsx("a", { href: "https://web.newlife.io", children: "newlife.IO" }) }), _jsx("li", { children: _jsx("a", { href: "https://web.newlife.io", children: "newthis.IO" }) }), _jsx("li", { children: _jsx("a", { href: "https://web.newlife.io", children: "newthat.OI" }) })] })] })),
         },
     },
     {
@@ -123,7 +124,6 @@ export const DEFAULT_ROUTES = [
     _jsx(OverridableRoute, { exact: true, path: "/folder/:moodId", component: Mood }, "m"),
     _jsx(OverridableRoute, { path: "/user/stake/:id", component: UserStake }, "us"),
     _jsx(OverridableRoute, { exact: true, path: "/user/:username", component: User }, "v"),
-    _jsx(OverridableRoute, { exact: true, path: "/user/invite", component: UserInvite }, "ui"),
     _jsx(OverridableRoute, { exact: true, path: "/payment/subscription", component: Product }, "s"),
     _jsx(OverridableRoute, { exact: true, path: "/auth/newlife-members", component: LegacyImport }, "ue"),
     _jsx(OverridableRoute, { exact: true, path: "/spotlights", component: Spotlights }, "sp"),
@@ -146,5 +146,10 @@ export const DEFAULT_ROUTES = [
     _jsx(OverridableRoute, { exact: true, path: "/signup/create", component: CreateUser }, "suc"),
     _jsx(OverridableRoute, { exact: true, path: "/signup/done", component: Done }, "sudn"),
     _jsx(OverridableRoute, { exact: true, path: "/signup/notInvited", component: NotInvited }, "suni"),
+    // User Invite
+    _jsx(OverridableRoute, { exact: true, path: "/user/invite", component: UserInvite }, "ui"),
+    _jsx(OverridableRoute, { exact: true, path: "/user/invite/all", component: InviteesList }, "uia"),
+    // Metamask
+    _jsx(OverridableRoute, { exact: true, path: "/signup/metamask", component: OnboardingTypeSelector }, "suots"),
 ];
 //# sourceMappingURL=defaultRoutes.js.map

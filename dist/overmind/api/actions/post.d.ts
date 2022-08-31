@@ -1,5 +1,8 @@
 import { Action } from "../../../types";
 import { MoodReadResponse, PostCreateRequest, PostReadResponse, PostRemoteMetaProxyResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+export declare const cache: Action<{
+    posts: PostReadResponse | PostReadResponse[];
+}>;
 export declare const read: Action<{
     id: string;
 }>;

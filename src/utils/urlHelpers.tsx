@@ -18,3 +18,9 @@ export const urlify = (text: string) => {
     return part;
   });
 };
+
+export const validUrl = (str: string) => {
+  var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  var pattern = new RegExp(regex);
+  return pattern.test(str);
+};

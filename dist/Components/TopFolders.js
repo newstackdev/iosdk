@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
 import { MaybeLink, PostWidget } from "./PostWidget";
 import { PremiumContent } from "./PremiumContent";
-import { useActions, useAppState } from "../overmind";
+import { useActions, useAppState, useEffects } from "../overmind";
 import { useCachedMood } from "../hooks/useCached";
 import FolderClosed from "./Icons/Folder/Closed";
 import Title from "../Pages/Explore/Title";
@@ -17,7 +17,7 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
                 height: "auto",
                 display: "flex",
                 justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
-                flexWrap: "unset",
+                flexWrap: "wrap",
             }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-five" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
                             justifyContent: "center",
                             flexDirection: "column",
@@ -44,7 +44,16 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
 };
 const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts }) => {
     const state = useAppState();
-    const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
+    const effects = useEffects();
+    const moods = state.lists.top.moods.items || [];
+    // if (true)
+    //   return (
+    //     <>
+    //       {posts?.map((p) => (
+    //         <div>{JSON.stringify(p.id)}</div>
+    //       ))}
+    //     </>
+    //   );
     const actions = useActions();
     maxItems = maxItems || 100;
     let remapMoods = [];

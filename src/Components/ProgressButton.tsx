@@ -12,7 +12,8 @@ export const ProgressButton: NLView<{
   disabled?: boolean;
   isErrorSubmit?: boolean;
   progressText?: string;
-}> = ({ actionName, type, htmlType, className, children, onClick, disabled, isErrorSubmit, progressText }) => {
+  id?: string;
+}> = ({ actionName, id, type, htmlType, className, children, onClick, disabled, isErrorSubmit, progressText }) => {
   const state = useAppState();
   const ival = !!state.indicators.specific[actionName];
   return (
@@ -20,7 +21,7 @@ export const ProgressButton: NLView<{
       {/* <IndeterminateProgress inProgress={ival} /> */}
       {/* {!ival ? ( */}
       <Button
-        // style={{ width: "100%" }}
+        id={id}
         type={type}
         htmlType={htmlType}
         onClick={onClick}

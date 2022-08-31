@@ -18,15 +18,72 @@
 }
 
 .dao-details-ctn {
+  margin: 0 auto;
   .u-margin-bottom-large;
-}
+  .u-margin-top-medium;
+  box-sizing: border-box;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  width: 95%;
+
+  @media(max-width: 800px){
+    width: 92%;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+    .dao-details-avi {
+      .u-margin-right-medium;
+      align-items: flex-start;
+
+      @media(max-width: 800px){
+        align-items: center;
+      }
+    }
+
+    .dao-details-txt {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      //border: solid red 2px;
+
+      @media(max-width: 800px){
+        align-items: center;
+        .u-margin-bottom-medium;
+      }
+    }
+
+    .dao-details-btns {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      @media(max-width: 800px){
+        .u-margin-top-medium;
+        width: 92%;
+        height: 130px;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+    }
+  }
 
 .dao-tabs-ctn {
-  gap: 75px;
-}
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  .u-margin-bottom-medium;
+  width: 90%;
 
-.dao-details-left {
-  .u-gap-40;
+  @media(max-width: 800px){
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 }
 
 .dao-owner-avi {
@@ -35,6 +92,9 @@
 
 .menu-h2-active {
   .header-2;
+  @media(max-width: 1050px){
+    font-size: 20px;
+  }
 }
 
 .menu-h2-inactive {
@@ -44,5 +104,13 @@
 }
 
 .toggle-wrapper {
+  width: 94%;
+  margin: 0 auto;
   .u-margin-top-large;
+}
+
+.sort {
+  @media(max-width: 800px){
+    display: none;
+  }
 }

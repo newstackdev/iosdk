@@ -1,6 +1,6 @@
-import { Button, Modal, Row } from "antd";
-import { Col, Form, Input, Select } from "antd-latest";
+import { Button, Modal } from "antd";
 import { CrossCircle } from "../../../../Components/Icons/CrossCircle";
+import { Form, Input } from "antd-latest";
 import { NLView } from "../../../../types";
 import { NewcoinRecept } from "../../../../Components/Recepts";
 import { ProgressButton } from "../../../../Components/ProgressButton";
@@ -137,6 +137,7 @@ export const VoteModal: NLView<{
               </Form.Item>
 
               <Button
+                id={"vote-lock-btn"}
                 className={"confirm-btn"}
                 onClick={() => {
                   setMode(VOTE_STEPS.CONFIRM);
@@ -175,6 +176,7 @@ export const VoteModal: NLView<{
               </p>
 
               <Button
+                id={"vote-confirm-btn"}
                 className={"confirm-btn"}
                 onClick={() => {
                   setMode(VOTE_STEPS.VOTE);
@@ -217,6 +219,7 @@ export const VoteModal: NLView<{
               </p>
 
               <ProgressButton
+                id={"vote-submit-btn"}
                 actionName="newcoin.daoVoteProposal"
                 progressText="Voting..."
                 onClick={vote}

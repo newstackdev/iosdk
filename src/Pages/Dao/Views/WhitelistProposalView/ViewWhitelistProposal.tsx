@@ -1,10 +1,10 @@
-import { Avatar, Col, Row } from "antd";
-import { ContentImage } from "../../../../Components/Image";
-import { Link } from "react-router-dom";
-import { ProgressBar } from "../../Components/Icons";
+import { AviLinkRegular } from "../../Components/AviLink";
+import { BlockExplorerIcon } from "../../Components/Icons";
+import { Button, Col, Row } from "antd";
 import { UserStake } from "../../../../Components/UserWidget";
 import { ViewWhitelistProposalPageRow } from "../../Components/Previews/Whitelist/ViewWhitelistProposalPageRow/ViewWhitelistProposalPageRow";
-import { getLocalTimeData } from "../../Utils/Helpers";
+import { VoteBarFull } from "../../Components/VoteBar";
+import { getLocalTimeData, useGetAuthorizedActions } from "../../Utils/Helpers";
 import { useAppState } from "../../../../overmind";
 import { useCachedDaoWhitelistProposal, useCachedPool, useCachedUser } from "../../../../hooks/useCached";
 import { useParams } from "react-router";
@@ -29,48 +29,46 @@ const ViewWhitelistProposal = (props: { proposal; daoOwner: string; proposalId: 
   const pool = useCachedPool({ owner: daoOwner });
 
   if (!(Number(proposal?.id) >= 0)) return <div>Proposal was executed or does not exist.</div>;
-  const yesVotes = Number(proposal.vote_yes?.quantity?.split(" ")[0]);
-  const noVotes = Number(proposal.vote_no?.quantity?.split(" ")[0]);
-  const totalVotes = yesVotes + noVotes;
+
+  const proposal_type = "standart";
+  const currUser = state.api.auth.user?.username || "";
+  let { status_tag, action_type, vote } = useGetAuthorizedActions({
+    daoOwner,
+    proposalId,
+    currUser,
+    proposal_type,
+    proposal,
+  });
 
   return (
-    <Col className="view-proposal-wrapper">
+    <Col className="view-proposal-wrapper u-margin-top-mega">
       <ViewWhitelistProposalPageRow
         daoOwner={daoOwner}
         proposalId={proposalId}
         proposal={proposal}
-        wrapperClass={"u-dao-row-wrapper u-dao-margin-btm-40px"}
+        wrapperClass={"u-margin-bottom-large u-dao-row-wrapper"}
         embedded={true}
         buttonType={false}
       />
 
       <p className={"view-proposal-type-p"}> #new member</p>
-      <Row align={"middle"}>
-        <div className={"view-proposal-row-dao-details"}>
+      <Row align={"middle"} justify={"space-between"}>
+        <p className={" u-margin-bottom-30 view-proposal-row-dao-details"}>
           Posted by
-          <Link to={`/user/${proposal.proposer}`} className={"view-proposal-avi-ctn"}>
-            <Avatar src={<ContentImage {...proposerObj} />} />
-            <p className={"view-proposal-row-username"}>{proposal.proposer}</p>
-          </Link>
+          <AviLinkRegular username={proposal.proposer} userObj={proposerObj} showVerified={false} wrapperClass={"avi"} />
           in the
-          <Link to={`/user/${proposal.proposer}`} className={"view-proposal-avi-ctn"}>
-            <Avatar src={<ContentImage {...daoOwnerObj} />} />
-            <p className={"view-proposal-row-username"}>{daoOwnerObj.username}</p>
-          </Link>
+          <AviLinkRegular username={daoOwner} userObj={daoOwnerObj} showVerified={false} wrapperClass={"avi"} />
           DAO
+          <a href={"#"} target={"rel_no_opener"}>
+            <BlockExplorerIcon />
+          </a>
+          <Button className={`u-dao-proposal-${status_tag}-tag-status-btn`}>
+            <span>{status_tag}</span>
+          </Button>
           <UserStake buttonText={`Get $${pool.code}`} user={{ username: daoOwner }} hideButton={false} />
-        </div>
+        </p>
       </Row>
-
-      <p className="paragraph-2b">
-        {timeData.time_left_seconds > 0 ? "Ending" : "Ended"} {timeData.time_left_from_now}{" "}
-      </p>
-      <p className="paragraph-1b u-margin-top-large">{totalVotes} votes </p>
-      <ProgressBar width={"100%"} proposal={proposal} />
-      <Row align={"middle"} justify={"space-between"} className={"view-proposal-votes-ctn"}>
-        <p className="u-margin-bottom-15 paragraph-2b"> {yesVotes} yes votes </p>
-        <p className="u-margin-bottom-15 paragraph-2b"> {noVotes} no votes </p>
-      </Row>
+      <VoteBarFull proposal={proposal} timeData={timeData} />
     </Col>
   );
 };

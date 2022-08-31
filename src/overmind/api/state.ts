@@ -4,6 +4,7 @@ import {
   MoodReadResponse,
   PagedRatedResponseUser,
   PostReadResponse,
+  UserInvitationPagedListReadPublicResponse,
   UserReadPrivateResponse,
   UserReadPublicResponse,
 } from "@newcoin-foundation/iosdk-newgraph-client-js";
@@ -29,6 +30,7 @@ type State = {
     admitted: boolean;
     userDisplayHandler: string;
     attempted: boolean;
+    inviteesList: UserInvitationPagedListReadPublicResponse;
   };
   cache: {
     users: {
@@ -63,6 +65,7 @@ export default {
     }),
     authorized: derived((s: AuthorizedUserState, rs: any) => rs.auth.status >= AUTH_FLOW_STATUS.AUTHORIZED),
     admitted: derived((s: AuthorizedUserState) => ["admitted", "registered"].includes(s.user?.status || "")),
+    inviteesList: { value: [] },
   },
 
   cache: {

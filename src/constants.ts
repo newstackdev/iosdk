@@ -1,4 +1,5 @@
 export const LICENSES = [
+  ["No license", "no-license", "The work is under the default exclusive copyright", "https://choosealicense.com/no-permission/"],
   [
     "Creative Commons - No Rights Reserved",
     "CC0",

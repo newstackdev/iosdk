@@ -21,6 +21,7 @@ declare const _default: {
             admitted: boolean;
             userDisplayHandler: string;
             attempted: boolean;
+            inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
         };
         cache: {
             users: {

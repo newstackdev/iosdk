@@ -129,6 +129,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 admitted: boolean;
                 userDisplayHandler: string;
                 attempted: boolean;
+                inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
             };
             cache: {
                 users: {
@@ -293,8 +294,20 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
-        unsid: {
+        newsafe: {
             token: string;
+        };
+        cache: {
+            readonly db: {
+                ready: boolean;
+                nodes: import("dexie").Dexie;
+                edges: import("dexie").Dexie.Table<any, any>;
+            };
+            ready: boolean;
+            _db: () => {
+                nodes: import("dexie").Dexie;
+                edges: import("dexie").Dexie.Table<any, any>;
+            };
         };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
@@ -356,7 +369,8 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             vote: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
-        unsid: {};
+        newsafe: {};
+        cache: typeof import("./cache/effects");
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         firebase: typeof import("./firebase/actions");
@@ -475,17 +489,55 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             vote: typeof import("./flows/vote/actions");
         }, object>;
         newcoin: typeof import("./newcoin/actions");
-        unsid: {
+        newsafe: {
             onInitializeOvermind: import("../types").Action<undefined, void>;
             authorize: import("../types").Action<{
                 jwt: string;
             }, void>;
             signOut: import("../types").Action<undefined, void>;
         };
+        cache: typeof import("./cache/actions");
     }, object>;
 }>;
 export declare const useAppState: import("overmind-react").StateHook<Context>;
 export declare const useActions: () => {
+    cache: {
+        readonly initStore: (payload: {
+            name: string;
+        }) => void | Promise<void>;
+        readonly store: (payload: {
+            label: string;
+            value: any;
+        }) => void | Promise<void>;
+        readonly storeMultiple: (payload: {
+            label: string;
+            value: any[];
+        }) => void | Promise<void>;
+        readonly storeEdge: (payload: {
+            fromLabel?: string | undefined;
+            toLabel: string;
+            from: {
+                id?: string | undefined;
+            };
+            to: {
+                id?: string | undefined;
+            };
+            value?: any;
+        }) => void | Promise<void>;
+        readonly storeEdgeMultiple: (payload: {
+            fromLabel?: string | undefined;
+            toLabel?: string | undefined;
+            from: {
+                id?: string | undefined;
+            }[];
+            to: {
+                id?: string | undefined;
+            }[];
+            value?: any;
+        }) => void | Promise<void>;
+        readonly getPost: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse) => void | Promise<void>;
+        readonly onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
+    };
     auth: {
         readonly logout: (payload?: {
             noRouting?: boolean | undefined;
@@ -585,7 +637,11 @@ export declare const useActions: () => {
             elements?: import("@stripe/stripe-js").StripeElements | null | undefined;
         }) => void | Promise<void>;
     };
-    evm: never;
+    evm: {
+        readonly connect: (payload: {}) => void | Promise<void>;
+        readonly checkConnection: (payload?: undefined) => void | Promise<void>;
+        readonly sendSignedMessage: (payload?: undefined) => void | Promise<void>;
+    };
     ux: {
         showNotification: (payload: {
             message: string;
@@ -646,6 +702,7 @@ export declare const useActions: () => {
             readonly invite: (payload: {
                 userInvite: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInviteRequest;
             }) => string | Promise<string | undefined> | undefined;
+            readonly getUserInvitesList: () => void | Promise<void>;
             readonly powerup: (payload: {
                 user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: number;
@@ -685,6 +742,9 @@ export declare const useActions: () => {
             }) => import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
         };
         post: {
+            readonly cache: (payload: {
+                posts: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse | import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
+            }) => void | Promise<void>;
             readonly read: (payload: {
                 id: string;
             }) => void | Promise<void>;
@@ -753,11 +813,13 @@ export declare const useActions: () => {
                     user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest;
                 }) => void | Promise<void>;
                 readonly checkAvailability: (payload: {
-                    username: string;
+                    username?: string | undefined;
                 }) => void | Promise<void>;
                 readonly verifyHash: (payload: {
                     inviteHash: string;
                 }) => void | Promise<void>;
+                readonly startMetamaskFlow: (payload: {}) => void | Promise<void>;
+                readonly stopMetamaskFlow: (payload?: undefined) => void | Promise<void>;
             };
         };
         rating: {
@@ -861,7 +923,7 @@ export declare const useActions: () => {
             vote_id: string;
         }) => any;
     };
-    unsid: {
+    newsafe: {
         onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
         authorize: (payload: {
             jwt: string;
@@ -928,6 +990,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
         vote: unknown;
     }, object>;
     newcoin: typeof import("./newcoin/effects");
-    unsid: {};
+    newsafe: {};
+    cache: typeof import("./cache/effects");
 }, object>;
 export declare const useReaction: () => import("overmind").IReaction<Context>;

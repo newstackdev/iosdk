@@ -1,7 +1,6 @@
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
 import { ContentLayout } from "../../Components/ContentLayout";
-import { EmbeddableControl, IOView } from "../../types";
-import { EmbeddableControlNextCommand } from "../../types";
+import { IOView } from "../../types";
 import { NextButton } from "../Onboarding";
 import { useActions, useAppState } from "../../overmind";
 import { useEffect, useState } from "react";
@@ -37,18 +36,16 @@ export const Auth: IOView<{ embedded: boolean }> = ({ embedded }) => {
   }, [state.api.auth.authorized, state.routing.location, state.flows.user.create.isLegacyUpdateOngoing]);
 
   useEffect(() => {
-    if (embedded) {
-      setNextCommand(
-        state.auth.status === AUTH_FLOW_STATUS.ANONYMOUS
-          ? {
-              text: "Send verification",
-              command: () => phoneForm.submit(),
-            }
-          : state.auth.status === AUTH_FLOW_STATUS.RECEIVED
-          ? { text: "Verify", command: () => codeForm.submit() }
-          : undefined,
-      );
-    }
+    setNextCommand(
+      state.auth.status === AUTH_FLOW_STATUS.ANONYMOUS
+        ? {
+            text: "Send verification",
+            command: () => phoneForm.submit(),
+          }
+        : state.auth.status === AUTH_FLOW_STATUS.RECEIVED
+        ? { text: embedded ? "Verify" : "Submit", command: () => codeForm.submit() }
+        : undefined,
+    );
   }, [state.auth.status]);
   const FragmentWrapper = ({ children }) => {
     if (state.routing.location === "/auth") return <ContentLayout customClass="app-content-layout">{children}</ContentLayout>;
@@ -59,11 +56,20 @@ export const Auth: IOView<{ embedded: boolean }> = ({ embedded }) => {
 
   return (
     <FragmentWrapper>
+      <div className="nl-onboarding-title" />
       <div id="sign-in-button" />
       <PhoneForm setIsErrorSubmit={setIsErrorSubmit} embedded={embedded} phoneForm={phoneForm} />
       <CodeForm setIsErrorSubmit={setIsErrorSubmit} embedded={embedded} codeForm={codeForm} />
 
-      {embedded && <NextButton nextProps={nextCommand} isErrorSubmit={isErrorSubmit} />}
+      <NextButton
+        nextProps={nextCommand}
+        isErrorSubmit={isErrorSubmit}
+        contentDescription={
+          embedded
+            ? "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS"
+            : undefined
+        }
+      />
       <div className="support-box__fix-height" hidden={embedded} />
     </FragmentWrapper>
   );

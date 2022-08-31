@@ -6,7 +6,8 @@ export const cache = async ({ state, actions, effects }, { user, force }) => {
     let { id, username } = { id: "", username: "", ...user };
     const cache = state.api.cache.users;
     if (!id && !username)
-        return;
+        return Promise.resolve();
+    await actions.cache.store({ label: "user", value: user });
     !id && (id = cache.byUsername[username].id || "");
     !username && (username = cache.byId[id]?.username || "");
     // mr.data.value?.forEach(m => (m.id && (state.api.cache.moods[m.id] = { ...state.api.cache.moods[m.id], ...m })));
@@ -18,15 +19,28 @@ export const cache = async ({ state, actions, effects }, { user, force }) => {
         console.log(ex);
     }
     const isNewer = !curr?.id || new Date(user?.updated || 0).getTime() - new Date(curr?.updated || 0).getTime() > 0;
-    const shouldUpdate = force || !curr || (!curr.moods?.length && user.moods?.length) || isNewer;
+    const shouldUpdate = force || !curr || !curr?.moods?.length /* && user.moods?.length */ || isNewer;
     if (!shouldUpdate)
-        return;
-    const mr = curr?.moods?.length || 0 > 4 ? curr?.moods : (await state.api.client.user.moodsList({ id })).data?.value;
+        return Promise.resolve();
+    let mr = [];
+    if ((!curr?.username && !user?.username) || curr?.moods?.length || 0 > 4) {
+        mr = curr?.moods;
+    }
+    else {
+        try {
+            const p = state.api.client.user.moodsList({ id });
+            const response = await p;
+            mr = response.data.value || [];
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
     const moods = mr || [];
-    mr && actions.api.mood.cache({ moods: mr });
+    mr && (await actions.api.mood.cache({ moods: mr }));
     if (state.api.auth.user?.id == id)
         state.api.auth.moods = [...(state.api.cache.users.byId[state.api.auth.user?.id || ""]?.moods || [])];
-    if (curr && curr.id && curr.username && curr.moods && curr.moods.length < moods.length) {
+    if (curr && curr.id && curr.moods && curr.moods.length < moods.length) {
         cache.byId[id].moods = moods;
         cache.byUsername[username || ""].moods = moods;
     }
@@ -42,7 +56,7 @@ export const cache = async ({ state, actions, effects }, { user, force }) => {
 const inProgress = {};
 export const read = async ({ state, actions, effects }, { id, username }) => {
     if (!(id || username))
-        return;
+        return Promise.resolve();
     const known = (id && state.api.cache.users.byId[id]) || (username && state.api.cache.users.byUsername[username]);
     const ur = await (known
         ? Promise.resolve({ data: known })
@@ -130,7 +144,7 @@ export const getMoods = async ({ state, actions, effects }, { id }) => {
     // state.api.cache.users.byUsername[u.username || ""].moods =  (r.data?.value || []) as MoodReadResponse[];
     //   moods: (r.data?.value || []) as MoodReadResponse[],
     // };
-    actions.api.mood.cache({ moods: r.data?.value });
+    await actions.api.mood.cache({ moods: r.data?.value });
     // r.data.value?.forEach(p => p.id && (state.api.cache.moods[p.id] = { ...state.api.cache.moods[p.id], ...p }))
 };
 export const stake = pipe(debounce(1000), async ({ state, actions, effects }, { user, amount }) => {
@@ -170,6 +184,22 @@ export const invite = async ({ state, effects }, { userInvite }) => {
         const response = await state.api.client.user.inviteCreate(userInvite);
         //@ts-ignore
         return response.data.invitation?.hash;
+    }
+    catch (ex) {
+        effects.ux.message.error(ex.error.errorMessage);
+    }
+};
+export const getUserInvitesList = async ({ state, effects, actions }) => {
+    try {
+        const response = await state.api.client.user.inviteesList();
+        const promises = response.data.value?.map((res) => {
+            return actions.api.user.cache({ user: res });
+        });
+        if (promises) {
+            await Promise.all(promises);
+            state.api.auth.inviteesList = response.data;
+        }
+        return Promise.resolve();
     }
     catch (ex) {
         effects.ux.message.error(ex.error.errorMessage);

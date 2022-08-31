@@ -33,11 +33,7 @@ export const routeAfterAuth = async ({ state, actions }) => {
 const last = (a) => a[a.length - 1];
 const uriFromLocation = ({ pathname, search }) => `${pathname}?${search}`;
 export const goBack = ({ actions, state }) => {
-    state.routing.backHistory.pop();
-    const bh = state.routing.backHistory.pop();
-    const current = uriFromLocation(state.routing.history.location);
-    const prev = bh ? uriFromLocation(bh) : "/";
-    actions.routing.historyPush({ location: bh ? uriFromLocation(bh) : "/" });
+    window.history.back();
 };
 const onRouteChangeWizard = (pathname, state) => {
     const restrictedPrev = ["HASH_VERIFY", "AUTHENTICATE"];

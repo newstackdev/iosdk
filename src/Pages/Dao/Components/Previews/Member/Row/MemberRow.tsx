@@ -1,11 +1,6 @@
-import { Avatar, Row } from "antd";
-import { ContentImage } from "../../../../../../Components/Image";
-import { Link } from "react-router-dom";
-import { VerifiedIcon } from "../../../../../../Components/Icons/VerifiedIcon";
+import { AviLinkMedium } from "../../../AviLink";
 import { useAppState } from "../../../../../../overmind";
-import { useCachedDaoWhitelist, useCachedPool, useCachedUser } from "../../../../../../hooks/useCached";
-import { useVerified } from "../../../../../../hooks/useVerified";
-import map from "lodash/map";
+import { useCachedUser } from "../../../../../../hooks/useCached";
 
 const MemberRow = ({ user, daoId, ticker }: any) => {
   const state = useAppState();
@@ -24,28 +19,13 @@ const MemberRow = ({ user, daoId, ticker }: any) => {
     }
   }
 
-  const { verifiedUsers } = useVerified(map(useCachedDaoWhitelist().rows as string[], "user"));
-  const isUserVerified = verifiedUsers && user && verifiedUsers.includes(user);
-
   return (
-    <Link className={""} to={`/user/${user}`}>
-      <Row align={"middle"} className={"member-row-wrapper"}>
-        <Row>
-          <Link to={`/user/${user}`}>
-            <Avatar src={<ContentImage {...userObj} />} className="member-row-avi" />
-          </Link>
-          <Row align={"middle"} className={"member-row-user-ctn"}>
-            <p className={"member-row-p"}>{user || "Creator.io"}</p>
-            {isUserVerified && <VerifiedIcon />}
-          </Row>
-        </Row>
-        <Row align={"middle"}>
-          <p className={"member-row-p"}>
-            {amtLocked || 0} ${ticker}
-          </p>
-        </Row>
-      </Row>
-    </Link>
+    <div className="member-row-wrapper">
+      <AviLinkMedium showVerified={true} wrapperClass="avi" username={user} userObj={userObj} />
+      <p className={"member-row-p"}>
+        {amtLocked || 0} ${ticker}
+      </p>
+    </div>
   );
 };
 

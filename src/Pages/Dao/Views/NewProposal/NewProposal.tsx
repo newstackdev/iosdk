@@ -18,11 +18,9 @@ const NewProposal = () => {
   const [form] = useForm();
   const actions = useActions();
   const proposalType = Form.useWatch("proposal_type", form);
-  const whitelistSelection = Form.useWatch("whitelist_selection", form);
   const { daoOwner } = useParams<{ daoOwner }>();
   const ownDao = state.api.auth.user?.username === daoOwner;
   const [proposalCreated, setProposalCreated] = useState(false);
-  // const [selection, setSelection] = useState<string>("");
   const [customTime, setCustomTime] = useState(false);
   const [voteEnd, setVoteEnd] = useState<any>({});
   const [tx, setTx] = useState("");
@@ -31,8 +29,19 @@ const NewProposal = () => {
     "Since you are the DAO owner, you can choose to approve this proposal on creation. If you'd rather approve this proposal later, leave the box unchecked.";
   const isWhitelisted = ownDao || useCachedDaoWhitelist(daoOwner).rows?.some((user) => user == state.api.auth.user?.username);
 
-  const proposalCreate = async (val: { vote_dates; summary; proposal_type; auto_approve; url; whitelist_selection }) => {
-    const voteEndTime = val.vote_dates ? val.vote_dates : voteEnd ? voteEnd.time : moment().add("6", "minutes");
+  const proposalCreate = async (val: {
+    custom_vote_end;
+    custom_vote_start;
+    summary;
+    proposal_type;
+    auto_approve;
+    url;
+    whitelist_selection;
+  }) => {
+    const voteStartTime = val.custom_vote_start
+      ? val.custom_vote_start
+      : moment().add("1", "minutes").utc().format("YYYY-MM-DDTHH:mm:ss");
+    const voteEndTime = val.custom_vote_end ? val.custom_vote_end : voteEnd ? voteEnd.time : moment().add("6", "minutes");
     const proposalAction = proposalType == "whitelist" ? "daoCreateWhitelistProposal" : "daoCreateProposal";
     const types = {
       whitelist: {
@@ -47,7 +56,7 @@ const NewProposal = () => {
     const res = await actions.newcoin[proposalAction]({
       ...val,
       ...payLoad,
-      vote_start: moment().add("1", "minutes").utc().format("YYYY-MM-DDTHH:mm:ss"),
+      vote_start: voteStartTime.utc().format("YYYY-MM-DDTHH:mm:ss"),
       vote_end: voteEndTime.utc().format("YYYY-MM-DDTHH:mm:ss"),
       dao_owner: daoOwner,
       user: val.whitelist_selection,
@@ -95,15 +104,7 @@ const NewProposal = () => {
 
         {proposalType == "whitelist" && (
           <Form.Item name="whitelist_selection" rules={[{ required: true }]}>
-            <SearchWidget
-              searchUsers={true}
-              searchTags={false}
-              showSearch={true}
-              noNavigation={true}
-              // setSelection={setSelection}
-              // selection={selection}
-            />
-            {/* <Input placeholder="username of new member" /> */}
+            <SearchWidget searchUsers={true} searchTags={false} showSearch={true} noNavigation={true} />
           </Form.Item>
         )}
 
@@ -152,7 +153,13 @@ const NewProposal = () => {
         </Row>
 
         {customTime && (
-          <Form.Item name="vote_dates">
+          <Form.Item name="custom_vote_start">
+            <DatePicker showTime className={"new-proposal-custom-time"} placeholder={"Vote Start"} format={"YYYY-MM-DD-HH:mm"} />
+          </Form.Item>
+        )}
+
+        {customTime && (
+          <Form.Item name="custom_vote_end">
             <DatePicker showTime className={"new-proposal-custom-time"} placeholder={"Vote End"} format={"YYYY-MM-DD-HH:mm"} />
           </Form.Item>
         )}
@@ -169,7 +176,7 @@ const NewProposal = () => {
           </Form.Item>
         )}
 
-        <div className={"dao-checks"}>
+        <Row className={"dao-checks"}>
           <Form.Item className={"row-check"} name="dao-check" valuePropName="checked" rules={[{ required: true }]}>
             <RowCheckbox>
               <p className="paragraph-2r">I am fostering community health</p>
@@ -177,7 +184,7 @@ const NewProposal = () => {
           </Form.Item>
 
           {ownDao && (
-            <Form.Item name="auto_approve" valuePropName="checked">
+            <Form.Item className={"row-check"} name="auto_approve" valuePropName="checked">
               <RowCheckbox>
                 <Tooltip title={autoApproveConsentInfo}>
                   <p className="paragraph-2r">I consent to auto approval of my proposal</p>
@@ -185,7 +192,7 @@ const NewProposal = () => {
               </RowCheckbox>
             </Form.Item>
           )}
-        </div>
+        </Row>
 
         <Row justify={"center"}>
           <ProgressButton

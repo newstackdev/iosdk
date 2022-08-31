@@ -8,7 +8,6 @@ export const Done: IOView = () => {
 
   useEffect(() => {
     if (state.api.auth.authorized) {
-      sessionStorage.removeItem("cachedOnboarding");
       actions.routing.historyPush({ location: "/explore" });
     }
   }, [state.api.auth.authorized]);

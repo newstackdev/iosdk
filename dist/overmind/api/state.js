@@ -14,6 +14,7 @@ export default {
         }),
         authorized: derived((s, rs) => rs.auth.status >= AUTH_FLOW_STATUS.AUTHORIZED),
         admitted: derived((s) => ["admitted", "registered"].includes(s.user?.status || "")),
+        inviteesList: { value: [] },
     },
     cache: {
         posts: {},

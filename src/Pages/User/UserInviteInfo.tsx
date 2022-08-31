@@ -21,7 +21,6 @@ const UserInviteInfo = ({
 }) => {
   const state = useAppState();
   const [visible, setVisible] = useState<boolean>(true);
-  const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false);
   const [showCopyText, setShowCopyText] = useState<boolean>(false);
 
   const user = state.api.auth.user;
@@ -53,41 +52,35 @@ const UserInviteInfo = ({
           <Col className="user-invite-info_modal-footer-col">
             {hash && showCopyText ? (
               <div style={{ position: "relative", cursor: "pointer" }}>
-                <CopyToClipboard text={window.location.origin + `?invite=${hash}`}>
-                  <Row
-                    onClick={() => {
-                      setCopiedToClipboard(true);
-                    }}
-                  >
-                    <Input
-                      type="primary"
-                      className="nl-user-unvite-input-hash"
-                      // @ts-ignore
-                      placeholder={hash}
-                    />
-                    <span style={{ position: "absolute", bottom: "11px", right: "0px" }}>
-                      <Clipboard fill={copiedToClipboard ? "#d7ff65" : "#fff"} />
-                    </span>
-                    {copiedToClipboard && (
-                      <div style={{ position: "absolute", top: "43px" }}>
-                        <p className="paragraph-3r" style={{ color: "#d7ff65" }}>
-                          Copied to clipboard!
-                        </p>
-                      </div>
-                    )}
-                  </Row>
-                </CopyToClipboard>
+                <Row>
+                  <Input
+                    type="primary"
+                    className="nl-user-unvite-input-hash"
+                    // @ts-ignore
+                    placeholder={hash}
+                  />
+                  <span style={{ position: "absolute", bottom: "11px", right: "0px" }}>
+                    <Clipboard fill={"#d7ff65"} />
+                  </span>
+                  <div style={{ position: "absolute", top: "43px" }}>
+                    <p className="paragraph-3r" style={{ color: "#d7ff65" }}>
+                      Copied to clipboard!
+                    </p>
+                  </div>
+                </Row>
               </div>
             ) : (
-              <Button
-                type="primary"
-                className="u-margin-top-large"
-                onClick={() => {
-                  setShowCopyText(true);
-                }}
-              >
-                Get an invite link
-              </Button>
+              <CopyToClipboard text={window.location.origin + `?invite=${hash}`}>
+                <Button
+                  type="primary"
+                  className="u-margin-top-large"
+                  onClick={() => {
+                    setShowCopyText(true);
+                  }}
+                >
+                  Get an invite link
+                </Button>
+              </CopyToClipboard>
             )}
             <Button
               type="primary"

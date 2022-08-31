@@ -48,13 +48,7 @@ const last = <T>(a: T[]) => a[a.length - 1];
 const uriFromLocation = ({ pathname, search }: { pathname: string; search: string }) => `${pathname}?${search}`;
 
 export const goBack: Action = ({ actions, state }) => {
-  state.routing.backHistory.pop();
-  const bh = state.routing.backHistory.pop();
-
-  const current = uriFromLocation(state.routing.history.location);
-  const prev = bh ? uriFromLocation(bh) : "/";
-
-  actions.routing.historyPush({ location: bh ? uriFromLocation(bh) : "/" });
+  window.history.back();
 };
 
 const onRouteChangeWizard = (pathname: string, state: State) => {
@@ -84,7 +78,6 @@ export const onRouteChange: Action<{
   actions.routing.setPreloginRoute();
 
   state.routing.simpleHistory.push({ pathname, search });
-
   onRouteChangeWizard(pathname, state);
 
   const lastBh = last(state.routing.backHistory);
@@ -107,7 +100,6 @@ export const onRouteChange: Action<{
   }
 
   setTimeout(() => window.scrollTo(0, 0));
-
   // if(state.auth.authorized)
   //     return actions.routing.historyPush({ location: "/explore" });
 

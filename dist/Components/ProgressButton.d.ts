@@ -8,4 +8,5 @@ export declare const ProgressButton: NLView<{
     disabled?: boolean;
     isErrorSubmit?: boolean;
     progressText?: string;
+    id?: string;
 }>;

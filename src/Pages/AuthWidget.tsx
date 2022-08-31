@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Dropdown, Menu, Row } from "antd";
+import { Avatar, Button, Col, Menu, Row } from "antd";
 import { ContentImage } from "../Components/Image";
 import { Link } from "react-router-dom";
 import { LogOut } from "../Components/Icons/LogOut";
@@ -6,7 +6,6 @@ import { NLView } from "../types";
 import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { useActions, useAppState } from "../overmind";
 import { useCachedUser } from "../hooks/useCached";
-import SubMenu from "antd/lib/menu/SubMenu";
 
 export const AuthWidget: NLView = () => {
   const state = useAppState();
@@ -16,30 +15,12 @@ export const AuthWidget: NLView = () => {
   const user: UserReadPrivateResponse | null = state.api.auth.user;
   const u = useCachedUser({ id: user?.id }, true);
 
-  const profileLink = (mobile?: boolean) =>
+  const profileLink = () =>
     state.auth.authenticated ? (
       !state.api.auth.authorized ? (
-        mobile ? (
-          <Button key="sub4" onClick={() => actions.auth.logout()} style={{ padding: 0 }}>
-            <Row>
-              <span className="u-margin-right-small">Sign out</span>
-              <LogOut />
-            </Row>
-          </Button>
-        ) : (
-          <Dropdown
-            overlay={
-              <Menu.Item key="sub4" onClick={() => actions.auth.logout()} style={{ padding: 0 }}>
-                <Row>
-                  <span className="u-margin-right-small">Sign out</span>
-                  <LogOut />
-                </Row>
-              </Menu.Item>
-            }
-          >
-            <Avatar src={<ContentImage {...u} />} className="avatar-image-header" />
-          </Dropdown>
-        )
+        <Button className="secondary-button" onClick={() => actions.auth.logout()}>
+          <span className="paragraph-2b">Sign out</span>
+        </Button>
       ) : (
         <Row
           style={{
@@ -55,26 +36,23 @@ export const AuthWidget: NLView = () => {
               <span className="paragraph-1r navbar-mobile-text">Profile</span>
             </Link>
           </Col>
-
-          <Col className="mobile-menu-show text-right">
-            {/* <span
-							hidden={!state.auth.authenticated}
-							onClick={() => actions.auth.logout()}
-							style={{ marginRight: "10px" }}
-						>
-							metamask
-						</span> */}
-          </Col>
         </Row>
       )
     ) : (
-      <Button
-        onClick={() => actions.routing.historyPush({ location: "/auth" })}
-        hidden={state.routing.location === "/auth"}
-        className="secondary-button"
-      >
-        <span className="paragraph-2b">Sign In</span>
-      </Button>
+      <div className="navbar-signin-wrapper">
+        <Button
+          onClick={() => {
+            actions.routing.historyPush({ location: "/auth" });
+            actions.flows.user.create.stopMetamaskFlow();
+          }}
+          className="secondary-button"
+        >
+          <span className="paragraph-2b">Sign In</span>
+        </Button>
+        <Button className="secondary-button" onClick={() => actions.routing.historyPush({ location: "/signup/metamask" })}>
+          <span className="paragraph-2b">Metamask</span>
+        </Button>
+      </div>
     );
 
   return (
@@ -86,6 +64,7 @@ export const AuthWidget: NLView = () => {
           {profileLink()}
         </Menu.Item>
       </Menu.Item>
+
       {isAuthorized && (
         <Menu.Item>
           <Button onClick={() => actions.routing.historyPush({ location: "/user/invite" })} className="stroke-btn-green">

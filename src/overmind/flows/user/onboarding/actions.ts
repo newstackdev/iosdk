@@ -2,7 +2,6 @@ import { Action } from "../../../../types";
 import { Context, State } from "../../../overmind";
 import { UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { WizardInput } from "./wizardStateMachine";
-import { action } from "overmind/lib/operator";
 import { debounce, filter, pipe, throttle } from "overmind";
 import { get, isEmpty, isNil } from "lodash";
 // import { IReaction } from "overmind";
@@ -19,6 +18,7 @@ const reduceState: (st: State) => WizardInput = ({
         formUsernameIsAvailable,
         inviteHashVerified,
         isLegacyUpdateOngoing,
+        metamaskFlow,
       },
     },
   },
@@ -33,6 +33,7 @@ const reduceState: (st: State) => WizardInput = ({
     user: auth.user,
     formPhone: phone,
     inviteHashVerified,
+    metamaskFlow,
     legacyToken,
     isLegacyUpdateOngoing,
     featureFlags: featureFlags,
@@ -66,7 +67,7 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
   reaction(
     (s) => ({ auth: s.api.auth, username: s.flows.user.create.form.username }),
     ({ username, auth }) => {
-      if (username && !auth.authorized) actions.flows.user.create.checkAvailability({ username });
+      if (!auth.authorized) actions.flows.user.create.checkAvailability({ username });
     },
   );
 };
@@ -160,8 +161,6 @@ export const wizardStepNext: Action = ({ state, actions }) => {
   state.flows.user.create.progressedSteps = state.flows.user.create.progressedSteps.filter((step) => step.current !== current);
   state.flows.user.create.progressedSteps.push({ nextLink, hasNext, current, hasPrev });
 
-  sessionStorage.setItem("cachedOnboarding", JSON.stringify(state.flows.user.create));
-
   state.flows.user.create.wizard.send("NEXT", reduceState(state));
   state.flows.user.create.wizard.send("UPDATE", reduceState(state));
 };
@@ -183,11 +182,10 @@ export const create: Action<{
   user: UserCreateRequest;
 }> = async ({ actions }, params) => {
   const u = await actions.api.user.create({ ...params });
-  sessionStorage.removeItem("cachedOnboarding");
   actions.flows.user.create.stopLegacyImport({ noRedirect: true });
 };
 
-export const checkAvailability: Action<{ username: string }> = pipe(
+export const checkAvailability: Action<{ username?: string }> = pipe(
   // filter((_, { username }) => username.length > 6),
   debounce(300),
   async ({ actions, state }: Context, { username }) => {
@@ -195,7 +193,6 @@ export const checkAvailability: Action<{ username: string }> = pipe(
       state.flows.user.create.formUsernameIsAvailable = "";
       return;
     }
-
     state.flows.user.create.formUsernameIsAvailable = "checking";
 
     // const promises = [
@@ -204,14 +201,20 @@ export const checkAvailability: Action<{ username: string }> = pipe(
     // ];
 
     // const [r, nc] = await Promise.all(promises);  //actions.flows.user.create._userCreate({ ...params });
-
     const r = await state.api.client.user.availabilityList({ username });
 
     const currUser = state.api.auth.user;
+    const isOpenSeaOffer = !isEmpty(r.data?.offer);
     const availableOnNewlife = r.data?.available || (currUser?.username === username && currUser.status === "imported");
     // const availableOnNewcoin = nc?.statusCode === 500;
 
-    state.flows.user.create.formUsernameIsAvailable = availableOnNewlife ? "available" : "unavailable"; // && availableOnNewcoin
+    state.flows.user.create.formUsernameIsAvailable = availableOnNewlife
+      ? isOpenSeaOffer
+        ? "availableOnOpenSea"
+        : state.flows.user.create.metamaskFlow
+        ? "unavailable"
+        : "available"
+      : "unavailable"; // && availableOnNewcoin
   },
 );
 
@@ -230,4 +233,13 @@ export const verifyHash: Action<{ inviteHash: string }> = pipe(async ({ state, a
     });
     actions.routing.historyPush({ location: "/signup/notInvited" });
   }
+});
+
+export const startMetamaskFlow: Action<{}> = pipe(async ({ state, actions }: Context) => {
+  state.flows.user.create.metamaskFlow = true;
+  actions.routing.historyPush({ location: "/signup/auth" });
+});
+
+export const stopMetamaskFlow: Action = pipe(async ({ state }: Context) => {
+  state.flows.user.create.metamaskFlow = false;
 });

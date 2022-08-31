@@ -1,5 +1,9 @@
+import { castArray, omit } from "lodash";
 import { debounce, pipe } from "overmind";
-import { omit } from "lodash";
+export const cache = async ({ state, actions, effects }, { posts }) => {
+    posts = castArray(posts);
+    await actions.cache.storeMultiple({ label: "post", value: posts });
+};
 export const read = async ({ state, actions, effects }, { id }) => {
     const r = await state.api.client.post.postList({ id });
     if (!r.data)
@@ -8,8 +12,9 @@ export const read = async ({ state, actions, effects }, { id }) => {
         actions.api.user.cache({ user: { ...r.data.author } });
     } // state.api.cache.users.by[r.data.author.id] =
     const isProcessing = /^processing$/i.test(state.api.cache.posts[id]?.contentUrl || "");
+    actions.api.post.cache({ posts: r.data });
     state.api.cache.posts[id] = omit(r.data, isProcessing ? ["contentUrl"] : []);
-    actions.api.mood.cache({ moods: r.data.moods });
+    await actions.api.mood.cache({ moods: r.data.moods });
 };
 export const create = pipe(async ({ state, actions, effects }, { postForm }) => {
     // await state.api.client.post.postCreate(post);
@@ -73,9 +78,9 @@ export const attachToMoods = async ({ state, actions, effects }, { moods, post }
         targetId: pid,
     })));
     console.log(`attachToMoods: caching ${moods.length} moods`);
-    moods.map((m) => {
-        actions.api.mood.cache({ moods: [m] });
-    });
+    await Promise.all(moods.map((m) => {
+        return actions.api.mood.cache({ moods: [m] });
+    }));
     console.log(`attachToMoods: done caching ${moods.length} moods`);
     return Promise.resolve();
 };

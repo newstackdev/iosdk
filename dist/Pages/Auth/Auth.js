@@ -28,16 +28,14 @@ export const Auth = ({ embedded }) => {
             actions.routing.historyPush({ location: "/explore" });
     }, [state.api.auth.authorized, state.routing.location, state.flows.user.create.isLegacyUpdateOngoing]);
     useEffect(() => {
-        if (embedded) {
-            setNextCommand(state.auth.status === AUTH_FLOW_STATUS.ANONYMOUS
-                ? {
-                    text: "Send verification",
-                    command: () => phoneForm.submit(),
-                }
-                : state.auth.status === AUTH_FLOW_STATUS.RECEIVED
-                    ? { text: "Verify", command: () => codeForm.submit() }
-                    : undefined);
-        }
+        setNextCommand(state.auth.status === AUTH_FLOW_STATUS.ANONYMOUS
+            ? {
+                text: "Send verification",
+                command: () => phoneForm.submit(),
+            }
+            : state.auth.status === AUTH_FLOW_STATUS.RECEIVED
+                ? { text: embedded ? "Verify" : "Submit", command: () => codeForm.submit() }
+                : undefined);
     }, [state.auth.status]);
     const FragmentWrapper = ({ children }) => {
         if (state.routing.location === "/auth")
@@ -46,6 +44,8 @@ export const Auth = ({ embedded }) => {
             return _jsx(_Fragment, { children: children });
         }
     };
-    return (_jsxs(FragmentWrapper, { children: [_jsx("div", { id: "sign-in-button" }), _jsx(PhoneForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), _jsx(CodeForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), embedded && _jsx(NextButton, { nextProps: nextCommand, isErrorSubmit: isErrorSubmit }), _jsx("div", { className: "support-box__fix-height", hidden: embedded })] }));
+    return (_jsxs(FragmentWrapper, { children: [_jsx("div", { className: "nl-onboarding-title" }), _jsx("div", { id: "sign-in-button" }), _jsx(PhoneForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), _jsx(CodeForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), _jsx(NextButton, { nextProps: nextCommand, isErrorSubmit: isErrorSubmit, contentDescription: embedded
+                    ? "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS"
+                    : undefined }), _jsx("div", { className: "support-box__fix-height", hidden: embedded })] }));
 };
 //# sourceMappingURL=Auth.js.map

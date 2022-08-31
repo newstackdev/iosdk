@@ -4,10 +4,11 @@ import { UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-clien
 declare type ICreators = {
     title?: string;
     maxItems?: number;
-    users?: UserReadPublicResponse[];
+    users: UserReadPublicResponse[];
     buttonType?: string;
     setAddedUsers?: React.Dispatch<React.SetStateAction<string[]>>;
     addedUsers?: string[];
+    to?: string;
 };
 export declare const CreatorWidget: NLView<{
     creator: UserReadPublicResponse;

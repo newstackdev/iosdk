@@ -162,6 +162,7 @@ export declare const standardModules: {
                 admitted: boolean;
                 userDisplayHandler: string;
                 attempted: boolean;
+                inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
             };
             cache: {
                 users: {
@@ -401,7 +402,7 @@ export declare const standardModules: {
             };
         };
     };
-    unsid: {
+    newsafe: {
         actions: {
             onInitializeOvermind: import("../types").Action<undefined, void>;
             authorize: import("../types").Action<{
@@ -413,5 +414,21 @@ export declare const standardModules: {
             token: string;
         };
         effects: {};
+    };
+    cache: {
+        actions: typeof import("./cache/actions");
+        effects: typeof import("./cache/effects");
+        state: {
+            readonly db: {
+                ready: boolean;
+                nodes: import("dexie").Dexie;
+                edges: import("dexie").Dexie.Table<any, any>;
+            };
+            ready: boolean;
+            _db: () => {
+                nodes: import("dexie").Dexie;
+                edges: import("dexie").Dexie.Table<any, any>;
+            };
+        };
     };
 };

@@ -175,16 +175,29 @@ const CheckoutForm = ({ embedded, setNext }: React.PropsWithChildren<EmbeddableC
       {/* <Form.Item>
 				<IndeterminateProgressAction actionName="payments.pay" />
 			</Form.Item> */}
+
       <Form.Item hidden={embedded}>
-        <ProgressButton
-          progressText="Processing payment..."
-          type="primary"
-          actionName="payments.pay"
-          htmlType="submit"
-          disabled={!stripe || !elements}
-        >
-          Submit
-        </ProgressButton>
+        <div className="flex-space-between">
+          <ProgressButton
+            progressText="Cancelling payment..."
+            type="primary"
+            actionName="routing.goBack"
+            onClick={() => actions.routing.goBack()}
+            htmlType="button"
+            disabled={!stripe || !elements}
+          >
+            Cancel
+          </ProgressButton>
+          <ProgressButton
+            progressText="Processing payment..."
+            type="primary"
+            actionName="payments.pay"
+            htmlType="submit"
+            disabled={!stripe || !elements}
+          >
+            Submit
+          </ProgressButton>
+        </div>
       </Form.Item>
     </Form>
     // </Elements>

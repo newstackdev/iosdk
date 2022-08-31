@@ -1,5 +1,5 @@
 import { Button, Checkbox, Input, Row, notification } from "antd";
-import { ErrorResponse, UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { ErrorResponse, UserCreateRequest, UserUpdateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import Form from "antd/lib/form";
 // import { logout } from "./Auth";
@@ -12,12 +12,29 @@ import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { User } from "@firebase/auth";
 import { assert } from "console";
-import { debounce } from "lodash";
 import { useActions, useAppState, useEffects } from "../../overmind";
 import { useForm } from "antd/lib/form/Form";
 import { useHistory } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
-// ({ embedded, setNext } : React.PropsWithChildren<EmbeddableControl>) => {
+import pick from "lodash/pick";
+
+const defaultCreateFormValues = [
+  "consentEmail",
+  "consentTestgroup",
+  "description",
+  "discord",
+  "displayName",
+  "email",
+  "facebook",
+  "id",
+  "instagram",
+  "pinterest",
+  "soundcloud",
+  "tumblr",
+  "twitter",
+  "website",
+  "youtube",
+];
 
 export const CrossCircleErr: NLView<{ children?: JSX.Element }> = ({ children }) => {
   return (
@@ -76,6 +93,17 @@ export const UserCreate: NLView<
       return;
     }
 
+    if (state.flows.user.create.metamaskFlow) {
+      await actions.api.user.update({
+        user: {
+          ...pick(state.api.auth.user, defaultCreateFormValues),
+          id: state.api.auth.user.id || "",
+          ...values,
+        },
+      });
+      actions.routing.historyPush({ location: "/explore" });
+      return;
+    }
     actions.flows.user.create.create({
       noRouting: !!noRouing,
       user: values,
@@ -192,10 +220,7 @@ export const UserCreate: NLView<
           <Input
             placeholder="email"
             suffix={<CrossCircleErr />}
-            disabled={
-              isEmailAvailable &&
-              (isEmpty(sessionStorage.getItem("cachedOnboarding")) || state.flows.user.create.isLegacyUpdateOngoing)
-            }
+            disabled={isEmailAvailable && state.flows.user.create.isLegacyUpdateOngoing}
           />
         </Form.Item>
 
@@ -219,7 +244,12 @@ export const UserCreate: NLView<
         <Form.Item name="website">
           <Input placeholder="website" />
         </Form.Item>
-
+        <Form.Item name="twitter">
+          <Input placeholder="twitter" />
+        </Form.Item>
+        <Form.Item name="discord">
+          <Input placeholder="discord" />
+        </Form.Item>
         <Form.Item name="instagram">
           <Input placeholder="instagram" />
         </Form.Item>
@@ -229,9 +259,7 @@ export const UserCreate: NLView<
         <Form.Item name="soundcloud">
           <Input placeholder="soundcloud" />
         </Form.Item>
-        <Form.Item name="twitter">
-          <Input placeholder="twitter" />
-        </Form.Item>
+        <p className="paragraph-2r u-margin-top-medium u-margin-bottom-medium">You can add or edit socials later!</p>
 
         <Form.Item
           name="consentPrivacyPolicy"

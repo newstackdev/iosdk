@@ -8,9 +8,10 @@ import { MaybeLink, PostWidget } from "./PostWidget";
 import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { PremiumContent } from "./PremiumContent";
-import { useActions, useAppState } from "../overmind";
+import { useActions, useAppState, useEffects } from "../overmind";
 import { useCachedMood } from "../hooks/useCached";
 import { useEffect } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import FolderClosed from "./Icons/Folder/Closed";
 import Title from "../Pages/Explore/Title";
 
@@ -43,7 +44,7 @@ export const TopFoldersGrid: NLView<{
           height: "auto",
           display: "flex",
           justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
-          flexWrap: "unset",
+          flexWrap: "wrap",
         }}
         wrap={true}
         className={`${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${
@@ -117,7 +118,19 @@ const TopFolders: NLView<{
   userMoods?: MoodReadResponse[];
 }> = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts }) => {
   const state = useAppState();
-  const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
+  const effects = useEffects();
+
+  const moods = state.lists.top.moods.items || [];
+
+  // if (true)
+  //   return (
+  //     <>
+  //       {posts?.map((p) => (
+  //         <div>{JSON.stringify(p.id)}</div>
+  //       ))}
+  //     </>
+  //   );
+
   const actions = useActions();
   maxItems = maxItems || 100;
 

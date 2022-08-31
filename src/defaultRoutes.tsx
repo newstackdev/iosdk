@@ -3,12 +3,14 @@ import { Auth } from "./Pages/Auth/Auth";
 import { Authenticate } from "./Pages/Onboarding/Authenticate";
 import { CreateUser } from "./Pages/Onboarding/CreateUser";
 import { DomainSelector, Done, LinkHash } from "./Pages/Onboarding";
+import { InviteesList, UserInvite } from "./Pages/User/UserInvite";
 import { JoinDao } from "./Pages/JoinDao";
 import { LegacyImport } from "./Pages/User/LegacyImport";
 import { Mood } from "./Pages/Mood/Mood";
 import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import { NLView } from "./types";
 import { NotInvited } from "./Pages/Onboarding/NotInvited";
+import { OnboardingTypeSelector } from "./Pages/Onboarding/OnboardingTypeSelector";
 import { Post, PostInTags } from "./Pages/Post/Post";
 import { PostCreate } from "./Pages/Post/components/PostCreate";
 import { Privacy } from "./Pages/Privacy";
@@ -20,7 +22,6 @@ import { SelectMoodForm } from "./Components/SelectMood";
 import { TOS } from "./Pages/TOS";
 import { User } from "./Pages/User/User";
 import { UserCreate } from "./Pages/User/UserCreate";
-import { UserInvite } from "./Pages/User/UserInvite";
 import { UserStake } from "./Components/UserWidget";
 import { UserUpdate } from "./Pages/User/UserUpdate";
 import { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
@@ -81,7 +82,7 @@ const HostToDomain: HostDef[] = [
         <>
           You are good to go.
           <br />
-          Use your UNSID to access the apps in the Newcoin ecosystem:
+          Use Newsafe to access the apps in the Newcoin ecosystem:
           <br />
           <br />
           <ul>
@@ -162,7 +163,6 @@ export const DEFAULT_ROUTES = [
   <OverridableRoute key="m" exact path="/folder/:moodId" component={Mood} />,
   <OverridableRoute key="us" path="/user/stake/:id" component={UserStake} />,
   <OverridableRoute key="v" exact path="/user/:username" component={User} />,
-  <OverridableRoute key="ui" exact path="/user/invite" component={UserInvite} />,
   <OverridableRoute key="s" exact path="/payment/subscription" component={Product} />,
   <OverridableRoute key="ue" exact path="/auth/newlife-members" component={LegacyImport} />,
   <OverridableRoute key="sp" exact path="/spotlights" component={Spotlights} />,
@@ -188,4 +188,11 @@ export const DEFAULT_ROUTES = [
   <OverridableRoute key="suc" exact path="/signup/create" component={CreateUser} />,
   <OverridableRoute key="sudn" exact path="/signup/done" component={Done} />,
   <OverridableRoute key="suni" exact path="/signup/notInvited" component={NotInvited} />,
+
+  // User Invite
+  <OverridableRoute key="ui" exact path="/user/invite" component={UserInvite} />,
+  <OverridableRoute key="uia" exact path="/user/invite/all" component={InviteesList} />,
+
+  // Metamask
+  <OverridableRoute key="suots" exact path="/signup/metamask" component={OnboardingTypeSelector} />,
 ];

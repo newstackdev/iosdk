@@ -133,6 +133,7 @@ declare const _default: {
                         admitted: boolean;
                         userDisplayHandler: string;
                         attempted: boolean;
+                        inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
                     };
                     cache: {
                         users: {
@@ -297,8 +298,20 @@ declare const _default: {
                         votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
                     };
                 };
-                unsid: {
+                newsafe: {
                     token: string;
+                };
+                cache: {
+                    readonly db: {
+                        ready: boolean;
+                        nodes: import("dexie").Dexie;
+                        edges: import("dexie").Dexie.Table<any, any>;
+                    };
+                    ready: boolean;
+                    _db: () => {
+                        nodes: import("dexie").Dexie;
+                        edges: import("dexie").Dexie.Table<any, any>;
+                    };
                 };
             }, object>;
             effects: import("overmind/lib/internalTypes").SubType<{
@@ -360,7 +373,8 @@ declare const _default: {
                     vote: unknown;
                 }, object>;
                 newcoin: typeof import("./overmind/newcoin/effects");
-                unsid: {};
+                newsafe: {};
+                cache: typeof import("./overmind/cache/effects");
             }, object>;
             actions: import("overmind/lib/internalTypes").SubType<{
                 firebase: typeof import("./overmind/firebase/actions");
@@ -479,13 +493,14 @@ declare const _default: {
                     vote: typeof import("./overmind/flows/vote/actions");
                 }, object>;
                 newcoin: typeof import("./overmind/newcoin/actions");
-                unsid: {
+                newsafe: {
                     onInitializeOvermind: import("./types").Action<undefined, void>;
                     authorize: import("./types").Action<{
                         jwt: string;
                     }, void>;
                     signOut: import("./types").Action<undefined, void>;
                 };
+                cache: typeof import("./overmind/cache/actions");
             }, object>;
         }>;
         config?: import("type-fest/source/partial-deep").PartialObjectDeep<{
@@ -735,6 +750,7 @@ declare const _default: {
                     admitted: boolean;
                     userDisplayHandler: string;
                     attempted: boolean;
+                    inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
                 };
                 cache: {
                     users: {
@@ -899,8 +915,20 @@ declare const _default: {
                     votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
                 };
             };
-            unsid: {
+            newsafe: {
                 token: string;
+            };
+            cache: {
+                readonly db: {
+                    ready: boolean;
+                    nodes: import("dexie").Dexie;
+                    edges: import("dexie").Dexie.Table<any, any>;
+                };
+                ready: boolean;
+                _db: () => {
+                    nodes: import("dexie").Dexie;
+                    edges: import("dexie").Dexie.Table<any, any>;
+                };
             };
         }, object>;
         effects: import("overmind/lib/internalTypes").SubType<{
@@ -962,7 +990,8 @@ declare const _default: {
                 vote: unknown;
             }, object>;
             newcoin: typeof import("./overmind/newcoin/effects");
-            unsid: {};
+            newsafe: {};
+            cache: typeof import("./overmind/cache/effects");
         }, object>;
         actions: import("overmind/lib/internalTypes").SubType<{
             firebase: typeof import("./overmind/firebase/actions");
@@ -1081,13 +1110,14 @@ declare const _default: {
                 vote: typeof import("./overmind/flows/vote/actions");
             }, object>;
             newcoin: typeof import("./overmind/newcoin/actions");
-            unsid: {
+            newsafe: {
                 onInitializeOvermind: import("./types").Action<undefined, void>;
                 authorize: import("./types").Action<{
                     jwt: string;
                 }, void>;
                 signOut: import("./types").Action<undefined, void>;
             };
+            cache: typeof import("./overmind/cache/actions");
         }, object>;
     }>;
 };

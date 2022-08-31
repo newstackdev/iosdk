@@ -3,8 +3,6 @@ import { CrossCircleErr } from "../../../User/UserCreate";
 import { FormInstance } from "antd";
 import { Input } from "antd";
 import { NLView } from "../../../../types";
-import { ProgressButton } from "../../../../Components/ProgressButton";
-import { layout } from "../../Auth";
 import { useActions, useAppState } from "../../../../overmind";
 import Form from "antd/lib/form";
 
@@ -19,7 +17,6 @@ const CodeForm: NLView<{
   return (
     <Form
       form={codeForm}
-      {...layout}
       hidden={state.auth.status !== AUTH_FLOW_STATUS.RECEIVED}
       name="basic"
       initialValues={{ phoneVerificationCode: "" }} // 111111
@@ -29,9 +26,9 @@ const CodeForm: NLView<{
         });
       }}
       autoComplete="off"
+      className="nl-onboarding-form"
     >
       <Form.Item
-        label="Phone verification"
         name="phoneVerificationCode"
         rules={[
           {
@@ -39,12 +36,13 @@ const CodeForm: NLView<{
             message: "Enter your verification code",
           },
         ]}
-        className="nl-auth-page-form__height"
+        className="nl-onboarding-form-item"
       >
         <Input
-          className="text-center"
+          className="nl-onboarding-input nl-onboarding-input-code"
           placeholder="enter verification code"
           suffix={<CrossCircleErr />}
+          autoFocus
           onChange={() =>
             codeForm
               .validateFields()
@@ -58,19 +56,6 @@ const CodeForm: NLView<{
               })
           }
         />
-      </Form.Item>
-      <Form.Item
-        wrapperCol={{
-          ...layout.wrapperCol,
-          offset: layout.labelCol.span,
-        }}
-        hidden={embedded}
-      >
-        {!embedded && (
-          <ProgressButton actionName="auth.firebaseVerifyPhone" type="primary" htmlType="submit" progressText="Verifying...">
-            Submit
-          </ProgressButton>
-        )}
       </Form.Item>
     </Form>
   );

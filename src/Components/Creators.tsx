@@ -18,10 +18,11 @@ import Title from "../Pages/Explore/Title";
 type ICreators = {
   title?: string;
   maxItems?: number;
-  users?: UserReadPublicResponse[];
+  users: UserReadPublicResponse[];
   buttonType?: string;
   setAddedUsers?: React.Dispatch<React.SetStateAction<string[]>>;
   addedUsers?: string[];
+  to?: string;
 };
 
 // export const Creator: NLView
@@ -47,7 +48,7 @@ export const CreatorWidget: NLView<{
   return (
     <Link to={`/user/${user.username}`} style={{ width: "50%" }}>
       <Row className="bg-hover app-full-width" style={{ alignItems: "center", justifyContent: "space-between" }}>
-        <Col className="top-creators-first-col u-margin-left-medium" xs={15}>
+        <Col className="top-creators-first-col u-margin-left-medium" xs={13}>
           <Col>
             <Avatar src={<ContentImage {...user} />} className={avatarClassName} />
           </Col>
@@ -61,7 +62,7 @@ export const CreatorWidget: NLView<{
                   textOverflow: "ellipsis",
                 }}
               >
-                {user.username}
+                {user.username || user.fullName}
                 {isUserVerified ? (
                   <span className="u-margin-left-medium">
                     <VerifiedIcon />
@@ -130,11 +131,11 @@ export const CreatorWidget: NLView<{
   );
 };
 
-export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers }) => {
-  const state = useAppState();
-
-  maxItems = maxItems || 100;
+export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to }) => {
   users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
+
+  //@ts-expect-error Add interface with .inivtation param
+  const t = users.find((creator) => creator.invitation) ? "Invite Users List" : "Explore top creators";
 
   // const creators =
   // 	!users ? state.lists.top.users.items : maxUsers;
@@ -143,13 +144,13 @@ export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users, button
     <>
       {title === undefined && (
         <Row style={{ width: "100%" }}>
-          <p className="header-2 u-margin-bottom-medium">Explore top creators</p>
+          <p className="header-2 u-margin-bottom-medium">{t}</p>
         </Row>
       )}
       <div style={{ width: "100%" }}>
-        {maxItems && maxItems !== 100 ? <Title title={title} href="/top/creators" /> : <></>}
+        {maxItems ? <Title title={title} href={to} /> : <></>}
         <div className="top-creators-wrapper" style={title ? { display: "flex", flexWrap: "wrap" } : {}}>
-          {users?.map((creator, index) => (
+          {users?.map((creator) => (
             <>
               <CreatorWidget creator={creator} buttonType={buttonType} setAddedUsers={setAddedUsers!} addedUsers={addedUsers} />
             </>
@@ -164,7 +165,7 @@ export const Creators: NLView<ICreators> = (props) => {
   return <CreatorsList {...props} />;
 };
 
-export const TopCreators: NLView<ICreators> = ({ maxItems, title, buttonType, addedUsers, setAddedUsers }) => {
+export const TopCreators: NLView<ICreators> = ({ maxItems, title, buttonType, setAddedUsers, addedUsers, to }) => {
   const state = useAppState();
   const actions = useActions();
 
@@ -177,8 +178,9 @@ export const TopCreators: NLView<ICreators> = ({ maxItems, title, buttonType, ad
         maxItems={maxItems}
         title={title}
         buttonType={buttonType}
-        addedUsers={addedUsers}
         setAddedUsers={setAddedUsers}
+        addedUsers={addedUsers}
+        to={to}
       />
       {creators && (creators?.length || 0) < (maxItems || 100) && <LoadMore loadMore={() => actions.lists.top.users()} />}
     </>

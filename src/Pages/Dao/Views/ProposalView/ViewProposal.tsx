@@ -1,13 +1,11 @@
-import { Avatar, Button, Col } from "antd";
-import { BlockExplorerIcon, ProgressBar } from "../../Components/Icons";
-import { BlockExplorerLink } from "../../../../Components/Links";
-import { ContentImage } from "../../../../Components/Image";
+import { AviLinkRegular } from "../../Components/AviLink";
+import { Button, Col } from "antd";
 import { ContentPreview } from "../../../../Components/EmbedContent/ContentPreview";
-import { Link } from "react-router-dom";
-import { ProposalFolder } from "../../Components/Links/ProposalFolder";
+import { ProposalFolder } from "../../Components/ProposalFolder";
 import { Row } from "antd-latest";
 import { UserStake } from "../../../../Components/UserWidget";
 import { ViewProposalRow } from "../../Components/Previews/Standard/ViewProposalPageRow/ViewProposalRow";
+import { VoteBarFull } from "../../Components/VoteBar";
 import { getLocalTimeData, useGetAuthorizedActions } from "../../Utils/Helpers";
 import { useAppState } from "../../../../overmind";
 import { useCachedDaoProposal, useCachedPool, useCachedUser } from "../../../../hooks/useCached";
@@ -51,9 +49,6 @@ const ViewProposal = (props: { proposal; daoOwner: string; proposalId: string })
   });
 
   if (!(Number(proposal?.id) >= 0)) return <div>Proposal was executed or does not exist.</div>;
-  const yesVotes = Number(proposal.vote_yes?.quantity?.split(" ")[0]);
-  const noVotes = Number(proposal.vote_no?.quantity?.split(" ")[0]);
-  const totalVotes = yesVotes + noVotes;
 
   return (
     <Col className={"u-margin-top-mega view-proposal-row-wrapper"}>
@@ -69,19 +64,10 @@ const ViewProposal = (props: { proposal; daoOwner: string; proposalId: string })
       <Row align={"middle"} justify={"space-between"}>
         <p className={" u-margin-bottom-30 view-proposal-row-dao-details"}>
           Posted by
-          <Link to={`/user/${proposal.proposer}`} className={"view-proposal-avi-ctn"}>
-            <Avatar className={"u-margin-right-medium"} src={<ContentImage {...proposerObj} />} />
-            <p className={"view-proposal-row-username"}>{proposal.proposer}</p>
-          </Link>
+          <AviLinkRegular username={proposal.proposer} userObj={proposerObj} showVerified={false} wrapperClass={"avi"} />
           in the
-          <Link to={`/user/${proposal.proposer}`} className={"view-proposal-avi-ctn"}>
-            <Avatar className={"u-margin-right-medium"} src={<ContentImage {...daoOwnerObj} />} />
-            <p className={"view-proposal-row-username"}>{daoOwnerObj.username}</p>
-          </Link>
+          <AviLinkRegular username={daoOwner} userObj={daoOwnerObj} showVerified={false} wrapperClass={"avi"} />
           DAO
-          <a href={"#"} target={"rel_no_opener"}>
-            <BlockExplorerIcon />
-          </a>
           <Button className={`u-dao-proposal-${status_tag}-tag-status-btn`}>
             <span>{status_tag}</span>
           </Button>
@@ -89,23 +75,10 @@ const ViewProposal = (props: { proposal; daoOwner: string; proposalId: string })
         </p>
       </Row>
 
-      <p className="paragraph-1b u-margin-top-large">{totalVotes} votes </p>
-
-      <ProgressBar width={"100%"} proposal={proposal} />
-
-      <Row align={"middle"} justify={"space-between"} className={"view-proposal-votes-ctn"}>
-        <p className="u-margin-bottom-15 paragraph-2b"> {yesVotes} yes votes </p>
-        <p className="u-margin-bottom-15 paragraph-2b"> {noVotes} no votes </p>
-      </Row>
+      <VoteBarFull proposal={proposal} timeData={timeData} />
 
       <Col className={"view-proposal-summary-p"}>
-        <Row justify={"space-between"}>
-          <p className={"view-proposal-type-p"}> {proposalType && `proposal type: ${proposalType}`}</p>
-          <p className={"view-proposal-type-p"}>
-            {timeData.time_left_seconds > 0 ? "ending" : "ended"} {timeData.time_left_from_now}{" "}
-          </p>
-        </Row>
-
+        <p className={"view-proposal-type-p"}> {proposalType && `proposal type: ${proposalType}`}</p>
         <Row className="u-margin-bottom-15">
           <p> {proposalSummary} </p>
         </Row>

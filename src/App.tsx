@@ -25,6 +25,8 @@ const AppShell: NLView = ({ children }) => {
     return cancel;
   }, []);
 
+  if (!state.cache.ready) return <>IndexedDb not ready</>;
+
   return (
     <>
       <div style={{ position: "sticky", zIndex: 999 }}>

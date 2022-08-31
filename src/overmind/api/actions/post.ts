@@ -7,8 +7,15 @@ import {
   PostReadResponse,
   PostRemoteMetaProxyResponse,
 } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { castArray, omit } from "lodash";
 import { debounce, pipe } from "overmind";
-import { omit } from "lodash";
+
+export const cache: Action<{
+  posts: PostReadResponse | PostReadResponse[];
+}> = async ({ state, actions, effects }, { posts }) => {
+  posts = castArray(posts);
+  await actions.cache.storeMultiple({ label: "post", value: posts });
+};
 
 export const read: Action<{ id: string }> = async ({ state, actions, effects }, { id }) => {
   const r = await state.api.client.post.postList({ id });
@@ -20,8 +27,10 @@ export const read: Action<{ id: string }> = async ({ state, actions, effects }, 
 
   const isProcessing = /^processing$/i.test(state.api.cache.posts[id]?.contentUrl || "");
 
+  actions.api.post.cache({ posts: r.data });
+
   state.api.cache.posts[id] = omit(r.data, isProcessing ? ["contentUrl"] : []);
-  actions.api.mood.cache({ moods: r.data.moods });
+  await actions.api.mood.cache({ moods: r.data.moods });
 };
 
 export const create: Action<{ postForm: PostCreateRequest & { file: any } }, PostReadResponse | void> = pipe(
@@ -107,9 +116,11 @@ export const attachToMoods: Action<{
 
   console.log(`attachToMoods: caching ${moods.length} moods`);
 
-  moods.map((m) => {
-    actions.api.mood.cache({ moods: [m] });
-  });
+  await Promise.all(
+    moods.map((m) => {
+      return actions.api.mood.cache({ moods: [m] });
+    }),
+  );
 
   console.log(`attachToMoods: done caching ${moods.length} moods`);
 

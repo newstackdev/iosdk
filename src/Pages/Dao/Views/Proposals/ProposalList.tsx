@@ -1,10 +1,11 @@
-import { Avatar, Dropdown, Menu } from "antd-latest";
+import { AviLinkLarge } from "../../Components/AviLink";
 import { BulkActionModal } from "../../Components/Modals/BulkActionModal";
 import { Burger } from "../../../../Components/Icons/Burger";
 import { Button, Col, Row } from "antd";
-import { ContentImage } from "../../../../Components/Image";
+import { Dropdown, Menu } from "antd-latest";
 import { Link, useParams } from "react-router-dom";
 import { LoadMore } from "../../../../Components/LoadMore";
+import { MemberCard } from "../../Components/Previews/Member/Card/MemberCard";
 import { ProposalCard } from "../../Components/Previews/Standard/Card/ProposalCard";
 import { ProposalRow } from "../../Components/Previews/Standard/Row/ProposalRow";
 import { UserStake } from "../../../../Components/UserWidget";
@@ -114,8 +115,13 @@ const Proposals = (props: { daoOwner: string }) => {
           label: (
             <p
               onClick={() => {
-                setSortSelection("needsApproval");
-                setBulkAction({ state: true, action: "approve" });
+                const s = proposals.filter((row) => row.status == "created" && row.proposer == currUser);
+                if (s.length > 0) {
+                  setSortSelection("needsApproval");
+                  setBulkAction({ state: true, action: "approve" });
+                } else {
+                  alert("no proposals to approve!");
+                }
               }}
             >
               Approve All
@@ -127,8 +133,15 @@ const Proposals = (props: { daoOwner: string }) => {
           label: (
             <p
               onClick={() => {
-                setSortSelection("needsExecution");
-                setBulkAction({ state: true, action: "execute" });
+                const s = proposals.filter(
+                  (row) => row.status == "approved" && row.time_data.time_left_seconds < 0 && row.proposer == currUser,
+                );
+                if (s.length > 0) {
+                  setSortSelection("needsExecution");
+                  setBulkAction({ state: true, action: "execute" });
+                } else {
+                  alert("no proposals to execute!");
+                }
               }}
             >
               Execute All
@@ -167,25 +180,23 @@ const Proposals = (props: { daoOwner: string }) => {
 
   return (
     <Col>
-      <Row align={"middle"} className={" u-margin-top-medium  dao-details-ctn"}>
-        <Row align={"middle"} className={"dao-details-left"}>
-          <Link to={`/user/${daoOwner}`}>
-            <Avatar src={<ContentImage {...daoOwnerObj} />} className="dao-owner-avi" />
-          </Link>
-          <Col>
-            <p className={"header-1r"}>{daoOwner} DAO</p>
-            <p>
-              {" "}
-              {Math.round(stakedAmt)} ${pool.code} Staked
-            </p>
-          </Col>
+      <div className={"dao-details-ctn"}>
+        <AviLinkLarge showVerified={false} wrapperClass={"avi"} username={daoOwner} userObj={daoOwnerObj} />
+        <div className={"dao-details-txt"}>
+          <p className={"header-1r"}> DAO</p>
+          <p className={"paragraph-2b"}>
+            {Math.round(stakedAmt)} ${pool.code} Staked
+          </p>
+        </div>
+        <div className={"dao-details-btns"}>
           <UserStake buttonText={`Get $${pool.code}`} user={{ username: daoOwner }} hideButton={false} />
-        </Row>
-        <Button className={"power-up-btn"}>
-          <Link to={`/dao/${daoOwner}/new-proposal`}>New Proposal</Link>
-        </Button>
-      </Row>
-      <Row justify={"space-between"} align={"middle"} className={"dao-tabs-ctn"}>
+          <Button className={"power-up-btn"}>
+            <Link to={`/dao/${daoOwner}/new-proposal`}>New Proposal</Link>
+          </Button>
+        </div>
+      </div>
+
+      <div className={"dao-tabs-ctn"}>
         <h2
           className={`menu-h2-${showProposalType == "standard" ? "active" : "inactive"}`}
           onClick={() => setShowProposalType("standard")}
@@ -236,12 +247,11 @@ const Proposals = (props: { daoOwner: string }) => {
             </Row>
           </a>
         </Dropdown>
-        <Row align={"middle"} onClick={() => setToggleView(!toggleView)}>
+        <Row className={"sort"} align={"middle"} onClick={() => setToggleView(!toggleView)}>
           {toggleView ? <Burger /> : <ListToggle />}
         </Row>
-      </Row>
-
-      <Row className={"u-gap-40 toggle-wrapper"}>
+      </div>
+      <Row className={"toggle-wrapper"}>
         {showProposalType == "standard" &&
           proposals
             .reverse()
@@ -275,7 +285,13 @@ const Proposals = (props: { daoOwner: string }) => {
               ),
             )}
         {showProposalType == "members" &&
-          proposals.map((member) => <MemberRow user={member.user} daoId={daoProposals.dao_id} ticker={pool.code} />)}
+          proposals.map((member) =>
+            !toggleView ? (
+              <MemberRow user={member.user} daoId={daoProposals.dao_id} ticker={pool.code} />
+            ) : (
+              <MemberCard user={member.user} daoId={daoProposals.dao_id} ticker={pool.code} />
+            ),
+          )}
         {shouldLoadMore && <LoadMore loadMore={loadMore} />}
       </Row>
     </Col>

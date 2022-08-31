@@ -129,6 +129,7 @@ export declare const config: (cfg: PartialConfiguration) => {
                 admitted: boolean;
                 userDisplayHandler: string;
                 attempted: boolean;
+                inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
             };
             cache: {
                 users: {
@@ -293,8 +294,20 @@ export declare const config: (cfg: PartialConfiguration) => {
                 votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
-        unsid: {
+        newsafe: {
             token: string;
+        };
+        cache: {
+            readonly db: {
+                ready: boolean;
+                nodes: import("dexie").Dexie;
+                edges: import("dexie").Dexie.Table<any, any>;
+            };
+            ready: boolean;
+            _db: () => {
+                nodes: import("dexie").Dexie;
+                edges: import("dexie").Dexie.Table<any, any>;
+            };
         };
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
@@ -356,7 +369,8 @@ export declare const config: (cfg: PartialConfiguration) => {
             vote: unknown;
         }, object>;
         newcoin: typeof import("./newcoin/effects");
-        unsid: {};
+        newsafe: {};
+        cache: typeof import("./cache/effects");
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         firebase: typeof import("./firebase/actions");
@@ -475,13 +489,14 @@ export declare const config: (cfg: PartialConfiguration) => {
             vote: typeof import("./flows/vote/actions");
         }, object>;
         newcoin: typeof import("./newcoin/actions");
-        unsid: {
+        newsafe: {
             onInitializeOvermind: import("../types").Action<undefined, void>;
             authorize: import("../types").Action<{
                 jwt: string;
             }, void>;
             signOut: import("../types").Action<undefined, void>;
         };
+        cache: typeof import("./cache/actions");
     }, object>;
 };
 export declare type State = ReturnType<typeof config>["state"];

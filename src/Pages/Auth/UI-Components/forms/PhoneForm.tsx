@@ -16,7 +16,6 @@ const PhoneForm: NLView<{
 }> = ({ setIsErrorSubmit, embedded, phoneForm }) => {
   const state = useAppState();
   const actions = useActions();
-  const [customClassName, setCustomClassName] = useState("");
   const phoneNumArr = state.flows.user.create.form.phone?.split("");
   const maskedPhoneNum = phoneNumArr
     ?.map((char, i) => {
@@ -34,7 +33,6 @@ const PhoneForm: NLView<{
     <Form
       form={phoneForm}
       hidden={state.auth.status !== AUTH_FLOW_STATUS.ANONYMOUS}
-      {...layout}
       name="basic"
       initialValues={{ phone: "" }} // +420111111111
       onFinish={({ phone }) => {
@@ -43,10 +41,12 @@ const PhoneForm: NLView<{
       }}
       // onFinishFailed={onFinishFailed}
       autoComplete="off"
-      className="text-center"
+      className="nl-onboarding-form"
     >
       <Form.Item
         name="phone"
+        className="nl-onboarding-form-item"
+        validateTrigger="onBlur"
         rules={[
           {
             required: !isPhonePresent,
@@ -54,13 +54,14 @@ const PhoneForm: NLView<{
             pattern: new RegExp(reg),
           },
         ]}
-        className="nl-auth-page-form__height"
       >
         <Input
-          className="text-center"
+          className={`nl-onboarding-input nl-onboarding-input-phone ${
+            isPhonePresent && embedded ? "nl-onboarding-input-phone-disabled text-center" : null
+          }`}
           placeholder={isPhonePresent && embedded ? maskedPhoneNum : "enter phone number"}
           disabled={isPhonePresent && embedded}
-          suffix={<CrossCircleErr />}
+          suffix={isPhonePresent && embedded ? undefined : <CrossCircleErr />}
           autoFocus
           onChange={(values) => {
             if (!values.target.value.includes("+")) {
@@ -68,27 +69,14 @@ const PhoneForm: NLView<{
                 phone: "+" + values.target.value,
               });
             }
-            phoneForm
-              .validateFields()
-              .then(() => setIsErrorSubmit && setIsErrorSubmit(false))
-              .catch((e) => {
-                if (e.errorFields?.length) {
-                  setIsErrorSubmit && setIsErrorSubmit!(true);
-                }
-              });
-
-            const customClassName = phoneForm.getFieldValue("phone").match(reg) ? "" : "disabled-submit-button";
-
-            setCustomClassName(customClassName);
+            if (!new RegExp(reg).test(values.target.value)) {
+              setIsErrorSubmit && setIsErrorSubmit!(true);
+            } else {
+              setIsErrorSubmit && setIsErrorSubmit(false);
+            }
           }}
         />
       </Form.Item>
-
-      <div className="app-control-surface" hidden={embedded}>
-        <Button type="primary" htmlType="submit" className={customClassName}>
-          Send verification
-        </Button>
-      </div>
     </Form>
   );
 };
