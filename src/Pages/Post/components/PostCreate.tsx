@@ -4,7 +4,7 @@ import {
   PostCreateRequest,
   PostReadResponse,
   UserReadPrivateResponse,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../../../types";
 import { PicturesWall } from "../../../Components/PicturesWall";
 import { useActions, useAppState, useEffects } from "../../../overmind";

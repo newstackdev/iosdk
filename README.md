@@ -21,7 +21,7 @@ if you are planning to use the powerful services the Newstack ecosystem is offer
 Use this if starting a project from scratch. This stage involves 
 
 ```
-    curl https://raw.githubusercontent.com/Newcoin-Foundation/iosdk/main/scripts/create.sh | bash -s <project-name>
+    curl https://raw.githubusercontent.com/newstackdev/iosdk/main/scripts/create.sh | bash -s <project-name>
 ```
 
 This will generate a demo [craco](https://github.com/gsoft-inc/craco)-based project. (craco is a layer on top of create-react-app that allows easier customization of webpack, among other things overriding lesscss variables used by ant-design styles).
@@ -32,13 +32,13 @@ Run ``` craco start ``` to start the demo app.
 ### Add to an existing project
 
 ```
-npm i @newcoin-foundation/iosdk --save
+npm i @newstackdev/iosdk --save
 ```
 
 You will likely want to use parts of the SDK in such scenario, see Usage below.
 
 ### API Clients only
-For existing condebases you might be interested in lower-level components only. This involves lower level work and  Consider `@newcoin-foundation/newcoin-sdk` and/or `@newcoin-foundation/newgraph-api-client` depending on your implementation plan.
+For existing condebases you might be interested in lower-level components only. This involves lower level work and  Consider `@newfound8ion/newcoin-sdk` and/or `@newstackdev/newgraph-api-client` depending on your implementation plan.
 
 ### Other languages/technologies
 Newgraph API (see below) is described as a Swagger and can be used to generate a client in any language. We welcome contributions in this space.
@@ -65,7 +65,7 @@ iOSDK manages state and provides actions to interact with it and the underlying 
 Note `src/overmind/app.ts`. It provides an example for setting up a simple counter state. This state is included in the larger state provided by the SDK so you can add your logic on top of what's already provided:
 
 ```
-import { Action } from "@newcoin-foundation/iosdk/src/types";
+import { Action } from "@newstackdev/iosdk/src/types";
 
 const test : Action = (({ state, actions }) => {
     // actions.custom.info();
@@ -94,7 +94,7 @@ Check the overmind docs for [namespaced](https://overmindjs.org/api-1/namespaced
 
 Pages are normal react components, however note that by importing:
 
-`import { useActions, useAppState } from '@newcoin-foundation/iosdk/src/overmind';`
+`import { useActions, useAppState } from '@newstackdev/iosdk/src/overmind';`
 
 you are getting the state with your custom actions defined in the previous section injected right into `actions` and `state`. This means no extra work needs to be done to use them immediately as in the usage of `state.app.test()` and `state.app.counter` below:  
 

@@ -1,5 +1,5 @@
-import { ROUTE_ACCESS_LEVELS } from "@newcoin-foundation/iosdk/dist/overmind/routing/state";
-import { config as baseConfig } from "@newcoin-foundation/iosdk/dist/config";
+import { ROUTE_ACCESS_LEVELS } from "@newstackdev/iosdk/dist/overmind/routing/state";
+import { config as baseConfig } from "@newstackdev/iosdk/dist/config";
 
 import { Home } from "./Pages/Home";
 // import { Explore } from "./Pages/Explore";

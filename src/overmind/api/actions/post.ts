@@ -6,7 +6,7 @@ import {
   PostCreateRequest,
   PostReadResponse,
   PostRemoteMetaProxyResponse,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { castArray, omit } from "lodash";
 import { debounce, pipe } from "overmind";
 

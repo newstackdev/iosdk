@@ -1,7 +1,7 @@
 // import { User } from "@firebase/auth";
 import { AUTH_FLOW_STATUS, state } from "./state";
 import { Action } from "../../types";
-import { MoodReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 
 export const logout: Action<{ noRouting?: boolean } | undefined> = async ({ state, actions, effects }, { noRouting } = {}) => {
   state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;

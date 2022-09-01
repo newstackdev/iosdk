@@ -92,30 +92,30 @@ export declare const config: {
                     client: import("./types").CreatorApi;
                     auth: {
                         status: import("./overmind/auth/state").AUTH_FLOW_STATUS_TYPE;
-                        user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
-                        moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
+                        user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse;
+                        moods: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
                         authorized: boolean;
                         admitted: boolean;
                         userDisplayHandler: string;
                         attempted: boolean;
-                        inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
+                        inviteesList: import("@newstackdev/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
                     };
                     cache: {
                         users: {
-                            byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
-                                moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
+                            byUsername: Record<string, import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                                moods?: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                             }>;
-                            byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
-                                moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
+                            byId: Record<string, import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                                moods?: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                             }>;
                         };
                         powerups: import("./overmind/api/state").PowerupsCache;
-                        posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
-                        moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
+                        posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                        moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                             promise?: Promise<any> | null | undefined;
                         }>;
                         stakeHistory: {
-                            user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
+                            user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                             amount: string;
                             response: any;
                             error: any;
@@ -169,20 +169,20 @@ export declare const config: {
                     postsSearch: {};
                     top: {
                         moods: {
-                            _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
-                            items: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
                             sortKey: string;
                             page: number;
                         };
                         users: {
-                            _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
-                            items: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse[];
                             sortKey: string;
                             page: number;
                         };
                         posts: {
-                            _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
-                            items: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
                             sortKey: string;
                             page: number;
                         };
@@ -190,11 +190,11 @@ export declare const config: {
                     search: {
                         users: {
                             query: string;
-                            results: import("@newcoin-foundation/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
+                            results: import("@newstackdev/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
                         };
                         posts: {
                             query: string;
-                            results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
+                            results: import("@newstackdev/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
                             lastQueried: {
                                 tags: string;
                                 aesthetics: string;
@@ -204,7 +204,7 @@ export declare const config: {
                         };
                         tags: {
                             query: string;
-                            results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
+                            results: import("@newstackdev/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
                             lastQueried: string;
                             isActive: boolean;
                             page: number;
@@ -257,10 +257,10 @@ export declare const config: {
                     cache: {
                         accountHistory: Record<string, import("./overmind/newcoin/types").HyperionAccountHistory>;
                         pools: {
-                            byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
-                            byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
+                            byCode: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
+                            byOwner: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
                         };
-                        votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
+                        votes: Record<string, import("@newstackdev/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
                     };
                 };
                 newsafe: {

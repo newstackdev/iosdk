@@ -1,4 +1,4 @@
-import { Api } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { Api } from "@newstackdev/iosdk-newgraph-client-js";
 export class CreatorApi extends Api {
 }
 // export interface UserInfo {

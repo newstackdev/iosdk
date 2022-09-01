@@ -8,7 +8,7 @@ import {
   PostTagsSearchPublicResponse,
   UserPagedListReadPublicResponse,
   UserReadPublicResponse,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { aestheticList } from "./SearchCreative/aestheticList";
 import { debounce, derived, filter, json, pipe } from "overmind";
 import { fischerYates } from "../../utils/random";

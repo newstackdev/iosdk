@@ -1,4 +1,4 @@
-import { ROUTE_ACCESS_LEVELS } from "@newcoin-foundation/iosdk/dist/overmind/routing/state";
+import { ROUTE_ACCESS_LEVELS } from "@newstackdev/iosdk/dist/overmind/routing/state";
 import { Home } from "./Pages/Home";
 import { Explore } from "./Pages/Explore";
 

@@ -3,7 +3,7 @@ import { ContentImage } from "../Components/Image";
 import { Link } from "react-router-dom";
 import { LogOut } from "../Components/Icons/LogOut";
 import { NLView } from "../types";
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useActions, useAppState } from "../overmind";
 import { useCachedUser } from "../hooks/useCached";
 

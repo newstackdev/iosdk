@@ -1,10 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 
-import "@newcoin-foundation/iosdk/src/App.less";
+import "@newstackdev/iosdk/src/App.less";
 import './index.css';
 
-import { App as IOApp } from "@newcoin-foundation/iosdk/dist/App";
+import { App as IOApp } from "@newstackdev/iosdk/dist/App";
 import { overmind } from './overmind/overmind';
 
 import { Route } from 'react-router-dom';

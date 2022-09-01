@@ -1,4 +1,4 @@
-import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useActions, useAppState } from "../overmind";
 import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";

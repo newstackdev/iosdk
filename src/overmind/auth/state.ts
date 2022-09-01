@@ -1,5 +1,5 @@
 import { Link } from "../../types";
-import { MoodReadResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { User, UserCredential } from "@firebase/auth";
 import { derived } from "overmind";
 import history from "../../history";

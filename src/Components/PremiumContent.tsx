@@ -1,7 +1,7 @@
 import { DetailedHTMLProps, HTMLAttributes, MouseEventHandler, ReactElement } from "react";
 import { EventHandler, IOView } from "../types";
 import { Link } from "react-router-dom";
-import { UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserStake } from "./UserWidget";
 import { useActions } from "../overmind";
 import { useCurrentUserStakeEligibility } from "../hooks/useBlockchainInfo";

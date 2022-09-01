@@ -2,7 +2,7 @@
 import { Callback, IOView, NLView } from "../types";
 import { STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
 import { UserFlowRoutes } from "../Pages/User/User";
-import { UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 export declare const SOCIAL_MEDIA: UserSocials[];
 export declare const UserWidgetVertical: NLView<{

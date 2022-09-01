@@ -3,7 +3,7 @@ import { ContentLayout } from "../../Components/ContentLayout";
 import { MaskedInput } from "antd-mask-input";
 import { NLView } from "../../types";
 import { SyntheticEvent, useEffect, useState } from "react";
-import { UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserWidgetHeading } from "../../Components/UserWidget";
 import { pad } from "../../utils/pad";
 import { useActions, useAppState } from "../../overmind";

@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { Callback, NLView } from "../../types";
 export declare const UserSearchResultsWidget: NLView<{
     query: string;

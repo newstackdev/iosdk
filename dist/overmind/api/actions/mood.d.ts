@@ -1,5 +1,5 @@
 import { Action } from "../../../types";
-import { MoodCreateRequest, MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodCreateRequest, MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 export declare const cache: Action<{
     moods?: (MoodReadResponse & {
         promise?: Promise<any>;

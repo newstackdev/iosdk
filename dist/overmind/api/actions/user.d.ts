@@ -1,5 +1,5 @@
 import { Action } from "../../../types";
-import { MoodReadResponse, UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newstackdev/iosdk-newgraph-client-js";
 export declare const cache: Action<{
     user: UserReadPublicResponse & {
         moods?: MoodReadResponse[];

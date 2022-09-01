@@ -1,5 +1,5 @@
 import { Button, Col, Dropdown, Input, Row, Select } from "antd";
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 
 import { Link } from "react-router-dom";
 import { NLView } from "../../types";

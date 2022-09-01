@@ -1,5 +1,5 @@
 import { Action } from "../../types";
-import { CreativeSearchResponse, MoodReadResponse, PostPagedListReadPublicResponse, PostReadResponse, PostTagsSearchPublicResponse, UserPagedListReadPublicResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { CreativeSearchResponse, MoodReadResponse, PostPagedListReadPublicResponse, PostReadResponse, PostTagsSearchPublicResponse, UserPagedListReadPublicResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse["hits"]>[number];
 export declare type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
 export declare const listTopUsers: Action;

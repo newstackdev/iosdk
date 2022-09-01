@@ -1,6 +1,6 @@
 import { ImageProps } from "antd";
 import { NLView } from "../../types";
-import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { ReactNode } from "react";
 
 export type Sizes = "small" | "medium" | "full" | "";

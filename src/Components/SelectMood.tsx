@@ -4,7 +4,7 @@ import { ItemGrid } from "./ItemGrid";
 import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 import { MoodCreateModal } from "../Pages/Mood/MoodCreate";
 import { MoodFolderWidget, MoodWidget } from "./MoodWidget";
-import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { MoodsGrid } from "../Pages/Mood/MoodsGrid";
 import { ProgressButton } from "./ProgressButton";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";

@@ -7,7 +7,7 @@ import { IUserInvite } from "./interfaces/IUser";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { SocialMediaInputs } from "src/Components/Input/SocialMediaInputs";
 import { Spin } from "../../Components/Spin";
-import { UserInvitationPagedListReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserInvitationPagedListReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useActions, useAppState } from "../../overmind";
 import { useCachedInvitees } from "src/hooks/useCached";
 import { useForm } from "antd/lib/form/Form";

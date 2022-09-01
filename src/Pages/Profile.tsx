@@ -1,5 +1,5 @@
 import { Badge, Col, Descriptions, Input, Row, Tabs, Tooltip } from "antd";
-import { MoodReadResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useState } from "react";
 import Avatar from "antd/lib/avatar/avatar";
 // import { ActivityStream } from "../Components/ActivityStream";

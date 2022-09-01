@@ -1,4 +1,4 @@
-import { ErrorResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { ErrorResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 // import { newlifeBaseUrl } from "../../../config";
 import { CreatorApi } from "../../../types";
 

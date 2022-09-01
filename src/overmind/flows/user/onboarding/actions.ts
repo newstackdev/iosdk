@@ -1,6 +1,6 @@
 import { Action } from "../../../../types";
 import { Context, State } from "../../../overmind";
-import { UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserCreateRequest } from "@newstackdev/iosdk-newgraph-client-js";
 import { WizardInput } from "./wizardStateMachine";
 import { debounce, filter, pipe, throttle } from "overmind";
 import { get, isEmpty, isNil } from "lodash";

@@ -1,5 +1,5 @@
 import { HyperionAccountHistory } from "../overmind/newcoin/types";
-import { MoodReadResponse, UserInvitationPagedListReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserInvitationPagedListReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { PowerupsCacheItem } from "../overmind/api/state";
 import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from "./useCached1";
 export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
@@ -15,7 +15,7 @@ export declare const useCachedNewconAccountHistory: (user: {
 export declare const useCachedPool: (pool?: {
     owner?: string;
     code?: string;
-}, force?: boolean) => import("@newcoin-foundation/newcoin-sdk/dist/types").NCPoolInfo | {
+}, force?: boolean) => import("@newfound8ion/newcoin-sdk/dist/types").NCPoolInfo | {
     owner: string;
     code: string;
     total: {
@@ -24,7 +24,7 @@ export declare const useCachedPool: (pool?: {
 };
 export declare const useCachedPoolByCode: (pool: {
     code?: string;
-}, force?: boolean) => "" | import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo | undefined;
+}, force?: boolean) => "" | import("@newfound8ion/newcoin-sdk").NCPoolsInfo | undefined;
 export declare const useCachedDaoProposals: (params?: {
     daoOwner?: string;
 }) => {

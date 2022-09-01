@@ -1,5 +1,5 @@
 import { Action } from "src/types";
-import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { json } from "overmind";
 import Dexie from "dexie";
 

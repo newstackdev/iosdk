@@ -1,5 +1,5 @@
 import { Avatar, Button, Col, Dropdown, Input, Row, Select } from "antd";
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 
 import { Callback, IOView, NLView } from "../../types";
 import { ContentImage } from "../../Components/Image";

@@ -7,7 +7,7 @@ import { PinterestIcon } from "./Icons/PinterestIcon";
 import { Soundcloud } from "./Icons/Soundcloud";
 import { TumblrIcon } from "./Icons/TumblrIcon";
 import { TwitterIcon } from "./Icons/TwitterIcon";
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { YoutubeIcon } from "./Icons/YouTubeIcon";
 
 export const SocialLink: NLView<{

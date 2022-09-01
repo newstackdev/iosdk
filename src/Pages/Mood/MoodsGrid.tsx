@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../../types";
 import { PostWidget } from "../../Components/PostWidget";
 import { Spin } from "../../Components/Spin";

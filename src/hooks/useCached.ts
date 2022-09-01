@@ -1,5 +1,5 @@
 import { HyperionAccountHistory } from "../overmind/newcoin/types";
-import { MoodReadResponse, UserInvitationPagedListReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserInvitationPagedListReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { PowerupsCacheItem } from "../overmind/api/state";
 import { json } from "overmind";
 import { omit } from "lodash";

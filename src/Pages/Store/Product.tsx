@@ -6,7 +6,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { EmbeddableControl } from "../../types";
 import { IndeterminateProgress, IndeterminateProgressAction } from "../../Components/IndeterminateProgress";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { PaymentStripePaymentIntentCreateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PaymentStripePaymentIntentCreateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { Stripe, StripePaymentElementChangeEvent, loadStripe } from "@stripe/stripe-js";
 import { config } from "../../config";

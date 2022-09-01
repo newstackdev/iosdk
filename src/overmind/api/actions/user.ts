@@ -11,7 +11,7 @@ import {
   UserInviteRequest,
   UserReadPublicResponse,
   UserUpdateRequest,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { action } from "overmind/lib/operator";
 import { debounce, json, pipe, throttle } from "overmind";
 import { get } from "lodash";

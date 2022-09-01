@@ -5,7 +5,7 @@ import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
 import { MaybeLink, PostWidget } from "./PostWidget";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { PremiumContent } from "./PremiumContent";
 import { useActions, useAppState, useEffects } from "../overmind";

@@ -1,4 +1,4 @@
-import { Api } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { Api } from "@newstackdev/iosdk-newgraph-client-js";
 import { Context } from "./overmind/overmind";
 import React from "react";
 export declare class CreatorApi extends Api<{

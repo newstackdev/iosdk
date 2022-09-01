@@ -1,4 +1,4 @@
-import { IOView } from "@newcoin-foundation/iosdk/dist/types";
+import { IOView } from "@newstackdev/iosdk/dist/types";
 import { useEffect } from "react";
 import { useActions } from "../overmind/overmind";
 

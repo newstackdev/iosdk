@@ -12,7 +12,7 @@ import { useParams } from "react-router";
 import useForm from "antd/lib/form/hooks/useForm";
 // import { ContentImage, contentImageUrl } from "../../Components/Image";
 import { Ebene } from "../../Components/Icons/Ebene";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";

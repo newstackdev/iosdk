@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
 import { NLView } from "../types";
 import { UserPowerup } from "./UserWidget";
-import { UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";

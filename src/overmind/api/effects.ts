@@ -1,5 +1,5 @@
 import { CreatorApi } from "../../types";
-import { ErrorResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { ErrorResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 
 // const baseUrl = newlifeBaseUrl; //"https://api-eu-sit.newlife.io/creator";
 

@@ -2,9 +2,9 @@ import {
   BcDaoProposalVoteResponse,
   BcListDaoProposalsResponse,
   BcListDaoWhitelistResponse,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { HyperionAccountHistory } from "./types";
-import { NCPoolsInfo } from "@newcoin-foundation/newcoin-sdk";
+import { NCPoolsInfo } from "@newfound8ion/newcoin-sdk";
 
 export interface PoolInfo {
   rows: Row[];

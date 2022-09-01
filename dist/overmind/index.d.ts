@@ -123,30 +123,30 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             client: import("../types").CreatorApi;
             auth: {
                 status: import("./auth/state").AUTH_FLOW_STATUS_TYPE;
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse;
-                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse;
+                moods: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
                 authorized: boolean;
                 admitted: boolean;
                 userDisplayHandler: string;
                 attempted: boolean;
-                inviteesList: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
+                inviteesList: import("@newstackdev/iosdk-newgraph-client-js").UserInvitationPagedListReadPublicResponse;
             };
             cache: {
                 users: {
-                    byUsername: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
-                        moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
+                    byUsername: Record<string, import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                        moods?: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                     }>;
-                    byId: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
-                        moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
+                    byId: Record<string, import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                        moods?: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                     }>;
                 };
                 powerups: import("./api/state").PowerupsCache;
-                posts: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
-                moods: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
+                posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | null | undefined;
                 }>;
                 stakeHistory: {
-                    user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
+                    user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                     amount: string;
                     response: any;
                     error: any;
@@ -200,20 +200,20 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             postsSearch: {};
             top: {
                 moods: {
-                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
-                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
                     sortKey: string;
                     page: number;
                 };
                 users: {
-                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
-                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse[];
                     sortKey: string;
                     page: number;
                 };
                 posts: {
-                    _items: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
-                    items: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
                     sortKey: string;
                     page: number;
                 };
@@ -221,11 +221,11 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             search: {
                 users: {
                     query: string;
-                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
+                    results: import("@newstackdev/iosdk-newgraph-client-js").UserPagedListReadPublicResponse | null;
                 };
                 posts: {
                     query: string;
-                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
+                    results: import("@newstackdev/iosdk-newgraph-client-js").PostPagedListReadPublicResponse | null;
                     lastQueried: {
                         tags: string;
                         aesthetics: string;
@@ -235,7 +235,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 };
                 tags: {
                     query: string;
-                    results: import("@newcoin-foundation/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
+                    results: import("@newstackdev/iosdk-newgraph-client-js").PostTagsSearchPublicResponse | null;
                     lastQueried: string;
                     isActive: boolean;
                     page: number;
@@ -288,10 +288,10 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             cache: {
                 accountHistory: Record<string, import("./newcoin/types").HyperionAccountHistory>;
                 pools: {
-                    byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
-                    byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
+                    byCode: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
+                    byOwner: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
                 };
-                votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
+                votes: Record<string, import("@newstackdev/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
         };
         newsafe: {
@@ -344,7 +344,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         api: {
             initialize(baseUrl: string): import("../types").CreatorApi;
             updateToken(token: string): void;
-            authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
+            authorize(): Promise<import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse>;
         };
         lists: {};
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -535,7 +535,7 @@ export declare const useActions: () => {
             }[];
             value?: any;
         }) => void | Promise<void>;
-        readonly getPost: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse) => void | Promise<void>;
+        readonly getPost: (payload: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse) => void | Promise<void>;
         readonly onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
     };
     auth: {
@@ -544,7 +544,7 @@ export declare const useActions: () => {
         } | undefined) => void | Promise<void>;
         readonly resetAuthTimer: (payload?: undefined) => void | Promise<void>;
         readonly reduceTimer: (payload?: undefined) => void | Promise<void>;
-        readonly fakeUserUpdate: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse) => void | Promise<void>;
+        readonly fakeUserUpdate: (payload: import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse) => void | Promise<void>;
     };
     firebase: {
         readonly onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
@@ -673,46 +673,46 @@ export declare const useActions: () => {
         };
         user: {
             readonly cache: (payload: {
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse & {
-                    moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse & {
+                    moods?: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[] | undefined;
                 };
                 force?: boolean | undefined;
-                moods?: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse | undefined;
+                moods?: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse | undefined;
             }) => void | Promise<void>;
             readonly read: (payload: {
                 id?: string | undefined;
                 username?: string | undefined;
-            }) => import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse>;
+            }) => import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse | Promise<import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse>;
             readonly create: (payload: {
                 noRouting?: boolean | undefined;
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest;
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserCreateRequest;
                 preregisterCreate?: boolean | undefined;
             }) => void | Promise<void>;
             readonly update: (payload: {
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserUpdateRequest;
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserUpdateRequest;
                 file?: any;
             }) => void | Promise<void>;
             readonly getMoods: (payload: {
                 id?: string | undefined;
             }) => void | Promise<void>;
             readonly stake: (payload: {
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: string;
             }) => any;
             readonly invite: (payload: {
-                userInvite: import("@newcoin-foundation/iosdk-newgraph-client-js").UserInviteRequest;
+                userInvite: import("@newstackdev/iosdk-newgraph-client-js").UserInviteRequest;
             }) => string | Promise<string | undefined> | undefined;
             readonly getUserInvitesList: () => void | Promise<void>;
             readonly powerup: (payload: {
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: number;
             }) => void | Promise<void>;
             readonly powerUpMultiple: (payload: {
-                users: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse[];
+                users: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse[];
                 amount?: number | undefined;
             }) => void | Promise<void>;
             readonly getPowerups: (payload: {
-                user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPublicResponse;
+                user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
             }) => void | Promise<void>;
             readonly getCurrent: (payload?: undefined) => void | Promise<void>;
             readonly checkLinkHash: (payload: {
@@ -725,7 +725,7 @@ export declare const useActions: () => {
         };
         mood: {
             readonly cache: (payload: {
-                moods?: (import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse & {
+                moods?: (import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | undefined;
                 })[] | undefined;
                 overwrite?: boolean | undefined;
@@ -734,38 +734,38 @@ export declare const useActions: () => {
                 id?: string | undefined;
             }) => void | Promise<void>;
             readonly readMultiple: (payload: {
-                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
+                moods: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
             }) => void | Promise<void>;
-            readonly getPosts: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse) => void | Promise<void>;
+            readonly getPosts: (payload: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse) => void | Promise<void>;
             readonly create: (payload: {
-                mood: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodCreateRequest;
-            }) => import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse>;
+                mood: import("@newstackdev/iosdk-newgraph-client-js").MoodCreateRequest;
+            }) => import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse | Promise<import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
         };
         post: {
             readonly cache: (payload: {
-                posts: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse | import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse[];
+                posts: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
             }) => void | Promise<void>;
             readonly read: (payload: {
                 id: string;
             }) => void | Promise<void>;
             readonly create: (payload: {
-                postForm: import("@newcoin-foundation/iosdk-newgraph-client-js").PostCreateRequest & {
+                postForm: import("@newstackdev/iosdk-newgraph-client-js").PostCreateRequest & {
                     file: any;
                 };
-            }) => void | import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse | Promise<void | import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse>;
+            }) => void | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse | Promise<void | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
             readonly attachToMoods: (payload: {
-                moods: import("@newcoin-foundation/iosdk-newgraph-client-js").MoodReadResponse[];
-                post: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse;
+                moods: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
+                post: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse;
             }) => void | Promise<void>;
             readonly rate: (payload: {
-                post: import("@newcoin-foundation/iosdk-newgraph-client-js").PostReadResponse;
+                post: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse;
                 amount: number;
                 contextType: string;
                 contextValue: string;
             }) => void | Promise<void>;
             readonly getRemoteMeta: (payload: {
                 url: string;
-            }) => import("@newcoin-foundation/iosdk-newgraph-client-js").PostRemoteMetaProxyResponse | Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").PostRemoteMetaProxyResponse>;
+            }) => import("@newstackdev/iosdk-newgraph-client-js").PostRemoteMetaProxyResponse | Promise<import("@newstackdev/iosdk-newgraph-client-js").PostRemoteMetaProxyResponse>;
         };
     };
     lists: {
@@ -793,7 +793,7 @@ export declare const useActions: () => {
         user: {
             create: {
                 readonly onInitializeOvermind: () => void | Promise<void>;
-                readonly updateForm: (payload: Partial<import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest & {
+                readonly updateForm: (payload: Partial<import("@newstackdev/iosdk-newgraph-client-js").UserCreateRequest & {
                     couponCode?: string | undefined;
                     inviteHash?: string | undefined;
                 }>) => void | Promise<void>;
@@ -806,11 +806,11 @@ export declare const useActions: () => {
                 readonly wizardStepNext: (payload?: undefined) => void | Promise<void>;
                 readonly preregisterCreate: (payload: {
                     noRouting?: boolean | undefined;
-                    user?: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest | undefined;
+                    user?: import("@newstackdev/iosdk-newgraph-client-js").UserCreateRequest | undefined;
                 }) => void | Promise<void>;
                 readonly create: (payload: {
                     noRouting?: boolean | undefined;
-                    user: import("@newcoin-foundation/iosdk-newgraph-client-js").UserCreateRequest;
+                    user: import("@newstackdev/iosdk-newgraph-client-js").UserCreateRequest;
                 }) => void | Promise<void>;
                 readonly checkAvailability: (payload: {
                     username?: string | undefined;
@@ -884,9 +884,9 @@ export declare const useActions: () => {
             daoOwner: string;
             proposal_id?: string | undefined;
         }) => any;
-        readonly daoCreate: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").BcCreateDaoRequest) => any;
-        readonly daoCreateProposal: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").BcCreateDaoProposal) => any;
-        readonly daoCreateWhitelistProposal: (payload: import("@newcoin-foundation/iosdk-newgraph-client-js").BcCreateWhitelistDaoProposal) => any;
+        readonly daoCreate: (payload: import("@newstackdev/iosdk-newgraph-client-js").BcCreateDaoRequest) => any;
+        readonly daoCreateProposal: (payload: import("@newstackdev/iosdk-newgraph-client-js").BcCreateDaoProposal) => any;
+        readonly daoCreateWhitelistProposal: (payload: import("@newstackdev/iosdk-newgraph-client-js").BcCreateWhitelistDaoProposal) => any;
         readonly daoApproveProposal: (payload: {
             dao_owner: string;
             proposal_id: string;
@@ -965,7 +965,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
     api: {
         initialize(baseUrl: string): import("../types").CreatorApi;
         updateToken(token: string): void;
-        authorize(): Promise<import("@newcoin-foundation/iosdk-newgraph-client-js").UserReadPrivateResponse>;
+        authorize(): Promise<import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse>;
     };
     lists: {};
     flows: import("overmind/lib/internalTypes").SubType<{

@@ -7,7 +7,7 @@ import {
   UserInvitationPagedListReadPublicResponse,
   UserReadPrivateResponse,
   UserReadPublicResponse,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { derived } from "overmind";
 
 export const api: CreatorApi = <CreatorApi>{};

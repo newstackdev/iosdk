@@ -1,6 +1,6 @@
 import { useActions, useAppState } from "../overmind/overmind";
-import { NLView } from "@newcoin-foundation/iosdk/dist/types";
-import { UnsidAuth } from "@newcoin-foundation/iosdk/dist/Components/UnsidAuth";
+import { NLView } from "@newstackdev/iosdk/dist/types";
+import { UnsidAuth } from "@newstackdev/iosdk/dist/Components/UnsidAuth";
 
 import { Layout, Row, Col, Spin, Menu } from "antd";
 import { Link } from "react-router-dom";
@@ -54,6 +54,6 @@ export const AppLayout: NLView = ({ children }) => {
         }
       </Content>
     </Layout>
-    <Footer>This application is based on <a href="https://github.com/Newcoin-Foundation/iosdk" target="_blank">iosdk</a>.</Footer>
+    <Footer>This application is based on <a href="https://github.com/newstackdev/iosdk" target="_blank">iosdk</a>.</Footer>
   </Layout>
 }

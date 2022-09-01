@@ -2,10 +2,10 @@ import { Col, Row } from "antd";
 import { ContentImage } from "../../Components/Image";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
-import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../../types";
 import { PostWidget } from "../../Components/PostWidget";
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useAppState } from "../../overmind";
 import Avatar from "antd/lib/avatar/avatar";
 

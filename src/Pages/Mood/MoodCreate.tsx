@@ -6,7 +6,7 @@ import {
   MoodReadResponse,
   PostCreateRequest,
   PostReadResponse,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+} from "@newstackdev/iosdk-newgraph-client-js";
 import { PicturesWall } from "../../Components/PicturesWall";
 import { get } from "lodash";
 import { useActions, useAppState, useEffects } from "../../overmind";

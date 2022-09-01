@@ -1,5 +1,5 @@
 import { Action } from "../../../types";
-import { MoodCreateRequest, MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodCreateRequest, MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { debounce, pipe } from "overmind";
 
 export const cache: Action<{

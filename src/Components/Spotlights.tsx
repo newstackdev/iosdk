@@ -9,7 +9,7 @@ import { IOView } from "../types";
 import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { Link } from "react-router-dom";
 import { MaybeLink, PostWidget } from "./PostWidget";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { Swiper, SwiperSlide } from "swiper/react";

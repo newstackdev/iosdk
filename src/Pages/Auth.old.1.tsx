@@ -7,7 +7,7 @@ export {};
 // import { initializeApp } from "firebase/app";
 // import { useAuthState } from 'react-firebase-hooks/auth';
 // import { Card, Col, Row } from "antd";
-// import { Api, UserReadPrivateResponse, ErrorResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+// import { Api, UserReadPrivateResponse, ErrorResponse } from "@newstackdev/iosdk-newgraph-client-js";
 // import { useEffect, useState } from 'react';
 // import { useHistory } from 'react-router-dom';
 

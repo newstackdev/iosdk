@@ -1,6 +1,6 @@
 import { Action } from "../../types";
 import { Context } from "../overmind";
-import { PostReadResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PostReadResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { debounce, derived, filter, json, pipe } from "overmind";
 import { get, omit, uniq } from "lodash";
 import { message, notification } from "antd";

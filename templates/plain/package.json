@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@newcoin-foundation/iosdk": "^0.1.169"
+    "@newstackdev/iosdk": "^0.1.169"
   },
   "name": "iosdk-theme-blank",
   "version": "0.5.0",
@@ -9,7 +9,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "postinstall": "rm -rf node_modules/@newcoin-foundation/iosdk/node_modules/@types/",
+    "postinstall": "rm -rf node_modules/@newstackdev/iosdk/node_modules/@types/",
 		"why is postinstall deleting some @types?": 
       "@types/react version mismatch between some components causes iosdk to install the next version under its node_modules which confuses overmind. to be resolved by upgrading antd and some others"
   },

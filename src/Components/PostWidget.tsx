@@ -1,6 +1,6 @@
 import { ContentImage } from "./Image";
 import { Link } from "react-router-dom";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { Row } from "antd";
 import { useAppState } from "../overmind";

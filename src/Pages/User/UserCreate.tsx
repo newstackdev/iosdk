@@ -1,5 +1,5 @@
 import { Button, Checkbox, Input, Row, notification } from "antd";
-import { ErrorResponse, UserCreateRequest, UserUpdateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { ErrorResponse, UserCreateRequest, UserUpdateRequest } from "@newstackdev/iosdk-newgraph-client-js";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import Form from "antd/lib/form";
 // import { logout } from "./Auth";

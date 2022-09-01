@@ -4,7 +4,7 @@ import { CrossCircle } from "./Icons/CrossCircle";
 import { NLView } from "../types";
 import { PinterestIcon } from "./Icons/PinterestIcon";
 import { PinterestShareButton, TelegramShareButton, TumblrShareButton, TwitterShareButton } from "react-share";
-import { PostReadResponse, UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PostReadResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { QRCodeSVG } from "qrcode.react";
 import { ShareIcon } from "./Icons/ShareIcon";
 import { TelegramIcon } from "./Icons/TelegramIcon";

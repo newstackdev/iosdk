@@ -1,4 +1,4 @@
-import { MoodReadResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "./useCached";
 

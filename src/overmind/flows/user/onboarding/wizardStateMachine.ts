@@ -1,5 +1,5 @@
 import { Configuration } from "../../../../config";
-import { UserReadPrivateResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { isEmpty } from "lodash";
 import { statemachine } from "overmind";
 

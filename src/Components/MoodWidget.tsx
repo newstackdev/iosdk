@@ -3,7 +3,7 @@ import { CaretRightFilled } from "@ant-design/icons";
 import { ContentImage } from "./Image";
 import { FolderClosed } from "./Icons/Folder/Closed";
 import { Link } from "react-router-dom";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { Post } from "../Pages/Post/Post";
 import { PostWidget } from "./PostWidget";
 import { Spin } from "./Spin";

@@ -2,7 +2,7 @@ import { Card, Col, Image, Row, Space } from "antd";
 import { ContentImage } from "./Image";
 import { CreativeSearchItem } from "../overmind/lists";
 import { Link } from "react-router-dom";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { aestheticList } from "../overmind/lists/SearchCreative/aestheticList";
 import { useAppState } from "../overmind";

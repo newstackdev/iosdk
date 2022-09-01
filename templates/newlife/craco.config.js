@@ -67,6 +67,14 @@ module.exports = {
       ];
       const r = ({
         ...cfg,
+        rules: [
+          ...cfg.module.rules,
+          {
+            type: "javascript/auto",
+            test: /\.mjs$/,
+            use: [],
+          },
+        ],
         ...{
 
           resolve: {

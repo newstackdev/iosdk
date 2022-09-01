@@ -1,10 +1,6 @@
 // import { NONPOSTAUTHLOCATIONS } from "../.co./constants";
 import { Action } from "../../types";
-import {
-  BcCreateDaoProposal,
-  BcCreateDaoRequest,
-  BcCreateWhitelistDaoProposal,
-} from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { BcCreateDaoProposal, BcCreateDaoRequest, BcCreateWhitelistDaoProposal } from "@newstackdev/iosdk-newgraph-client-js";
 import { Context } from "../overmind";
 import { DaoState } from "./state";
 import { debounce, pipe } from "overmind";

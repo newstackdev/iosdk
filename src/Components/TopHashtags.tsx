@@ -3,7 +3,7 @@ import { ContentImage } from "./Image";
 import { ItemGrid } from "./ItemGrid";
 import { Link } from "react-router-dom";
 import { NLView } from "../types";
-import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { Row } from "antd-latest";
 import { SpotlightGrid } from "./Spotlights";
 import { fischerYates } from "../utils/random";

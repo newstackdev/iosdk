@@ -1,5 +1,5 @@
 import { Action } from "../../types";
-import { BcCreateDaoProposal, BcCreateDaoRequest, BcCreateWhitelistDaoProposal } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { BcCreateDaoProposal, BcCreateDaoRequest, BcCreateWhitelistDaoProposal } from "@newstackdev/iosdk-newgraph-client-js";
 export declare const progressTest: Action;
 export declare const getAccountBalance: Action<{
     user?: {

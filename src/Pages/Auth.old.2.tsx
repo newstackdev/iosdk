@@ -7,7 +7,7 @@ export default {};
 // import { getAuth, RecaptchaVerifier, signInWithEmailAndPassword, signInWithPhoneNumber, ConfirmationResult, UserCredential, signOut } from "firebase/auth";
 // import { initializeApp } from "firebase/app";
 // import { useAuthState } from 'react-firebase-hooks/auth';
-// import { ErrorResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+// import { ErrorResponse } from "@newstackdev/iosdk-newgraph-client-js";
 
 // import { useEffect, useState } from 'react';
 // import { useHistory } from 'react-router-dom';

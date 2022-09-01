@@ -4,7 +4,7 @@ import { ContentImage } from "../../Components/Image";
 import { ItemGrid } from "../../Components/ItemGrid";
 import { Link } from "react-router-dom";
 import { NLView } from "../../types";
-import { PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { SearchItemWidget } from "../../Components/SearchItemWidget";
 import { fischerYates } from "../../utils/random";
 import { useActions, useAppState } from "../../overmind";

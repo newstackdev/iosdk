@@ -1,6 +1,6 @@
 import { Callback, NLView } from "../types";
 import { Col, Row } from "antd";
-import { MoodReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useAppState } from "../overmind";
 import { useCachedNewconAccountHistory } from "../hooks/useCached";
 

@@ -1,6 +1,6 @@
 import { BaseState, Events, States, Wizard } from "./wizardStateMachine";
 import { Statemachine } from "overmind";
-import { UserCreateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserCreateRequest } from "@newstackdev/iosdk-newgraph-client-js";
 import isEmpty from "lodash/isEmpty";
 
 export enum DOMAIN_PRESALE_STEPS {

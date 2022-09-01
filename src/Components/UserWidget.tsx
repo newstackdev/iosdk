@@ -20,7 +20,7 @@ import { Share } from "../Components/Share";
 import { Smallinfo } from "../Components/Icons/Smallinfo";
 import { SocialLink } from "../Components/SocialLink";
 import { UserFlowRoutes } from "../Pages/User/User";
-import { UserReadPrivateResponse, UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { VerifiedIconLight } from "../Components/Icons/VerifiedIconLight";

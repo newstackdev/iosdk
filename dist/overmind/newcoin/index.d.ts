@@ -11,10 +11,10 @@ declare const _default: {
         cache: {
             accountHistory: Record<string, import("./types").HyperionAccountHistory>;
             pools: {
-                byCode: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
-                byOwner: Record<string, import("@newcoin-foundation/newcoin-sdk").NCPoolsInfo>;
+                byCode: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
+                byOwner: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
             };
-            votes: Record<string, import("@newcoin-foundation/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
+            votes: Record<string, import("@newstackdev/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
         };
     };
 };

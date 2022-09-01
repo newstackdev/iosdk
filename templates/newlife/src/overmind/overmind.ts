@@ -3,8 +3,8 @@ import { createOvermind } from "overmind";
 import { namespaced } from 'overmind/config'
 
 import { merge } from 'lodash';
-import { config as defaultConfig, Configuration } from "@newcoin-foundation/iosdk/dist/config";
-import { standardModules } from '@newcoin-foundation/iosdk/dist/overmind/standardModules';
+import { config as defaultConfig, Configuration } from "@newstackdev/iosdk/dist/config";
+import { standardModules } from '@newstackdev/iosdk/dist/overmind/standardModules';
 
 import { app } from "./app";
 import { createStateHook, createActionsHook, createEffectsHook, createReactionHook } from 'overmind-react';

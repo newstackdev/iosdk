@@ -1,5 +1,5 @@
 import { NLView } from "../../types";
-import { MoodReadResponse, PostReadResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 export declare const useVotingStreamMood: () => {
     nextPath: () => string;
     currMood: MoodReadResponse & {

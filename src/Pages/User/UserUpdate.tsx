@@ -4,7 +4,7 @@ import { Input, Row } from "antd";
 import { LogOut } from "../../Components/Icons/LogOut";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { SocialMediaInputs } from "../../Components/Input/SocialMediaInputs";
-import { UserUpdateRequest } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserUpdateRequest } from "@newstackdev/iosdk-newgraph-client-js";
 import { useActions, useAppState, useEffects } from "../../overmind";
 import { useEffect } from "react";
 import { useForm } from "antd/lib/form/Form";

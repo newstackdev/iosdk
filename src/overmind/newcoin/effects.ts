@@ -1,5 +1,5 @@
-import { NCO_BlockchainAPI } from "@newcoin-foundation/newcoin-sdk";
-// import t from "@newcoin-foundation/newcoin-sdk";
+import { NCO_BlockchainAPI } from "@newfound8ion/newcoin-sdk";
+// import t from "@newfound8ion/newcoin-sdk";
 // import { devnet_services, devnet_urls, NCO_BlockchainAPI, NCStakePool } from "../../../../newcoin-sdk/src";
 
 // const conns = {

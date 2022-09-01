@@ -6,8 +6,8 @@ import './index.css';
 import './App.css';
 
 import { NewCounter } from './Pages/Counter';
-import { NLView } from '@newcoin-foundation/iosdk/dist/types';
-import { Auth } from '@newcoin-foundation/iosdk/dist/Pages/Auth/Auth';
+import { NLView } from '@newstackdev/iosdk/dist/types';
+import { Auth } from '@newstackdev/iosdk/dist/Pages/Auth/Auth';
 import {
   BrowserRouter as Router,
   Route,

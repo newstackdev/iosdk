@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import { NLView } from "../types";
-import { UserReadPublicResponse } from "@newcoin-foundation/iosdk-newgraph-client-js";
+import { UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 declare type ICreators = {
     title?: string;
     maxItems?: number;
