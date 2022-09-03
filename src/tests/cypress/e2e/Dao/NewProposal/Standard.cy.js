@@ -1,6 +1,6 @@
 describe("Can Create and Auto Approve a New Standard Proposal", () => {
   it("Can Navigate to the NewProposal Page", () => {
-    cy.visit("http://localhost:3000/dao/dx.io/proposals", { timeout: 500000 });
+    cy.visit("/dao/dx.io/proposals", { timeout: 500000 });
     cy.contains("NewProposal").click();
     cy.url().should("include", "/new-proposal");
   });

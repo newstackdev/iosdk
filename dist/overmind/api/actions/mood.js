@@ -1,4 +1,5 @@
 import { debounce, pipe } from "overmind";
+import uniqBy from "lodash/uniqBy";
 export const cache = async ({ state, actions, effects }, { moods, overwrite }) => {
     if (!moods)
         return;
@@ -37,7 +38,7 @@ export const cache = async ({ state, actions, effects }, { moods, overwrite }) =
             ...curr,
             ...m,
             promise: m.promise || null,
-            posts: ((curr.posts && curr.posts.length) || 0) < ((m && m.posts?.length) || 0) ? m.posts : curr.posts,
+            posts: uniqBy(((curr.posts && curr.posts.length) || 0) < ((m && m.posts?.length) || 0) ? m.posts : curr.posts, "id"),
         };
         // if(
         //     // !curr?.id ||
@@ -67,7 +68,11 @@ export const readMultiple = async ({ state, actions, effects }, { moods }) => {
 export const getPosts = async ({ state, actions, effects }, mood) => {
     if (!mood.id)
         return;
+    if (state.indicators.specific["__getPosts" + mood.id])
+        return;
+    state.indicators.specific["__getPosts" + mood.id] = true;
     const r = await state.api.client.mood.postsList({ id: mood.id });
+    state.indicators.specific["__getPosts" + mood.id] = false;
     // state.api.cache.moods[id] = { ...state.api.cache.moods[id], posts: uniqBy(r.data.value, p => p.id) };
     await actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });
     r.data.value?.forEach((p) => p.id && (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p }));

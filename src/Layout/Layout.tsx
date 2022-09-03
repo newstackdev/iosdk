@@ -123,7 +123,7 @@ export const XTopMenu = () => {
         </Link>
       </Menu.Item>
       <Menu.Item key="5">
-        <Link to="/post-create" className="nav-item">
+        <Link to="/post-create" className="nav-item nav-item-upload">
           <NavbarUpload />
         </Link>
       </Menu.Item>

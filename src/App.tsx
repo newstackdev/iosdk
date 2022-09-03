@@ -6,7 +6,17 @@ import { PartialConfiguration } from "./config";
 import { Provider } from "overmind-react";
 import { BrowserRouter as Router, Switch, useHistory } from "react-router-dom";
 import { overmind as _overmind, useActions, useAppState } from "./overmind";
+import { useCachedMoodPosts } from "./hooks/useCached2";
 import { useEffect } from "react";
+
+const DexieTest = () => {
+  const ps = useCachedMoodPosts({ id: "a4bfb1d2-88d8-8f9a-7b96-9042f9e97434" });
+  return (
+    <>
+      !{JSON.stringify(ps)} {ps.posts.length}
+    </>
+  );
+};
 
 const AppShell: NLView = ({ children }) => {
   const state = useAppState();
@@ -25,7 +35,9 @@ const AppShell: NLView = ({ children }) => {
     return cancel;
   }, []);
 
-  if (!state.cache.ready) return <>IndexedDb not ready</>;
+  if (!state.cache.ready) return <>Getting ready...</>;
+
+  // if (state.cache.ready) return <DexieTest />;
 
   return (
     <>

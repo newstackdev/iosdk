@@ -1,4 +1,4 @@
-import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { useActions, useAppState } from "../overmind";
 import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -37,6 +37,26 @@ export const useCachedPost = ({ id }: { id?: string }, force?: boolean) => {
   return (id && state.api.cache.posts[id]) || {};
 };
 
+export const useCachedPosts = (posts: { id?: string }[], force?: boolean) => {
+  const state = useAppState();
+  const actions = useActions();
+  const ids = posts.map((p) => p.id);
+  const key = ids.join(",");
+
+  const cachedPosts = //= [];
+    useLiveQuery(() => {
+      const should = (state.auth.authenticated && state.cache.ready && posts?.length) || null;
+      const f = should && state.cache.db.nodes["post"];
+      const bg = f
+        ?.where("id")
+        .anyOf(posts.map((p) => p.id))
+        .toArray();
+      return bg;
+    }, [key, state.cache.ready, state.auth.authenticated]);
+
+  return cachedPosts || []; //(posts?.length && state.api.cache.posts[id]) || {};
+};
+
 export const useCachedMood = ({ id }: { id?: string }, force?: boolean) => {
   const state = useAppState();
   const actions = useActions();
@@ -54,19 +74,29 @@ export const useCachedMoodPosts = ({ id }: { id?: string }, force?: boolean) => 
   const state = useAppState();
   const actions = useActions();
 
-  const cachedFolder = useLiveQuery(() => state.cache.db.nodes["folder"].where({ id }).toArray());
-  const cachedFolderPosts = useLiveQuery(() =>
-    state.cache.db.edges.where({ fromLabel: "folder", fromId: id, toLabel: "post" }).toArray(),
-  );
+  const cachedFolder = useLiveQuery(() => {
+    const f = state.cache.db.nodes["folder"];
+    return f?.where({ id }).toArray();
+  }, [id, state.cache.ready, state.auth.authenticated]);
+  const cachedFolderPostsEdges = useLiveQuery(() => {
+    const w = state.cache.ready && state.cache.db.edges.where;
+    // if (!w) return [];
+    const wr = state.cache.db.edges.where("__outE").startsWith(["folder", id, "post"].join("+")).toArray();
+    if (!wr) return [];
+    return wr;
+  }, [state.cache.ready, id, state.auth.authenticated]);
 
   useEffect(() => {
     id &&
       state.auth.authenticated &&
+      state.cache.ready &&
       (force || !state.api.cache.moods[id]) && //|| !state.api.cache.moods[id].posts?.length) &&
       actions.api.mood.getPosts({ id });
-  }, [state.auth.authenticated, id]);
+  }, [state.cache.ready, state.auth.authenticated, id]);
 
-  return { ...cachedFolder, posts: cachedFolderPosts }; //(id && state.api.cache.moods[id]) || {};
+  const posts = useCachedPosts((cachedFolderPostsEdges || []).map((p) => ({ id: p.toId || "" })));
+
+  return { ...(cachedFolder || [])[0], posts: posts || [] }; //(id && state.api.cache.moods[id]) || {};
 };
 
 export const useCachedMoods = (moods?: { id?: string }[], force?: boolean) => {

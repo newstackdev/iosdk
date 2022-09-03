@@ -31,7 +31,7 @@ const PostCreateHeader: NLView<{
                   e.stopPropagation();
                   setContentType("text/plain");
                 }}
-                className={contentType === "text/plain" ? "uploadIconActive" : "uploadIconInactive"}
+                className={`${contentType === "text/plain" ? "uploadIconActive" : "uploadIconInactive"} upload-text-node`}
               >
                 <Text />
               </span>
@@ -43,9 +43,9 @@ const PostCreateHeader: NLView<{
                   e.stopPropagation();
                   setContentType("");
                 }}
-                className={
+                className={`${
                   contentType !== "text/plain" && contentType !== "video/mp4" ? "uploadIconActive" : "uploadIconInactive"
-                }
+                }  upload-image-node`}
               >
                 <Image />
               </span>

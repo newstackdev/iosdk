@@ -5,6 +5,7 @@ import { json } from "overmind";
 import { omit } from "lodash";
 import { useActions, useAppState } from "../overmind";
 import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from "./useCached1";
+// import { useCachedMood, useCachedPost, useCachedUser } from "./useCached1";
 // import { useCachedMoodPosts } from "./useCached2";
 import { useEffect } from "react";
 
@@ -13,10 +14,7 @@ export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
 export const useCachedMoods = (moods?: { id?: string }[], force?: boolean) => {
   const state = useAppState();
   const actions = useActions();
-  const moodsCollector: MoodReadResponse[] = [];
   useEffect(() => {
-    const res: MoodReadResponse[] = [];
-
     moods &&
       moods.length &&
       state.auth.authenticated &&
@@ -25,14 +23,15 @@ export const useCachedMoods = (moods?: { id?: string }[], force?: boolean) => {
           .map(
             ({ id }) =>
               id &&
-              (force || !state.api.cache.moods[id] || !state.api.cache.moods[id].posts?.length) &&
+              state.auth.authenticated &&
+              (force || !state.api.cache.moods[id]) && //|| !state.api.cache.moods[id].posts?.length) &&
               actions.api.mood.read({ id }),
           )
           .filter(Boolean),
       ).then((r) => r.reduce((m) => m));
   }, [state.auth.authenticated, moods]);
 
-  return moodsCollector;
+  return (moods && state.api.cache.moods) || [];
 };
 
 export const useCachedPowerups = (user?: { id?: string }, force?: boolean) => {

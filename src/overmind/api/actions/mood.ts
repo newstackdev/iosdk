@@ -1,6 +1,7 @@
 import { Action } from "../../../types";
 import { MoodCreateRequest, MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { debounce, pipe } from "overmind";
+import uniqBy from "lodash/uniqBy";
 
 export const cache: Action<{
   moods?: (MoodReadResponse & { promise?: Promise<any> })[];
@@ -53,7 +54,7 @@ export const cache: Action<{
       ...curr,
       ...m,
       promise: m.promise || null,
-      posts: ((curr.posts && curr.posts.length) || 0) < ((m && m.posts?.length) || 0) ? m.posts : curr.posts,
+      posts: uniqBy(((curr.posts && curr.posts.length) || 0) < ((m && m.posts?.length) || 0) ? m.posts : curr.posts, "id"),
     };
 
     // if(
@@ -92,7 +93,13 @@ export const readMultiple: Action<{ moods: MoodReadResponse[] }> = async ({ stat
 export const getPosts: Action<MoodReadResponse> = async ({ state, actions, effects }, mood) => {
   if (!mood.id) return;
 
+  if (state.indicators.specific["__getPosts" + mood.id]) return;
+
+  state.indicators.specific["__getPosts" + mood.id] = true;
+
   const r = await state.api.client.mood.postsList({ id: mood.id });
+
+  state.indicators.specific["__getPosts" + mood.id] = false;
 
   // state.api.cache.moods[id] = { ...state.api.cache.moods[id], posts: uniqBy(r.data.value, p => p.id) };
   await actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });

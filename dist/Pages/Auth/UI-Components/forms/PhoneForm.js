@@ -30,7 +30,7 @@ const PhoneForm = ({ setIsErrorSubmit, embedded, phoneForm }) => {
                     message: "The phone number is invalid.",
                     pattern: new RegExp(reg),
                 },
-            ], children: _jsx(Input, { className: `nl-onboarding-input nl-onboarding-input-phone ${isPhonePresent && embedded ? "nl-onboarding-input-phone-disabled text-center" : null}`, placeholder: isPhonePresent && embedded ? maskedPhoneNum : "enter phone number", disabled: isPhonePresent && embedded, suffix: isPhonePresent && embedded ? undefined : _jsx(CrossCircleErr, {}), autoFocus: true, onChange: (values) => {
+            ], children: _jsx(Input, { className: `nl-onboarding-input nl-onboarding-input-phone ${isPhonePresent && embedded ? "nl-onboarding-input-phone-disabled text-center" : null}`, id: "basic_phone", placeholder: isPhonePresent && embedded ? maskedPhoneNum : "enter phone number", disabled: isPhonePresent && embedded, suffix: isPhonePresent && embedded ? undefined : _jsx(CrossCircleErr, {}), autoFocus: true, onChange: (values) => {
                     if (!values.target.value.includes("+")) {
                         phoneForm.setFieldsValue({
                             phone: "+" + values.target.value,

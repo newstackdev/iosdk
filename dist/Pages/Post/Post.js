@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { SelectMoodForm } from "../../Components/SelectMood";
 import { Spin } from "../../Components/Spin";
 import { useActions, useAppState } from "../../overmind";
-import { useCachedMood, useCachedPost, useCachedUser } from "../../hooks/useCached";
+import { useCachedMoods, useCachedPost, useCachedUser } from "../../hooks/useCached";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 // import { ContentImage, contentImageUrl } from "../../Components/Image";
@@ -20,14 +20,16 @@ import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
 import { Share } from "../../Components/Share";
 import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
 import { Vote } from "../../Components/Vote";
+import { fischerYates } from "../../utils/random";
 import { useVerified } from "../../hooks/useVerified";
 export const useVotingStreamMood = () => {
     const { moodId, postId, id } = useParams();
-    const currPost = useCachedPost({ id: postId || id }, true);
-    const currMood = useCachedMood({ id: moodId }, true);
-    const [index, setIndex] = useState(-1);
     const state = useAppState();
-    const moodPosts = currMood.posts || [];
+    const currPost = useCachedPost({ id: postId || id }, true);
+    const availableMoods = fischerYates(Object.values(useCachedMoods(state.api.auth.moods, true)));
+    const [index, setIndex] = useState(-1);
+    const [currMood, setCurrMood] = useState(Object.values(availableMoods).find((mood) => mood?.id === moodId));
+    const [moodPosts, setMoodPosts] = useState(currMood?.posts || []);
     const getIndex = () => {
         if (!currMood?.id)
             return;
@@ -37,20 +39,26 @@ export const useVotingStreamMood = () => {
         const ix = moodPosts.findIndex((p) => p.id === postId);
         setIndex(ix > 0 ? ix : 0);
     };
-    useEffect(() => getIndex(), [state.routing.location, currPost]);
+    useEffect(() => {
+        getIndex();
+        if (!moodPosts[index + 1]?.id) {
+            setCurrMood(availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1]);
+            setIndex(-1);
+        }
+    }, [state.routing.location, currPost]);
+    useEffect(() => {
+        setMoodPosts(currMood?.posts || []);
+    }, [currMood]);
     const getPosts = (m) => {
         const cm = state.api.cache.moods[m?.id || ""];
         return cm && cm.posts ? cm.posts : [];
     };
     const nextPath = () => {
         const _nextPostId = moodPosts[index + 1]?.id;
-        const nextMood = _nextPostId
-            ? currMood
-            : currPost.moods?.find((md) => currMood.id != md.id && getPosts(md).length) ||
-                state.lists.top.moods.items.find((md) => currMood.id !== md.id && getPosts(md).length);
+        const nextMood = _nextPostId ? currMood : undefined;
         const _moodPosts = getPosts(nextMood) || [];
         const nextPost = _nextPostId || (_moodPosts && _moodPosts[0] && _moodPosts[0].id);
-        const nextPath = `/folder/${nextMood?.id}/${nextPost}`; //(index != null) && moodPosts[index + 1]?.id ?
+        const nextPath = nextMood ? `/folder/${nextMood?.id}/${nextPost}` : "/explore"; //(index != null) && moodPosts[index + 1]?.id ?
         return nextPath;
     };
     return {
@@ -142,7 +150,7 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
         navigateToNext();
     };
     const doneVoting = (rating) => {
-        if (rating > 0)
+        if (rating > 0) {
             actions.api.post.rate({
                 post: currPost,
                 amount: rating,
@@ -150,8 +158,10 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
                 contextValue,
                 // mood: currMood
             });
-        if (rating < 100)
+        }
+        if (rating < 100) {
             return navigateToNext();
+        }
         window.addEventListener("keydown", function (e) {
             if (e.keyCode === 32 && e.target === document.body && rating === 100) {
                 e.preventDefault();

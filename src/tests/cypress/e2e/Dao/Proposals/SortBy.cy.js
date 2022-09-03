@@ -1,6 +1,6 @@
 describe("Can Perform All Sorts", () => {
   it("Loads Proposals", () => {
-    cy.visit("http://localhost:3000/dao/dx.io/proposals");
+    cy.visit("/dao/dx.io/proposals");
     cy.contains("View");
   });
   it("Can Sort by Needs Approval", () => {

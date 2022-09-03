@@ -18,7 +18,7 @@ export const init = (name: string = "iosdk-cache", stores: Record<string, string
   const db = new Dexie(name);
   db.version(1).stores({
     ...stores,
-    [EDGES_TABLE_NAME]: "++id,fromLabel,toLabel,fromId,toId",
+    [EDGES_TABLE_NAME]: "++id,__outE,__inE",
   });
   const edges = db[EDGES_TABLE_NAME];
 

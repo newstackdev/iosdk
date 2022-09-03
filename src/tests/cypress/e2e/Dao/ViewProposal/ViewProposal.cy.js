@@ -1,5 +1,5 @@
 beforeEach(() => {
-  cy.visit("http://localhost:3000/dao/dx.io/proposals", { timeout: 500000 });
+  cy.visit("/dao/dx.io/proposals", { timeout: 500000 });
 });
 
 describe("Can Vote", () => {

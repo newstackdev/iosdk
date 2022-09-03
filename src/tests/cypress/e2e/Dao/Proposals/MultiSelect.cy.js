@@ -1,6 +1,6 @@
 describe("Can Perform Bulk Approval", () => {
   it("Loads Proposals", () => {
-    cy.visit("http://localhost:3000/dao/dx.io/proposals");
+    cy.visit("/dao/dx.io/proposals");
     cy.wait(5000);
     cy.contains("View");
   });
@@ -23,7 +23,7 @@ describe("Can Perform Bulk Approval", () => {
 
 describe("Can Perform Bulk Execution", () => {
   it("Loads Proposals", () => {
-    cy.visit("http://localhost:3000/dao/dx.io/proposals");
+    cy.visit("/dao/dx.io/proposals");
     cy.wait(5000);
     cy.contains("View");
   });

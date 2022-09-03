@@ -5,7 +5,9 @@ import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from 
 export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
 export declare const useCachedMoods: (moods?: {
     id?: string;
-}[], force?: boolean) => MoodReadResponse[];
+}[], force?: boolean) => never[] | Record<string, MoodReadResponse & {
+    promise?: Promise<any> | null | undefined;
+}>;
 export declare const useCachedPowerups: (user?: {
     id?: string;
 }, force?: boolean) => "" | PowerupsCacheItem;

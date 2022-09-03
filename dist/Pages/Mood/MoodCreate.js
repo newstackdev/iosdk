@@ -49,22 +49,22 @@ export const MoodCreate = ({ onCreated, setIsCreated }) => {
                             required: true,
                             message: "Please input a title",
                         },
-                    ], children: _jsx(Input, { placeholder: "title" }) }), _jsx(Form.Item, { required: true, name: "description", rules: [
+                    ], children: _jsx(Input, { placeholder: "title", id: "mood-create-title" }) }), _jsx(Form.Item, { required: true, name: "description", rules: [
                         {
                             required: true,
                             message: "A couple of words here please",
                         },
-                    ], children: _jsx(Input, { placeholder: "description" }) }), _jsx(Form.Item, { required: false, name: "stakeToAccess", children: _jsx(Input
+                    ], children: _jsx(Input, { placeholder: "description", id: "mood-create-description" }) }), _jsx(Form.Item, { required: false, name: "stakeToAccess", children: _jsx(Input
                     // disabled
                     , { 
                         // disabled
-                        title: "Minimum amount of creator coin stake a user needs to access this folder", placeholder: "minimum stake in creator coin to access" }) }), _jsx(Form.Item, { required: false, name: "action", children: _jsx(Input, { disabled: true, title: "Upcoming feature", placeholder: "action" }) }), _jsx(Form.Item, { name: "doMint", valuePropName: "checked", children: _jsx(RowCheckbox, { disabled: true, title: "Upcoming feature", children: "Create a Newcoin NFT collection" }) }), _jsx(Form.Item, { name: "license", rules: [{ required: false, message: "Please pick a license" }], children: _jsx(Select, { defaultValue: LICENSES[0][1], children: LICENSES.map((l) => (_jsx(Select.Option, { value: l[1], children: l[0] }))) }) }), _jsx(Form.Item, { label: "", className: "text-center", children: _jsx(ProgressButton, { actionName: "api.mood.create", progressText: "Creating mood...", type: "primary", htmlType: "submit", children: "Create" }) })] }) }));
+                        title: "Minimum amount of creator coin stake a user needs to access this folder", placeholder: "minimum stake in creator coin to access" }) }), _jsx(Form.Item, { required: false, name: "action", children: _jsx(Input, { disabled: true, title: "Upcoming feature", placeholder: "action" }) }), _jsx(Form.Item, { name: "doMint", valuePropName: "checked", children: _jsx(RowCheckbox, { disabled: true, title: "Upcoming feature", children: "Create a Newcoin NFT collection" }) }), _jsx(Form.Item, { name: "license", rules: [{ required: false, message: "Please pick a license" }], children: _jsx(Select, { defaultValue: LICENSES[0][1], children: LICENSES.map((l) => (_jsx(Select.Option, { value: l[1], children: l[0] }))) }) }), _jsx(Form.Item, { label: "", className: "text-center", children: _jsx(ProgressButton, { actionName: "api.mood.create", progressText: "Creating mood...", type: "primary", htmlType: "submit", id: "mood-create-submit", children: "Create" }) })] }) }));
 };
 export const MoodCreateModal = ({ setIsCreated, onCreated }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (_jsxs(_Fragment, { children: [_jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: isOpen, onOk: () => setIsOpen(false), onCancel: () => setIsOpen(false), footer: false, className: "nl-white-box-modal", children: _jsx(MoodCreate, { onCreated: (m) => {
                         setIsOpen(false);
                         onCreated && onCreated(m);
-                    }, setIsCreated: setIsCreated }) }), _jsxs("div", { children: [_jsx("div", { style: { fontSize: "120px" }, children: _jsx(AddFolder, { setIsOpen: setIsOpen }) }), _jsx("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
+                    }, setIsCreated: setIsCreated }) }), _jsxs("div", { children: [_jsx("div", { style: { fontSize: "120px" }, id: "add-folder-button", children: _jsx(AddFolder, { setIsOpen: setIsOpen }) }), _jsx("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
 };
 //# sourceMappingURL=MoodCreate.js.map

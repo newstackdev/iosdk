@@ -39,6 +39,7 @@ const CodeForm: NLView<{
         className="nl-onboarding-form-item"
       >
         <Input
+          id="basic_phoneVerificationCode"
           className="nl-onboarding-input nl-onboarding-input-code"
           placeholder="enter verification code"
           suffix={<CrossCircleErr />}

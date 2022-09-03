@@ -1,12 +1,7 @@
 import { Button, Checkbox, Col, Input, Modal, Row, Select, Upload, notification } from "antd";
 import { Callback, NLView } from "../../types";
 import { FileOutlined } from "@ant-design/icons";
-import {
-  MoodCreateRequest,
-  MoodReadResponse,
-  PostCreateRequest,
-  PostReadResponse,
-} from "@newstackdev/iosdk-newgraph-client-js";
+import { MoodCreateRequest, MoodReadResponse, PostCreateRequest, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { PicturesWall } from "../../Components/PicturesWall";
 import { get } from "lodash";
 import { useActions, useAppState, useEffects } from "../../overmind";
@@ -91,7 +86,7 @@ export const MoodCreate: NLView<{
             },
           ]}
         >
-          <Input placeholder="title" />
+          <Input placeholder="title" id="mood-create-title" />
         </Form.Item>
 
         <Form.Item
@@ -104,7 +99,7 @@ export const MoodCreate: NLView<{
             },
           ]}
         >
-          <Input placeholder="description" />
+          <Input placeholder="description" id="mood-create-description" />
         </Form.Item>
         <Form.Item required={false} name="stakeToAccess">
           <Input
@@ -130,7 +125,13 @@ export const MoodCreate: NLView<{
           </Select>
         </Form.Item>
         <Form.Item label="" className="text-center">
-          <ProgressButton actionName="api.mood.create" progressText="Creating mood..." type="primary" htmlType="submit">
+          <ProgressButton
+            actionName="api.mood.create"
+            progressText="Creating mood..."
+            type="primary"
+            htmlType="submit"
+            id="mood-create-submit"
+          >
             Create
           </ProgressButton>
         </Form.Item>
@@ -164,7 +165,7 @@ export const MoodCreateModal: NLView<{
         />
       </Modal>
       <div>
-        <div style={{ fontSize: "120px" }}>
+        <div style={{ fontSize: "120px" }} id="add-folder-button">
           <AddFolder setIsOpen={setIsOpen} />
         </div>
         <p className="paragraph-1r" style={{ opacity: 0 }}>

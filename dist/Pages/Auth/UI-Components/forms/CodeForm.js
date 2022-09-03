@@ -16,7 +16,7 @@ const CodeForm = ({ setIsErrorSubmit, embedded, codeForm }) => {
                     required: true,
                     message: "Enter your verification code",
                 },
-            ], className: "nl-onboarding-form-item", children: _jsx(Input, { className: "nl-onboarding-input nl-onboarding-input-code", placeholder: "enter verification code", suffix: _jsx(CrossCircleErr, {}), autoFocus: true, onChange: () => codeForm
+            ], className: "nl-onboarding-form-item", children: _jsx(Input, { id: "basic_phoneVerificationCode", className: "nl-onboarding-input nl-onboarding-input-code", placeholder: "enter verification code", suffix: _jsx(CrossCircleErr, {}), autoFocus: true, onChange: () => codeForm
                     .validateFields()
                     .then(() => {
                     setIsErrorSubmit(false);

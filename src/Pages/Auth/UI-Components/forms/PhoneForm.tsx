@@ -59,6 +59,7 @@ const PhoneForm: NLView<{
           className={`nl-onboarding-input nl-onboarding-input-phone ${
             isPhonePresent && embedded ? "nl-onboarding-input-phone-disabled text-center" : null
           }`}
+          id="basic_phone"
           placeholder={isPhonePresent && embedded ? maskedPhoneNum : "enter phone number"}
           disabled={isPhonePresent && embedded}
           suffix={isPhonePresent && embedded ? undefined : <CrossCircleErr />}

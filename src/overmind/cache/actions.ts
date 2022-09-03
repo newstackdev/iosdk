@@ -32,7 +32,15 @@ export const storeEdge: Action<{
   to: IGraphObject;
   value?: any;
 }> = async ({ effects }, { fromLabel, toLabel, from, to, value }) => {
-  return put(effects.cache.edges(), { fromLabel, toLabel, fromId: from.id, toId: to.id, value });
+  return put(effects.cache.edges(), {
+    __outE: [fromLabel, from.id, toLabel, to.id].join("+"),
+    __inE: [toLabel, to.id, fromLabel, from.id].join("+"),
+    fromLabel,
+    from,
+    toLabel,
+    to,
+    value,
+  });
 };
 
 export const storeEdgeMultiple: Action<{
@@ -44,7 +52,13 @@ export const storeEdgeMultiple: Action<{
 }> = async ({ effects }, { fromLabel, toLabel, from, to, value }) => {
   const tbl = effects.cache.edges();
   await Promise.all(
-    from.flatMap((f) => to.map((t) => put(tbl, { fromLabel, toLabel, fromId: f.id, toId: t.id, value: value || {} }))),
+    from.flatMap((f) =>
+      to.map((t) => {
+        const __outE = [fromLabel, f.id, toLabel, t.id].join("+");
+        const __inE = [toLabel, t.id, fromLabel, f.id].join("+");
+        return put(tbl, { __outE, __inE, value, fromLabel, fromId: f.id, toLabel, toId: t.id });
+      }),
+    ), //{ fromLabel, fromId: f.id, toLabel, toId: t.id, value: value || {} }))),
   );
   return;
 };
@@ -68,9 +82,9 @@ export const onInitializeOvermind: Action = async ({ effects, state, actions, re
     state.cache.ready = true;
   });
 
-  setTimeout(() => {
-    state.cache._db = () => db;
-  });
+  // setTimeout(() => {
+  state.cache._db = () => db;
+  // });
 
   // state.cache._edges = () => db[EDGES_TABLE_NAME];
 };
