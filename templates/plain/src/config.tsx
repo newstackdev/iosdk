@@ -20,9 +20,9 @@ const stages: Record<string, string> = {
 const stage = stages[currentHost];
 
 const apiBaseUrls: Record<string, string> = {
-	"eu-dev": "https://api-eu-dev.newlife.io/creator",
-	"eu-sit": "https://api-eu-sit.newlife.io/creator",
-	"eu-prod": "https://api-eu-prod.newlife.io/creator",
+	"eu-dev": "https://api-eu-dev.newgra.ph/v1",
+	"eu-sit": "",
+	"eu-prod": "https://api.newgra.ph/v1", // upcoming
 };
 
 const getStr = (o: any) => (path: string) =>
