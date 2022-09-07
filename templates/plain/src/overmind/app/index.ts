@@ -10,7 +10,7 @@ const signIn: Action<{ jwt: string }> = async ({ state, effects, actions }, { jw
 
 const signOut: Action = async ({ state, effects, actions }) => {
     actions.api.auth.logout();
-    actions.unsid.signOut();
+    actions.newsafe.signOut();
 
     state.api.auth.user = {};
   }
