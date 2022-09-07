@@ -1,7 +1,7 @@
 describe("Can Create and Auto Approve a New Standard Proposal", () => {
   it("Can Navigate to the NewProposal Page", () => {
-    cy.visit("/dao/dx.io/proposals", { timeout: 500000 });
-    cy.contains("NewProposal").click();
+    cy.visit("http://localhost:3000/dao/dx.io/proposals", { timeout: 500000 });
+    cy.get(".power-up-btn").click();
     cy.url().should("include", "/new-proposal");
   });
   it("Can fill out form values", () => {
@@ -18,12 +18,12 @@ describe("Can Create and Auto Approve a New Standard Proposal", () => {
   });
   it("Navigates Back To the Dao", () => {
     cy.get(".ant-modal-close-x").click();
-    cy.wait(10000);
+    cy.wait(3000);
     cy.url().should("include", "/proposals");
   });
   it("Shows the NewProposal is already approved", () => {
     cy.contains("View").click();
-    cy.contains("live");
-    cy.contains("Vote");
+    cy.contains("starting");
+    cy.contains("View");
   });
 });

@@ -1,7 +1,7 @@
 import { Action } from "../overmind";
 
-const signIn: Action<{ jwt: string }> = async ({ state, effects, actions }, { jwt: unsidjwt }) => {
-    await actions.api.auth.authorize({ token: unsidjwt });
+const signIn: Action<{ jwt: string }> = async ({ state, effects, actions }, { jwt: newsafejwt }) => {
+    await actions.api.auth.authorize({ token: newsafejwt });
 
     // effects.app.api.updateToken(unsidjwt); // initialize your own/other apis
     // any post-auth initialization
@@ -18,13 +18,13 @@ const signOut: Action = async ({ state, effects, actions }) => {
 const onInitializeOvermind: Action = ({ actions, state, effects, reaction }) => {
     // state.app.api = effects.app.api.initialize(<your init url>);
   
-    state.unsid.token &&
-        actions.app.signIn({ jwt: state.unsid.token || "" });
+    state.newsafe.token &&
+        actions.app.signIn({ jwt: state.newsafe.token || "" });
   
     reaction(
-      (state) => state.unsid.token,
+      (state) => state.newsafe.token,
       async () => {
-        await actions.app.signIn({ jwt: state.unsid.token || "" });
+        await actions.app.signIn({ jwt: state.newsafe.token || "" });
         actions.routing.historyPush({ location: "/home" });
       }
     )

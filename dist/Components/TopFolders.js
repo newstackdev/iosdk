@@ -45,7 +45,7 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
 const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts }) => {
     const state = useAppState();
     const effects = useEffects();
-    const moods = state.lists.top.moods.items || [];
+    const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
     // if (true)
     //   return (
     //     <>

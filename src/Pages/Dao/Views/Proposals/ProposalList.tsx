@@ -6,6 +6,7 @@ import { Dropdown, Menu } from "antd-latest";
 import { Link, useParams } from "react-router-dom";
 import { LoadMore } from "../../../../Components/LoadMore";
 import { MemberCard } from "../../Components/Previews/Member/Card/MemberCard";
+import { NoBulkActionModal } from "../../Components/Modals/NoBulkActionModal";
 import { ProposalCard } from "../../Components/Previews/Standard/Card/ProposalCard";
 import { ProposalRow } from "../../Components/Previews/Standard/Row/ProposalRow";
 import { UserStake } from "../../../../Components/UserWidget";
@@ -49,7 +50,7 @@ const Proposals = (props: { daoOwner: string }) => {
 
   const [toggleView, setToggleView] = useState(false);
   const [showProposalType, setShowProposalType] = useState("standard");
-  const [bulkAction, setBulkAction] = useState({ state: false, action: "" });
+  const [bulkAction, setBulkAction] = useState<any>({ state: false, action: "" });
   const [sortSelection, setSortSelection] = useState("all");
 
   let proposals;
@@ -119,9 +120,7 @@ const Proposals = (props: { daoOwner: string }) => {
                 if (s.length > 0) {
                   setSortSelection("needsApproval");
                   setBulkAction({ state: true, action: "approve" });
-                } else {
-                  alert("no proposals to approve!");
-                }
+                } else setBulkAction({ state: "none", action: "approve" });
               }}
             >
               Approve All
@@ -139,9 +138,7 @@ const Proposals = (props: { daoOwner: string }) => {
                 if (s.length > 0) {
                   setSortSelection("needsExecution");
                   setBulkAction({ state: true, action: "execute" });
-                } else {
-                  alert("no proposals to execute!");
-                }
+                } else setBulkAction({ state: "none", action: "execute" });
               }}
             >
               Execute All
@@ -228,7 +225,7 @@ const Proposals = (props: { daoOwner: string }) => {
                 </Row>
               </a>
             </Dropdown>
-            {bulkAction.state && (
+            {bulkAction.state === true && (
               <BulkActionModal
                 proposals={proposals}
                 showProposalType={showProposalType}
@@ -237,6 +234,7 @@ const Proposals = (props: { daoOwner: string }) => {
                 dao_owner={daoOwner}
               />
             )}
+            {bulkAction.state === "none" && <NoBulkActionModal />}
           </Row>
         )}
         <Dropdown overlay={menu}>
@@ -297,5 +295,6 @@ const Proposals = (props: { daoOwner: string }) => {
     </Col>
   );
 };
-
 export default Proposals;
+
+//

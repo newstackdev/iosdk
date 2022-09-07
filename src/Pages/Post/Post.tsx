@@ -36,8 +36,8 @@ export const useVotingStreamMood = () => {
   }>();
   const state = useAppState();
   const currPost = useCachedPost({ id: postId || id }, true);
-  const availableMoods = fischerYates(Object.values(useCachedMoods(state.api.auth.moods, true)));
 
+  const [availableMoods, setAvailableMoods] = useState(Object.values(useCachedMoods(Object.values(state.api.cache.moods))));
   const [index, setIndex] = useState<number>(-1);
   const [currMood, setCurrMood] = useState(Object.values(availableMoods).find((mood) => mood?.id === moodId));
   const [moodPosts, setMoodPosts] = useState(currMood?.posts || []);
@@ -54,16 +54,18 @@ export const useVotingStreamMood = () => {
   };
 
   useEffect(() => {
-    getIndex();
-    if (!moodPosts[index + 1]?.id) {
-      setCurrMood(availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1]);
-      setIndex(-1);
-    }
-  }, [state.routing.location, currPost]);
+    setAvailableMoods(fischerYates(availableMoods));
+  }, [state.api.cache.moods]);
 
   useEffect(() => {
-    setMoodPosts(currMood?.posts || []);
-  }, [currMood]);
+    getIndex();
+    if (!moodPosts[index + 1]?.id) {
+      const updatedMood = availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1];
+      setCurrMood(updatedMood);
+      setMoodPosts(updatedMood?.posts || []);
+      setIndex(0);
+    }
+  }, [state.routing.location, currPost, currMood]);
 
   const getPosts = (m?: MoodReadResponse) => {
     const cm = state.api.cache.moods[m?.id || ""];

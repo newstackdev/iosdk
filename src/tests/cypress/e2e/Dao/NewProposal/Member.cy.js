@@ -19,14 +19,14 @@ describe("Can Create and Auto Approve a New Member Proposal", () => {
   });
   it("Navigates Back To the Dao", () => {
     cy.get(".ant-modal-close-x").click();
-    cy.wait(10000);
+    cy.wait(5000);
     cy.url().should("include", "/proposals");
   });
   it("Shows the NewProposal is already approved", () => {
     cy.contains("Members").click();
     cy.wait(5000);
     cy.contains("View").click();
-    cy.contains("live");
-    cy.contains("Vote");
+    cy.contains("starting");
+    cy.contains("View");
   });
 });

@@ -32,6 +32,7 @@ const NewProposal = () => {
   const proposalCreate = async (val: {
     custom_vote_end;
     custom_vote_start;
+    title;
     summary;
     proposal_type;
     auto_approve;
@@ -40,7 +41,7 @@ const NewProposal = () => {
   }) => {
     const voteStartTime = val.custom_vote_start
       ? val.custom_vote_start
-      : moment().add("1", "minutes").utc().format("YYYY-MM-DDTHH:mm:ss");
+      : moment().add("5", "minutes").utc().format("YYYY-MM-DDTHH:mm:ss");
     const voteEndTime = val.custom_vote_end ? val.custom_vote_end : voteEnd ? voteEnd.time : moment().add("6", "minutes");
     const proposalAction = proposalType == "whitelist" ? "daoCreateWhitelistProposal" : "daoCreateProposal";
     const types = {
@@ -50,14 +51,14 @@ const NewProposal = () => {
       standard: {
         summary: val.summary + "#" + proposalType,
         url: val.url || "blank",
+        title: val.title,
       },
     };
     const payLoad = proposalType == "whitelist" ? types.whitelist : types.standard;
     const res = await actions.newcoin[proposalAction]({
-      ...val,
       ...payLoad,
-      vote_start: voteStartTime.utc().format("YYYY-MM-DDTHH:mm:ss"),
-      vote_end: voteEndTime.utc().format("YYYY-MM-DDTHH:mm:ss"),
+      vote_start: voteStartTime,
+      vote_end: voteEndTime,
       dao_owner: daoOwner,
       user: val.whitelist_selection,
     });
@@ -113,7 +114,7 @@ const NewProposal = () => {
           <Button
             className={`time-select-btn-${voteEnd.btn == "day" ? "active" : "inactive"}`}
             onClick={() => {
-              setVoteEnd({ btn: "day", time: moment().add("1", "day") });
+              setVoteEnd({ btn: "day", time: moment().add("1", "day").utc().format("YYYY-MM-DDTHH:mm:ss") });
               customTime && setCustomTime(false);
             }}
           >
@@ -123,7 +124,7 @@ const NewProposal = () => {
           <Button
             className={`time-select-btn-${voteEnd.btn == "week" ? "active" : "inactive"}`}
             onClick={() => {
-              setVoteEnd({ btn: "week", time: moment().add("1", "week") });
+              setVoteEnd({ btn: "week", time: moment().add("1", "week").utc().format("YYYY-MM-DDTHH:mm:ss") });
               customTime && setCustomTime(false);
             }}
           >
@@ -133,7 +134,7 @@ const NewProposal = () => {
           <Button
             className={`time-select-btn-${voteEnd.btn == "month" ? "active" : "inactive"}`}
             onClick={() => {
-              setVoteEnd({ btn: "month", time: moment().add("1", "month") });
+              setVoteEnd({ btn: "month", time: moment().add("1", "month").utc().format("YYYY-MM-DDTHH:mm:ss") });
               customTime && setCustomTime(false);
             }}
           >

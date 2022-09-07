@@ -85,7 +85,7 @@ export const config = {
 		// indicators let us know when an action is in progress
 		// setting indicators for all actions for progress is too costly and may become recursive, we filter using this setting
 		indicators: {
-			isWatchable: (actionName: string) => /^(api|lists|auth|newgraphApplication|unsid)/.test(actionName),
+			isWatchable: (actionName: string) => /^(api|lists|auth|newgraphApplication|newsafe)/.test(actionName),
 		  }
 		},
 	routes: {

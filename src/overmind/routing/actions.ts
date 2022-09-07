@@ -74,6 +74,12 @@ const onRouteChangeWizard = (pathname: string, state: State) => {
 export const onRouteChange: Action<{
   location: { pathname: string; search: string };
 }> = async ({ state, actions }, { location: { pathname, search } }) => {
+  if (pathname === "/signout") {
+    await actions.firebase.logout();
+    await actions.auth.logout();
+    actions.routing.historyPush({ location: "/" });
+  }
+
   state.routing.location = [pathname, search].filter(Boolean).join("");
   actions.routing.setPreloginRoute();
 

@@ -11,25 +11,25 @@ export const cache: Action<{
 
   if ((moods as any).id && !(moods instanceof Array)) moods = [moods];
 
-  /* dexie cache */
-  await Promise.all(
-    moods.map(async (m) => {
-      if (!m.posts || m.promise) return Promise.resolve();
+  /* dexie cache - TODO: in progress, now it just saves values without utilizing it - makes e2e testing unstable */
+  // await Promise.all(
+  //   moods.map(async (m) => {
+  //     if (!m.posts || m.promise) return Promise.resolve();
 
-      return Promise.all([
-        actions.api.post.cache({ posts: m.posts }),
-        actions.cache.store({ label: "folder", value: m }),
-        actions.cache.storeEdgeMultiple({
-          fromLabel: "folder",
-          toLabel: "post",
-          from: [m],
-          to: m.posts,
-        }),
-      ]);
-      // await actions.api.post.cache({ posts: m.posts });
-      // await ;
-    }),
-  );
+  //     return Promise.all([
+  //       actions.api.post.cache({ posts: m.posts }),
+  //       actions.cache.store({ label: "folder", value: m }),
+  //       actions.cache.storeEdgeMultiple({
+  //         fromLabel: "folder",
+  //         toLabel: "post",
+  //         from: [m],
+  //         to: m.posts,
+  //       }),
+  //     ]);
+  //     // await actions.api.post.cache({ posts: m.posts });
+  //     // await ;
+  //   }),
+  // );
 
   moods.forEach((m) => {
     const id = m.id || "";
@@ -70,6 +70,7 @@ export const cache: Action<{
 };
 
 export const read: Action<{ id?: string }> = async ({ state, actions, effects }, { id }) => {
+  console.log("start");
   if (!id) return;
 
   const curr = state.api.cache.moods[id] || {};
@@ -77,6 +78,7 @@ export const read: Action<{ id?: string }> = async ({ state, actions, effects },
   if (curr.promise) return; // await curr.promise;
 
   const promise = state.api.client.mood.moodList({ id });
+  console.log(await promise, "moods");
 
   await actions.api.mood.cache({ moods: [{ id, promise }] });
 

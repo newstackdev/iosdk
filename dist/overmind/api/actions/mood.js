@@ -5,23 +5,24 @@ export const cache = async ({ state, actions, effects }, { moods, overwrite }) =
         return;
     if (moods.id && !(moods instanceof Array))
         moods = [moods];
-    /* dexie cache */
-    await Promise.all(moods.map(async (m) => {
-        if (!m.posts || m.promise)
-            return Promise.resolve();
-        return Promise.all([
-            actions.api.post.cache({ posts: m.posts }),
-            actions.cache.store({ label: "folder", value: m }),
-            actions.cache.storeEdgeMultiple({
-                fromLabel: "folder",
-                toLabel: "post",
-                from: [m],
-                to: m.posts,
-            }),
-        ]);
-        // await actions.api.post.cache({ posts: m.posts });
-        // await ;
-    }));
+    /* dexie cache - TODO: in progress, now it just saves values without utilizing it - makes e2e testing unstable */
+    // await Promise.all(
+    //   moods.map(async (m) => {
+    //     if (!m.posts || m.promise) return Promise.resolve();
+    //     return Promise.all([
+    //       actions.api.post.cache({ posts: m.posts }),
+    //       actions.cache.store({ label: "folder", value: m }),
+    //       actions.cache.storeEdgeMultiple({
+    //         fromLabel: "folder",
+    //         toLabel: "post",
+    //         from: [m],
+    //         to: m.posts,
+    //       }),
+    //     ]);
+    //     // await actions.api.post.cache({ posts: m.posts });
+    //     // await ;
+    //   }),
+    // );
     moods.forEach((m) => {
         const id = m.id || "";
         const curr = state.api.cache.moods[id] || {};
@@ -51,12 +52,14 @@ export const cache = async ({ state, actions, effects }, { moods, overwrite }) =
     });
 };
 export const read = async ({ state, actions, effects }, { id }) => {
+    console.log("start");
     if (!id)
         return;
     const curr = state.api.cache.moods[id] || {};
     if (curr.promise)
         return; // await curr.promise;
     const promise = state.api.client.mood.moodList({ id });
+    console.log(await promise, "moods");
     await actions.api.mood.cache({ moods: [{ id, promise }] });
     const r = await promise;
     await actions.api.mood.cache({ moods: [r.data] });

@@ -7,7 +7,7 @@ export const initStore: Action<{ name: string }> = (_, { name }) => {};
 
 const put = async (table: Dexie.Table, value: any) => {
   try {
-    await table.put(json(value));
+    // await table.put(json(value));
   } catch (ex) {
     console.log(ex);
     throw ex;

@@ -120,7 +120,7 @@ const TopFolders: NLView<{
   const state = useAppState();
   const effects = useEffects();
 
-  const moods = state.lists.top.moods.items || [];
+  const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
 
   // if (true)
   //   return (

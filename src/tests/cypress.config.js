@@ -10,7 +10,7 @@ const testStage = envs[process.env.NODE_ENV];
 
 module.exports = defineConfig({
   e2e: {
-    defaultCommandTimeout: 10000,
+    defaultCommandTimeout: 30000,
     baseUrl: testStage,
     setupNodeEvents(on, config) {
       // implement node event listeners here

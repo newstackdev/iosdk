@@ -1,6 +1,6 @@
 import { useActions, useAppState } from "../overmind/overmind";
 import { NLView } from "@newstackdev/iosdk/dist/types";
-import { UnsidAuth } from "@newstackdev/iosdk/dist/Components/UnsidAuth";
+import { NewsafeAuth } from "@newstackdev/iosdk/dist/Components/NewsafeAuth";
 
 import { Layout, Row, Col, Spin, Menu } from "antd";
 import { Link } from "react-router-dom";

@@ -19,16 +19,10 @@ export const useCachedMoods = (moods?: { id?: string }[], force?: boolean) => {
       moods.length &&
       state.auth.authenticated &&
       Promise.all(
-        moods
-          .map(
-            ({ id }) =>
-              id &&
-              state.auth.authenticated &&
-              (force || !state.api.cache.moods[id]) && //|| !state.api.cache.moods[id].posts?.length) &&
-              actions.api.mood.read({ id }),
-          )
-          .filter(Boolean),
-      ).then((r) => r.reduce((m) => m));
+        moods.map(
+          ({ id }) => id && state.auth.authenticated && (force || !state.api.cache.moods[id]) && actions.api.mood.read({ id }),
+        ),
+      );
   }, [state.auth.authenticated, moods]);
 
   return (moods && state.api.cache.moods) || [];

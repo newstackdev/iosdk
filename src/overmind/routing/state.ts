@@ -20,6 +20,7 @@ export const ROUTE_ACCESS_LEVELS: Record<string, (st: AUTH_FLOW_STATUS_TYPE, gst
   "/privacy_policy": () => true,
   "/signup/metamask": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
   "/signup/notInvited": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
+  "/signout": () => true,
 
   ..."domain,subscribe,create,powerup,auth"
     .split(/,/)

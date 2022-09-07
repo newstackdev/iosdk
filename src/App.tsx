@@ -35,7 +35,7 @@ const AppShell: NLView = ({ children }) => {
     return cancel;
   }, []);
 
-  if (!state.cache.ready) return <>Getting ready...</>;
+  // if (!state.cache.ready) return <>Getting ready...</>;
 
   // if (state.cache.ready) return <DexieTest />;
 

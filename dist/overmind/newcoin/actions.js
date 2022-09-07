@@ -105,8 +105,8 @@ const notifyIfError = async (p, actions) => {
     }
 };
 export const daoCreateProposal = pipe(async ({ state, actions }, param) => {
-    const vs = (param.vote_start || "").split(/Z/)[0];
-    const ve = (param.vote_end || "").split(/Z/)[0];
+    const vs = param.vote_start || "";
+    const ve = param.vote_end || "";
     const u = param.dao_owner || state.config.settings.newcoin.daoDomain;
     try {
         const r = await state.api.client.newcoin.daoProposalCreate({
@@ -126,8 +126,8 @@ export const daoCreateProposal = pipe(async ({ state, actions }, param) => {
     }
 });
 export const daoCreateWhitelistProposal = pipe(async ({ state, actions }, param) => {
-    const vs = (param.vote_start || "").split(/Z/)[0];
-    const ve = (param.vote_end || "").split(/Z/)[0];
+    const vs = param.vote_start;
+    const ve = param.vote_end;
     const u = param.dao_owner || state.config.settings.newcoin.daoDomain;
     try {
         const r = await state.api.client.newcoin.daoProposalWhitelistCreate({

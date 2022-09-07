@@ -2,20 +2,11 @@ beforeEach(() => {
   cy.visit("/dao/dx.io/proposals", { timeout: 500000 });
 });
 
-describe("Can Vote", () => {
-  it("Can Sort by Needs Votes", () => {
-    cy.contains("Sort By").trigger("mouseover");
-    cy.contains("Votes").click({ timeout: 500000 });
-  });
+describe("Can View a Proposal", () => {
   it("Can Visit an individual Proposal from the DAO", () => {
-    cy.contains("View", { timeout: 500000 }).click();
+    cy.contains("View").click();
     cy.url().should("include", "/proposal");
-  });
-  it("Can See The Status Tag", () => {
-   cy.contains("Starting")
-  });
-  it("Can See The Action Tag", () => {
-    cy.contains("View")
+    cy.get(".view-proposal-row-wrapper");
   });
   // it("Can Perform All Actions on Vote Modal", () => {
   //   cy.contains("YES").click();

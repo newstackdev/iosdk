@@ -23,7 +23,8 @@ const stages: Record<string, string> = {
 export const stage = stages[currentHost];
 
 const apiBaseUrls: Record<string, string> = {
-  "eu-dev": "https://api-eu-dev.newlife.io/creator",
+  "eu-dev": "https://api-eu-dev.newgra.ph/v1",
+  // "eu-dev": "https://api-eu-dev.newlife.io/creator",
   "eu-sit": "https://api-eu-sit.newlife.io/creator",
   "eu-prod": "https://api-eu-prod.newlife.io/creator",
 };

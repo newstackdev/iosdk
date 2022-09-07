@@ -15,6 +15,7 @@ export const ROUTE_ACCESS_LEVELS = {
     "/privacy_policy": () => true,
     "/signup/metamask": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
     "/signup/notInvited": (st) => st < AUTH_FLOW_STATUS.AUTHENTICATED,
+    "/signout": () => true,
     ..."domain,subscribe,create,powerup,auth"
         .split(/,/)
         .map((r) => ({

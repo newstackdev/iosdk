@@ -57,7 +57,7 @@ const PostCreateHeader: NLView<{
                   e.stopPropagation();
                   setContentType("video/mp4");
                 }}
-                className={contentType === "video/mp4" ? "uploadIconActive" : "uploadIconInactive"}
+                className={`${contentType === "video/mp4" ? "uploadIconActive" : "uploadIconInactive"} upload-video-node`}
               >
                 <Video />
               </span>

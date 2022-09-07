@@ -137,8 +137,8 @@ const notifyIfError = async (p, actions) => {
 };
 
 export const daoCreateProposal: Action<BcCreateDaoProposal, any> = pipe(async ({ state, actions }, param) => {
-  const vs = (param.vote_start || "").split(/Z/)[0];
-  const ve = (param.vote_end || "").split(/Z/)[0];
+  const vs = param.vote_start || "";
+  const ve = param.vote_end || "";
   const u = param.dao_owner || state.config.settings.newcoin.daoDomain;
 
   try {
@@ -162,8 +162,8 @@ export const daoCreateProposal: Action<BcCreateDaoProposal, any> = pipe(async ({
 });
 
 export const daoCreateWhitelistProposal: Action<BcCreateWhitelistDaoProposal, any> = pipe(async ({ state, actions }, param) => {
-  const vs = (param.vote_start || "").split(/Z/)[0];
-  const ve = (param.vote_end || "").split(/Z/)[0];
+  const vs = param.vote_start;
+  const ve = param.vote_end;
   const u = param.dao_owner || state.config.settings.newcoin.daoDomain;
 
   try {
