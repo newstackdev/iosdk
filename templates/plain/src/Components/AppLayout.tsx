@@ -50,7 +50,7 @@ export const AppLayout: NLView = ({ children }) => {
             <Spin /> :
             loggedIn ?
               children :
-              <UnsidAuth />
+              <NewsafeAuth />
         }
       </Content>
     </Layout>
