@@ -3,11 +3,13 @@ echo Installing IOSDK, this will take a while...
 # npx create-react-app $1 --template typescript
 mkdir $1
 cd $1
+npm init -y
+
 yarn add @newstackdev/iosdk @types/react@17.0.44
 
 template=${2-plain}
 
-rsync -av node_modules/@newstackdev/iosdk/templates/$template/ .
+rsync -av ./node_modules/@newstackdev/iosdk/templates/$template/ .
 
 # Removes type discrepancies - a temporary measure
 rm -rf ./node_modules/@newstackdev/iosdk/node_modules

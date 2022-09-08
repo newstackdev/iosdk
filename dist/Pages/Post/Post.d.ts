@@ -2,9 +2,7 @@ import { NLView } from "../../types";
 import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 export declare const useVotingStreamMood: () => {
     nextPath: () => string;
-    currMood: (MoodReadResponse & {
-        promise?: Promise<any> | null | undefined;
-    }) | undefined;
+    currMood: MoodReadResponse | undefined;
     currPost: PostReadResponse;
     index: number;
     contextType: string;

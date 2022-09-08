@@ -15,6 +15,26 @@ const signOut: Action = async ({ state, effects, actions }) => {
   window.localStorage.setItem("newsafe-auth-token", "");
 };
 
+const newsafeAuthUrl: Action<{ redirectUrl?: string; redirectPath: string } | undefined, string> = ({ state }, _params) => {
+  const hostname = state.config.settings.app.currentHost;
+  const params = {
+    requestor: state.config.settings.newcoin.daoDomain,
+    referer: hostname,
+    redirectUrl: _params?.redirectUrl || _params?.redirectPath || `https://${hostname}`,
+  };
+
+  const newsafeUrl = `https://auth-dev.newsafe.org/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;
+
+  return newsafeUrl;
+};
+
+const navigateToNewsafeAuthUrl: Action<{ redirectUrl?: string; redirectPath: string } | undefined> = async (
+  { actions },
+  params,
+) => {
+  (window as any).location = actions.newsafe.newsafeAuthUrl();
+};
+
 const onInitializeOvermind: Action = ({ actions, state, effects, reaction }) => {
   const newsafeJwtFromUrl = new URLSearchParams(window.location.search).get("newsafe_jwt");
   const newsafeJwtFromLocalStore = newsafeJwtFromUrl
@@ -31,6 +51,9 @@ const newsafeApplication = {
   actions: {
     onInitializeOvermind,
     authorize,
+    navigateToNewsafeAuthUrl,
+    signIn: navigateToNewsafeAuthUrl,
+    newsafeAuthUrl,
     signOut,
   },
   state: {

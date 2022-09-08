@@ -222,6 +222,8 @@ export const verifyHash: Action<{ inviteHash: string }> = pipe(async ({ state, a
   try {
     const res = (await state.api.client.user.inviteHashList({ hash: inviteHash })).data;
     if (res) {
+      if (!/^\+/.test((res as any).phone)) (res as any).phone = "+" + (res as any).phone;
+
       state.flows.user.create.inviteHashVerified = true;
       //@ts-ignore
       actions.flows.user.create.updateForm({ ...res });

@@ -4,18 +4,30 @@ import { useActions, useAppState } from "../overmind";
 import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from "./useCached1";
 // import { useCachedMood, useCachedPost, useCachedUser } from "./useCached1";
 // import { useCachedMoodPosts } from "./useCached2";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
 export const useCachedMoods = (moods, force) => {
     const state = useAppState();
     const actions = useActions();
+    const [isCachedMoodsLoading, setIsCachedMoodsLoading] = useState(false);
     useEffect(() => {
-        moods &&
-            moods.length &&
-            state.auth.authenticated &&
-            Promise.all(moods.map(({ id }) => id && state.auth.authenticated && (force || !state.api.cache.moods[id]) && actions.api.mood.read({ id })));
+        try {
+            setIsCachedMoodsLoading(true);
+            const getMoods = async () => {
+                moods &&
+                    moods.length &&
+                    state.auth.authenticated &&
+                    Promise.all(moods.map(({ id }) => id && state.auth.authenticated && (force || !state.api.cache.moods[id]) && actions.api.mood.read({ id })));
+            };
+            getMoods();
+            setIsCachedMoodsLoading(false);
+        }
+        catch (e) {
+            console.warn(e);
+            setIsCachedMoodsLoading(false);
+        }
     }, [state.auth.authenticated, moods]);
-    return (moods && state.api.cache.moods) || [];
+    return { cachedMoods: state.api.cache.moods, isCachedMoodsLoading } || [];
 };
 export const useCachedPowerups = (user, force) => {
     const state = useAppState();

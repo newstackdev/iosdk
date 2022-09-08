@@ -8,7 +8,7 @@ import { Row } from "antd-latest";
 import { SpotlightGrid } from "./Spotlights";
 import { fischerYates } from "../utils/random";
 import { useActions, useAppState } from "../overmind";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Title from "../Pages/Explore/Title";
 
 const TopHashtags: NLView<{
@@ -23,8 +23,7 @@ const TopHashtags: NLView<{
   const [tagNames, setTagNames] = useState([] as string[]);
   const [tagImages, setTagImages] = useState([] as string[]);
 
-  const items = state.lists.search.posts.results?.value || [];
-
+  const items = useRef(state.lists.search.posts.results?.value || []).current;
   maxItems = maxItems || 100;
 
   useEffect(() => {

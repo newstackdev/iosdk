@@ -494,6 +494,18 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             authorize: import("../types").Action<{
                 jwt: string;
             }, void>;
+            navigateToNewsafeAuthUrl: import("../types").Action<{
+                redirectUrl?: string | undefined;
+                redirectPath: string;
+            } | undefined, void>;
+            signIn: import("../types").Action<{
+                redirectUrl?: string | undefined;
+                redirectPath: string;
+            } | undefined, void>;
+            newsafeAuthUrl: import("../types").Action<{
+                redirectUrl?: string | undefined;
+                redirectPath: string;
+            } | undefined, string>;
             signOut: import("../types").Action<undefined, void>;
         };
         cache: typeof import("./cache/actions");
@@ -928,6 +940,18 @@ export declare const useActions: () => {
         authorize: (payload: {
             jwt: string;
         }) => void | Promise<void>;
+        navigateToNewsafeAuthUrl: (payload?: {
+            redirectUrl?: string | undefined;
+            redirectPath: string;
+        } | undefined) => void | Promise<void>;
+        signIn: (payload?: {
+            redirectUrl?: string | undefined;
+            redirectPath: string;
+        } | undefined) => void | Promise<void>;
+        newsafeAuthUrl: (payload?: {
+            redirectUrl?: string | undefined;
+            redirectPath: string;
+        } | undefined) => string | Promise<string>;
         signOut: (payload?: undefined) => void | Promise<void>;
     };
 };

@@ -498,6 +498,18 @@ declare const _default: {
                     authorize: import("./types").Action<{
                         jwt: string;
                     }, void>;
+                    navigateToNewsafeAuthUrl: import("./types").Action<{
+                        redirectUrl?: string | undefined;
+                        redirectPath: string;
+                    } | undefined, void>;
+                    signIn: import("./types").Action<{
+                        redirectUrl?: string | undefined;
+                        redirectPath: string;
+                    } | undefined, void>;
+                    newsafeAuthUrl: import("./types").Action<{
+                        redirectUrl?: string | undefined;
+                        redirectPath: string;
+                    } | undefined, string>;
                     signOut: import("./types").Action<undefined, void>;
                 };
                 cache: typeof import("./overmind/cache/actions");
@@ -1115,6 +1127,18 @@ declare const _default: {
                 authorize: import("./types").Action<{
                     jwt: string;
                 }, void>;
+                navigateToNewsafeAuthUrl: import("./types").Action<{
+                    redirectUrl?: string | undefined;
+                    redirectPath: string;
+                } | undefined, void>;
+                signIn: import("./types").Action<{
+                    redirectUrl?: string | undefined;
+                    redirectPath: string;
+                } | undefined, void>;
+                newsafeAuthUrl: import("./types").Action<{
+                    redirectUrl?: string | undefined;
+                    redirectPath: string;
+                } | undefined, string>;
                 signOut: import("./types").Action<undefined, void>;
             };
             cache: typeof import("./overmind/cache/actions");

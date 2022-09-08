@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Alert, Button } from "antd";
 import { IOView } from "../types";
 import { useAppState } from "../overmind";
 
@@ -42,27 +42,36 @@ export const NewsafeAuth: IOView<{
             </>
           ) : (
             <div className="text-center" style={{ maxWidth: 800 }}>
-              This application had not been configured correctly.
-              <br />
-              <br />
-              If you are the developer of the app:
-              <br />
-              <br />
-              <ul>
-                <li>
-                  Have you created your app entry yet? If not create it at&nbsp;
-                  <a href="https://console-dev.newstack.dev">console-dev.newstack.dev</a>&nbsp;. It only takes a few minutes.
-                  <br />
-                  <br />
-                </li>
+              <Alert
+                message={
+                  <>
+                    This application had not been configured correctly.
+                    <br />
+                    <br />
+                    If you are the developer of the app:
+                    <br />
+                    <br />
+                    <ul>
+                      <li>
+                        Have you created your app entry yet? If not create it at&nbsp;
+                        <a href="https://console-dev.newstack.dev">console-dev.newstack.dev</a>&nbsp;. It only takes a few
+                        minutes.
+                        <br />
+                        <br />
+                      </li>
 
-                <li>
-                  Got an app created? You are likely missing just a tiny bit of config. Please follow the instructions at&nbsp;
-                  <a href="https://console-dev.newstack.dev/instructions">console-dev.newstack.dev</a>&nbsp;.
-                  <br />
-                  <br />
-                </li>
-              </ul>
+                      <li>
+                        Got an app created? You are likely missing just a tiny bit of config. Please follow the instructions
+                        at&nbsp;
+                        <a href="https://console-dev.newstack.dev/instructions">console-dev.newstack.dev</a>&nbsp;.
+                        <br />
+                        <br />
+                      </li>
+                    </ul>
+                  </>
+                }
+                type="error"
+              />
             </div>
           )}
         </>

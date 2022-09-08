@@ -26,6 +26,7 @@ import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
 import { Vote } from "../../Components/Vote";
 import { fischerYates } from "../../utils/random";
 
+import { isEmpty } from "lodash";
 import { useVerified } from "../../hooks/useVerified";
 
 export const useVotingStreamMood = () => {
@@ -36,11 +37,11 @@ export const useVotingStreamMood = () => {
   }>();
   const state = useAppState();
   const currPost = useCachedPost({ id: postId || id }, true);
-
-  const [availableMoods, setAvailableMoods] = useState(Object.values(useCachedMoods(Object.values(state.api.cache.moods))));
+  const { cachedMoods, isCachedMoodsLoading } = useCachedMoods();
+  const [availableMoods, setAvailableMoods] = useState<Array<MoodReadResponse>>([]);
   const [index, setIndex] = useState<number>(-1);
-  const [currMood, setCurrMood] = useState(Object.values(availableMoods).find((mood) => mood?.id === moodId));
-  const [moodPosts, setMoodPosts] = useState(currMood?.posts || []);
+  const [currMood, setCurrMood] = useState<MoodReadResponse>();
+  const [moodPosts, setMoodPosts] = useState<Array<PostReadResponse>>([]);
 
   const getIndex = () => {
     if (!currMood?.id) return;
@@ -54,8 +55,14 @@ export const useVotingStreamMood = () => {
   };
 
   useEffect(() => {
-    setAvailableMoods(fischerYates(availableMoods));
-  }, [state.api.cache.moods]);
+    if (!isEmpty(cachedMoods)) {
+      const randomizedMoods = fischerYates(Object.values(cachedMoods)) as MoodReadResponse[];
+      const currentMood = randomizedMoods.find((mood) => mood?.id === moodId);
+      setAvailableMoods(randomizedMoods);
+      setCurrMood(currentMood);
+      setMoodPosts(currentMood?.posts || []);
+    }
+  }, [state.api.auth.moods, isCachedMoodsLoading]);
 
   useEffect(() => {
     getIndex();
