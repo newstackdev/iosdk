@@ -1,8 +1,12 @@
 echo Installing IOSDK, this will take a while...
 
 # npx create-react-app $1 --template typescript
+xcanonical=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
+canoical=$(dirname "$xcanonical")
+cd $canonical
 mkdir $1
 cd $1
+
 npm init -y
 
 yarn add @newstackdev/iosdk @types/react@17.0.44
