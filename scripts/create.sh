@@ -4,8 +4,8 @@ echo Installing IOSDK, this will take a while...
 xcanonical=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
 canoical=$(dirname "$xcanonical")
 cd $canonical
-mkdir $1
-cd $1
+mkdir $canonical/$1
+cd $canonical/$1
 
 npm init -y
 
