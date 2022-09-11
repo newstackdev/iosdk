@@ -3,7 +3,7 @@ echo Installing IOSDK, this will take a while...
 # npx create-react-app $1 --template typescript
 # canonicalFile=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
 canonicalFile=$(cd -P -- "$(dirname -- "$0")" && printf "%s\n" "$(pwd -P)/$(basename -- "$0")")
-canoicalDir=$(dirname "$canonicalFile")
+canonicalDir=$(dirname "$canonicalFile")
 target=$canonicalDir/$1
 mkdir $canonical/$1
 cd $target
