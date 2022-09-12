@@ -1,18 +1,23 @@
-echo Installing IOSDK, this will take a while...
+echo Installing IOSDK, this will take a while... You may want to grab a drink of your liking in the meanwhile.
 
 # npx create-react-app $1 --template typescript
 # canonicalFile=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
 # canonicalFile=$(cd -P -- "$(dirname -- "$0")" && printf "%s\n" "$(pwd -P)/$(basename -- "$0")")
 # canonicalDir=$(dirname "$canonicalFile")
 canonicalDir=`pwd`
-echo canonicalDir: $canonicalDir
+echo Running in $canonicalDir
 target=$canonicalDir/$1
-echo target: $target
+echo Creating $target
 mkdir $target
-echo target: $target
+echo Entering $target
 cd $target
 
+
 npm init -y
+
+
+echo Installing...
+
 
 yarn add @newstackdev/iosdk @types/react@17.0.44
 
