@@ -5,9 +5,12 @@ echo Installing IOSDK, this will take a while...
 # canonicalFile=$(cd -P -- "$(dirname -- "$0")" && printf "%s\n" "$(pwd -P)/$(basename -- "$0")")
 # canonicalDir=$(dirname "$canonicalFile")
 canonicalDir=`pwd`
+echo canonicalDir: $canonicalDir
 target=$canonicalDir/$1
-mkdir $canonicalDir/$1
-cd $canonicalDir/$1
+echo target: $target
+mkdir $target
+echo target: $target
+cd $target
 
 npm init -y
 
