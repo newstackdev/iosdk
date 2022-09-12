@@ -7,7 +7,7 @@ echo Installing IOSDK, this will take a while...
 canonicalDir=`pwd`
 target=$canonicalDir/$1
 mkdir $canonicalDir/$1
-cd $target
+cd $canonicalDir/$1
 
 npm init -y
 
