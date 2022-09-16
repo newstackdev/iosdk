@@ -56,6 +56,7 @@ export const config = {
 	...baseConfig,
 	env: {
 		stage,
+		env: (stage || "").split(/-/)[0]
 	},
 	settings: {
 		newgraph: {
