@@ -1,8 +1,9 @@
-import { Col, Form, Input } from "antd";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { Form, Input } from "antd";
 import { IOView } from "../../types";
 import { Link, useLocation } from "react-router-dom";
 import { NextButton } from "./NextButton";
+import { UnsuccessfulLoginModal } from "../Auth/UI-Components/UnsuccessfulLoginModal";
 import { useActions, useAppState } from "../../overmind";
 import { useCallback, useEffect, useState } from "react";
 import { validUrl } from "../../utils/urlHelpers";
@@ -59,25 +60,24 @@ export const LinkHash: IOView = () => {
           style={{ textAlign: "center" }}
         />
       </Form>
-      <Col>
-        <NextButton
-          isErrorSubmit={isErrorSubmit}
-          nextProps={{ text: "Next", command: () => done() }}
-          visible={!isEmpty(state.flows.user.create.form.inviteHash)}
-          contentDescription={
-            !state.flows.user.create.legacyToken && !state.auth.authenticated ? (
-              <div>
-                Enter hash or nft credentials. Or
-                <Link to="/auth/newlife-members" className="paragraph-2u nl-onboarding-link">
-                  {" "}
-                  click here{" "}
-                </Link>
-                if you are a member from the Newlife mobile app.
-              </div>
-            ) : null
-          }
-        />
-      </Col>
+      <NextButton
+        isErrorSubmit={isErrorSubmit}
+        nextProps={{ text: "Next", command: () => done() }}
+        visible={!isEmpty(state.flows.user.create.form.inviteHash)}
+        contentDescription={
+          !state.flows.user.create.legacyToken && !state.auth.authenticated ? (
+            <div>
+              Enter hash or nft credentials. Or
+              <Link to="/auth/newlife-members" className="paragraph-2u nl-onboarding-link">
+                {" "}
+                click here{" "}
+              </Link>
+              if you are a member from the Newlife mobile app.
+            </div>
+          ) : null
+        }
+      />
+      <UnsuccessfulLoginModal redirect={actions.routing.historyPush} />
     </ContentLayout>
   );
 };

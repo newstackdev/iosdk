@@ -5,8 +5,14 @@ export const authorize = async ({ state, actions, effects }, params) => {
     try {
         state.api.auth.user = await effects.api.authorize();
     }
-    catch (ex) {
-        console.log(ex);
+    catch (e) {
+        if (e &&
+            e.error.statusCode === 404 &&
+            state.auth.authenticated &&
+            window.localStorage.getItem("isSigningInProgress") === "true") {
+            window.localStorage.setItem("isSigningUserUknown", "true");
+            await actions.routing.historyPush({ location: "/signout" });
+        }
     }
     const user = state.api.auth.user;
     if (!user || !user.id) {

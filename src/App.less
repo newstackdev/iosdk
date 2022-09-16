@@ -232,7 +232,7 @@ p {
   width: min(299px, 100%);
   height: 45px;
   margin-bottom: 12px;
-  border-radius: 47.5px;
+  border-radius: 8px;
 
   &.inverse {
     color: @lightgrey;
@@ -965,11 +965,13 @@ textarea {
 
 .support-box {
   background: @darkgrey;
+  white-space: pre-wrap;
   border-radius: 8px;
   padding: 10px;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  width: 313px;
+  justify-content: center;
+  width: 100%;
   height: 69px;
   margin: 0 auto;
 }
@@ -1069,6 +1071,10 @@ textarea {
 .post-create-layout {
   max-height: none !important;
   height: 100% !important;
+}
+
+.nl-mintNFT-modal {
+  align-items: center;
 }
 
 .banner {
@@ -1655,7 +1661,7 @@ textarea {
 }
 
 .nl-domain-presale__info-text__wrapper {
-  width: 313px;
+  width: 100%;
 }
 
 // Post
@@ -1876,6 +1882,7 @@ textarea {
 }
 
 .nl-onboarding-footer {
+  width: 60%;
   height: 450px;
   display: flex;
   flex-direction: column;

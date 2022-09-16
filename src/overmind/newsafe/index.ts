@@ -1,4 +1,5 @@
 import { Action } from "../../types";
+import auth from "../auth";
 
 const authorize: Action<{ jwt: string }> = async ({ state, effects, actions }, { jwt }) => {
   const newsafeJwt = `newsafe ${jwt}`;
@@ -15,6 +16,11 @@ const signOut: Action = async ({ state, effects, actions }) => {
   window.localStorage.setItem("newsafe-auth-token", "");
 };
 
+const authHosts = {
+  dev: "auth-dev.newsafe.org",
+  prod: "auth.newsafe.org",
+};
+
 const newsafeAuthUrl: Action<{ redirectUrl?: string; redirectPath: string } | undefined, string> = ({ state }, _params) => {
   const hostname = state.config.settings.app.currentHost;
   const params = {
@@ -23,7 +29,10 @@ const newsafeAuthUrl: Action<{ redirectUrl?: string; redirectPath: string } | un
     redirectUrl: _params?.redirectUrl || _params?.redirectPath || `https://${hostname}`,
   };
 
-  const newsafeUrl = `https://auth-dev.newsafe.org/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;
+  const env = state.config.env.stage.split(/-/)[1];
+  const authHost = authHosts[env];
+
+  const newsafeUrl = `https://${authHost}/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;
 
   return newsafeUrl;
 };

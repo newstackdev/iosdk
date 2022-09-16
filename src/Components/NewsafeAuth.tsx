@@ -1,12 +1,13 @@
 import { Alert, Button } from "antd";
 import { IOView } from "../types";
-import { useAppState } from "../overmind";
+import { useActions, useAppState } from "../overmind";
 
 export const NewsafeAuth: IOView<{
   redirectPath?: string;
   redirectUrl?: string;
 }> = ({ children, redirectPath, redirectUrl }) => {
   const state = useAppState();
+  const actions = useActions();
 
   const hostname = state.config.settings.app.currentHost;
   const params = {
@@ -14,7 +15,6 @@ export const NewsafeAuth: IOView<{
     referer: hostname,
     redirectUrl: redirectUrl || redirectPath || `https://${hostname}`,
   };
-  const newsafeUrl = `https://auth-dev.newsafe.org/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;
 
   return (
     <>
@@ -34,7 +34,7 @@ export const NewsafeAuth: IOView<{
               <div className="text-center">
                 <Button
                   style={{ fontSize: 30, height: 60, marginTop: 60 }}
-                  onClick={() => ((window.location as any) = newsafeUrl)}
+                  onClick={() => actions.newsafe.navigateToNewsafeAuthUrl()}
                 >
                   Sign In
                 </Button>

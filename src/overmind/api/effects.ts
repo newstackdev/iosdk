@@ -24,11 +24,6 @@ export default (() => {
         return r.data;
       } catch (_ex) {
         const ex: { error: ErrorResponse } = _ex as any;
-        if (ex.error && ex.error.statusCode === 404) {
-          return {};
-          // return (await api.user.userCreate({})).data;
-        }
-        // alert(ex.error.errorMessage);
         throw ex;
       }
     },

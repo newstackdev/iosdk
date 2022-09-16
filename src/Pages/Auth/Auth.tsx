@@ -1,6 +1,7 @@
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
 import { ContentLayout } from "../../Components/ContentLayout";
 import { IOView } from "../../types";
+import { Link } from "react-router-dom";
 import { NextButton } from "../Onboarding";
 import { useActions, useAppState } from "../../overmind";
 import { useEffect, useState } from "react";
@@ -24,6 +25,12 @@ export const Auth: IOView<{ embedded: boolean }> = ({ embedded }) => {
 
   useEffect(() => {
     actions.routing.setBreadcrumbs([{ text: "Auth" }]);
+    if (state.routing.location === "/auth") {
+      window.localStorage.setItem("isSigningInProgress", "true");
+    }
+    return () => {
+      window.localStorage.removeItem("isSigningInProgress");
+    };
   }, []);
 
   useEffect(() => {
@@ -65,9 +72,16 @@ export const Auth: IOView<{ embedded: boolean }> = ({ embedded }) => {
         nextProps={nextCommand}
         isErrorSubmit={isErrorSubmit}
         contentDescription={
-          embedded
-            ? "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS"
-            : undefined
+          embedded ? (
+            "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS"
+          ) : (
+            <div>
+              <Link to="/auth/newlife-members" className="paragraph-2u nl-onboarding-link">
+                Click here{" "}
+              </Link>
+              if you are a member from the Newlife mobile app.
+            </div>
+          )
         }
       />
       <div className="support-box__fix-height" hidden={embedded} />

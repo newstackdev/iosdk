@@ -1,6 +1,7 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { AUTH_FLOW_STATUS } from "../../overmind/auth/state";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { Link } from "react-router-dom";
 import { NextButton } from "../Onboarding";
 import { useActions, useAppState } from "../../overmind";
 import { useEffect, useState } from "react";
@@ -20,6 +21,12 @@ export const Auth = ({ embedded }) => {
     const [codeForm] = Form.useForm();
     useEffect(() => {
         actions.routing.setBreadcrumbs([{ text: "Auth" }]);
+        if (state.routing.location === "/auth") {
+            window.localStorage.setItem("isSigningInProgress", "true");
+        }
+        return () => {
+            window.localStorage.removeItem("isSigningInProgress");
+        };
     }, []);
     useEffect(() => {
         if (state.api.auth.authorized &&
@@ -44,8 +51,6 @@ export const Auth = ({ embedded }) => {
             return _jsx(_Fragment, { children: children });
         }
     };
-    return (_jsxs(FragmentWrapper, { children: [_jsx("div", { className: "nl-onboarding-title" }), _jsx("div", { id: "sign-in-button" }), _jsx(PhoneForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), _jsx(CodeForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), _jsx(NextButton, { nextProps: nextCommand, isErrorSubmit: isErrorSubmit, contentDescription: embedded
-                    ? "You need to verify your phone number to pre-register your account. You will receive a verification code via SMS"
-                    : undefined }), _jsx("div", { className: "support-box__fix-height", hidden: embedded })] }));
+    return (_jsxs(FragmentWrapper, { children: [_jsx("div", { className: "nl-onboarding-title" }), _jsx("div", { id: "sign-in-button" }), _jsx(PhoneForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, phoneForm: phoneForm }), _jsx(CodeForm, { setIsErrorSubmit: setIsErrorSubmit, embedded: embedded, codeForm: codeForm }), _jsx(NextButton, { nextProps: nextCommand, isErrorSubmit: isErrorSubmit, contentDescription: embedded ? ("You need to verify your phone number to pre-register your account. You will receive a verification code via SMS") : (_jsxs("div", { children: [_jsxs(Link, { to: "/auth/newlife-members", className: "paragraph-2u nl-onboarding-link", children: ["Click here", " "] }), "if you are a member from the Newlife mobile app."] })) }), _jsx("div", { className: "support-box__fix-height", hidden: embedded })] }));
 };
 //# sourceMappingURL=Auth.js.map

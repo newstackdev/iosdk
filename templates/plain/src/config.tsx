@@ -54,7 +54,9 @@ export const apiBaseUrl = apiBaseUrls[stage];
 // Customize here
 export const config = {
 	...baseConfig,
-
+	env: {
+		stage,
+	},
 	settings: {
 		newgraph: {
 			baseUrl: apiBaseUrl,

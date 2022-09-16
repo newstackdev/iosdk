@@ -110,8 +110,6 @@ export const PostCreate: NLView = (props) => {
 
     if (mintNFTswitch && !mintConfirmationOpen) return setMintConfirmationOpen(true);
 
-    setMintConfirmationOpen(false);
-
     try {
       if (!contentType) {
         const f = values.file[0];
@@ -132,11 +130,15 @@ export const PostCreate: NLView = (props) => {
       const p = await actions.api.post.create({ postForm });
       if (!p) return;
 
-      setMoodMode(true);
       setPost(p);
     } catch (ex) {
       setErrMsg(get(ex, "error.errorMessage.details") || get(ex, "message") || "unknown error");
     }
+  };
+
+  const onNextMode = () => {
+    setMintConfirmationOpen(false);
+    setMoodMode(true);
   };
 
   const onChangeContentHandler = useCallback(
@@ -351,8 +353,31 @@ export const PostCreate: NLView = (props) => {
       <Modal
         visible={mintConfirmationOpen}
         onOk={() => setMintConfirmationOpen(false)}
-        onCancel={() => setMintConfirmationOpen(false)}
-        footer={false}
+        onCancel={() => {
+          setMintConfirmationOpen(false);
+          setPost({});
+        }}
+        footer={
+          isEmpty(post) ? (
+            <ProgressButton
+              actionName="api.post.create"
+              type="primary"
+              progressText="Creating post..."
+              // htmlType="submit"
+              onClick={() => {
+                form.submit();
+              }}
+              className={`nl-button-primary ${!selectedLicense ? "disabled-submit-button" : ""}`}
+              disabled={!selectedLicense || ncoBalance === 0 ? true : false}
+            >
+              <p className="paragraph-1b">Mint</p>
+            </ProgressButton>
+          ) : (
+            <Button onClick={onNextMode} className="nl-button-primary">
+              <p className="paragraph-1b">Next</p>
+            </Button>
+          )
+        }
         //@ts-ignore
         // getContainer={() =>
         // 	document.getElementById("basic")
@@ -360,45 +385,62 @@ export const PostCreate: NLView = (props) => {
         className="nl-white-box-modal"
         closeIcon={<CrossCircle />}
       >
-        <Row style={{ width: "100%" }}>
-          <Col style={{ marginRight: "20px" }}>
+        <Row style={{ width: "100%" }} className="nl-mintNFT-modal u-margin-bottom-large">
+          <Col className="u-margin-right-medium">
             <Avatar src={<ContentImage {...user} />} className="avatar-image-top-creators" />
           </Col>
           <Col>
-            <p className="paragraph-1r">your NFT</p>
-            <p className="paragraph-1b">{user?.username}</p>
+            <p className="paragraph-1r">testnet NFT</p>
+            <p className="header-3">{user?.username}</p>
           </Col>
         </Row>
-        <Row>
-          <Col style={{ marginBottom: "20px" }}>
-            <p className="header-3">Ready to mint!</p>
-          </Col>
-          <Col style={{ marginBottom: "20px" }}>
-            <p className="paragraph-2r">You are about to mint your NFT on Newcoin Protocol!</p>
-          </Col>
-          <Col>
-            <p className="paragraph-2r">Summary:</p>
-            <p className="paragraph-2r">1087 $GNCO</p>
-            <p className="paragraph-2r">— 5% creator fee</p>
-            <p className="paragraph-2r">— 3% DAO fee</p>
-          </Col>
-        </Row>
-        <Row justify="space-between" style={{ marginBottom: "30px" }}>
-          <NFTLargeIcon />
-        </Row>
-        <ProgressButton
-          actionName="api.post.create"
-          type="primary"
-          progressText="Creating post..."
-          // htmlType="submit"
-          onClick={() => {
-            form.submit();
-          }}
-          className={!selectedLicense ? "disabled-submit-button" : ""}
-          disabled={!selectedLicense || ncoBalance === 0 ? true : false}
-        >
-          Mint
-        </ProgressButton>
+        {isEmpty(post) ? (
+          <>
+            <Row>
+              <Col className="u-margin-bottom-medium">
+                <p className="header-3">Ready to mint!</p>
+              </Col>
+              <Col className="u-margin-bottom-medium">
+                <p className="paragraph-1r">
+                  You are about to mint your NFT on Newcoin Protocol Testnet. On Testnet your NFT is not financially tradeable.
+                  When the Mainnet goes live, your Testnet NFT will be deleted and you will be able to create tradeable NFTs! Here
+                  is your Testnet summary!
+                </p>
+              </Col>
+              <Col>
+                <p className="paragraph-1r">Summary:</p>
+                <p className="paragraph-1r">1087 $GNCO</p>
+                <p className="paragraph-1r">— 5% creator fee</p>
+                <p className="paragraph-1r">— 3% DAO fee</p>
+              </Col>
+            </Row>
+            <Row justify="space-between" className="u-margin-bottom-30">
+              <NFTLargeIcon />
+            </Row>
+          </>
+        ) : (
+          <>
+            <Row>
+              <Col className="u-margin-bottom-medium">
+                <p className="header-3">Minted!</p>
+              </Col>
+              <Col className="u-margin-bottom-medium">
+                <p className="paragraph-1r">
+                  You minted your NFT on Newcoin Protocol Testnet. On Testnet your NFT is not financially tradeable. When the
+                  Mainnet goes live, your Testnet NFT will be deleted and you will be able to create tradeable NFTs! Here is your
+                  Testnet receipt!
+                </p>
+              </Col>
+              <Col>
+                <p className="paragraph-1r">Summary:</p>
+                <p className="paragraph-1r">1087 $GNCO</p>
+                <p className="paragraph-1r">— 5% creator fee</p>
+                <p className="paragraph-1r">— 3% DAO fee</p>
+              </Col>
+            </Row>
+            <Row className="u-margin-bottom-30" />
+          </>
+        )}
       </Modal>
 
       <Form className="app-main-full-width" hidden={!moodMode} onFinish={gtfooh}>
