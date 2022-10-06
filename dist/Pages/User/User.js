@@ -40,7 +40,7 @@ export const User = () => {
         return (_jsx(Deferred, { deferTime: 200, visible: state.indicators.specific["api.user.read"], children: state.indicators.specific["api.user.read"] ? (_jsx(Spin, {})) : (_jsx(Deferred, { deferTime: 200, visible: false, children: _jsxs("div", { children: ["User not found. The user may exist in the newcoin network,", _jsx("br", {}), "check\u00A0", _jsx("a", { href: `https://explorer-dev.newcoin.org/account/${user.username}`, children: "the newcoin block explorer." })] }) })) }));
     switch (activeKey) {
         case "Folders":
-            return (_jsxs(_Fragment, { children: [_jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey }), _jsx(TopFolders, { userMoods: moodList, maxPostsToShow: 5, title: "" })] }));
+            return (_jsxs(_Fragment, { children: [_jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey }), _jsx(TopFolders, { userMoods: moodList, maxPostsToShow: 5, title: "", loadMoreMoodsHandler: () => actions.api.user.getMoods({ id: user.id || "" }), randomizeMoods: false })] }));
         case "Powered":
             return (_jsxs(_Fragment, { children: [_jsx(UserWidgetHeading, { user: user, setActiveKey: setActiveKey, activeKey: activeKey }), _jsx(Creators, { users: powerups?.in?.value?.sort((a, b) => (b.powered || 0) - (a.powered || 0)).slice(0, 20) || [], title: "" })] }));
         case "Powering":

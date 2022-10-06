@@ -132,10 +132,11 @@ export const rate: Action<{
   amount: number;
   contextType: string;
   contextValue: string;
+  messageWrapper?: (string, RatingUpdateResponse) => any;
 }> = pipe(
   // mood?: MoodReadResponse
   debounce(300),
-  async ({ state, actions, effects }: Context, { post, amount, contextType, contextValue }) => {
+  async ({ state, actions, effects }: Context, { post, amount, contextType, contextValue, messageWrapper }) => {
     const t = post.title || post.content || "";
     const mt = t.length <= 30 ? t : t.substring(0, 30) + "...";
     try {
@@ -144,7 +145,9 @@ export const rate: Action<{
         value: amount || 1,
         ...(contextType ? { contextType, contextValue } : {}),
       });
-      effects.ux.message.info(`You voted ${amount}%`);
+      const msgTxt = `You voted ${amount}%`;
+      const msg = messageWrapper ? messageWrapper(msgTxt, res.data) : msgTxt;
+      effects.ux.message.info(msg);
     } catch (ex) {
       effects.ux.message.error(((ex as any).error as ErrorResponse).errorMessage);
     }

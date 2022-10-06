@@ -7,6 +7,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { RcFile, UploadFile, UploadFileStatus } from "antd/lib/upload/interface";
 import Form from "antd/lib/form";
 import React, { FC, ReactElement } from "react";
+import isEmpty from "lodash/isEmpty";
 
 // type File = { status: UploadFileStatus, originFileObj: Blob, preview: string, url: string, name: string } & UploadFile;
 // type FileList = File[];
@@ -21,7 +22,6 @@ function getBase64(file: RcFile | undefined): Promise<string> {
     reader.onerror = (error) => reject(error);
   });
 }
-
 export class PicturesWall extends React.Component<
   React.ComponentPropsWithRef<
     React.ElementType & {
@@ -32,6 +32,8 @@ export class PicturesWall extends React.Component<
       contentType: string;
       children?: ReactElement;
       name: string;
+      placeholderImgSrc?: string;
+      uploadClassname?: string;
     }
   >
 > {
@@ -65,8 +67,7 @@ export class PicturesWall extends React.Component<
 
   render() {
     const { previewVisible, previewImage, fileList, previewTitle } = this.state;
-    const { contentType } = this.props;
-
+    const { contentType, placeholderImgSrc, uploadClassname } = this.props;
     return (
       <>
         {contentType === "text/plain" ? (
@@ -104,12 +105,18 @@ export class PicturesWall extends React.Component<
               //   onSuccess && onSuccess(() => ({ body: "ok", xhr: {} as XMLHttpRequest }));
 
               // }}
+              className={isEmpty(fileList) ? uploadClassname : null}
               openFileDialogOnClick
             >
               {fileList.length > 0 ? null : this.props.name === "avatar" ? (
-                <Row style={{ textAlign: "left" }}>
-                  <Edit />
-                </Row>
+                <>
+                  {isEmpty(fileList) && (
+                    <img alt="placeholderImg" src={placeholderImgSrc} className="upload-profile-update-placeholder-img" />
+                  )}
+                  <Row style={{ textAlign: "left" }}>
+                    <Edit />
+                  </Row>
+                </>
               ) : (
                 <div className="paragraph-2b" style={{ fontSize: 17 }}>
                   Drag and drop content here!{<br />} JPEG, PNG, GIF
@@ -135,10 +142,19 @@ export class PicturesWall extends React.Component<
 export const PictureWallFormItem: NLView<{
   onChange?: EventHandler;
   uploadText?: string;
-}> = ({ onChange, uploadText }) => {
+  placeholderImgSrc?: string;
+}> = ({ onChange, uploadText, placeholderImgSrc }) => {
   return (
     <div style={{ margin: "auto" }} className="upload-profile-update-icon">
-      <PicturesWall name="avatar" listType="picture-card" showUploadList={false} onChange={onChange} uploadText={uploadText} />
+      <PicturesWall
+        name="avatar"
+        listType="picture-card"
+        showUploadList={false}
+        onChange={onChange}
+        uploadText={uploadText}
+        placeholderImgSrc={placeholderImgSrc}
+        uploadClassname="upload-profile-update-field"
+      />
     </div>
   );
 };

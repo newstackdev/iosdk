@@ -12,11 +12,11 @@ import { useParams } from "react-router";
 import useForm from "antd/lib/form/hooks/useForm";
 // import { ContentImage, contentImageUrl } from "../../Components/Image";
 import { Ebene } from "../../Components/Icons/Ebene";
-import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse, RatingUpdateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
-import { BlockExplorerLink } from "../../Components/Links";
+import { BlockExplorerLink, blockExplorerUrl } from "../../Components/Links";
 import { ContentImage } from "../../Components/Image";
 import { EyeClosed } from "../../Components/Icons/EyeClosed";
 import { EyeOpen } from "../../Components/Icons/EyeOpen";
@@ -62,17 +62,19 @@ export const useVotingStreamMood = () => {
       setCurrMood(currentMood);
       setMoodPosts(currentMood?.posts || []);
     }
-  }, [state.api.auth.moods, isCachedMoodsLoading]);
+  }, [state.api.auth.moods, isCachedMoodsLoading, cachedMoods]);
 
   useEffect(() => {
-    getIndex();
-    if (!moodPosts[index + 1]?.id) {
-      const updatedMood = availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1];
-      setCurrMood(updatedMood);
-      setMoodPosts(updatedMood?.posts || []);
-      setIndex(0);
+    if (!isEmpty(availableMoods) && !isEmpty(moodPosts)) {
+      getIndex();
+      if (!moodPosts[index + 1]?.id) {
+        const updatedMood = availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1];
+        setCurrMood(updatedMood);
+        setMoodPosts(updatedMood?.posts || []);
+        setIndex(0);
+      }
     }
-  }, [state.routing.location, currPost, currMood]);
+  }, [state.routing.location, currPost, currMood, availableMoods, moodPosts]);
 
   const getPosts = (m?: MoodReadResponse) => {
     const cm = state.api.cache.moods[m?.id || ""];
@@ -249,6 +251,16 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           amount: rating,
           contextType,
           contextValue,
+          messageWrapper: (msg: string, rating: any) =>
+            rating.TxID_mintFile ? (
+              <a href={blockExplorerUrl.newcoin(rating.TxID_mintFile)} target="_blank" rel="noreferrer">
+                {msg}
+                <br />
+                <small>click for a newscan receipt</small>
+              </a>
+            ) : (
+              <>{msg}</>
+            ),
           // mood: currMood
         });
       }

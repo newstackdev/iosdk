@@ -15,7 +15,7 @@ export const AuthWidget = () => {
             background: "transparent",
             padding: 0,
             flex: 1,
-        }, children: _jsx(Col, { children: _jsxs(Link, { to: `/user/${state.api.auth.user?.username}`, children: [_jsx(Avatar, { src: _jsx(ContentImage, { ...u, menuAvatar: true }), className: "avatar-image-header" }), _jsx("span", { className: "paragraph-1r navbar-mobile-text", children: "Profile" })] }) }) }))) : (_jsxs("div", { className: "navbar-signin-wrapper", children: [_jsx(Button, { onClick: () => {
+        }, children: _jsx(Col, { children: _jsxs(Link, { className: "navbar-profile-link-btn", to: `/user/${state.api.auth.user?.username}`, children: [_jsx(Avatar, { src: _jsx(ContentImage, { ...u, menuAvatar: true }), className: "avatar-image-header" }), _jsx("span", { className: "paragraph-1r navbar-mobile-text", children: "Profile" })] }) }) }))) : (_jsxs("div", { className: "navbar-signin-wrapper", children: [_jsx(Button, { onClick: () => {
                     actions.routing.historyPush({ location: "/auth" });
                     actions.flows.user.create.stopMetamaskFlow();
                 }, className: "secondary-button", children: _jsx("span", { className: "paragraph-2b", children: "Sign In" }) }), _jsx(Button, { className: "secondary-button", onClick: () => actions.routing.historyPush({ location: "/signup/metamask" }), children: _jsx("span", { className: "paragraph-2b", children: "Metamask" }) })] }));

@@ -15,6 +15,7 @@ export const AppLayout: NLView = ({ children }) => {
   useOvermindRouting();
 
   const loggedIn = state.api.auth.user?.username;
+  const isAllowed = state.routing.isAllowed;
 
   return <Layout>
     <Header>
@@ -48,7 +49,7 @@ export const AppLayout: NLView = ({ children }) => {
           state.indicators.specific["newgraphApplication.authWithUnsid"]
             ?
             <Spin /> :
-            loggedIn ?
+            loggedIn || isAllowed ?
               children :
               <NewsafeAuth />
         }

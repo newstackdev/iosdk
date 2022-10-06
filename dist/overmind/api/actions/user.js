@@ -1,6 +1,7 @@
 import { AUTH_FLOW_STATUS } from "../../auth/state";
 import { debounce, json, pipe, throttle } from "overmind";
-import { get } from "lodash";
+import { fischerYates } from "../../../utils/random";
+import { get, isEmpty, uniqBy } from "lodash";
 export const cache = async ({ state, actions, effects }, { user, force }) => {
     // moods.forEach(m => m.author = ur.data)
     let { id, username } = { id: "", username: "", ...user };
@@ -131,22 +132,35 @@ export const update = async ({ state, effects, actions }, { user, file }) => {
         user: { ...state.api.auth.user, ...user, id, ...(hasUpload ? { contentUrl: "PROCESSING" } : {}) },
     });
 };
-export const getMoods = async ({ state, actions, effects }, { id }) => {
+export const getMoods = pipe(debounce(300), async ({ state, actions, effects }, { id }) => {
     if (!id)
         return;
-    const r = await state.api.client.user.moodsList({ id });
-    if (!r.data)
+    const page = state.lists.selectedUser.moods.page ?? 0;
+    const r = await state.api.client.user.moodsList({
+        page: page.toString(),
+        id,
+    });
+    state.lists.selectedUser.isNextMoodsAvailable = true;
+    if (isEmpty(r.data?.value)) {
+        state.lists.selectedUser.isNextMoodsAvailable = false;
         return;
+    }
+    // state.lists.selectedUser.isNextMoodsAvailable = true;
     const u = state.api.cache.users.byId[id];
-    actions.api.user.cache({ user: u });
+    await actions.api.user.cache({ user: u });
     // const un = u?.username || "";
-    // state.api.cache.users.byId[id].moods =  (r.data?.value || []) as MoodReadResponse[];
-    // state.api.cache.users.byUsername[u.username || ""].moods =  (r.data?.value || []) as MoodReadResponse[];
+    if (state.api.cache.users.byId[id]) {
+        state.api.cache.users.byId[id].moods = uniqBy([...state.api.cache.users.byId[id].moods, ...(r.data?.value || [])], (mood) => mood?.id);
+    }
+    if (state.api.cache.users.byUsername[u?.username || ""]) {
+        state.api.cache.users.byUsername[u.username || ""].moods = uniqBy([...state.api.cache.users.byUsername[u.username || ""].moods, ...(r.data?.value || [])], (mood) => mood?.id);
+    }
     //   moods: (r.data?.value || []) as MoodReadResponse[],
     // };
-    await actions.api.mood.cache({ moods: r.data?.value });
+    await actions.api.mood.cache({ moods: fischerYates(r.data?.value || []) });
+    state.lists.selectedUser.moods.page++;
     // r.data.value?.forEach(p => p.id && (state.api.cache.moods[p.id] = { ...state.api.cache.moods[p.id], ...p }))
-};
+});
 export const stake = pipe(debounce(1000), async ({ state, actions, effects }, { user, amount }) => {
     try {
         const u = await actions.api.user.read(user);

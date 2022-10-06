@@ -7,9 +7,17 @@ import { NCO_BlockchainAPI } from "@newfound8ion/newcoin-sdk";
 // };
 console.log(NCO_BlockchainAPI);
 export const newcoin = new NCO_BlockchainAPI(NCO_BlockchainAPI.defaults.devnet_urls, NCO_BlockchainAPI.defaults.devnet_services);
+export const newcoinProxy = new NCO_BlockchainAPI(NCO_BlockchainAPI.defaults.devnet_urls, NCO_BlockchainAPI.defaults.devnet_services, true, true);
 const HyperionClient = (url) => {
-    return (query) => {
+    const get = (query) => {
         return fetch(url + query);
+    };
+    const post = (body) => {
+        fetch(url, { method: "POST", body });
+    };
+    return {
+        get,
+        post,
     };
 };
 export const hyperion = HyperionClient("https://hyperion.newcoin.org");

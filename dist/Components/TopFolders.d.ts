@@ -17,5 +17,8 @@ declare const TopFolders: NLView<{
     posts?: string;
     filterToSameNumberPosts?: boolean;
     userMoods?: MoodReadResponse[];
+    enableScrollForMoreMoods?: boolean;
+    loadMoreMoodsHandler?: () => void;
+    randomizeMoods?: boolean;
 }>;
 export default TopFolders;

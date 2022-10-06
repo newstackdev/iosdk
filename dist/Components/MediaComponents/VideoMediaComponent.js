@@ -26,7 +26,7 @@ export const VideoComponent = (props) => {
     const state = useAppState();
     if (thumbnail) {
         const thumbnailUrl = `${state.config.settings.newgraph.mediaBucket}/videos/${id}/thumbnail/${coverContentUrl?.replace(/[^.]+$/, (m) => `0000000.${m}`)}`;
-        console.log({ thumbnailUrl });
+        //console.log({ thumbnailUrl });
         return _jsx(ImageComponent, { ...{ ...props, overrideContentUrl: thumbnailUrl } });
     }
     //+ "#t=0.3"

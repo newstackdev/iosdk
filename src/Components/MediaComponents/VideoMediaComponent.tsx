@@ -39,7 +39,7 @@ export const VideoComponent: ContentElement = (props) => {
       /[^.]+$/,
       (m) => `0000000.${m}`,
     )}`;
-    console.log({ thumbnailUrl });
+    //console.log({ thumbnailUrl });
     return <ImageComponent {...{ ...props, overrideContentUrl: thumbnailUrl }} />;
   }
 

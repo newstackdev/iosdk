@@ -31,7 +31,7 @@ export const AuthWidget: NLView = () => {
           }}
         >
           <Col>
-            <Link to={`/user/${state.api.auth.user?.username}`}>
+            <Link className="navbar-profile-link-btn" to={`/user/${state.api.auth.user?.username}`}>
               <Avatar src={<ContentImage {...u} menuAvatar />} className="avatar-image-header" />
               <span className="paragraph-1r navbar-mobile-text">Profile</span>
             </Link>

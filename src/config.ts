@@ -23,10 +23,11 @@ const stages: Record<string, string> = {
 export const stage = stages[currentHost];
 
 const apiBaseUrls: Record<string, string> = {
+  // "eu-dev": "https://api-eu-dev.newgra.ph/v1",
   "eu-dev": "https://api-eu-dev.newgra.ph/v1",
-  // "eu-dev": "https://api-eu-dev.newlife.io/creator",
   "eu-sit": "https://api-eu-sit.newlife.io/creator",
-  "eu-prod": "https://api.newlife.io/creator",
+  // "eu-prod": "https://api.newlife.io/creator",
+  "eu-prod": "https://api.newgra.ph/v1",
 };
 
 const getStr = (o: any) => (path: string) => get(o, path) || "";
@@ -104,6 +105,7 @@ console.log("Firebase config", firebaseConfig);
 
 export const config = {
   env: {
+    env: (stage || "").split(/-/)[1],
     stage,
   },
   settings: {

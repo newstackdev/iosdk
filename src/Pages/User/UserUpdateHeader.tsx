@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { PictureWallFormItem } from "../../Components/PicturesWall";
 import { useAppState } from "../../overmind";
 import { useCachedDaoProposals } from "../../hooks/useCached";
+import { useContentImageUrl } from "../../Components/MediaComponents/ImageMediaComponent";
 import Form from "antd/lib/form";
 import SupportBox from "../../Components/SupportBox";
 
@@ -11,6 +12,10 @@ const UserUpdateHeader = () => {
   const state = useAppState();
   const daoOwner = state.api.auth.user?.username || state.config.settings.newcoin.daoDomain;
   const daoProposals = useCachedDaoProposals({ daoOwner });
+  const profilePicture = useContentImageUrl({
+    id: state.api.auth.user.id,
+    contentUrl: state.api.auth.user.contentUrl,
+  });
 
   return (
     <div className="post-create-header-wrapper">
@@ -39,7 +44,7 @@ const UserUpdateHeader = () => {
                 // label="Avatar"
                 name="file"
               >
-                <PictureWallFormItem uploadText="Upload avatar" />
+                <PictureWallFormItem uploadText="Upload avatar" placeholderImgSrc={profilePicture} />
               </Form.Item>
             </Col>
           </Row>

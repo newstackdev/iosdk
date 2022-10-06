@@ -402,45 +402,38 @@ export const PostCreate: NLView = (props) => {
               </Col>
               <Col className="u-margin-bottom-medium">
                 <p className="paragraph-1r">
-                  You are about to mint your NFT on Newcoin Protocol Testnet. On Testnet your NFT is not financially tradeable.
-                  When the Mainnet goes live, your Testnet NFT will be deleted and you will be able to create tradeable NFTs! Here
-                  is your Testnet summary!
+                  You're about to mint your NFT on Newcoin Protocol Testnet. On Testnet your NFT is not financially tradeable.
                 </p>
               </Col>
               <Col>
-                <p className="paragraph-1r">Summary:</p>
-                <p className="paragraph-1r">1087 $GNCO</p>
-                <p className="paragraph-1r">— 5% creator fee</p>
-                <p className="paragraph-1r">— 3% DAO fee</p>
+                <p className="paragraph-1r">
+                  When the Mainnet goes live, your Testnet NFT will be deleted and you will be able to create tradeable NFTs!
+                </p>
               </Col>
-            </Row>
-            <Row justify="space-between" className="u-margin-bottom-30">
-              <NFTLargeIcon />
             </Row>
           </>
         ) : (
           <>
             <Row>
               <Col className="u-margin-bottom-medium">
-                <p className="header-3">Minted!</p>
+                <p className="header-3">Your NFT is minting</p>
               </Col>
               <Col className="u-margin-bottom-medium">
                 <p className="paragraph-1r">
-                  You minted your NFT on Newcoin Protocol Testnet. On Testnet your NFT is not financially tradeable. When the
-                  Mainnet goes live, your Testnet NFT will be deleted and you will be able to create tradeable NFTs! Here is your
-                  Testnet receipt!
+                  Your mint on Newcoin Protocol Testnet is in progress. On Testnet your NFT is not financially tradeable.
                 </p>
               </Col>
               <Col>
-                <p className="paragraph-1r">Summary:</p>
-                <p className="paragraph-1r">1087 $GNCO</p>
-                <p className="paragraph-1r">— 5% creator fee</p>
-                <p className="paragraph-1r">— 3% DAO fee</p>
+                <p className="paragraph-1r">
+                  When the Mainnet goes live, your Testnet NFT will be deleted and you will be able to create tradeable NFTs!
+                </p>
               </Col>
             </Row>
-            <Row className="u-margin-bottom-30" />
           </>
         )}
+        <Row justify="space-between" className="u-margin-top-large u-margin-bottom-small">
+          <NFTLargeIcon />
+        </Row>
       </Modal>
 
       <Form className="app-main-full-width" hidden={!moodMode} onFinish={gtfooh}>

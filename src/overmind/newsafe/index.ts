@@ -29,7 +29,8 @@ const newsafeAuthUrl: Action<{ redirectUrl?: string; redirectPath: string } | un
     redirectUrl: _params?.redirectUrl || _params?.redirectPath || `https://${hostname}`,
   };
 
-  const env = state.config.env.stage.split(/-/)[1];
+  const _env = state.config.env;
+  const env = _env.env || _env.stage.split(/-/)[1];
   const authHost = authHosts[env];
 
   const newsafeUrl = `https://${authHost}/explore?requestor=${params.requestor}&referer=${params.referer}&redirectUrl=${params.redirectUrl}`;

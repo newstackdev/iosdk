@@ -43,7 +43,7 @@ export const getAccountHitory = async ({ effects, state }, { user, force }) => {
     const curr = state.newcoin.cache.accountHistory[user?.username || ""];
     if (curr && !force)
         return;
-    const r = await effects.newcoin.hyperion(`/v2/state/get_account?account=${user?.username}`);
+    const r = await effects.newcoin.hyperion.get(`/v2/state/get_account?account=${user?.username}`);
     return (state.newcoin.cache.accountHistory[user?.username || ""] = (await r.json()));
 };
 const getLowerBoundId = (items) => items?.length ? ((items[items.length - 1]?.id || 0) + 1)?.toString() : undefined;

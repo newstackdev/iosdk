@@ -6,7 +6,14 @@ export const ProposalFolder = ({ proposal }: { proposal: { url?: string } }) => 
   const maybeProposalFolder = useCachedMood({ id: maybeProposalFolderId });
 
   return maybeProposalFolderId && maybeProposalFolder ? (
-    <TopFolders userMoods={[maybeProposalFolder]} maxItems={5} maxPostsToShow={5} title="" />
+    <TopFolders
+      userMoods={[maybeProposalFolder]}
+      maxItems={5}
+      maxPostsToShow={5}
+      title=""
+      enableScrollForMoreMoods={false}
+      randomizeMoods={false}
+    />
   ) : (
     <></>
   );

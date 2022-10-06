@@ -8,6 +8,7 @@ export declare const mediaBucket: any;
 export declare const stripeKey: any;
 export declare const config: {
     env: {
+        env: string;
         stage: string;
     };
     settings: {
@@ -186,6 +187,24 @@ export declare const config: {
                             sortKey: string;
                             page: number;
                         };
+                        isNextMoodsAvailable: boolean;
+                        isNextPostsAvailable: boolean;
+                    };
+                    selectedUser: {
+                        moods: {
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
+                            sortKey: string;
+                            page: number;
+                        };
+                        posts: {
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                            sortKey: string;
+                            page: number;
+                        };
+                        isNextMoodsAvailable: boolean;
+                        isNextPostsAvailable: boolean;
                     };
                     search: {
                         users: {

@@ -21,7 +21,7 @@ export const Explore: NLView = () => {
   const moods = state.lists.top.moods.items;
 
   useEffect(() => {
-    !moods.length && actions.lists.top.moods();
+    !moods.length && actions.lists.top.moods({});
   }, []);
 
   // const users = state.lists.top.users.items;
@@ -40,7 +40,14 @@ export const Explore: NLView = () => {
 				title={users?.length ? "Spotlights" : ""}
 			/> */}
       <Spotlights title={"Spotlights"} maxRows={1} maxItems={10} carousel />
-      <TopFolders title={"Explore top folders"} maxItems={3} maxPostsToShow={5} posts={"full"} filterToSameNumberPosts />
+      <TopFolders
+        title={"Explore top folders"}
+        maxItems={3}
+        maxPostsToShow={5}
+        posts={"full"}
+        filterToSameNumberPosts
+        enableScrollForMoreMoods={false}
+      />
       {/* <MoodsGrid
 				moods={moods}
 				loadMore={actions.lists.top.moods}
@@ -55,6 +62,7 @@ export const Explore: NLView = () => {
         skipItems={3}
         filterToSameNumberPosts
         posts={"full"}
+        enableScrollForMoreMoods={false}
       />
     </div>
   );

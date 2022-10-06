@@ -8,6 +8,7 @@ export declare const config: (cfg: PartialConfiguration) => {
         };
         config: {
             env: {
+                env: string;
                 stage: string;
             };
             settings: {
@@ -217,6 +218,24 @@ export declare const config: (cfg: PartialConfiguration) => {
                     sortKey: string;
                     page: number;
                 };
+                isNextMoodsAvailable: boolean;
+                isNextPostsAvailable: boolean;
+            };
+            selectedUser: {
+                moods: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+                posts: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+                isNextMoodsAvailable: boolean;
+                isNextPostsAvailable: boolean;
             };
             search: {
                 users: {
@@ -459,8 +478,11 @@ export declare const config: (cfg: PartialConfiguration) => {
             searchTags: import("../types").Action<{
                 query: string;
             }, void>;
+            resetMoodAndPostAvailability: import("../types").Action<undefined, void>;
             top: {
-                moods: import("../types").Action<undefined, void>;
+                moods: import("../types").Action<{
+                    requestedPage?: number | undefined;
+                }, void>;
                 users: import("../types").Action<undefined, void>;
                 posts: import("../types").Action<undefined, void>;
             };

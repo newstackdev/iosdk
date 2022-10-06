@@ -86,7 +86,7 @@ export const attachToMoods = async ({ state, actions, effects }, { moods, post }
 };
 export const rate = pipe(
 // mood?: MoodReadResponse
-debounce(300), async ({ state, actions, effects }, { post, amount, contextType, contextValue }) => {
+debounce(300), async ({ state, actions, effects }, { post, amount, contextType, contextValue, messageWrapper }) => {
     const t = post.title || post.content || "";
     const mt = t.length <= 30 ? t : t.substring(0, 30) + "...";
     try {
@@ -95,7 +95,9 @@ debounce(300), async ({ state, actions, effects }, { post, amount, contextType, 
             value: amount || 1,
             ...(contextType ? { contextType, contextValue } : {}),
         });
-        effects.ux.message.info(`You voted ${amount}%`);
+        const msgTxt = `You voted ${amount}%`;
+        const msg = messageWrapper ? messageWrapper(msgTxt, res.data) : msgTxt;
+        effects.ux.message.info(msg);
     }
     catch (ex) {
         effects.ux.message.error(ex.error.errorMessage);

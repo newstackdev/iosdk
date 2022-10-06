@@ -27,7 +27,7 @@ export const authorize = async ({ state, actions, effects }, params) => {
     actions.newcoin.getAccountBalance({ user });
     actions.newcoin.getPoolInfo({ pool: { owner: user.username } });
     if (!state.lists.top.moods.items.length) {
-        actions.lists.top.moods();
+        actions.lists.top.moods({});
         actions.lists.top.users();
         actions.lists.top.posts();
     }

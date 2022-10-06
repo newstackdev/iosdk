@@ -37,7 +37,6 @@ export const User: NLView = () => {
   // const moodList = user.moods || [];
   // const cachedMoods = state.api.cache.moods[user?.id || ""];
   const moodList = json(user.moods || []).sort((m1, m2) => (m1.stakeToAccess || 0) - (m2.stakeToAccess || 0));
-
   const powerups = useCachedPowerups(user, true) as PowerupsCacheItem;
   const powering = powerups?.out?.value?.length || "";
   const powered = powerups?.in?.value?.length || "";
@@ -72,7 +71,13 @@ export const User: NLView = () => {
       return (
         <>
           <UserWidgetHeading user={user} setActiveKey={setActiveKey} activeKey={activeKey} />
-          <TopFolders userMoods={moodList} maxPostsToShow={5} title="" />
+          <TopFolders
+            userMoods={moodList}
+            maxPostsToShow={5}
+            title=""
+            loadMoreMoodsHandler={() => actions.api.user.getMoods({ id: user.id || "" })}
+            randomizeMoods={false}
+          />
         </>
       );
     case "Powered":

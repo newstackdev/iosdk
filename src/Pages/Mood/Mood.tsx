@@ -148,12 +148,7 @@ export const Mood: NLView = () => {
       {/* <UserWidgetHeading user={mood.author || {}} /> */}
 
       {/* <MoodsGridRow mood={mood} noFolder={true} wrap={true} /> */}
-      <TopFoldersGrid
-        mood={mood}
-        noFolder={true}
-        // postNumber={3}
-        title="Moods"
-      />
+      <TopFoldersGrid mood={mood} noFolder={true} title="Moods" />
       {/* <ItemGrid items={postList} render={p => <PostWidget post={p} mood={mood} />} /> */}
     </ContentLayout>
   );

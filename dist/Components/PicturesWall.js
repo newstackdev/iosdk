@@ -1,9 +1,10 @@
-import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { CrossCircle } from "./Icons/CrossCircle";
 import { Edit } from "./Icons/Edit";
 import { Input, Modal, Row, Upload } from "antd";
 import Form from "antd/lib/form";
 import React from "react";
+import isEmpty from "lodash/isEmpty";
 // type File = { status: UploadFileStatus, originFileObj: Blob, preview: string, url: string, name: string } & UploadFile;
 // type FileList = File[];
 function getBase64(file) {
@@ -42,7 +43,7 @@ export class PicturesWall extends React.Component {
     };
     render() {
         const { previewVisible, previewImage, fileList, previewTitle } = this.state;
-        const { contentType } = this.props;
+        const { contentType, placeholderImgSrc, uploadClassname } = this.props;
         return (_jsx(_Fragment, { children: contentType === "text/plain" ? (_jsx(Form.Item, { required: true, name: "content", rules: [
                     {
                         required: true,
@@ -62,10 +63,10 @@ export class PicturesWall extends React.Component {
                         // customRequest={({ file, onSuccess }) => {
                         //   onSuccess && onSuccess(() => ({ body: "ok", xhr: {} as XMLHttpRequest }));
                         // }}
-                        openFileDialogOnClick: true, children: fileList.length > 0 ? null : this.props.name === "avatar" ? (_jsx(Row, { style: { textAlign: "left" }, children: _jsx(Edit, {}) })) : (_jsxs("div", { className: "paragraph-2b", style: { fontSize: 17 }, children: ["Drag and drop content here!", _jsx("br", {}), " JPEG, PNG, GIF"] })) }), _jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: previewVisible, title: previewTitle, footer: null, onCancel: this.handleCancel, children: _jsx("img", { alt: "example", style: { width: "100%" }, src: previewImage }) })] })) }));
+                        className: isEmpty(fileList) ? uploadClassname : null, openFileDialogOnClick: true, children: fileList.length > 0 ? null : this.props.name === "avatar" ? (_jsxs(_Fragment, { children: [isEmpty(fileList) && (_jsx("img", { alt: "placeholderImg", src: placeholderImgSrc, className: "upload-profile-update-placeholder-img" })), _jsx(Row, { style: { textAlign: "left" }, children: _jsx(Edit, {}) })] })) : (_jsxs("div", { className: "paragraph-2b", style: { fontSize: 17 }, children: ["Drag and drop content here!", _jsx("br", {}), " JPEG, PNG, GIF"] })) }), _jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: previewVisible, title: previewTitle, footer: null, onCancel: this.handleCancel, children: _jsx("img", { alt: "example", style: { width: "100%" }, src: previewImage }) })] })) }));
     }
 }
-export const PictureWallFormItem = ({ onChange, uploadText }) => {
-    return (_jsx("div", { style: { margin: "auto" }, className: "upload-profile-update-icon", children: _jsx(PicturesWall, { name: "avatar", listType: "picture-card", showUploadList: false, onChange: onChange, uploadText: uploadText }) }));
+export const PictureWallFormItem = ({ onChange, uploadText, placeholderImgSrc }) => {
+    return (_jsx("div", { style: { margin: "auto" }, className: "upload-profile-update-icon", children: _jsx(PicturesWall, { name: "avatar", listType: "picture-card", showUploadList: false, onChange: onChange, uploadText: uploadText, placeholderImgSrc: placeholderImgSrc, uploadClassname: "upload-profile-update-field" }) }));
 };
 //# sourceMappingURL=PicturesWall.js.map

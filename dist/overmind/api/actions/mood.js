@@ -1,4 +1,5 @@
 import { debounce, pipe } from "overmind";
+import isEmpty from "lodash/isEmpty";
 import uniqBy from "lodash/uniqBy";
 export const cache = async ({ state, actions, effects }, { moods, overwrite }) => {
     if (!moods)
@@ -68,22 +69,28 @@ export const read = async ({ state, actions, effects }, { id }) => {
 export const readMultiple = async ({ state, actions, effects }, { moods }) => {
     moods?.filter((m) => m?.posts?.length || 0 <= 4).forEach((m) => actions.api.mood.read(m));
 };
-export const getPosts = async ({ state, actions, effects }, mood) => {
+export const getPosts = pipe(debounce(100), async ({ state, actions, effects }, mood) => {
     if (!mood.id)
         return;
     if (state.indicators.specific["__getPosts" + mood.id])
         return;
     state.indicators.specific["__getPosts" + mood.id] = true;
-    const r = await state.api.client.mood.postsList({ id: mood.id });
+    const page = state.lists.selectedUser.posts.page ?? 0;
+    const r = await state.api.client.mood.postsList({ id: mood.id, page: page.toString() });
+    if (isEmpty(r.data?.value)) {
+        state.lists.selectedUser.isNextPostsAvailable = false;
+        return;
+    }
     state.indicators.specific["__getPosts" + mood.id] = false;
     // state.api.cache.moods[id] = { ...state.api.cache.moods[id], posts: uniqBy(r.data.value, p => p.id) };
     await actions.api.mood.cache({ moods: [{ ...mood, posts: r.data.value }] });
     r.data.value?.forEach((p) => p.id && (state.api.cache.posts[p.id] = { ...state.api.cache.posts[p.id], ...p }));
+    state.lists.selectedUser.posts.page++;
     // state.api.users[id] = {
     //     ...state.api.users[id],
     //     moods: (r.data?.value || []) as MoodReadResponse[]
     // };
-};
+});
 export const create = pipe(debounce(100), async ({ state, actions, effects }, { mood }) => {
     const m = await state.api.client.mood.moodCreate(mood);
     await actions.api.mood.cache({ moods: [m.data] });

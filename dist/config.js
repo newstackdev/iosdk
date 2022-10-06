@@ -15,10 +15,11 @@ const stages = {
 };
 export const stage = stages[currentHost];
 const apiBaseUrls = {
+    // "eu-dev": "https://api-eu-dev.newgra.ph/v1",
     "eu-dev": "https://api-eu-dev.newgra.ph/v1",
-    // "eu-dev": "https://api-eu-dev.newlife.io/creator",
     "eu-sit": "https://api-eu-sit.newlife.io/creator",
-    "eu-prod": "https://api.newlife.io/creator",
+    // "eu-prod": "https://api.newlife.io/creator",
+    "eu-prod": "https://api.newgra.ph/v1",
 };
 const getStr = (o) => (path) => get(o, path) || "";
 const getEnv = getStr(process.env);
@@ -86,6 +87,7 @@ console.log("Stage", stage);
 console.log("Firebase config", firebaseConfig);
 export const config = {
     env: {
+        env: (stage || "").split(/-/)[1],
         stage,
     },
     settings: {

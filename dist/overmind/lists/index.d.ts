@@ -48,6 +48,14 @@ declare const _default: {
             moods: ListState<MoodReadResponse>;
             users: ListState<UserReadPublicResponse>;
             posts: ListState<PostReadResponse>;
+            isNextMoodsAvailable: boolean;
+            isNextPostsAvailable: boolean;
+        };
+        selectedUser: {
+            moods: ListState<MoodReadResponse>;
+            posts: ListState<PostReadResponse>;
+            isNextMoodsAvailable: boolean;
+            isNextPostsAvailable: boolean;
         };
         search: {
             users: {
@@ -88,8 +96,11 @@ declare const _default: {
         searchTags: Action<{
             query: string;
         }, void>;
+        resetMoodAndPostAvailability: Action<undefined, void>;
         top: {
-            moods: Action<undefined, void>;
+            moods: Action<{
+                requestedPage?: number | undefined;
+            }, void>;
             users: Action<undefined, void>;
             posts: Action<undefined, void>;
         };

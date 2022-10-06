@@ -35,7 +35,7 @@ export const authorize: Action<{ token?: string } | undefined> = async ({ state,
   actions.newcoin.getPoolInfo({ pool: { owner: user.username } });
 
   if (!state.lists.top.moods.items.length) {
-    actions.lists.top.moods();
+    actions.lists.top.moods({});
     actions.lists.top.users();
     actions.lists.top.posts();
   }

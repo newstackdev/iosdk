@@ -20,6 +20,7 @@ export declare const rate: Action<{
     amount: number;
     contextType: string;
     contextValue: string;
+    messageWrapper?: (string: any, RatingUpdateResponse: any) => any;
 }>;
 export declare const getRemoteMeta: Action<{
     url: string;

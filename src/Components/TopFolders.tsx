@@ -1,18 +1,15 @@
 import { Col, Row } from "antd";
-import { ContentLayout } from "./ContentLayout";
-import { Ebene } from "./Icons/Ebene";
-import { LargeArrowBack } from "./Icons/LargeArrowBack";
+
 import { Link } from "react-router-dom";
-import { LoadMore } from "./LoadMore";
 import { MaybeLink, PostWidget } from "./PostWidget";
-import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { PremiumContent } from "./PremiumContent";
-import { useActions, useAppState, useEffects } from "../overmind";
-import { useCachedMood } from "../hooks/useCached";
-import { useEffect } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
+import { Spin } from "./Spin";
+import { useActions, useAppState } from "../overmind";
+import { useCallback, useEffect } from "react";
 import FolderClosed from "./Icons/Folder/Closed";
+import InfiniteScroll from "react-infinite-scroller";
 import Title from "../Pages/Explore/Title";
 
 const MAX_ALLOWED_POSTS = 5;
@@ -26,18 +23,19 @@ export const TopFoldersGrid: NLView<{
   noFullWidth?: boolean;
   blur?: boolean;
 }> = ({ mood, maxPosts, title, noFolder, noFullWidth, wrap }) => {
-  const m = useCachedMood(mood);
+  const postsList = mood.posts?.slice(0, maxPosts);
+  const actions = useActions();
+  const state = useAppState();
 
-  const postsList = m.posts?.slice(0, maxPosts);
+  const getPostsHandler = useCallback(
+    (page: number) => {
+      actions.api.mood.getPosts({ id: mood.id });
+    },
+    [mood],
+  );
 
   return (
-    <PremiumContent
-      stakeToAccess={m.stakeToAccess}
-      owner={m?.author}
-      style={{ width: "100%" }}
-      link={"/folder/" + m.id}
-      // className={title === "Moods" ? "" : ""}
-    >
+    <PremiumContent stakeToAccess={mood.stakeToAccess} owner={mood?.author} style={{ width: "100%" }} link={"/folder/" + mood.id}>
       <Row
         style={{
           width: "100%",
@@ -68,41 +66,80 @@ export const TopFoldersGrid: NLView<{
 
               <small className="folder-name" style={{ paddingTop: "5px" }}>
                 {/* @ts-ignore */}
-                {m.title?.length > 10 ? m.title?.substring(0, 3) + "..." : m?.title || ""}
+                {mood.title?.length > 10 ? mood.title?.substring(0, 3) + "..." : mood?.title || ""}
               </small>
             </Col>
           </Link>
         )}
         {/* // image */}
         {!postsList?.length && <Col style={{ aspectRatio: "1/1" }} />}
-        {postsList?.map((p) => (
-          <MaybeLink
-            // style={}
-            to={
-              !p.id
-                ? ""
-                : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
-                ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
-                : !mood
-                ? `/post/${p.id}`
-                : `/folder/${mood.id}/${p.id}`
-            }
-            className={p.contentType === "text/plain" ? "maybelink ant-col" : "ant-col"}
+        {window.location.pathname.includes("folder/") ? (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={getPostsHandler}
+            loader={<Spin />}
+            hasMore={state.lists.top.isNextPostsAvailable && state.lists.selectedUser.isNextPostsAvailable}
           >
-            <Col
-              className={"bg-hover"}
-              style={{
-                justifyContent: "center",
-                flexDirection: "column",
-                aspectRatio: "1/1",
-                height: "100%",
-                flex: 1,
-              }}
+            <Row>
+              {postsList?.map((p) => (
+                <MaybeLink
+                  to={
+                    !p.id
+                      ? ""
+                      : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                      ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                      : !mood
+                      ? `/post/${p.id}`
+                      : `/folder/${mood.id}/${p.id}`
+                  }
+                  className={p.contentType === "text/plain" ? "maybelink ant-col" : "ant-col"}
+                >
+                  <Col
+                    className={"bg-hover"}
+                    style={{
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      aspectRatio: "1/1",
+                      height: "100%",
+                      flex: 1,
+                    }}
+                  >
+                    <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
+                  </Col>
+                </MaybeLink>
+              ))}
+            </Row>
+          </InfiniteScroll>
+        ) : (
+          postsList?.map((p) => (
+            <MaybeLink
+              // style={}
+              to={
+                !p.id
+                  ? ""
+                  : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                  ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                  : !mood
+                  ? `/post/${p.id}`
+                  : `/folder/${mood.id}/${p.id}`
+              }
+              className={p.contentType === "text/plain" ? "maybelink ant-col" : "ant-col"}
             >
-              <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
-            </Col>
-          </MaybeLink>
-        ))}
+              <Col
+                className={"bg-hover"}
+                style={{
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  aspectRatio: "1/1",
+                  height: "100%",
+                  flex: 1,
+                }}
+              >
+                <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
+              </Col>
+            </MaybeLink>
+          ))
+        )}
       </Row>
     </PremiumContent>
   );
@@ -116,9 +153,26 @@ const TopFolders: NLView<{
   posts?: string;
   filterToSameNumberPosts?: boolean;
   userMoods?: MoodReadResponse[];
-}> = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts }) => {
+  enableScrollForMoreMoods?: boolean;
+  loadMoreMoodsHandler?: () => void;
+  randomizeMoods?: boolean;
+}> = ({
+  maxItems,
+  title,
+  posts,
+  userMoods,
+  skipItems,
+  maxPostsToShow,
+  filterToSameNumberPosts,
+  enableScrollForMoreMoods = true,
+  randomizeMoods = true,
+  loadMoreMoodsHandler,
+}) => {
   const state = useAppState();
-  const effects = useEffects();
+
+  useEffect(() => {
+    actions.lists.resetMoodAndPostAvailability();
+  }, []);
 
   const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
 
@@ -140,6 +194,17 @@ const TopFolders: NLView<{
     remapMoods = moods.filter((m) => m.posts?.slice(0, maxPostsToShow).length === maxPostsToShow);
   } else remapMoods = moods;
 
+  const loadMoreHandler = useCallback(
+    (page) => {
+      if (loadMoreMoodsHandler) {
+        loadMoreMoodsHandler();
+      } else {
+        actions.lists.top.moods({ requestedPage: page + 1 });
+      }
+    },
+    [loadMoreMoodsHandler, actions.lists.top.moods],
+  );
+
   return (
     <>
       {title === undefined && (
@@ -148,33 +213,36 @@ const TopFolders: NLView<{
           <p className="header-2 u-margin-bottom-medium">Explore folders</p>
         </Row>
       )}
-
-      <div>
+      <div style={{ maxHeight: "100%" }}>
         {title ? <Title title={title} href="/top/folders" /> : ""}
-        {remapMoods?.slice(skipItems || 0, (skipItems || 0) + (maxItems || 3)).map((m, i) => (
-          <Row
-            className="nl-mood-grid-row"
-            style={
-              posts === "full"
-                ? {
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }
-                : {
-                    justifyContent: "start",
-                    alignItems: "center",
-                  }
-            }
-          >
-            <TopFoldersGrid
-              mood={m}
-              maxPosts={maxPostsToShow} //i}
-              title={title}
-            />
-          </Row>
-        ))}
+        <InfiniteScroll
+          pageStart={randomizeMoods ? Math.floor(Math.random() * 20) : 0}
+          loadMore={loadMoreHandler}
+          hasMore={
+            enableScrollForMoreMoods && state.lists.top.isNextMoodsAvailable && state.lists.selectedUser.isNextMoodsAvailable
+          }
+          loader={<Spin />}
+        >
+          {remapMoods?.slice(skipItems || 0, (skipItems || 0) + (maxItems || 3)).map((m, i) => (
+            <Row
+              className="nl-mood-grid-row"
+              style={
+                posts === "full"
+                  ? {
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }
+                  : {
+                      justifyContent: "start",
+                      alignItems: "center",
+                    }
+              }
+            >
+              <TopFoldersGrid mood={m} maxPosts={maxPostsToShow || MAX_ALLOWED_POSTS} title={title} />
+            </Row>
+          ))}
+        </InfiniteScroll>
       </div>
-      {!userMoods && (moods?.length || 0) < maxItems && <LoadMore loadMore={() => actions.lists.top.moods()} />}
     </>
   );
 };

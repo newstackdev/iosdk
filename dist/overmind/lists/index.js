@@ -44,19 +44,29 @@ const creativeSearch = pipe(debounce(500), async ({ state }, query) => {
         state.lists.creativeSearch.tags.items = calculateTags(state.lists.creativeSearch.results.items);
     }
 });
-const listTopMoods = pipe(debounce(300), async ({ state, actions, effects }) => {
-    const page = state.lists.top.moods.page ?? 0;
+const listTopMoods = pipe(debounce(300), async ({ state, actions, effects }, { requestedPage }) => {
+    const page = requestedPage ?? state.lists.top.moods.page ?? 0;
     const r = await state.api.client.mood.listTopList({
         page: page.toString(),
     }); // Math.floor(20 + (Math.random() * 20)).toString()
-    const moods = r.data?.value || [];
+    if (_.isEmpty(r.data?.value)) {
+        state.lists.top.isNextPostsAvailable = false;
+        return;
+    }
+    const moods = fischerYates(r.data?.value || []);
     await actions.api.mood.cache({ moods });
-    fischerYates(moods).forEach((v) => {
+    moods.forEach((v) => {
         // state.api.cache.moods[v.id || ""] = v;
         state.lists.top.moods.items.push({ ...v });
     });
     state.lists.top.moods.page++;
 });
+const resetMoodAndPostAvailability = ({ state }) => {
+    state.lists.top.isNextMoodsAvailable = true;
+    state.lists.top.isNextPostsAvailable = true;
+    state.lists.selectedUser.isNextMoodsAvailable = true;
+    state.lists.selectedUser.isNextPostsAvailable = true;
+};
 export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects }) => {
     const page = state.lists.top.users.page ? state.lists.top.users.page + 1 : Math.floor(Math.random() * 10);
     const r = await state.api.client.user.listTopList({
@@ -70,10 +80,15 @@ export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects
     state.lists.top.users.page++;
 });
 export const listTopPosts = pipe(debounce(300), async ({ state, actions, effects }) => {
-    const page = state.lists.top.posts.page ? state.lists.top.posts.page + 1 : 0;
+    const page = state.lists.top.posts.page ?? 0;
+    state.lists.top.isNextPostsAvailable = true;
     const r = await state.api.client.post.listTopList({
         page: page.toString(),
     });
+    if (_.isEmpty(r.data?.value)) {
+        state.lists.top.isNextPostsAvailable = false;
+        return;
+    }
     r.data?.value?.forEach((v) => {
         state.api.cache.posts[v.id || ""] = v;
         state.lists.top.posts.items.push(v);
@@ -178,6 +193,7 @@ const actions = {
     searchUsers,
     searchPosts,
     searchTags,
+    resetMoodAndPostAvailability,
     top: {
         moods: listTopMoods,
         users: listTopUsers,
@@ -204,6 +220,14 @@ export default {
             moods: newListState(),
             users: newListState(),
             posts: newListState(),
+            isNextMoodsAvailable: true,
+            isNextPostsAvailable: true,
+        },
+        selectedUser: {
+            moods: newListState(),
+            posts: newListState(),
+            isNextMoodsAvailable: true,
+            isNextPostsAvailable: true,
         },
         search: {
             users: {

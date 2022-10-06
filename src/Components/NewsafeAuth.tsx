@@ -2,6 +2,8 @@ import { Alert, Button } from "antd";
 import { IOView } from "../types";
 import { useActions, useAppState } from "../overmind";
 
+const maybeWithEnv = (v, env: string) => (env != "prod" ? v : `${v}-${env}`);
+
 export const NewsafeAuth: IOView<{
   redirectPath?: string;
   redirectUrl?: string;
@@ -16,6 +18,8 @@ export const NewsafeAuth: IOView<{
     redirectUrl: redirectUrl || redirectPath || `https://${hostname}`,
   };
 
+  const env = state.config.env.env;
+  const newstackConsoleUrl = maybeWithEnv("https://console", env) + ".newstack.dev";
   return (
     <>
       {children || (
@@ -54,8 +58,7 @@ export const NewsafeAuth: IOView<{
                     <ul>
                       <li>
                         Have you created your app entry yet? If not create it at&nbsp;
-                        <a href="https://console-dev.newstack.dev">console-dev.newstack.dev</a>&nbsp;. It only takes a few
-                        minutes.
+                        <a href={newstackConsoleUrl}>${newstackConsoleUrl}</a>&nbsp;. It only takes a few minutes.
                         <br />
                         <br />
                       </li>
@@ -63,7 +66,7 @@ export const NewsafeAuth: IOView<{
                       <li>
                         Got an app created? You are likely missing just a tiny bit of config. Please follow the instructions
                         at&nbsp;
-                        <a href="https://console-dev.newstack.dev/instructions">console-dev.newstack.dev</a>&nbsp;.
+                        <a href={`${newstackConsoleUrl}/instructions`}>${newstackConsoleUrl}</a>&nbsp;.
                         <br />
                         <br />
                       </li>

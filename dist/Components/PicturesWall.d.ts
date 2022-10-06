@@ -9,6 +9,8 @@ export declare class PicturesWall extends React.Component<React.ComponentPropsWi
     contentType: string;
     children?: ReactElement;
     name: string;
+    placeholderImgSrc?: string;
+    uploadClassname?: string;
 }>> {
     state: {
         previewVisible: boolean;
@@ -27,4 +29,5 @@ export declare class PicturesWall extends React.Component<React.ComponentPropsWi
 export declare const PictureWallFormItem: NLView<{
     onChange?: EventHandler;
     uploadText?: string;
+    placeholderImgSrc?: string;
 }>;

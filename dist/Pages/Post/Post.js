@@ -12,7 +12,7 @@ import { Ebene } from "../../Components/Icons/Ebene";
 import { NFTIcon } from "../../Components/Icons/NTFIcon";
 import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
-import { BlockExplorerLink } from "../../Components/Links";
+import { BlockExplorerLink, blockExplorerUrl } from "../../Components/Links";
 import { ContentImage } from "../../Components/Image";
 import { EyeClosed } from "../../Components/Icons/EyeClosed";
 import { EyeOpen } from "../../Components/Icons/EyeOpen";
@@ -49,16 +49,18 @@ export const useVotingStreamMood = () => {
             setCurrMood(currentMood);
             setMoodPosts(currentMood?.posts || []);
         }
-    }, [state.api.auth.moods, isCachedMoodsLoading]);
+    }, [state.api.auth.moods, isCachedMoodsLoading, cachedMoods]);
     useEffect(() => {
-        getIndex();
-        if (!moodPosts[index + 1]?.id) {
-            const updatedMood = availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1];
-            setCurrMood(updatedMood);
-            setMoodPosts(updatedMood?.posts || []);
-            setIndex(0);
+        if (!isEmpty(availableMoods) && !isEmpty(moodPosts)) {
+            getIndex();
+            if (!moodPosts[index + 1]?.id) {
+                const updatedMood = availableMoods[availableMoods.findIndex((mood) => mood.id === currMood?.id) + 1];
+                setCurrMood(updatedMood);
+                setMoodPosts(updatedMood?.posts || []);
+                setIndex(0);
+            }
         }
-    }, [state.routing.location, currPost, currMood]);
+    }, [state.routing.location, currPost, currMood, availableMoods, moodPosts]);
     const getPosts = (m) => {
         const cm = state.api.cache.moods[m?.id || ""];
         return cm && cm.posts ? cm.posts : [];
@@ -166,6 +168,7 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
                 amount: rating,
                 contextType,
                 contextValue,
+                messageWrapper: (msg, rating) => rating.TxID_mintFile ? (_jsxs("a", { href: blockExplorerUrl.newcoin(rating.TxID_mintFile), target: "_blank", rel: "noreferrer", children: [msg, _jsx("br", {}), _jsx("small", { children: "click for a newscan receipt" })] })) : (_jsx(_Fragment, { children: msg })),
                 // mood: currMood
             });
         }

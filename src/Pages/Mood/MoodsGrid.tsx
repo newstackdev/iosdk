@@ -87,11 +87,9 @@ export const MoodsGrid: NLView<MoodsGridParams> = ({ moods, title, loadMore }) =
   return (
     <>
       {title && <h2 className="app-main-full-width header-2">{title}</h2>}
-
       {moods?.map((m, i) => (
         <MoodsGridRow mood={m} maxItems={4} delay={i * 1000} />
       ))}
-
       <div ref={currentElement} style={{ minHeight: 100, minWidth: 100 }}>
         <br />
         {state.indicators.isWorking && loadMore ? <Spin /> : ""}

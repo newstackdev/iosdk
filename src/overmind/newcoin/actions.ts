@@ -61,7 +61,7 @@ export const getAccountHitory: Action<{ user?: { username?: string }; force?: bo
 ) => {
   const curr = state.newcoin.cache.accountHistory[user?.username || ""];
   if (curr && !force) return;
-  const r = await effects.newcoin.hyperion(`/v2/state/get_account?account=${user?.username}`);
+  const r = await effects.newcoin.hyperion.get(`/v2/state/get_account?account=${user?.username}`);
   return (state.newcoin.cache.accountHistory[user?.username || ""] = (await r.json()) as any);
 };
 

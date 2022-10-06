@@ -8,6 +8,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         };
         config: {
             env: {
+                env: string;
                 stage: string;
             };
             settings: {
@@ -217,6 +218,24 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                     sortKey: string;
                     page: number;
                 };
+                isNextMoodsAvailable: boolean;
+                isNextPostsAvailable: boolean;
+            };
+            selectedUser: {
+                moods: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+                posts: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+                isNextMoodsAvailable: boolean;
+                isNextPostsAvailable: boolean;
             };
             search: {
                 users: {
@@ -459,8 +478,11 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             searchTags: import("../types").Action<{
                 query: string;
             }, void>;
+            resetMoodAndPostAvailability: import("../types").Action<undefined, void>;
             top: {
-                moods: import("../types").Action<undefined, void>;
+                moods: import("../types").Action<{
+                    requestedPage?: number | undefined;
+                }, void>;
                 users: import("../types").Action<undefined, void>;
                 posts: import("../types").Action<undefined, void>;
             };
@@ -774,6 +796,7 @@ export declare const useActions: () => {
                 amount: number;
                 contextType: string;
                 contextValue: string;
+                messageWrapper?: ((string: any, RatingUpdateResponse: any) => any) | undefined;
             }) => void | Promise<void>;
             readonly getRemoteMeta: (payload: {
                 url: string;
@@ -795,8 +818,11 @@ export declare const useActions: () => {
         searchTags: (payload: {
             query: string;
         }) => void | Promise<void>;
+        resetMoodAndPostAvailability: (payload?: undefined) => void | Promise<void>;
         top: {
-            moods: (payload?: undefined) => void | Promise<void>;
+            moods: (payload: {
+                requestedPage?: number | undefined;
+            }) => void | Promise<void>;
             users: (payload?: undefined) => void | Promise<void>;
             posts: (payload?: undefined) => void | Promise<void>;
         };

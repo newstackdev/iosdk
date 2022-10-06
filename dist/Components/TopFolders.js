@@ -1,18 +1,23 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
-import { LoadMore } from "./LoadMore";
 import { MaybeLink, PostWidget } from "./PostWidget";
 import { PremiumContent } from "./PremiumContent";
-import { useActions, useAppState, useEffects } from "../overmind";
-import { useCachedMood } from "../hooks/useCached";
+import { Spin } from "./Spin";
+import { useActions, useAppState } from "../overmind";
+import { useCallback, useEffect } from "react";
 import FolderClosed from "./Icons/Folder/Closed";
+import InfiniteScroll from "react-infinite-scroller";
 import Title from "../Pages/Explore/Title";
 const MAX_ALLOWED_POSTS = 5;
 export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, wrap }) => {
-    const m = useCachedMood(mood);
-    const postsList = m.posts?.slice(0, maxPosts);
-    return (_jsx(PremiumContent, { stakeToAccess: m.stakeToAccess, owner: m?.author, style: { width: "100%" }, link: "/folder/" + m.id, children: _jsxs(Row, { style: {
+    const postsList = mood.posts?.slice(0, maxPosts);
+    const actions = useActions();
+    const state = useAppState();
+    const getPostsHandler = useCallback((page) => {
+        actions.api.mood.getPosts({ id: mood.id });
+    }, [mood]);
+    return (_jsx(PremiumContent, { stakeToAccess: mood.stakeToAccess, owner: mood?.author, style: { width: "100%" }, link: "/folder/" + mood.id, children: _jsxs(Row, { style: {
                 width: "100%",
                 height: "auto",
                 display: "flex",
@@ -24,7 +29,19 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
                             aspectRatio: "1/1",
                             height: "100%",
                             flex: 1,
-                        }, children: [_jsx(FolderClosed, { className: "text-center folder" }), _jsx("small", { className: "folder-name", style: { paddingTop: "5px" }, children: m.title?.length > 10 ? m.title?.substring(0, 3) + "..." : m?.title || "" })] }) })), !postsList?.length && _jsx(Col, { style: { aspectRatio: "1/1" } }), postsList?.map((p) => (_jsx(MaybeLink
+                        }, children: [_jsx(FolderClosed, { className: "text-center folder" }), _jsx("small", { className: "folder-name", style: { paddingTop: "5px" }, children: mood.title?.length > 10 ? mood.title?.substring(0, 3) + "..." : mood?.title || "" })] }) })), !postsList?.length && _jsx(Col, { style: { aspectRatio: "1/1" } }), window.location.pathname.includes("folder/") ? (_jsx(InfiniteScroll, { pageStart: 0, loadMore: getPostsHandler, loader: _jsx(Spin, {}), hasMore: state.lists.top.isNextPostsAvailable && state.lists.selectedUser.isNextPostsAvailable, children: _jsx(Row, { children: postsList?.map((p) => (_jsx(MaybeLink, { to: !p.id
+                                ? ""
+                                : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                                    ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                                    : !mood
+                                        ? `/post/${p.id}`
+                                        : `/folder/${mood.id}/${p.id}`, className: p.contentType === "text/plain" ? "maybelink ant-col" : "ant-col", children: _jsx(Col, { className: "bg-hover", style: {
+                                    justifyContent: "center",
+                                    flexDirection: "column",
+                                    aspectRatio: "1/1",
+                                    height: "100%",
+                                    flex: 1,
+                                }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }))) }) })) : (postsList?.map((p) => (_jsx(MaybeLink
                 // style={}
                 , { 
                     // style={}
@@ -40,11 +57,13 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
                             aspectRatio: "1/1",
                             height: "100%",
                             flex: 1,
-                        }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) })))] }) }));
+                        }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }))))] }) }));
 };
-const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts }) => {
+const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts, enableScrollForMoreMoods = true, randomizeMoods = true, loadMoreMoodsHandler, }) => {
     const state = useAppState();
-    const effects = useEffects();
+    useEffect(() => {
+        actions.lists.resetMoodAndPostAvailability();
+    }, []);
     const moods = userMoods ? userMoods : state.lists.top.moods.items || [];
     // if (true)
     //   return (
@@ -62,15 +81,23 @@ const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToSh
     }
     else
         remapMoods = moods;
-    return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: "Explore folders" }) })), _jsxs("div", { children: [title ? _jsx(Title, { title: title, href: "/top/folders" }) : "", remapMoods?.slice(skipItems || 0, (skipItems || 0) + (maxItems || 3)).map((m, i) => (_jsx(Row, { className: "nl-mood-grid-row", style: posts === "full"
-                            ? {
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }
-                            : {
-                                justifyContent: "start",
-                                alignItems: "center",
-                            }, children: _jsx(TopFoldersGrid, { mood: m, maxPosts: maxPostsToShow, title: title }) })))] }), !userMoods && (moods?.length || 0) < maxItems && _jsx(LoadMore, { loadMore: () => actions.lists.top.moods() })] }));
+    const loadMoreHandler = useCallback((page) => {
+        if (loadMoreMoodsHandler) {
+            loadMoreMoodsHandler();
+        }
+        else {
+            actions.lists.top.moods({ requestedPage: page + 1 });
+        }
+    }, [loadMoreMoodsHandler, actions.lists.top.moods]);
+    return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: "Explore folders" }) })), _jsxs("div", { style: { maxHeight: "100%" }, children: [title ? _jsx(Title, { title: title, href: "/top/folders" }) : "", _jsx(InfiniteScroll, { pageStart: randomizeMoods ? Math.floor(Math.random() * 20) : 0, loadMore: loadMoreHandler, hasMore: enableScrollForMoreMoods && state.lists.top.isNextMoodsAvailable && state.lists.selectedUser.isNextMoodsAvailable, loader: _jsx(Spin, {}), children: remapMoods?.slice(skipItems || 0, (skipItems || 0) + (maxItems || 3)).map((m, i) => (_jsx(Row, { className: "nl-mood-grid-row", style: posts === "full"
+                                ? {
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }
+                                : {
+                                    justifyContent: "start",
+                                    alignItems: "center",
+                                }, children: _jsx(TopFoldersGrid, { mood: m, maxPosts: maxPostsToShow || MAX_ALLOWED_POSTS, title: title }) }))) })] })] }));
 };
 export default TopFolders;
 //# sourceMappingURL=TopFolders.js.map
