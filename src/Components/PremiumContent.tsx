@@ -27,6 +27,7 @@ const DefaultPrivateContentView: IOView<{
     <div
       onClick={(e) => onClick && e.stopPropagation()} // if the onClick above needs to take us to details this will prevent it from getting the event so that
       // we can stake from the list of folders directly
+      className="iosdk-premium-content-notification"
       style={{
         background: "rgba(0,0,0,.3)",
         padding: "20px",
@@ -78,6 +79,7 @@ export const PremiumContent: IOView<
   return (
     <>
       <div
+        className="iosdk-premium-content"
         {...(blur
           ? {
               onClickCapture: (e) => {

@@ -174,7 +174,7 @@ export const UserStake: NLView<{
           onDone && onDone({});
         }}
         okButtonProps={{ style: { display: "none" } }}
-        className="nl-white-box-modal"
+        className="iosdk-modal iosdk-stake-modal nl-white-box-modal"
       >
         <Row align="middle" className="text-center">
           <Col span={8} className="nl-avatar">
@@ -433,7 +433,7 @@ export const UserPowerup: NLView<{ user?: UserReadPrivateResponse }> = ({ user }
         onCancel={() => setVisible(false)}
         cancelButtonProps={{ hidden: true }}
         footer={false}
-        className="nl-white-box-modal"
+        className="iosdk-modal nl-white-box-modal"
         closeIcon={<CrossCircle />}
       >
         <div className="text-center">
@@ -733,7 +733,7 @@ export const UserWidgetHeading: NLView<{
                 <UserPowerup user={u} />
                 <div style={{ width: "100px", textAlign: "center", margin: "0 0 0 auto" }}>
                   {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
-                  {isDAOMember && <p className="paragraph-2r">staked</p>}
+                  {poolInfo.total && <p className="paragraph-2r">{poolInfo.total.quantity} staked</p>}
                 </div>
                 {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
                 <Row style={{ justifyContent: "flex-end", alignItems: "center" }} className="u-margin-top-medium">
@@ -932,61 +932,62 @@ export const UserSocialInfoRow: NLView<{ user?: UserReadPrivateResponse }> = ({ 
 export const PoolInfoDataRow: NLView<{
   pool?: { code: string };
   verifyIconLight?: boolean;
-}> = ({ pool, verifyIconLight = false }) => {
+  noLink?: boolean;
+}> = ({ pool, verifyIconLight = false, noLink }) => {
   const poolInfo = useCachedPool(pool);
   const myPools = useAppState().newcoin.pools;
   const user = useCachedUser({ username: poolInfo.owner });
   const { verifiedUsers } = useVerified([user.username || ""]);
   const isUserVerified = verifiedUsers && user.username && verifiedUsers.includes(user.username);
 
-  return (
-    <Link to={`/user/${user.username}`}>
-      <Row
-        style={{
-          padding: "20px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        className="bg-transition-box"
-      >
-        <Col span={5}>
-          <Avatar src={<ContentImage {...user} />} className="avatar-image-small" />
-        </Col>
-        <Col span={13} style={{ width: "100%" }}>
-          <div className="u-margin-bottom-small" style={{ display: "flex", textAlign: "center" }}>
-            {user.username}
-            {isUserVerified ? (
-              verifyIconLight ? (
-                <VerifiedIcon style={{ marginLeft: 20 }} />
-              ) : (
-                <VerifiedIcon style={{ marginLeft: 20 }} />
-              )
+  const row = (
+    <Row
+      style={{
+        padding: "20px",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      className="bg-transition-box"
+    >
+      <Col span={5}>
+        <Avatar src={<ContentImage {...user} />} className="avatar-image-small" />
+      </Col>
+      <Col span={13} style={{ width: "100%" }}>
+        <div className="u-margin-bottom-small" style={{ display: "flex", textAlign: "center" }}>
+          {user.username}
+          {isUserVerified ? (
+            verifyIconLight ? (
+              <VerifiedIcon style={{ marginLeft: 20 }} />
             ) : (
-              false
-            )}
-          </div>
-          <div>
-            ${user.newcoinTicker?.toUpperCase()}&nbsp;
-            <b>{~~myPools[poolInfo?.code]}</b>
-          </div>
-          <small style={{ padding: 0, margin: 0 }}>
-            TVL: {poolInfo.total.quantity}
-            {/* {Math.round(Number(poolInfo?.total.quantity.toString().replace(/NCO/, "")))} */}
-          </small>
-        </Col>
+              <VerifiedIcon style={{ marginLeft: 20 }} />
+            )
+          ) : (
+            false
+          )}
+        </div>
+        <div>
+          ${user.newcoinTicker?.toUpperCase()}&nbsp;
+          <b>{~~myPools[poolInfo?.code]}</b>
+        </div>
+        <small style={{ padding: 0, margin: 0 }}>
+          TVL: {poolInfo.total.quantity}
+          {/* {Math.round(Number(poolInfo?.total.quantity.toString().replace(/NCO/, "")))} */}
+        </small>
+      </Col>
 
-        <Col span={6}>
-          <UserStake user={user} />
-        </Col>
-      </Row>
-    </Link>
-
-    // <div>
-    // 			<CreatorWidget avatarClassName="avatar-image-small" creator={{ username: poolInfo.owner }} />
-    // 			{pool?.code} ${myPools[poolInfo?.code]} ${poolInfo?.code}
-    // 			/ ${poolInfo?.total.quantity }
-    // 	</div>
+      <Col span={6}>
+        <UserStake user={user} />
+      </Col>
+    </Row>
   );
+
+  return noLink ? <>{row}</> : <Link to={`/user/${user.username}`}>{row}</Link>;
+
+  // <div>
+  // 			<CreatorWidget avatarClassName="avatar-image-small" creator={{ username: poolInfo.owner }} />
+  // 			{pool?.code} ${myPools[poolInfo?.code]} ${poolInfo?.code}
+  // 			/ ${poolInfo?.total.quantity }
+  // 	</div>
   // <DataRow
   // 	title={
   // 		// <Link to={`/user/${poolInfo?.owner}`}>{poolInfo?.owner}</Link>

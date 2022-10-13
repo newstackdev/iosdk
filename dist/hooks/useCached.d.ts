@@ -2,7 +2,12 @@ import { HyperionAccountHistory } from "../overmind/newcoin/types";
 import { MoodReadResponse, UserInvitationPagedListReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { PowerupsCacheItem } from "../overmind/api/state";
 import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from "./useCached1";
-export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
+declare const useCachedFolder: ({ id }: {
+    id?: string | undefined;
+}, force?: boolean | undefined) => MoodReadResponse & {
+    promise?: Promise<any> | null | undefined;
+};
+export { useCachedMood, useCachedFolder, useCachedMoodPosts, useCachedPost, useCachedUser };
 export declare const useCachedMoods: (moods?: {
     id?: string;
 }[], force?: boolean) => {

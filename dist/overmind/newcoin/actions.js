@@ -22,8 +22,14 @@ export const getAccountBalance = async ({ effects, state, actions }, props) => {
         const [total, symbol] = c.split(/ /);
         return { ...r, [symbol]: total };
     }, {});
-    actions.newcoin.daoGetWhitelist();
-    actions.newcoin.voterListVotes({ voter: user.username });
+    try {
+        await actions.newcoin.daoGetWhitelist();
+        await actions.newcoin.voterListVotes({ voter: user.username });
+    }
+    catch (ex) {
+        console.warn(ex, ex.message);
+        console.warn("Likely no DAO");
+    }
 };
 export const getPoolInfo = pipe(debounce(200), async ({ effects, state }, { pool }) => {
     if (!(pool.code || pool.owner))

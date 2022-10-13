@@ -110,6 +110,8 @@ export const PostCreate: NLView = (props) => {
 
     if (mintNFTswitch && !mintConfirmationOpen) return setMintConfirmationOpen(true);
 
+    !mintNFTswitch && setMoodMode(true);
+
     try {
       if (!contentType) {
         const f = values.file[0];

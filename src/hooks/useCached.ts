@@ -9,7 +9,9 @@ import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from 
 // import { useCachedMoodPosts } from "./useCached2";
 import { useEffect, useState } from "react";
 
-export { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser };
+const useCachedFolder = useCachedMood;
+
+export { useCachedMood, useCachedFolder, useCachedMoodPosts, useCachedPost, useCachedUser };
 
 export const useCachedMoods = (moods?: { id?: string }[], force?: boolean) => {
   const state = useAppState();

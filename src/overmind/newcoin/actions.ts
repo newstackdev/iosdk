@@ -36,8 +36,13 @@ export const getAccountBalance: Action<{ user?: { username?: string } } | undefi
     return { ...r, [symbol]: total };
   }, {});
 
-  actions.newcoin.daoGetWhitelist();
-  actions.newcoin.voterListVotes({ voter: user.username });
+  try {
+    await actions.newcoin.daoGetWhitelist();
+    await actions.newcoin.voterListVotes({ voter: user.username });
+  } catch (ex) {
+    console.warn(ex, (ex as any).message);
+    console.warn("Likely no DAO");
+  }
 };
 
 export const getPoolInfo: Action<{ pool: { owner?: string; code?: string } }> = pipe(

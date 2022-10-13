@@ -66,6 +66,7 @@ export declare const PoolInfoDataRow: NLView<{
         code: string;
     };
     verifyIconLight?: boolean;
+    noLink?: boolean;
 }>;
 export declare const UserNewcoinPoolsParticipation: IOView<{
     user?: UserReadPrivateResponse;
