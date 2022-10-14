@@ -1,4 +1,4 @@
-import { Button, Col, Form, Modal, Progress, Row, Tag, TagProps, Tooltip } from "antd";
+import { Avatar, Button, Col, Drawer, Form, Layout, Modal, Progress, Row, Tag, TagProps, Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { MoodCreateModal } from "../Mood/MoodCreate";
@@ -18,16 +18,22 @@ import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
 import { BlockExplorerLink, blockExplorerUrl } from "../../Components/Links";
 import { ContentImage } from "../../Components/Image";
+import { ContentLayout } from "src/Components/ContentLayout";
+import { ContentLayoutDeepLike } from "../../Components/ContentLayout";
+import { Edit } from "../../Components/Icons/Edit";
 import { EyeClosed } from "../../Components/Icons/EyeClosed";
 import { EyeOpen } from "../../Components/Icons/EyeOpen";
 import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
 import { Share } from "../../Components/Share";
+import { Tags } from "./components/Tags";
 import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
 import { Vote } from "../../Components/Vote";
 import { fischerYates } from "../../utils/random";
 
 import { isEmpty } from "lodash";
 import { useVerified } from "../../hooks/useVerified";
+import Title from "../Explore/Title";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 export const useVotingStreamMood = () => {
   const { moodId, postId, id } = useParams<{
@@ -57,7 +63,10 @@ export const useVotingStreamMood = () => {
   useEffect(() => {
     if (!isEmpty(cachedMoods)) {
       const randomizedMoods = fischerYates(Object.values(cachedMoods)) as MoodReadResponse[];
-      const currentMood = randomizedMoods.find((mood) => mood?.id === moodId);
+      const currentMood = randomizedMoods.find(async (mood) => {
+        const randomizedMoodId = (await mood).id;
+        return randomizedMoodId === moodId;
+      });
       setAvailableMoods(randomizedMoods);
       setCurrMood(currentMood);
       setMoodPosts(currentMood?.posts || []);
@@ -140,13 +149,16 @@ const useVotingStreamTags = () => {
   };
 };
 
-const round = (n) => Math.round(n * 10000) / 10000;
-const sumScore = (tagRels?: { score?: number }[]) => {
+//TODO move funcitons to separate file
+
+export const round = (n) => Math.round(n * 10000) / 10000;
+
+export const sumScore = (tagRels?: { score?: number }[]) => {
   if (!(tagRels instanceof Array)) return 0;
   const w = 1 / tagRels.length;
   return round(tagRels.reduce((r, c) => r + w * (c.score || 0), 0));
 };
-const bySumScore = (a, b) => sumScore(b["_rel"]) - sumScore(a["_rel"]);
+export const bySumScore = (a, b) => sumScore(b["_rel"]) - sumScore(a["_rel"]);
 
 const SvgPolygons: NLView<{
   visionTags?: {
@@ -200,7 +212,7 @@ const SvgPolygons: NLView<{
 
 type Polygon = { x: number; y: number }[];
 
-type SimplifiedTag = {
+export type SimplifiedTag = {
   value?: string;
   polygons?: Polygon[];
 };
@@ -212,9 +224,14 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
     const actions = useActions();
     const [copyToClipboard, setCopyToClipboard] = useState<boolean>(false);
     const [isEyeOpened, setIsEyeOpened] = useState<boolean>(false);
+    const [isEyeOpenedResponzive, setIsEyeOpenedResponzive] = useState<boolean>(false);
+    const [visible, setVisible] = useState<boolean>(false);
+    const isResponzive = useMediaQuery("(max-width: 1024px)");
+
     // const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
     const nextInStream = useVotingStreamHook(); //useVotingStreamTags();
     const ref = useRef<any>();
+    const containerDeeplike = useRef<any>();
 
     const { contextType, contextValue, currPost, nextPath, index } = nextInStream;
 
@@ -273,7 +290,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
         if (e.keyCode === 32 && e.target === document.body && rating === 100) {
           e.preventDefault();
           window.scrollTo(0, 500);
-          setIsEyeOpened(true);
+          !isResponzive && setIsEyeOpened(true);
         }
       });
 
@@ -320,7 +337,16 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
         <Vote
           // useVotingStream={useVotingStreamMood}
           votingEnabled={!!contextType}
+          setVisible={setVisible}
+          visible={visible}
+          visionTags={visionTags}
+          nonVisionTags={nonVisionTags}
+          setHilightTag={setHilightTag}
+          isEyeOpenedResponzive={isEyeOpenedResponzive}
+          setIsEyeOpenedResponzive={setIsEyeOpenedResponzive}
+          addToMoods={addToMoods}
           onDoneVoting={doneVoting}
+          containerDeeplike={containerDeeplike}
           onLongDoneVoting={() => {
             const eh = (e) => {
               if (e.which !== 32) return;
@@ -338,11 +364,19 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           }}
           info={
             <Row className="nl-post-info-column">
-              {currPost.title && (
-                <Col>
-                  <p className="header-2 u-margin-bottom-medium">{currPost.title}</p>
-                </Col>
+              {isResponzive && (
+                <Row className="nl-post-fake-drawer__username">
+                  <Avatar src={<ContentImage {...author} />} className="u-margin-right-small" />
+                  {username && (
+                    <Link to={`/user/${username}`} className="nl-post-info-column__user-info">
+                      <p className="paragraph-1r">{username}</p>
+                    </Link>
+                  )}
+                </Row>
               )}
+              <Row justify="space-between">
+                <p className="header-2">{currPost.title || "Folder name"}</p>
+              </Row>
               <Col style={{ flex: 0.3, overflow: "overlay" }} className="text-right">
                 <Link to={`/user/${username}`} className="nl-post-info-column__user-info">
                   <span className="paragraph-2b u-margin-bottom-medium">
@@ -381,7 +415,6 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
                   </Row>
                 )}
               </Col>
-
               {/* <CopyToClipboard text={url}>
 							<Tooltip
 								title={
@@ -404,42 +437,9 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
 								</button>
 							</Tooltip>
 						  </CopyToClipboard> */}
-
-              {/* Tags */}
-              {isEyeOpened && currPost.tags?.length ? (
-                <Row className="nl-post-info-column__tags-wrapper">
-                  {[
-                    ...visionTags?.sort(bySumScore),
-                    ...nonVisionTags
-                      // 	?.sort(bySumScore)
-                      .slice(0, Math.max(0, 20 - visionTags.length)),
-                  ]
-                    // ?.slice(0, 10)
-                    ?.map((t) => {
-                      const tag = t.value;
-                      const score = (sumScore(t["_rel"]) * 100).toFixed(0);
-
-                      return (
-                        <Row
-                          onMouseOver={() => setHilightTag(visionTags.filter((s) => s.value === t.value))}
-                          onMouseOut={() => setHilightTag([])}
-                          className="paragraph-3b nl-post-info-column__infobox-wrapper__col__tag"
-                          style={{
-                            backgroundColor: t.polygons?.length ? "#c9fd50" : "#fcfcf3",
-                          }}
-                        >
-                          <div className="u-margin-right-xs">{score}%</div>
-                          <p>{tag}</p>
-                        </Row>
-                      );
-                    })}
-                </Row>
-              ) : (
+              <Tags isEyeOpened={isEyeOpened} visionTags={visionTags} nonVisionTags={nonVisionTags} setHilightTag={setHilightTag}>
                 <Row style={{ flex: 0.4 }} />
-              )}
-              {isEyeOpened && currPost.tags?.length === undefined && <p className="paragraph-2b">no tags found.</p>}
-              {/* Tags */}
-
+              </Tags>
               {/* infobox */}
               <Row className="nl-post-info-column__infobox-wrapper">
                 <Col className="nl-post-info-column__infobox-wrapper__col">
@@ -458,7 +458,15 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
                         <EyeOpen />
                       </span>
                     ) : (
-                      <span className="cursor-pointer" onClick={() => setIsEyeOpened(true)}>
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => {
+                          if (isResponzive) {
+                            setIsEyeOpenedResponzive(true);
+                            setVisible((p) => !p);
+                          } else setIsEyeOpened(true);
+                        }}
+                      >
                         <EyeClosed />
                       </span>
                     )
@@ -480,8 +488,19 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           )}
           {hilightTag?.length ? <SvgPolygons visionTags={hilightTag} /> : <></>}
         </Vote>
-        <div hidden={state.flows.rating.value !== 100} className="app-main-full-width">
-          <SelectMoodForm onFinish={addToMoods} title="Add a folder" />
+
+        <div hidden={state.flows.rating.value !== 100} style={{ position: "fixed", bottom: 0, width: "100%" }}>
+          <div className="nl-post-deeplike-desktop-wrapper">
+            <ContentLayoutDeepLike containerDeeplike={containerDeeplike}>
+              <SelectMoodForm
+                onFinish={() => addToMoods()}
+                title="Save to a folder"
+                deeplikeActions
+                setVisible={setVisible}
+                visible={visible}
+              />
+            </ContentLayoutDeepLike>
+          </div>
         </div>
       </>
     );

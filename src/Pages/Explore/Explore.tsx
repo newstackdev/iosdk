@@ -1,14 +1,8 @@
 // import '../App.css';
-import { ContentLayout } from "../../Components/ContentLayout";
-import { ItemGrid } from "../../Components/ItemGrid";
-import { MoodWidget } from "../../Components/MoodWidget";
-import { MoodsGrid } from "../Mood/MoodsGrid";
-import { NLView } from "../../types";
+import { ContentType, NLView } from "../../types";
+import { TopCreators } from "../../Components/Creators";
 import { useActions, useAppState, useEffects } from "../../overmind";
 import { useEffect } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
-import Creators, { TopCreators } from "../../Components/Creators";
-import FolderClosed from "../../Components/Icons/Folder/Closed";
 import Spotlights from "../../Components/Spotlights";
 import TopFolders from "../../Components/TopFolders";
 import TopHashtags from "../../Components/TopHashtags";
@@ -18,17 +12,21 @@ export const Explore: NLView = () => {
   const actions = useActions();
   const effects = useEffects();
 
-  const moods = state.lists.top.moods.items;
+  const topMoods = state.lists.top.moods.items;
+  const topUsers = state.lists.top.users.items;
+  const topPosts = state.lists.top.posts.items;
+  const topVideoPosts = state.lists.top.videoPosts.items;
 
   useEffect(() => {
-    !moods.length && actions.lists.top.moods({});
+    const loadAll = async () => {
+      await Promise.all([actions.lists.top.moods({}), actions.lists.top.users(), actions.lists.top.posts()]);
+      await actions.lists.top.posts(ContentType.video);
+    };
+    loadAll();
   }, []);
 
-  // const users = state.lists.top.users.items;
-
-  // useEffect(() => {
-  //   !users.length && actions.lists.top.users();
-  // }, []);
+  // if(true)
+  // 	return <NewcoinRecept visible={true} tx="hello">Here is your receipt</NewcoinRecept>;
 
   // return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
   return (
@@ -39,7 +37,7 @@ export const Explore: NLView = () => {
 				layout="vertical"
 				title={users?.length ? "Spotlights" : ""}
 			/> */}
-      <Spotlights title={"Spotlights"} maxRows={1} maxItems={10} carousel />
+      <Spotlights title={"Spotlights"} carousel posts={topPosts} href="top/spotlights" />
       <TopFolders
         title={"Explore top folders"}
         maxItems={3}
@@ -53,7 +51,8 @@ export const Explore: NLView = () => {
 				loadMore={actions.lists.top.moods}
 				title={moods?.length ? "Top moods today" : ""}
 			/> */}
-      <TopCreators maxItems={4} title={"Explore top creators"} users={[]} to="/top/creators" />
+      <TopCreators maxItems={4} title={"Explore top creators"} users={topUsers} to="/top/creators" />
+      <Spotlights title={"Top videos"} carousel posts={topVideoPosts} href="top/videos" />
       <TopHashtags maxItems={3} title={"Explore top hashtags"} />
       <TopFolders
         title={"Explore more folders"}

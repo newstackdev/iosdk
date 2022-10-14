@@ -1,4 +1,4 @@
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { Avatar, Col, Row, Select } from "antd";
 import { ContentImage } from "../../Components/Image";
 import { Searchicon } from "../../Components/Icons/Searchicon";
@@ -112,7 +112,7 @@ export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onCh
                 onClose();
             }, children: label }));
     };
-    return (_jsxs(Row, { align: "bottom", children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), onMouseOver: () => setMouseVisible(true), onMouseOut: () => setMouseVisible(false), children: _jsx(Searchicon, {}) }), _jsx("div", { children: !(showSearch || visible) && !mouseVisible ? (_jsx(_Fragment, {})) : (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
+    return (_jsxs(Row, { align: "bottom", style: { width: "100%", height: "48px" }, onMouseOut: () => setMouseVisible(false), onMouseOver: () => setMouseVisible(true), children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), children: _jsx(Searchicon, {}) }), _jsx("div", { style: { width: 300, height: "100%" }, children: mouseVisible || visible ? (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
                             position: "absolute",
                             right: -10,
                             color: "white",
@@ -144,6 +144,6 @@ export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onCh
                                                         paddingTop: 10,
                                                         paddingBottom: 10,
                                                     }, children: "#" }) }) }), _jsx(Col, { span: 13, children: _jsx("p", { className: "paragraph-2b", children: t }) }), _jsx(Col, { span: 6 })] }) }));
-                        })] })) })] }));
+                        })] })) : (_jsx("div", { style: { width: "auto", height: "100%" }, children: "\u00A0" })) })] }));
 };
 //# sourceMappingURL=SearchWidget.js.map

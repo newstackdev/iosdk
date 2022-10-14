@@ -5,6 +5,25 @@ import { UserFlowRoutes } from "../Pages/User/User";
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 export declare const SOCIAL_MEDIA: UserSocials[];
+export declare const badgeIcons: {
+    daoVotedProposal: JSX.Element;
+    daoCreated: JSX.Element;
+    daoCreatedProposal: JSX.Element;
+    daoJoinedCount: JSX.Element;
+    staked: JSX.Element;
+};
+export interface IBadgeResponse {
+    done: boolean;
+    value: {
+        id: string;
+        created: string;
+        updated: string;
+        name: string;
+        title: string;
+        type: string;
+        value: any;
+    }[];
+}
 export declare const UserWidgetVertical: NLView<{
     user?: UserReadPublicResponse;
 }>;

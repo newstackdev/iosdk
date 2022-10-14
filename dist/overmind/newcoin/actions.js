@@ -5,23 +5,33 @@ export const progressTest = pipe(async () => {
     return await new Promise((res) => setTimeout(res, 1000));
 });
 export const getAccountBalance = async ({ effects, state, actions }, props) => {
-    const user = props?.user || state.api.auth.user;
-    state.newcoin.account = await effects.newcoin.newcoin.getAccountBalance({
-        owner: user.username || "",
-        contract: "eosio.token",
-    });
-    state.newcoin.mainPool = await effects.newcoin.newcoin.getAccountBalance({
-        owner: user.username || "",
-        contract: "pool.nco",
-    });
-    const ps = await effects.newcoin.newcoin.getAccountBalance({
-        owner: user.username || "",
-        contract: "pools2.nco",
-    });
-    state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
-        const [total, symbol] = c.split(/ /);
-        return { ...r, [symbol]: total };
-    }, {});
+    const current = state.api.auth.user;
+    const user = props?.user || current;
+    if (!state.api.auth.admitted)
+        return;
+    try {
+        state.newcoin.account = await effects.newcoin.newcoin.getAccountBalance({
+            owner: user.username || "",
+            contract: "eosio.token",
+        });
+        state.newcoin.mainPool = await effects.newcoin.newcoin.getAccountBalance({
+            owner: user.username || "",
+            contract: "pool.nco",
+        });
+        const ps = await effects.newcoin.newcoin.getAccountBalance({
+            owner: user.username || "",
+            contract: "pools2.nco",
+        });
+        state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
+            const [total, symbol] = c.split(/ /);
+            return { ...r, [symbol]: total };
+        }, {});
+    }
+    catch (e) {
+        if (!props?.user && current?.created && new Date(current.created).getTime() - Date.now() < 2 * 60 * 1000)
+            return;
+        throw e;
+    }
     try {
         await actions.newcoin.daoGetWhitelist();
         await actions.newcoin.voterListVotes({ voter: user.username });
@@ -68,6 +78,8 @@ export const daoGetProposals = pipe(debounce(100), async ({ state }, { daoId, da
     }));
 });
 export const daoGetWhitelistProposals = pipe(debounce(100), async ({ state }, { daoId, daoOwner, proposal_id }) => {
+    if (!daoOwner)
+        return;
     const r = await state.api.client.newcoin.daoProposalWhitelistListList({
         dao_owner: daoOwner,
         limit: "1000",
@@ -195,6 +207,8 @@ export const voterListVotes = async ({ state }, props) => {
 };
 export const daoGetWhitelist = async ({ state }, props) => {
     const u = props?.daoOwner || state.config.settings.newcoin.daoDomain;
+    if (!u)
+        return;
     const r = await state.api.client.newcoin.daoWhitelistList({
         dao_owner: u,
         limit: "1000",

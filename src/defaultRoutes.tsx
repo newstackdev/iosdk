@@ -19,6 +19,7 @@ import { ProposalsPage } from "./Pages/Dao/Views/Proposals/ProposalList";
 import { Route } from "react-router-dom";
 import { SearchCreativePost } from "./Pages/SearchCreativePost";
 import { SelectMoodForm } from "./Components/SelectMood";
+import { State } from "./overmind/overmind";
 import { TOS } from "./Pages/TOS";
 import { User } from "./Pages/User/User";
 import { UserCreate } from "./Pages/User/UserCreate";
@@ -26,6 +27,7 @@ import { UserStake } from "./Components/UserWidget";
 import { UserUpdate } from "./Pages/User/UserUpdate";
 import { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
 import { ViewWhitelistProposalPage } from "./Pages/Dao/Views/WhitelistProposalView/ViewWhitelistProposal";
+import { fischerYates } from "./utils/random";
 import { useActions, useAppState } from "./overmind";
 import { useEffect } from "react";
 import Creators, { TopCreators } from "./Components/Creators";
@@ -131,14 +133,11 @@ const OverridableRoute: React.FunctionComponent<any> = (props: any) => {
   return <Route {..._props} />;
 };
 
-export const DEFAULT_ROUTES = [
+export const DEFAULT_ROUTES = (state: State) => [
   <OverridableRoute key="a" exact path="/auth" component={Auth} />,
   <OverridableRoute key="h" exact path="/" component={HostBasedComponents.Root} />,
   <OverridableRoute key="dj" exact path="/dao/join" component={JoinDao} />,
-  <OverridableRoute key="tc" exact path="/top/creators" component={TopCreators} />,
-  <OverridableRoute key="tf" exact path="/top/folders" component={TopFolders} />,
-  <OverridableRoute key="tp" exact path="/top/posts" component={Creators} />,
-  <OverridableRoute key="th" exact path="/top/hashtags" component={TopHashtags} />,
+
   <OverridableRoute key="np" exact path="/newlink.page" component={UserTop} />,
   <OverridableRoute key="c" exact path="/user-create" component={UserCreate} />,
   <OverridableRoute key="u" exact path="/my/profile" component={User} />,
@@ -165,7 +164,6 @@ export const DEFAULT_ROUTES = [
   <OverridableRoute key="v" exact path="/user/:username" component={User} />,
   <OverridableRoute key="s" exact path="/payment/subscription" component={Product} />,
   <OverridableRoute key="ue" exact path="/auth/newlife-members" component={LegacyImport} />,
-  <OverridableRoute key="sp" exact path="/spotlights" component={Spotlights} />,
   <OverridableRoute key="sf" exact path="/save-folder" component={SelectMoodForm} />,
   <OverridableRoute key="ts" exact path="/terms_of_service" component={TOS} />,
   <OverridableRoute key="pp" exact path="/privacy_policy" component={Privacy} />,
@@ -173,7 +171,6 @@ export const DEFAULT_ROUTES = [
   <OverridableRoute key="st" exact path="/tags/:tags/:postId" component={PostInTags} />,
 
   // DAO
-
   <OverridableRoute key="da" exact path="/dao/:daoOwner/proposal/:id" component={ViewProposalPage} />,
   <OverridableRoute key="db" exact path="/dao/:daoOwner/member-proposal/:id" component={ViewWhitelistProposalPage} />,
   <OverridableRoute key="dc" exact path="/dao/:daoOwner/proposals/:type?" component={ProposalsPage} />,
@@ -195,4 +192,22 @@ export const DEFAULT_ROUTES = [
 
   // Metamask
   <OverridableRoute key="suots" exact path="/signup/metamask" component={OnboardingTypeSelector} />,
+
+  // TOP
+  <OverridableRoute key="tc" exact path="/top/creators" component={TopCreators} />,
+  <OverridableRoute key="tf" exact path="/top/folders" component={TopFolders} />,
+  <OverridableRoute key="tp" exact path="/top/posts" component={Creators} />,
+  <OverridableRoute key="th" exact path="/top/hashtags" component={TopHashtags} />,
+  <OverridableRoute
+    key="sp"
+    exact
+    path="/top/spotlights"
+    component={() => <Spotlights title="Top Spotlights" posts={state.lists.top.posts.items} />}
+  />,
+  <OverridableRoute
+    key="tv"
+    exact
+    path="/top/videos"
+    component={() => <Spotlights title="Top Videos" posts={state.lists.top.videoPosts.items} />}
+  />,
 ];

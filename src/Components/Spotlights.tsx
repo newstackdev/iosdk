@@ -1,37 +1,32 @@
 import "swiper/css";
 import "swiper/css/navigation";
-import { Autoplay, Navigation, Pagination } from "swiper";
-import { Carousel } from "antd";
+import { Autoplay, Navigation } from "swiper";
+import { BannerArrow } from "./Icons/BannerArrow";
 import { Col, Row } from "antd";
-import { ContentImage } from "./Image";
-import { ContentLayout } from "./ContentLayout";
 import { IOView } from "../types";
-import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { Link } from "react-router-dom";
 import { MaybeLink, PostWidget } from "./PostWidget";
 import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
-import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
-import { fischerYates } from "../utils/random";
-import { max } from "lodash";
-import { useAppState } from "../overmind";
-import { useCachedMood } from "../hooks/useCached";
+import { urlify } from "../utils/urlHelpers";
+import { useActions, useAppState } from "../overmind";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useVerifiedPosts } from "../hooks/useVerified";
 import Title from "../Pages/Explore/Title";
 
-const SpotlightListCarousel: React.FC<{
+const SpotlightListCarousel: IOView<{
   children: JSX.Element;
   navigationPrevRef: any;
   navigationNextRef: any;
 }> = ({ children, navigationPrevRef, navigationNextRef }) => {
   return (
     <Swiper
+      //TODO disable autoplay and add video icon
       modules={[Autoplay, Navigation]}
-      slidesPerView={3}
+      slidesPerView={4}
       navigation={{
         prevEl: navigationPrevRef.current,
         nextEl: navigationNextRef.current,
@@ -68,153 +63,160 @@ const SpotlightListCarousel: React.FC<{
 };
 
 const Spotlight: IOView<{
-  p: any;
-  moodsList: any[];
-  mood: MoodReadResponse;
-  index: number;
+  post: PostReadResponse;
   title?: string;
   verifiedUsers: (string | undefined)[] | undefined;
-}> = ({ p, moodsList, mood, index, title, verifiedUsers }) => (
-  <div
-    style={{
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-    }}
-    className="bg-hover"
-  >
-    <Col className="spotlight">
-      <MaybeLink
-        to={!p.id ? "" : !mood ? `/post/${p.id}` : `/folder/${mood.id}/${p.id}`}
-        className={p.contentType === "text/plain" ? "maybelink" : ""}
-      >
-        <PostWidget
-          mood={moodsList[index]}
-          post={p}
-          username={p.author?.username}
-          aspectRatio={p.aspectRatio}
-          isSpotlight={true}
-        />
-      </MaybeLink>
-    </Col>
-    <p
-      className={
-        title === undefined
-          ? "spotlight-username paragraph-2b font-variant-none"
-          : "spotlight-username paragraph-1b font-variant-none"
-      }
-    >
-      <Link to={`/user/${p?.author?.username || p.author?.displayName}`} style={{ display: "flex", flexDirection: "row" }}>
-        {p?.author?.username || p?.author?.displayName}
-        {verifiedUsers && verifiedUsers.includes(p?.author?.username) && (
-          <span
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <VerifiedIcon
-              style={{
-                width: "1em",
-                height: "auto",
-                marginLeft: 10,
-              }}
-            />
-          </span>
-        )}
-      </Link>
-    </p>
-  </div>
-);
-
-export const SpotlightGrid: NLView<{
-  maxItems?: number;
-  title?: string;
-  mood: MoodReadResponse;
-  carousel: boolean;
-  navigationPrevRef: any;
-  navigationNextRef: any;
-}> = ({ maxItems, title, mood, carousel, navigationPrevRef, navigationNextRef }) => {
-  const [postsList, setPostsList] = useState<PostReadResponse[]>([]);
-  const [moodsList, setMoodsList] = useState<MoodReadResponse[]>([]);
-
-  const state = useAppState();
+}> = ({ post, title, verifiedUsers }) => {
+  const url = urlify(post?.description);
+  const actions = useActions();
 
   useEffect(() => {
-    const moods = fischerYates(state.lists.top.moods.items || [], maxItems || 4);
-    const posts = moods.map((m) => fischerYates(m.posts || [], 1)[0]);
+    actions.lists.resetMoodAndPostAvailability();
+  }, []);
 
-    setPostsList(posts);
-    setMoodsList(moods);
-  }, [state.lists.top.moods, state.lists.top.posts]);
+  return (
+    <>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+        className="bg-hover"
+      >
+        <Col className="spotlight">
+          {url && (
+            <a
+              style={{
+                position: "absolute",
+                zIndex: 999999,
+                cursor: "pointer",
+                bottom: 10,
+                top: 18,
+                left: "46%",
+                height: "auto",
+              }}
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <BannerArrow />
+            </a>
+          )}
+          <MaybeLink
+            //@ts-ignore
+            to={!post.id ? "" : !post ? `/post/${post.id}` : `/folder/${post.moods.id}/${post.id}`}
+            className={post.contentType === "text/plain" ? "maybelink" : ""}
+          >
+            <PostWidget post={post} username={post.author?.username} aspectRatio={post.aspectRatio} isSpotlight={true} />
+          </MaybeLink>
+        </Col>
+        <p
+          className={
+            title === undefined
+              ? "spotlight-username paragraph-2b font-variant-none"
+              : "spotlight-username paragraph-1b font-variant-none"
+          }
+        >
+          <Link
+            to={`/user/${post?.author?.username || post.author?.displayName}`}
+            style={{ display: "flex", flexDirection: "row" }}
+          >
+            {post?.author?.username || post?.author?.displayName}
+            {verifiedUsers && verifiedUsers.includes(post?.author?.username) && (
+              <span
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <VerifiedIcon
+                  style={{
+                    width: "1em",
+                    height: "auto",
+                    marginLeft: 10,
+                  }}
+                />
+              </span>
+            )}
+          </Link>
+        </p>
+      </div>
+    </>
+  );
+};
 
-  const { verifiedUsers } = useVerifiedPosts(postsList);
+export const SpotlightGrid: NLView<{
+  title?: string;
+  carousel?: boolean;
+  navigationPrevRef: any;
+  navigationNextRef: any;
+  posts: PostReadResponse[];
+}> = ({ title, carousel, navigationPrevRef, navigationNextRef, posts }) => {
+  const { verifiedUsers } = useVerifiedPosts(posts);
 
   if (carousel) {
     return (
       <SpotlightListCarousel navigationPrevRef={navigationPrevRef} navigationNextRef={navigationNextRef}>
-        <div style={{ width: "100%", height: "100%", display: "flex" }}>
-          {postsList?.map((p: any, i: number) => (
-            <SwiperSlide>
-              <Spotlight p={p} index={i} title={title} mood={mood} moodsList={moodsList} verifiedUsers={verifiedUsers} />
-            </SwiperSlide>
-          ))}
+        <div style={{ width: "100%", height: "100%", display: "flex", flexWrap: "wrap" }}>
+          {posts.map((post) => {
+            return (
+              <div className="ant-col">
+                <SwiperSlide>
+                  <Spotlight title={title} post={post} verifiedUsers={verifiedUsers} />
+                </SwiperSlide>
+              </div>
+            );
+          })}
         </div>
       </SpotlightListCarousel>
     );
   } else
     return (
-      <div style={{ width: "100%", height: "100%", display: "flex" }}>
-        {postsList?.map((p: any, i: number) => (
-          <Spotlight p={p} index={i} title={title} mood={mood} moodsList={moodsList} verifiedUsers={verifiedUsers} />
-        ))}
+      <div style={{ width: "100%", height: "100%", display: "flex", flexWrap: "wrap" }}>
+        {posts.map((post) => {
+          return (
+            <div className="ant-col">
+              <Spotlight title={title} post={post} verifiedUsers={verifiedUsers} />
+            </div>
+          );
+        })}
       </div>
     );
 };
 
 const Spotlights: NLView<{
+  href?: string;
   title?: string;
-  maxRows?: number;
-  maxItems?: number;
-  carousel: boolean;
-}> = ({ title, maxRows, maxItems, carousel }) => {
+  carousel?: boolean;
+  posts: PostReadResponse[];
+}> = ({ title, carousel, posts, href }) => {
   const state = useAppState();
-  const moods = state.lists.top.moods.items;
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
 
   return (
     <>
-      {title === undefined && (
-        <Row>
-          <p className="header-2 u-margin-bottom-medium">Spotlights</p>
-        </Row>
-      )}
       <div>
-        <Row>
-          {title ? (
-            <Title title={title} href="/spotlights" navigationPrevRef={navigationPrevRef} navigationNextRef={navigationNextRef} />
-          ) : (
-            <></>
-          )}
-        </Row>
+        {state.routing.location === "/explore" ? (
+          <Title title={title} href={href} navigationPrevRef={navigationPrevRef} navigationNextRef={navigationNextRef} />
+        ) : (
+          <Row>
+            <p className="header-2 u-margin-bottom-medium">{title}</p>
+          </Row>
+        )}
         <div className="spotlight-flex-container">
-          {moods?.slice(0, maxRows || moods.length).map((m, index) => {
-            return (
-              <Row className="nl-mood-grid-row spotlight-row">
-                <SpotlightGrid
-                  maxItems={maxItems}
-                  title={title}
-                  mood={m}
-                  carousel={carousel}
-                  navigationPrevRef={navigationPrevRef}
-                  navigationNextRef={navigationNextRef}
-                />
-              </Row>
-            );
-          })}
+          <Row className="nl-mood-grid-row-four spotlight-row">
+            <SpotlightGrid
+              title={title}
+              posts={posts}
+              carousel={carousel}
+              navigationPrevRef={navigationPrevRef}
+              navigationNextRef={navigationNextRef}
+            />
+          </Row>
         </div>
       </div>
     </>

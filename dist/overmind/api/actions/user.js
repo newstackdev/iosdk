@@ -49,7 +49,7 @@ export const cache = async ({ state, actions, effects }, { user, force }) => {
         cache.byId[id] = { ...curr, ...user, moods: mr };
         cache.byUsername[username] = { ...curr, ...user, moods };
     }
-    if (isNewer) {
+    if (shouldUpdate) {
         state.api.auth.user?.id === user.id &&
             (state.api.auth.user = Object.assign({}, json(state.api.auth.user) || {}, cache.byId[id]));
     } //state.api.auth.user, user));
@@ -78,7 +78,7 @@ export const create = pipe(throttle(3000), async ({ state, effects, actions }, {
             !state.flows.user.create.isLegacyUpdateOngoing) {
             return;
         }
-        const pn = state.firebase.user.phoneNumber;
+        const pn = state.flows.user.create.form.phone || state.firebase.user.phoneNumber;
         if (!pn) {
             !noRouting && actions.routing.historyPush({ location: "/auth" });
             return;
@@ -160,6 +160,16 @@ export const getMoods = pipe(debounce(300), async ({ state, actions, effects }, 
     await actions.api.mood.cache({ moods: fischerYates(r.data?.value || []) });
     state.lists.selectedUser.moods.page++;
     // r.data.value?.forEach(p => p.id && (state.api.cache.moods[p.id] = { ...state.api.cache.moods[p.id], ...p }))
+});
+export const getBadges = pipe(debounce(300), async ({ state, effects }, { id }) => {
+    try {
+        const res = await state.api.client.user.badgeListList({ id });
+        return res.data;
+    }
+    catch (ex) {
+        effects.ux.message.error(ex.error.errorMessage);
+        return [];
+    }
 });
 export const stake = pipe(debounce(1000), async ({ state, actions, effects }, { user, amount }) => {
     try {

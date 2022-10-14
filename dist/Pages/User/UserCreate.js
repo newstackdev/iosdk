@@ -8,8 +8,11 @@ import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { useActions, useAppState, useEffects } from "../../overmind";
+import { useCachedPoolByCode } from "src/hooks/useCached";
 import { useForm } from "antd/lib/form/Form";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import omitBy from "lodash/omitBy";
 import pick from "lodash/pick";
 const defaultCreateFormValues = [
     "consentEmail",
@@ -36,6 +39,7 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
     const actions = useActions();
     const effects = useEffects();
     const [isEmailAvailable, setIsEmailAvailable] = useState(false);
+    const ticker = useCachedPoolByCode({ code: state.flows.user.create.form.newcoinTicker?.toUpperCase() });
     const [form] = useForm();
     const username = state.flows.user.create.form.username;
     useEffect(() => {
@@ -55,6 +59,22 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
     const sf = state.flows.user.create.form;
     useEffect(setNextEmbedded, [sf]);
     const onFinish = async (values) => {
+        const defaultUser = {
+            username: "",
+            newcoinTicker: "",
+            displayName: "",
+            email: "",
+            description: "",
+            website: "",
+            twitter: "",
+            discord: "",
+            instagram: "",
+            tumblr: "",
+            soundcloud: "",
+            consentPrivacyPolicy: "",
+            phone: "",
+            legacyToken: "",
+        };
         console.log("Creating:", values);
         try {
             await form.validateFields();
@@ -76,7 +96,10 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
         }
         actions.flows.user.create.create({
             noRouting: !!noRouing,
-            user: values,
+            user: {
+                ...defaultUser,
+                ...omitBy(values, isNil),
+            },
         });
     };
     // const onFinishFailed = (errorInfo: any) => {
@@ -95,7 +118,6 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
                     // @ts-ignore
                     ({ ...r, [c.name[0]]: c.value || c.values }), sf);
                     actions.flows.user.create.updateForm(upd);
-                    sessionStorage.setItem("cachedOnboarding", JSON.stringify(state.flows.user.create));
                 }, initialValues: sf, children: [_jsx(Form.Item, { name: "couponCode", hidden: true, rules: [
                             {
                             // required: !hideUsername,
@@ -115,6 +137,14 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
                                 required: true,
                                 pattern: /^[a-z]{3,7}$/,
                                 message: "3 - 7 characters, latin alphabet only",
+                            },
+                            {
+                                validator: () => {
+                                    if (ticker) {
+                                        return Promise.reject(new Error("Ticker already exists! Choose another one."));
+                                    }
+                                    return Promise.resolve();
+                                },
                             },
                         ], children: _jsx(Input, { placeholder: "newcoin ticker", suffix: _jsx(CrossCircleErr, {}) }) }), _jsx(Form.Item, { name: "displayName", rules: [
                             {

@@ -25,7 +25,7 @@ export const DomainSelector: IOView = () => {
     if (state.flows.user.create.isLegacyUpdateOngoing) {
       actions.flows.user.create.updateForm({ ...state.api.auth.user });
     }
-  }, []);
+  }, [state.api.auth.user]);
 
   const domainPrice = () => estimateUsernamePrice(username);
 
@@ -43,6 +43,7 @@ export const DomainSelector: IOView = () => {
       <div className="nl-onboarding-form">
         <MaskedInput
           ref={el as any}
+          readOnly={!isEmpty(state.api.auth.user.newcoinAccTx)}
           className={
             fuia === "unavailable" ? "nl-domain-presale__masked-input masked-input-error" : "nl-domain-presale__masked-input"
           }
@@ -66,11 +67,6 @@ export const DomainSelector: IOView = () => {
         />
       </div>
 
-      {/* {state.flows.user.create.metamaskFlow ? (
-        fuia === "availableOnOpenSea" ? (
-          <Button onClick={actions.evm.sendSignedMessage}>Transfer to us via Metamask</Button>
-        ) : null
-      ) : ( */}
       <NextButton
         nextProps={isMetamaskFlow ? { command: actions.evm.sendSignedMessage, text: "Transfer to us via Metamask" } : undefined}
         visible={
@@ -139,7 +135,7 @@ export const DomainSelector: IOView = () => {
                     </Tooltip>
                     &nbsp;
                     <a href="/" onClick={() => actions.flows.user.create.stopLegacyImport()}>
-                      I am not {state.flows.user.create.legacyUsername}
+                      I am not {state.flows.user.create.legacyUsername || state.api.auth.user.username}
                     </a>
                   </>
                 ) : (

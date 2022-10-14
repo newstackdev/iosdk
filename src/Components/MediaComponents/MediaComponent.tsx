@@ -1,11 +1,9 @@
 import { ContentElement, ContentImageProps } from "./types";
 import { ImageComponent, useContentImageUrl } from "./ImageMediaComponent";
 import { Link } from "react-router-dom";
-import { Profile } from "../Icons/Profile";
 import { ReactElement } from "react";
 import { TextMediaComponent } from "./TextMediaComponent";
 import { VideoComponent, useContentVideoUrl } from "./VideoMediaComponent";
-import { contentImageUrl } from "../Image";
 import { useVisibilityOnce } from "../../hooks/useVisibility";
 
 const withLink = (element: ReactElement, to?: string) => (to ? <Link to={to}>{element}</Link> : element);

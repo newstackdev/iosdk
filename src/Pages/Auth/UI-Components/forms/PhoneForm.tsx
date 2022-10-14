@@ -5,6 +5,7 @@ import { FormInstance } from "antd";
 import { NLView } from "../../../../types";
 import { isEmpty } from "lodash";
 import { layout } from "../../Auth";
+import { phoneNumberReformat } from "../../../../utils/phoneNumberReformat";
 import { useActions, useAppState } from "../../../../overmind";
 import { useState } from "react";
 import Form from "antd/lib/form";
@@ -65,11 +66,7 @@ const PhoneForm: NLView<{
           suffix={isPhonePresent && embedded ? undefined : <CrossCircleErr />}
           autoFocus
           onChange={(values) => {
-            if (!values.target.value.includes("+")) {
-              phoneForm.setFieldsValue({
-                phone: "+" + values.target.value,
-              });
-            }
+            phoneNumberReformat(values, phoneForm);
             if (!new RegExp(reg).test(values.target.value)) {
               setIsErrorSubmit && setIsErrorSubmit!(true);
             } else {

@@ -143,6 +143,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 };
                 powerups: import("./api/state").PowerupsCache;
                 posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                videoPosts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                 moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | null | undefined;
                 }>;
@@ -213,6 +214,12 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                     page: number;
                 };
                 posts: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+                videoPosts: {
                     _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                     items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
                     sortKey: string;
@@ -484,7 +491,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                     requestedPage?: number | undefined;
                 }, void>;
                 users: import("../types").Action<undefined, void>;
-                posts: import("../types").Action<undefined, void>;
+                posts: import("../types").Action<import("../types").ContentType | undefined, void>;
             };
         };
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -729,6 +736,9 @@ export declare const useActions: () => {
             readonly getMoods: (payload: {
                 id?: string | undefined;
             }) => void | Promise<void>;
+            readonly getBadges: (payload: {
+                id: string;
+            }) => Promise<import("../Components/UserWidget").IBadgeResponse> | Promise<Promise<import("../Components/UserWidget").IBadgeResponse>>;
             readonly stake: (payload: {
                 user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: string;
@@ -824,7 +834,7 @@ export declare const useActions: () => {
                 requestedPage?: number | undefined;
             }) => void | Promise<void>;
             users: (payload?: undefined) => void | Promise<void>;
-            posts: (payload?: undefined) => void | Promise<void>;
+            posts: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
         };
     };
     flows: {

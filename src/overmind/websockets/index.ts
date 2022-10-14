@@ -12,7 +12,7 @@ import { capFirst } from "../../utils/capFirst";
 const toggleWebSocket: Action = pipe(debounce(500), async ({ state, effects, actions }: Context) => {
   if (!state.api.auth.authorized) return;
 
-  const token = state.firebase?.token;
+  const token = state.newsafe?.token || state.firebase?.token;
 
   if (!token) return;
 

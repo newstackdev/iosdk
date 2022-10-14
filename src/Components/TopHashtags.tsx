@@ -87,18 +87,18 @@ export const BannerHashtag: NLView<{
 }> = ({ items, tagNames, limit, gridRow }) => (
   <ItemGrid
     items={items}
-    tagPreview={true}
     limit={limit}
     gridRow={gridRow}
+    wrapAt={3}
     render={(m: PostReadResponse, index) => (
-      <div
-        style={{
-          height: "130%",
-          width: "100%",
-          marginBottom: 30,
-        }}
-      >
-        <Link to={`/search?tags=${encodeURIComponent(tagNames[index])}`} style={{ cursor: "pointer" }}>
+      <Link to={`/search?tags=${encodeURIComponent(tagNames[index])}`} style={{ cursor: "pointer", width: "100%" }}>
+        <Col
+          style={{
+            padding: 10,
+            width: "100%",
+            height: "155px",
+          }}
+        >
           <p
             className="header-3"
             style={{
@@ -118,9 +118,10 @@ export const BannerHashtag: NLView<{
               position: "relative",
               opacity: 0.4,
             }}
+            className="post-rounded"
           />
-        </Link>
-      </div>
+        </Col>
+      </Link>
     )}
     noEmptyResults={true}
   />

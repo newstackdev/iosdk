@@ -12,9 +12,8 @@ export const logout: Action<{ noRouting?: boolean } | undefined> = async ({ stat
 
   Object.values(state.auth.tokens).forEach((t) => t.logout());
 
-  // await effects.firebase.logout();
+  await actions.newsafe.signOut();
 
-  // actions.routing.historyPush({ location: "/" });
   if (!noRouting) window.location.replace("/");
 };
 

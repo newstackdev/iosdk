@@ -32,10 +32,6 @@ import Paragraph from "antd/lib/typography/Paragraph";
 import ShowMoreText from "react-show-more-text";
 import usePreventBodyScroll from "../hooks/usePreventBodyScroll";
 
-// import { Info } from "./Icons/Info";
-// import { CreatorWidget } from "./Creators";
-// import { UserStakeButton } from "../Pages/User/UserStake";
-
 const ellipsisStyle = {
   maxWidth: 125,
   whiteSpace: "nowrap",
@@ -53,6 +49,19 @@ export const SOCIAL_MEDIA = [
   UserSocials.YOUTUBE,
   UserSocials.DISCORD,
 ];
+
+export const badgeIcons = {
+  ["daoVotedProposal"]: <VerifiedIcon />,
+  ["daoCreated"]: <VerifiedIcon />,
+  ["daoCreatedProposal"]: <VerifiedIcon />,
+  ["daoJoinedCount"]: <VerifiedIcon />,
+  ["staked"]: <VerifiedIcon />,
+};
+
+export interface IBadgeResponse {
+  done: boolean;
+  value: { id: string; created: string; updated: string; name: string; title: string; type: string; value: any }[];
+}
 
 export const UserWidgetVertical: NLView<{ user?: UserReadPublicResponse }> = ({ user }) => {
   const u = useCachedUser({ id: user?.id || "" });
@@ -174,6 +183,7 @@ export const UserStake: NLView<{
           onDone && onDone({});
         }}
         okButtonProps={{ style: { display: "none" } }}
+        wrapClassName="iosdk-modal iosdk-stake-modal"
         className="iosdk-modal iosdk-stake-modal nl-white-box-modal"
       >
         <Row align="middle" className="text-center">
@@ -276,10 +286,10 @@ export const UserStake: NLView<{
             <Avatar size="large" src={<ContentImage size="medium" {..._user} />} />
           </Col>
           <Col span={24}>
-            <p className="header-3">
+            <p className="header-3 text-left">
               {membershipValue > 0 ? (
                 <>
-                  Your stake in {_user.newcoinTicker} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value}{" "}
+                  Your stake in {poolInfo.code || ""} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value}{" "}
                   GNCO more to increase your membership value.
                 </>
               ) : (
@@ -580,6 +590,15 @@ export const UserWidgetHeading: NLView<{
   const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
   const daoProposals = useCachedDaoProposals({ daoOwner });
   const poolInfo = useCachedPool({ owner: user?.username });
+  const [badges, setBadges] = useState<IBadgeResponse>();
+
+  useEffect(() => {
+    const getBadge = async () => {
+      const retrievedBadges = await actions.api.user.getBadges({ id: user?.id || "" });
+      setBadges(retrievedBadges);
+    };
+    getBadge();
+  }, []);
 
   const symbol = poolInfo.code;
 
@@ -703,6 +722,20 @@ export const UserWidgetHeading: NLView<{
                       </p>
                     </Col>
                   </Row>
+                  <Row className="u-margin-top-small" gutter={12}>
+                    {badges &&
+                      badges.value?.map((badge, index) => {
+                        return (
+                          <Tooltip trigger="hover" title={badge?.title} key={badge?.id}>
+                            <span
+                              className={`${index === 0 ? "u-margin-left-small" : ""} u-margin-right-small`}
+                              style={{ height: 40, width: 40, backgroundColor: "grey", borderRadius: "50%" }}
+                              //TODO: remove styling and replace it with available icons when available
+                            ></span>
+                          </Tooltip>
+                        );
+                      })}
+                  </Row>
                 </Row>
               </Col>
             </Row>
@@ -729,9 +762,9 @@ export const UserWidgetHeading: NLView<{
                   <p className="paragraph-2r">powering</p>
                 </span>
               </Col>
-              <Col xs={12} sm={12} className="powerup text-right">
+              <Col xs={24} sm={12} className="powerup text-right">
                 <UserPowerup user={u} />
-                <div style={{ width: "100px", textAlign: "center", margin: "0 0 0 auto" }}>
+                <div className="user-widget-heading__powering-symbol">
                   {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
                   {poolInfo.total && <p className="paragraph-2r">{poolInfo.total.quantity} staked</p>}
                 </div>
@@ -966,7 +999,7 @@ export const PoolInfoDataRow: NLView<{
           )}
         </div>
         <div>
-          ${user.newcoinTicker?.toUpperCase()}&nbsp;
+          ${poolInfo.code?.toUpperCase()}&nbsp;
           <b>{~~myPools[poolInfo?.code]}</b>
         </div>
         <small style={{ padding: 0, margin: 0 }}>

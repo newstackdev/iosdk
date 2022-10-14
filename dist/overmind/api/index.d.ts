@@ -34,6 +34,7 @@ declare const _default: {
             };
             powerups: import("./state").PowerupsCache;
             posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+            videoPosts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
             moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                 promise?: Promise<any> | null | undefined;
             }>;

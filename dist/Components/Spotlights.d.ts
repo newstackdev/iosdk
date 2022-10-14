@@ -1,19 +1,18 @@
 import "swiper/css";
 import "swiper/css/navigation";
-import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 export declare const SpotlightGrid: NLView<{
-    maxItems?: number;
     title?: string;
-    mood: MoodReadResponse;
-    carousel: boolean;
+    carousel?: boolean;
     navigationPrevRef: any;
     navigationNextRef: any;
+    posts: PostReadResponse[];
 }>;
 declare const Spotlights: NLView<{
+    href?: string;
     title?: string;
-    maxRows?: number;
-    maxItems?: number;
-    carousel: boolean;
+    carousel?: boolean;
+    posts: PostReadResponse[];
 }>;
 export default Spotlights;

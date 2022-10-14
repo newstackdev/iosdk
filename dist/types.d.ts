@@ -37,3 +37,8 @@ export declare type FirebaseConfig = {
     appId: string;
     measurementId: string;
 };
+export declare enum ContentType {
+    video = "video/mp4",
+    text = "text/plain",
+    image = "image/jpeg"
+}

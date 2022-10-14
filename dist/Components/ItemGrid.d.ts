@@ -10,7 +10,9 @@ export declare type ItemGridParams<T> = {
     setSelectedFolder?: React.Dispatch<React.SetStateAction<boolean>>;
     selectedFolder?: boolean;
     noEmptyResults?: boolean;
-    tagPreview?: boolean;
     gridRow?: number;
+    wrapAt?: number;
+    deeplikeActions?: boolean;
+    deepLikeContainer?: React.MutableRefObject<null>;
 };
 export declare const ItemGrid: NLView<ItemGridParams<object>>;

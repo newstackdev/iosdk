@@ -95,14 +95,10 @@ const OverridableRoute = (props) => {
     const _props = component ? { ...props, component } : props;
     return _jsx(Route, { ..._props });
 };
-export const DEFAULT_ROUTES = [
+export const DEFAULT_ROUTES = (state) => [
     _jsx(OverridableRoute, { exact: true, path: "/auth", component: Auth }, "a"),
     _jsx(OverridableRoute, { exact: true, path: "/", component: HostBasedComponents.Root }, "h"),
     _jsx(OverridableRoute, { exact: true, path: "/dao/join", component: JoinDao }, "dj"),
-    _jsx(OverridableRoute, { exact: true, path: "/top/creators", component: TopCreators }, "tc"),
-    _jsx(OverridableRoute, { exact: true, path: "/top/folders", component: TopFolders }, "tf"),
-    _jsx(OverridableRoute, { exact: true, path: "/top/posts", component: Creators }, "tp"),
-    _jsx(OverridableRoute, { exact: true, path: "/top/hashtags", component: TopHashtags }, "th"),
     _jsx(OverridableRoute, { exact: true, path: "/newlink.page", component: UserTop }, "np"),
     _jsx(OverridableRoute, { exact: true, path: "/user-create", component: UserCreate }, "c"),
     _jsx(OverridableRoute, { exact: true, path: "/my/profile", component: User }, "u"),
@@ -126,7 +122,6 @@ export const DEFAULT_ROUTES = [
     _jsx(OverridableRoute, { exact: true, path: "/user/:username", component: User }, "v"),
     _jsx(OverridableRoute, { exact: true, path: "/payment/subscription", component: Product }, "s"),
     _jsx(OverridableRoute, { exact: true, path: "/auth/newlife-members", component: LegacyImport }, "ue"),
-    _jsx(OverridableRoute, { exact: true, path: "/spotlights", component: Spotlights }, "sp"),
     _jsx(OverridableRoute, { exact: true, path: "/save-folder", component: SelectMoodForm }, "sf"),
     _jsx(OverridableRoute, { exact: true, path: "/terms_of_service", component: TOS }, "ts"),
     _jsx(OverridableRoute, { exact: true, path: "/privacy_policy", component: Privacy }, "pp"),
@@ -151,5 +146,12 @@ export const DEFAULT_ROUTES = [
     _jsx(OverridableRoute, { exact: true, path: "/user/invite/all", component: InviteesList }, "uia"),
     // Metamask
     _jsx(OverridableRoute, { exact: true, path: "/signup/metamask", component: OnboardingTypeSelector }, "suots"),
+    // TOP
+    _jsx(OverridableRoute, { exact: true, path: "/top/creators", component: TopCreators }, "tc"),
+    _jsx(OverridableRoute, { exact: true, path: "/top/folders", component: TopFolders }, "tf"),
+    _jsx(OverridableRoute, { exact: true, path: "/top/posts", component: Creators }, "tp"),
+    _jsx(OverridableRoute, { exact: true, path: "/top/hashtags", component: TopHashtags }, "th"),
+    _jsx(OverridableRoute, { exact: true, path: "/top/spotlights", component: () => _jsx(Spotlights, { title: "Top Spotlights", posts: state.lists.top.posts.items }) }, "sp"),
+    _jsx(OverridableRoute, { exact: true, path: "/top/videos", component: () => _jsx(Spotlights, { title: "Top Videos", posts: state.lists.top.videoPosts.items }) }, "tv"),
 ];
 //# sourceMappingURL=defaultRoutes.js.map

@@ -4,7 +4,7 @@ import { NLView } from "../types";
 export declare const MaybeLink: React.FC<React.PropsWithChildren<{
     style?: React.CSSProperties;
     to: string;
-    className: string;
+    className?: string;
 }>>;
 export declare const PostWidget: NLView<{
     post: PostReadResponse;

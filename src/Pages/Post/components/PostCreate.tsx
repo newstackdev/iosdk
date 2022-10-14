@@ -109,9 +109,7 @@ export const PostCreate: NLView = (props) => {
     console.log("Success:", values);
 
     if (mintNFTswitch && !mintConfirmationOpen) return setMintConfirmationOpen(true);
-
     !mintNFTswitch && setMoodMode(true);
-
     try {
       if (!contentType) {
         const f = values.file[0];
@@ -131,6 +129,8 @@ export const PostCreate: NLView = (props) => {
       };
       const p = await actions.api.post.create({ postForm });
       if (!p) return;
+
+      !mintNFTswitch && setMoodMode(true);
 
       setPost(p);
     } catch (ex) {

@@ -3,11 +3,11 @@ import { Form } from "antd";
 import { ItemGrid } from "./ItemGrid";
 import { MoodCreateModal } from "../Pages/Mood/MoodCreate";
 import { MoodFolderWidget } from "./MoodWidget";
-import { ProgressButton } from "./ProgressButton";
 import { omit } from "lodash";
 import { useAppState } from "../overmind";
 import { useState } from "react";
-export const SelectMood = ({ moods, onChange, limit, title }) => {
+import Title from "../Pages/Explore/Title";
+export const SelectMood = ({ moods, onChange, limit, title, deeplikeActions, deepLikeContainer }) => {
     const [_value, _setValue] = useState({});
     const state = useAppState();
     const filteredMoods = state.api.auth.moods.filter(() => true);
@@ -24,11 +24,10 @@ export const SelectMood = ({ moods, onChange, limit, title }) => {
             color: "white",
             width: "100%",
             border: "none",
-            padding: "10px",
-        }, children: _jsx("div", { style: { width: "90%", margin: "0 auto" }, children: _jsx(MoodCreateModal, { onCreated: (v) => v?.id && toggle(v) }) }) }));
-    return (_jsx(ItemGrid, { items: [{}, ...checkMoods], limit: limit, 
+        }, className: "selectable-folder bg-hover", children: _jsx(MoodCreateModal, { onCreated: (v) => v?.id && toggle(v) }) }));
+    return (_jsx(ItemGrid, { items: [{}, ...checkMoods], limit: limit, deepLikeContainer: deepLikeContainer, 
         // titleLink="/save-folder"
-        title: title, 
+        title: title, deeplikeActions: true, 
         // setSelectedFolder={setSelectedFolder}
         // selectedFolder={selectedFolder}
         render: (m, index) => {
@@ -52,5 +51,7 @@ export const SelectMood = ({ moods, onChange, limit, title }) => {
     //     }
     // </ScrollMenu>
 };
-export const SelectMoodForm = ({ title, onFinish }) => (_jsxs(Form, { className: "app-main-full-width", onFinish: onFinish, children: [_jsx(Form.Item, { name: "moods", style: { marginBottom: "40px" }, children: title ? _jsx(SelectMood, { title: title }) : _jsx(SelectMood, {}) }), _jsx(Form.Item, { label: "", wrapperCol: { offset: 0, span: 24 }, className: "text-right", children: _jsx(ProgressButton, { actionName: "api.post.attachToMoods", type: "primary", htmlType: "submit", progressText: "Adding to moods...", children: "Share" }) })] }));
+export const SelectMoodForm = ({ title, onFinish, deeplikeActions, setVisible, visible }) => {
+    return (_jsx("div", { className: "nl-post-deeplike-container", children: _jsxs(Form, { className: "app-main-full-width", onFinish: onFinish, children: [_jsx(Title, { title: "Save to a folder", deeplikeActions: true, setVisible: setVisible, visible: visible }), _jsx(Form.Item, { name: "moods", style: { margin: 0 }, children: _jsx(SelectMood, { title: title, deeplikeActions: deeplikeActions, limit: 6 }) })] }) }));
+};
 //# sourceMappingURL=SelectMood.js.map

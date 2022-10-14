@@ -13,9 +13,12 @@ import { RowCheckbox } from "../../Components/RowCheckbox";
 import { User } from "@firebase/auth";
 import { assert } from "console";
 import { useActions, useAppState, useEffects } from "../../overmind";
+import { useCachedPoolByCode } from "src/hooks/useCached";
 import { useForm } from "antd/lib/form/Form";
 import { useHistory } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import omitBy from "lodash/omitBy";
 import pick from "lodash/pick";
 
 const defaultCreateFormValues = [
@@ -57,6 +60,7 @@ export const UserCreate: NLView<
   const actions = useActions();
   const effects = useEffects();
   const [isEmailAvailable, setIsEmailAvailable] = useState(false);
+  const ticker = useCachedPoolByCode({ code: state.flows.user.create.form.newcoinTicker?.toUpperCase() });
 
   const [form] = useForm();
 
@@ -84,8 +88,24 @@ export const UserCreate: NLView<
   useEffect(setNextEmbedded, [sf]);
 
   const onFinish = async (values: UserCreateRequest) => {
-    console.log("Creating:", values);
+    const defaultUser = {
+      username: "",
+      newcoinTicker: "",
+      displayName: "",
+      email: "",
+      description: "",
+      website: "",
+      twitter: "",
+      discord: "",
+      instagram: "",
+      tumblr: "",
+      soundcloud: "",
+      consentPrivacyPolicy: "",
+      phone: "",
+      legacyToken: "",
+    };
 
+    console.log("Creating:", values);
     try {
       await form.validateFields();
     } catch (e: any) {
@@ -106,7 +126,10 @@ export const UserCreate: NLView<
     }
     actions.flows.user.create.create({
       noRouting: !!noRouing,
-      user: values,
+      user: {
+        ...defaultUser,
+        ...omitBy(values, isNil),
+      },
     });
   };
 
@@ -141,8 +164,6 @@ export const UserCreate: NLView<
           );
 
           actions.flows.user.create.updateForm(upd as UserCreateRequest);
-
-          sessionStorage.setItem("cachedOnboarding", JSON.stringify(state.flows.user.create));
         }}
         initialValues={sf}
       >
@@ -181,6 +202,14 @@ export const UserCreate: NLView<
               required: true,
               pattern: /^[a-z]{3,7}$/,
               message: "3 - 7 characters, latin alphabet only",
+            },
+            {
+              validator: () => {
+                if (ticker) {
+                  return Promise.reject(new Error("Ticker already exists! Choose another one."));
+                }
+                return Promise.resolve();
+              },
             },
           ]}
         >

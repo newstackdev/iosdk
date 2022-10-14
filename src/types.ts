@@ -42,6 +42,12 @@ export type FirebaseConfig = {
   measurementId: string;
 };
 
+export enum ContentType {
+  video = "video/mp4",
+  text = "text/plain",
+  image = "image/jpeg",
+}
+
 // export interface UserInfo {
 // 	status?: string;
 // 	token?: string;

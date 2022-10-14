@@ -164,14 +164,7 @@ export const MoodCreateModal: NLView<{
           setIsCreated={setIsCreated}
         />
       </Modal>
-      <div>
-        <div style={{ fontSize: "120px" }} id="add-folder-button">
-          <AddFolder setIsOpen={setIsOpen} />
-        </div>
-        <p className="paragraph-1r" style={{ opacity: 0 }}>
-          add folder
-        </p>
-      </div>
+      <AddFolder setIsOpen={setIsOpen} id="add-folder-button" />
     </>
   );
 };

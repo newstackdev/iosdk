@@ -116,6 +116,10 @@
   width: auto;
 }
 
+.ant-select-suffix {
+  display: none;
+}
+
 .ant-select-selection-item {
   align-items: center;
 }
@@ -384,11 +388,14 @@
 .ant-message-notice-content {
   background: @darkgrey;
   // width: 299px;
-  width: 100%;
+  width: 87%;
   border-radius: 8px;
   box-shadow: none !important;
   height: fit-content;
-  margin: 0 10px;
+
+  @media screen and (max-width: 428px) {
+    width: 100%;
+  }
 }
 
 .anticon-info-circle {
@@ -656,4 +663,25 @@ a.ant-typography,
 }
 .ant-select-clear {
   background-color: transparent;
+}
+
+// Drawer
+.ant-drawer-bottom.ant-drawer-open .ant-drawer-content-wrapper {
+  box-shadow: none;
+}
+.ant-drawer-content {
+  border-radius: 8px;
+  background: @hover;
+}
+.ant-drawer-header {
+  background: @hover;
+  border-bottom: none;
+  padding: 16px 24px 0px 16px;
+}
+.ant-drawer-body {
+  padding: 0px;
+}
+
+.ant-drawer-content-wrapper {
+  padding: 0px 7px !important;
 }

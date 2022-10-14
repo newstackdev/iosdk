@@ -6,7 +6,9 @@ const firebaseTestRecaptcha = {
 export const onInitializeOvermind = async ({ effects, state, actions, reaction }) => {
     const auth = effects.firebase.initialize(state.config.settings.firebaseConfig);
     setTimeout(() => (state.auth.initialized = true), 700);
-    auth.onAuthStateChanged((u) => actions.firebase.handleAuthChange(u));
+    auth.onAuthStateChanged((u) => {
+        actions.firebase.handleAuthChange(u);
+    });
 };
 export const logout = async ({ effects, state }) => {
     await effects.firebase.logout();

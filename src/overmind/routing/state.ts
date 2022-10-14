@@ -27,7 +27,9 @@ export const ROUTE_ACCESS_LEVELS: Record<string, (st: AUTH_FLOW_STATUS_TYPE, gst
     .map((r) => ({
       [`/signup${r ? "/" : ""}${r}`]: (st, gst: State) => {
         if (
-          ((gst.flows.user.create.isLegacyUpdateOngoing || !isEmpty(gst.flows.user.create.progressedSteps)) &&
+          ((gst.flows.user.create.isLegacyUpdateOngoing ||
+            !isEmpty(gst.flows.user.create.progressedSteps) ||
+            AUTH_FLOW_STATUS.AUTHENTICATED <= st) &&
             ROUTE_ACCESS_LEVELS_ONBOARDING.includes(r)) ||
           (ROUTE_ACCESS_LEVELS_METAMASK.includes(r) && gst.flows.user.create.metamaskFlow)
         ) {

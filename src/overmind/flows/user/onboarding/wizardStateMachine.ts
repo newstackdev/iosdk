@@ -123,12 +123,16 @@ const defaults: Record<string, (d?: { hasNext: boolean; link?: string }) => Stat
 // export type WizardMachine = statemachine<States, Events, BaseState>;
 export const Wizard = statemachine<States, Events, BaseState>({
   HASH_VERIFY: {
-    NEXT: ({ inviteHash, inviteHashVerified }) =>
-      inviteHash && inviteHashVerified ? defaults.AUTHENTICATE() : defaults.HASH_VERIFY(),
-    UPDATE: ({ inviteHash, isLegacyUpdateOngoing, inviteHashVerified, metamaskFlow }) => {
+    NEXT: ({ inviteHash, inviteHashVerified, authenticated }) =>
+      inviteHash && inviteHashVerified
+        ? authenticated
+          ? defaults.SELECT_DOMAIN()
+          : defaults.AUTHENTICATE()
+        : defaults.HASH_VERIFY(),
+    UPDATE: ({ inviteHash, isLegacyUpdateOngoing, inviteHashVerified, metamaskFlow, authenticated }) => {
       return metamaskFlow
         ? defaults.AUTHENTICATE()
-        : isLegacyUpdateOngoing
+        : isLegacyUpdateOngoing || authenticated
         ? defaults.SELECT_DOMAIN()
         : ({
             ...defaults.HASH_VERIFY(),
@@ -199,7 +203,7 @@ export const Wizard = statemachine<States, Events, BaseState>({
               (featureFlags.onboarding.premiumDomains || formUsername.replace(/\.io$/, "").length > 5) &&
               formUsernameIsAvailable === "available",
             nextLink:
-              isLegacyUpdateOngoing || !(authorized || authenticated)
+              (isLegacyUpdateOngoing && !(authorized && authenticated)) || !(authorized || authenticated)
                 ? "/signup/auth"
                 : subscribed || isLegacyUpdateOngoing || formUsername.replace(/\.io$/, "").length > 5 || metamaskFlow
                 ? "/signup/create"

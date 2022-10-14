@@ -1,13 +1,14 @@
 import { Button, Form, Input } from "antd";
 import { ContentLayout } from "../../Components/ContentLayout";
-import { CreatorsList, TopCreators } from "../../Components/Creators";
+import { CreatorsList } from "../../Components/Creators";
 import { FormInstance } from "antd-latest";
 import { IOView, NLView } from "../../types";
 import { IUserInvite } from "./interfaces/IUser";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { SocialMediaInputs } from "src/Components/Input/SocialMediaInputs";
 import { Spin } from "../../Components/Spin";
-import { UserInvitationPagedListReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { UserInvitationReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { phoneNumberReformat } from "../../utils/phoneNumberReformat";
 import { useActions, useAppState } from "../../overmind";
 import { useCachedInvitees } from "src/hooks/useCached";
 import { useForm } from "antd/lib/form/Form";
@@ -25,8 +26,7 @@ export const UserInvite: NLView = () => {
 
   const user = state.api.auth.user;
 
-  //@ts-ignore
-  const numberOfInvites: number | undefined = user.availableInvites || 2;
+  const numberOfInvites = user.availableInvites || undefined;
 
   const onFinish = async (data: IUserInvite) => {
     try {
@@ -43,7 +43,17 @@ export const UserInvite: NLView = () => {
     case "inprogress":
       return <Spin />;
     case "failed":
-      return <div>Something went wrong</div>;
+      return (
+        <ContentLayout customClass="text-center">
+          <div className="paragraph-1r">
+            Oops! Looks like something went wrong. <br /> Try to refresh or
+            <a href="https://t.me/newcoinprotocol" target="_blank" rel="noreferrer" className="paragraph-1u">
+              {" "}
+              ask support
+            </a>
+          </div>
+        </ContentLayout>
+      );
     case "done":
       return <UserInviteInfo invitedUsername={fullName} setStatus={setStatus} form={form} hash={hash} />;
     case "start":
@@ -69,8 +79,7 @@ export const InviteesList: IOView<{
 
   const user = state.api.auth.user;
 
-  //@ts-ignore
-  const numberOfInvites: number | undefined = user.availableInvites || 2;
+  const numberOfInvites = user.availableInvites ?? 0;
 
   return (
     <div className="text-center">
@@ -84,7 +93,7 @@ export const InviteesList: IOView<{
           </Button>
         </>
       )}
-      <CreatorsList maxItems={maxItems} title={title} users={inviteesList.value as any} to="/user/invite/all" />
+      <CreatorsList users={inviteesList.value as UserInvitationReadPublicResponse[]} />
     </div>
   );
 };
@@ -95,7 +104,7 @@ const FormInviteFriend: IOView<{ form: FormInstance<any>; onFinish: (data: IUser
 }) => {
   const emailReg =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const phoneReg = "^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,7}$";
+  const phoneReg = /^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$/;
 
   return (
     <>
@@ -120,7 +129,7 @@ const FormInviteFriend: IOView<{ form: FormInstance<any>; onFinish: (data: IUser
             },
           ]}
         >
-          <Input placeholder="name" />
+          <Input placeholder="name *" />
         </Form.Item>
         <Form.Item
           name="phone"
@@ -132,8 +141,9 @@ const FormInviteFriend: IOView<{ form: FormInstance<any>; onFinish: (data: IUser
             },
           ]}
         >
-          <Input placeholder="phone" />
+          <Input placeholder="phone *" onChange={(values) => phoneNumberReformat(values, form)} />
         </Form.Item>
+        <p className="text-left u-margin-bottom-small header-2 u-margin-top-large">Optional</p>
         <Form.Item
           name="email"
           rules={[
@@ -149,7 +159,7 @@ const FormInviteFriend: IOView<{ form: FormInstance<any>; onFinish: (data: IUser
         <Form.Item>
           <div className="u-margin-top-large">
             <ProgressButton actionName="api.user.invite" progressText="Inviting user..." type="primary" htmlType="submit">
-              Send an invite
+              Generate invite
             </ProgressButton>
           </div>
         </Form.Item>

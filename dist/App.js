@@ -36,7 +36,7 @@ const AppShell = ({ children }) => {
                                         }), children: !flags["banner"] ? (_jsx(CrossCircle, {})) : (_jsx(Button, { className: "secondary-button", onClick: () => actions.flows.userJourney.setFlag({
                                                 flag: "bannerDisabled",
                                                 value: "true",
-                                            }), children: _jsx("span", { className: "paragraph-2b", children: "I understand" }) })) })] }) }) })), _jsx(state.config.components.layout.Header, {})] }), _jsx("div", { className: `App ${state.ux.layout.headerShown ? "app-layout-wrapper" : ""}`, children: _jsxs(state.config.components.layout.Layout, { children: [state.config.routes.useDefaultRoutes ? DEFAULT_ROUTES : _jsx(_Fragment, {}), children] }) })] }));
+                                            }), children: _jsx("span", { className: "paragraph-2b", children: "I understand" }) })) })] }) }) })), _jsx(state.config.components.layout.Header, {})] }), _jsx("div", { className: `App ${state.ux.layout.headerShown ? "app-layout-wrapper" : ""}`, children: _jsxs(state.config.components.layout.Layout, { children: [state.config.routes.useDefaultRoutes ? DEFAULT_ROUTES(state) : _jsx(_Fragment, {}), children] }) })] }));
 };
 const overmindSampleCustomConfig = {
     components: {

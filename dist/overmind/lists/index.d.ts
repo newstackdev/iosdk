@@ -1,9 +1,9 @@
-import { Action } from "../../types";
+import { Action, ContentType } from "../../types";
 import { CreativeSearchResponse, MoodReadResponse, PostPagedListReadPublicResponse, PostReadResponse, PostTagsSearchPublicResponse, UserPagedListReadPublicResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 export declare type CreativeSearchHits = NonNullable<CreativeSearchResponse["hits"]>[number];
 export declare type CreativeSearchItem = NonNullable<CreativeSearchHits["_source"]>;
 export declare const listTopUsers: Action;
-export declare const listTopPosts: Action;
+export declare const listTopPosts: Action<ContentType | undefined, void>;
 export declare const searchUsers: Action<{
     query: string;
 }>;
@@ -48,6 +48,7 @@ declare const _default: {
             moods: ListState<MoodReadResponse>;
             users: ListState<UserReadPublicResponse>;
             posts: ListState<PostReadResponse>;
+            videoPosts: ListState<PostReadResponse>;
             isNextMoodsAvailable: boolean;
             isNextPostsAvailable: boolean;
         };
@@ -102,7 +103,7 @@ declare const _default: {
                 requestedPage?: number | undefined;
             }, void>;
             users: Action<undefined, void>;
-            posts: Action<undefined, void>;
+            posts: Action<ContentType | undefined, void>;
         };
     };
     effects: {};

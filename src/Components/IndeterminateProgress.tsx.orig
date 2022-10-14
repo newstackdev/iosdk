@@ -24,14 +24,6 @@ export const IndeterminateProgress = ({
 	);
 };
 
-<<<<<<< HEAD
-export const IndeterminateProgressAction = ({ actionName } : { actionName : string }) => {
-    const state = useAppState();
-    const ival = !!state.indicators.specific[actionName];
-
-    return <IndeterminateProgress inProgress={ival} />
-}
-=======
 export const IndeterminateProgressAction = ({
 	actionName,
 }: {
@@ -42,4 +34,3 @@ export const IndeterminateProgressAction = ({
 
 	return <IndeterminateProgress inProgress={ival} />;
 };
->>>>>>> feature/design

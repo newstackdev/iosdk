@@ -3,7 +3,7 @@ const { defineConfig } = require("cypress");
 const envs = {
   production: "https://newlife.io",
   development: "http://localhost:3000",
-  test: "https://web-dev.newlife.io",
+  test: "http://localhost:3000",
 };
 
 const testStage = envs[process.env.NODE_ENV];
@@ -16,4 +16,5 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
   },
+  chromeWebSecurity: false,
 });

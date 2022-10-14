@@ -147,6 +147,7 @@ declare const _default: {
                         };
                         powerups: import("./overmind/api/state").PowerupsCache;
                         posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                        videoPosts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                         moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                             promise?: Promise<any> | null | undefined;
                         }>;
@@ -217,6 +218,12 @@ declare const _default: {
                             page: number;
                         };
                         posts: {
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                            sortKey: string;
+                            page: number;
+                        };
+                        videoPosts: {
                             _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                             items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
                             sortKey: string;
@@ -488,7 +495,7 @@ declare const _default: {
                             requestedPage?: number | undefined;
                         }, void>;
                         users: import("./types").Action<undefined, void>;
-                        posts: import("./types").Action<undefined, void>;
+                        posts: import("./types").Action<import("./types").ContentType | undefined, void>;
                     };
                 };
                 flows: import("overmind/lib/internalTypes").SubType<{
@@ -800,6 +807,7 @@ declare const _default: {
                     };
                     powerups: import("./overmind/api/state").PowerupsCache;
                     posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    videoPosts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                     moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                         promise?: Promise<any> | null | undefined;
                     }>;
@@ -870,6 +878,12 @@ declare const _default: {
                         page: number;
                     };
                     posts: {
+                        _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                        items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                        sortKey: string;
+                        page: number;
+                    };
+                    videoPosts: {
                         _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                         items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
                         sortKey: string;
@@ -1141,7 +1155,7 @@ declare const _default: {
                         requestedPage?: number | undefined;
                     }, void>;
                     users: import("./types").Action<undefined, void>;
-                    posts: import("./types").Action<undefined, void>;
+                    posts: import("./types").Action<import("./types").ContentType | undefined, void>;
                 };
             };
             flows: import("overmind/lib/internalTypes").SubType<{

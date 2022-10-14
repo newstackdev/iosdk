@@ -12,10 +12,10 @@ import {
   UserReadPublicResponse,
   UserUpdateRequest,
 } from "@newstackdev/iosdk-newgraph-client-js";
+import { IBadgeResponse } from "../../../Components/UserWidget";
 import { debounce, json, pipe, throttle } from "overmind";
 import { fischerYates } from "../../../utils/random";
 import { get, isEmpty, uniqBy } from "lodash";
-
 export const cache: Action<{
   user: UserReadPublicResponse & { moods?: MoodReadResponse[] };
   force?: boolean;
@@ -76,7 +76,7 @@ export const cache: Action<{
     cache.byUsername[username] = { ...curr, ...user, moods };
   }
 
-  if (isNewer) {
+  if (shouldUpdate) {
     state.api.auth.user?.id === user.id &&
       (state.api.auth.user = Object.assign({}, json(state.api.auth.user) || {}, cache.byId[id]));
   } //state.api.auth.user, user));
@@ -120,8 +120,7 @@ export const create: Action<{
     ) {
       return;
     }
-
-    const pn = state.firebase.user!.phoneNumber;
+    const pn = state.flows.user.create.form.phone || state.firebase.user!.phoneNumber;
     if (!pn) {
       !noRouting && actions.routing.historyPush({ location: "/auth" });
       return;
@@ -224,6 +223,19 @@ export const getMoods: Action<{ id?: string }> = pipe(debounce(300), async ({ st
   state.lists.selectedUser.moods.page++;
   // r.data.value?.forEach(p => p.id && (state.api.cache.moods[p.id] = { ...state.api.cache.moods[p.id], ...p }))
 });
+
+export const getBadges: Action<{ id: string }, Promise<IBadgeResponse>> = pipe(
+  debounce(300),
+  async ({ state, effects }, { id }) => {
+    try {
+      const res = await state.api.client.user.badgeListList({ id });
+      return res.data;
+    } catch (ex) {
+      effects.ux.message.error(((ex as any).error as ErrorResponse).errorMessage);
+      return [];
+    }
+  },
+);
 
 export const stake: Action<{ user: UserReadPublicResponse; amount: string }, any> = pipe(
   debounce(1000),

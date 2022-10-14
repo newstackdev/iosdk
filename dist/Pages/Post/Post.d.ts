@@ -15,6 +15,19 @@ declare const useVotingStreamTags: () => {
     contextType: string;
     contextValue: string;
 };
+export declare const round: (n: any) => number;
+export declare const sumScore: (tagRels?: {
+    score?: number;
+}[]) => number;
+export declare const bySumScore: (a: any, b: any) => number;
+declare type Polygon = {
+    x: number;
+    y: number;
+}[];
+export declare type SimplifiedTag = {
+    value?: string;
+    polygons?: Polygon[];
+};
 export declare const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingEnabled?: boolean) => NLView;
 export declare const Post: NLView<{}>;
 export declare const PostInMood: NLView<{}>;

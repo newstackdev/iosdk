@@ -25,13 +25,16 @@ export interface IOnboarding {
 }
 
 const defaultState = {
-  form: {} as Partial<UserCreateRequest & { couponCode?: string; inviteHash?: string }>,
+  form: {
+    phone: window.sessionStorage.getItem("nlOnboardingPhone"),
+    email: window.sessionStorage.getItem("emailForSignIn"),
+  } as Partial<UserCreateRequest & { couponCode?: string; inviteHash?: string }>,
   justCreated: false as boolean,
   inviteHashVerified: false,
-  legacyToken: "",
+  legacyToken: JSON.parse(window.localStorage.getItem("legacyAuthToken") || "null")?.legacyToken || "",
   legacyUsername: "",
   metamaskFlow: false,
-  isLegacyUpdateOngoing: false,
+  isLegacyUpdateOngoing: window.sessionStorage.getItem("nlOnboardingLegacyUpdateOngoing") === "true" || false,
   formUsernameIsAvailable: "" as "available" | "checking" | "unavailable" | "availableOnOpenSea" | "",
   progressedSteps: [],
   wizard: Wizard.create(

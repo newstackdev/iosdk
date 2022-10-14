@@ -3,7 +3,6 @@ import { Blurhash } from "react-blurhash";
 import { ContentElement, ContentImageProps, Sizes } from "./types";
 import { Profile } from "../Icons/Profile";
 import { Spin } from "../Spin";
-import { isEmpty } from "lodash";
 import { useAppState } from "../../overmind";
 
 const imageSizes: Record<Sizes, string> = {

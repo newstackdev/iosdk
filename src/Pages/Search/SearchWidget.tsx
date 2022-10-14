@@ -195,20 +195,19 @@ export const SearchWidget: NLView<{
   };
 
   return (
-    <Row align="bottom">
+    <Row
+      align="bottom"
+      style={{ width: "100%", height: "48px" }}
+      onMouseOut={() => setMouseVisible(false)}
+      onMouseOver={() => setMouseVisible(true)}
+    >
       {/* {currVal} */}
-      <div
-        style={{ width: 30, margin: "16px 5px 0 5px" }}
-        onClick={() => setVisible(!visible)}
-        onMouseOver={() => setMouseVisible(true)}
-        onMouseOut={() => setMouseVisible(false)}
-      >
+      <div style={{ width: 30, margin: "16px 5px 0 5px" }} onClick={() => setVisible(!visible)}>
         <Searchicon />
       </div>
-      <div>
-        {!(showSearch || visible) && !mouseVisible ? (
-          <></>
-        ) : (
+
+      <div style={{ width: 300, height: "100%" }}>
+        {mouseVisible || visible ? (
           <Select
             className="search-widget"
             mode={noNavigation ? "multiple" : undefined}
@@ -328,6 +327,8 @@ export const SearchWidget: NLView<{
               );
             })}
           </Select>
+        ) : (
+          <div style={{ width: "auto", height: "100%" }}>&nbsp;</div>
         )}
       </div>
     </Row>

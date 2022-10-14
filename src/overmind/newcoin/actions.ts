@@ -15,26 +15,35 @@ export const getAccountBalance: Action<{ user?: { username?: string } } | undefi
   { effects, state, actions },
   props,
 ) => {
-  const user = props?.user || state.api.auth.user;
+  const current = state.api.auth.user;
+  const user = props?.user || current;
 
-  state.newcoin.account = await effects.newcoin.newcoin.getAccountBalance({
-    owner: user.username || "",
-    contract: "eosio.token",
-  });
+  if (!state.api.auth.admitted) return;
 
-  state.newcoin.mainPool = await effects.newcoin.newcoin.getAccountBalance({
-    owner: user.username || "",
-    contract: "pool.nco",
-  });
+  try {
+    state.newcoin.account = await effects.newcoin.newcoin.getAccountBalance({
+      owner: user.username || "",
+      contract: "eosio.token",
+    });
 
-  const ps = await effects.newcoin.newcoin.getAccountBalance({
-    owner: user.username || "",
-    contract: "pools2.nco",
-  });
-  state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
-    const [total, symbol] = c.split(/ /);
-    return { ...r, [symbol]: total };
-  }, {});
+    state.newcoin.mainPool = await effects.newcoin.newcoin.getAccountBalance({
+      owner: user.username || "",
+      contract: "pool.nco",
+    });
+
+    const ps = await effects.newcoin.newcoin.getAccountBalance({
+      owner: user.username || "",
+      contract: "pools2.nco",
+    });
+    state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
+      const [total, symbol] = c.split(/ /);
+      return { ...r, [symbol]: total };
+    }, {});
+  } catch (e) {
+    if (!props?.user && current?.created && new Date(current.created).getTime() - Date.now() < 2 * 60 * 1000) return;
+
+    throw e;
+  }
 
   try {
     await actions.newcoin.daoGetWhitelist();
@@ -95,6 +104,8 @@ export const daoGetProposals: Action<{ daoId?: string; daoOwner: string; proposa
 export const daoGetWhitelistProposals: Action<{ daoId?: string; daoOwner: string; proposal_id?: string }, any> = pipe(
   debounce(100),
   async ({ state }, { daoId, daoOwner, proposal_id }) => {
+    if (!daoOwner) return;
+
     const r = await state.api.client.newcoin.daoProposalWhitelistListList({
       dao_owner: daoOwner,
       limit: "1000",
@@ -252,6 +263,7 @@ export const voterListVotes: Action<{ voter?: string } | undefined, any> = async
 
 export const daoGetWhitelist: Action<{ daoOwner?: string } | undefined, any> = async ({ state }, props) => {
   const u = props?.daoOwner || state.config.settings.newcoin.daoDomain;
+  if (!u) return;
 
   const r = await state.api.client.newcoin.daoWhitelistList({
     dao_owner: u,

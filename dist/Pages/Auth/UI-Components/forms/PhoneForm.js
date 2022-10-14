@@ -3,6 +3,7 @@ import { AUTH_FLOW_STATUS } from "../../../../overmind/auth/state";
 import { Input } from "antd";
 import { CrossCircleErr } from "../../../User/UserCreate";
 import { isEmpty } from "lodash";
+import { phoneNumberReformat } from "../../../../utils/phoneNumberReformat";
 import { useActions, useAppState } from "../../../../overmind";
 import Form from "antd/lib/form";
 const PhoneForm = ({ setIsErrorSubmit, embedded, phoneForm }) => {
@@ -31,11 +32,7 @@ const PhoneForm = ({ setIsErrorSubmit, embedded, phoneForm }) => {
                     pattern: new RegExp(reg),
                 },
             ], children: _jsx(Input, { className: `nl-onboarding-input nl-onboarding-input-phone ${isPhonePresent && embedded ? "nl-onboarding-input-phone-disabled text-center" : null}`, id: "basic_phone", placeholder: isPhonePresent && embedded ? maskedPhoneNum : "enter phone number", disabled: isPhonePresent && embedded, suffix: isPhonePresent && embedded ? undefined : _jsx(CrossCircleErr, {}), autoFocus: true, onChange: (values) => {
-                    if (!values.target.value.includes("+")) {
-                        phoneForm.setFieldsValue({
-                            phone: "+" + values.target.value,
-                        });
-                    }
+                    phoneNumberReformat(values, phoneForm);
                     if (!new RegExp(reg).test(values.target.value)) {
                         setIsErrorSubmit && setIsErrorSubmit(true);
                     }

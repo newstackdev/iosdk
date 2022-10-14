@@ -25,8 +25,8 @@ declare type ContentElementOpts = {
     thumbnail?: boolean;
     overrideContentUrl?: string;
 };
-declare type MenuAvatar = {
+declare type CustomTypes = {
     menuAvatar?: boolean;
 };
-export declare type ContentElement = NLView<ImageProps & ContentImageProps & ContentElementOpts & MenuAvatar>;
+export declare type ContentElement = NLView<ImageProps & ContentImageProps & ContentElementOpts & CustomTypes>;
 export {};

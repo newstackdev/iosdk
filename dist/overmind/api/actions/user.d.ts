@@ -1,5 +1,6 @@
 import { Action } from "../../../types";
 import { MoodReadResponse, UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newstackdev/iosdk-newgraph-client-js";
+import { IBadgeResponse } from "../../../Components/UserWidget";
 export declare const cache: Action<{
     user: UserReadPublicResponse & {
         moods?: MoodReadResponse[];
@@ -23,6 +24,9 @@ export declare const update: Action<{
 export declare const getMoods: Action<{
     id?: string;
 }>;
+export declare const getBadges: Action<{
+    id: string;
+}, Promise<IBadgeResponse>>;
 export declare const stake: Action<{
     user: UserReadPublicResponse;
     amount: string;

@@ -18,8 +18,10 @@ export type ItemGridParams<T> = {
   setSelectedFolder?: React.Dispatch<React.SetStateAction<boolean>>;
   selectedFolder?: boolean;
   noEmptyResults?: boolean;
-  tagPreview?: boolean;
   gridRow?: number;
+  wrapAt?: number;
+  deeplikeActions?: boolean;
+  deepLikeContainer?: React.MutableRefObject<null>;
 };
 
 export const ItemGrid: NLView<ItemGridParams<object>> = ({
@@ -30,7 +32,9 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
   loadMore,
   limit,
   noEmptyResults,
-  tagPreview,
+  wrapAt,
+  deeplikeActions,
+  deepLikeContainer,
   gridRow,
 }) => {
   const [isVisible, currentElement] = useVisibility<HTMLDivElement>(200);
@@ -50,33 +54,12 @@ export const ItemGrid: NLView<ItemGridParams<object>> = ({
     return noEmptyResults ? <></> : <Result icon={<></>}>nothing here</Result>;
   return (
     <>
-      {/* See All page */}
-      {title === undefined ? (
-        <Row style={{ width: "100%", marginTop: "20px" }}>
-          {/* <LargeArrowBack /> */}
-          <p className="header-2" style={{ marginLeft: "40px" }}>
-            {title}
-          </p>
-        </Row>
-      ) : (
-        <Title title={title} href={titleLink} />
-      )}
-
       {items.length ? (
-        <Row
-          wrap={true}
-          className={"nl-mood-grid-row-three app-main-full-width-only"}
-          style={{
-            justifyContent: "space-between",
-            alignItems: " baseline",
-            width: "100%",
-          }}
-        >
+        <Row wrap={true} className={wrapAt === 3 ? "nl-mood-grid-row-three" : "nl-mood-grid-row-responzive"} align="top">
           {items.map((item, index) => (
             <Col
               key={`item${index}`}
               // className={"share-folder"}
-              style={!tagPreview ? { borderRadius: "8px", marginBottom: "20px" } : { borderRadius: "8px", height: "155px" }}
             >
               {render(item, index)}
             </Col>

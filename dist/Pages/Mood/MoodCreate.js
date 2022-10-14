@@ -65,6 +65,6 @@ export const MoodCreateModal = ({ setIsCreated, onCreated }) => {
     return (_jsxs(_Fragment, { children: [_jsx(Modal, { closeIcon: _jsx(CrossCircle, {}), visible: isOpen, onOk: () => setIsOpen(false), onCancel: () => setIsOpen(false), footer: false, className: "nl-white-box-modal", children: _jsx(MoodCreate, { onCreated: (m) => {
                         setIsOpen(false);
                         onCreated && onCreated(m);
-                    }, setIsCreated: setIsCreated }) }), _jsxs("div", { children: [_jsx("div", { style: { fontSize: "120px" }, id: "add-folder-button", children: _jsx(AddFolder, { setIsOpen: setIsOpen }) }), _jsx("p", { className: "paragraph-1r", style: { opacity: 0 }, children: "add folder" })] })] }));
+                    }, setIsCreated: setIsCreated }) }), _jsx(AddFolder, { setIsOpen: setIsOpen, id: "add-folder-button" })] }));
 };
 //# sourceMappingURL=MoodCreate.js.map

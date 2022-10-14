@@ -72,10 +72,7 @@
 
 .nl-grid-row(@flexbase-xs, @flexbase-md, @flexbase-xl, @margin-md,@margin-xl, @containerWidth) {
   text-align: center;
-
-  &:not(:last-child) {
-    margin-bottom: 20px;
-  }
+  align-items: baseline;
 
   .ant-col {
     overflow: hidden;
@@ -86,12 +83,8 @@
     display: flex;
     align-items: center;
 
-    &:not(:first-child) {
-      .nl-mood-grid-row-margin-left(@flexbase-md, @margin-md,@containerWidth);
-    }
-    &:not(:last-child) {
-      .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md,@containerWidth);
-    }
+    .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md,@containerWidth);
+
     &.wrap {
       .nl-mood-grid-row-margin-left(@flexbase-xs, @margin-md,@containerWidth);
       .nl-mood-grid-row-margin-right(@flexbase-xs, @margin-md,@containerWidth);
@@ -100,12 +93,7 @@
 
     @media screen and (min-width: 720px) {
       width: calc(20% - 9px);
-      &:not(:first-child) {
-        .nl-mood-grid-row-margin-left(@flexbase-md, @margin-md,@containerWidth);
-      }
-      &:not(:last-child) {
-        .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md,@containerWidth);
-      }
+      .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md,@containerWidth);
       &.wrap {
         .nl-mood-grid-row-margin-left(@flexbase-xl, @margin-xl,@containerWidth);
         .nl-mood-grid-row-margin-right(@flexbase-xl, @margin-xl,@containerWidth);
@@ -147,7 +135,10 @@
 }
 
 .nl-mood-grid-row {
-  .nl-grid-row(-18px,8px,18.1px,28px,9px,13.5%);
+  .nl-grid-row(-18px,23px,18.1px,23px,9px,16.6%);
+  .ant-col:last-child {
+    margin-right: 0 !important;
+  }
 
   @media screen and (max-width: 428px) {
     .nl-grid-row(-18px,8px,18.1px,4px,9px,20%);
@@ -157,8 +148,18 @@
   }
 }
 
+.nl-mood-grid-row-two {
+  .nl-grid-row(-18px,6px,18.1px,6px,9px,50%);
+  .ant-col:nth-child(2n) {
+    margin-right: 0 !important;
+  }
+}
+
 .nl-mood-grid-row-three {
-  .nl-grid-row(-18px,8px,18.1px,0px,9px,33.3%);
+  .nl-grid-row(-18px,8px,18.1px,8px,9px,33.3%);
+  .ant-col:nth-child(3n) {
+    margin-right: 0 !important;
+  }
 }
 
 .nl-mood-grid-row-four {
@@ -169,6 +170,20 @@
   .nl-grid-row(-18px,8px,18.1px,4px,9px,17%);
 }
 
-.nl-spotlight-grid-row {
-  .nl-grid-row(-18px,8px,18.1px,4px,9px,33%);
+.nl-mood-grid-row-responzive {
+  & > div {
+    margin-bottom: 10px;
+  }
+  @media screen and (min-width: 320px) {
+    .nl-mood-grid-row-two() !important;
+  }
+  @media screen and (min-width: 768px) {
+    .nl-mood-grid-row-three() !important;
+  }
+  @media screen and (min-width: 992px) {
+    .nl-mood-grid-row-four() !important;
+  }
+  @media screen and (min-width: 1200px) {
+    .nl-mood-grid-row() !important;
+  }
 }

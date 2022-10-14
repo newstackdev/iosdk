@@ -119,6 +119,11 @@
   font-size: 15px;
   line-height: 19.5px;
   letter-spacing: 0px;
+
+  @media screen and (max-width: 728px) {
+    font-size: 10px;
+    line-height: 12.5px;
+  }
 }
 .header-1r {
   font-family: @nlui-fontfam-ABC-favorit-regular;
@@ -192,4 +197,10 @@
   > * {
     margin-bottom: 1em;
   }
+}
+
+.typography-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

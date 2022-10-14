@@ -31,6 +31,7 @@ declare type State = {
         };
         powerups: PowerupsCache;
         posts: Record<string, PostReadResponse>;
+        videoPosts: Record<string, PostReadResponse>;
         moods: Record<string, MoodReadResponse & {
             promise?: Promise<any> | null;
         }>;

@@ -2,7 +2,6 @@ import { ContentImage } from "./Image";
 import { Link } from "react-router-dom";
 import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
-import { Row } from "antd";
 import { useAppState } from "../overmind";
 import { useCachedPost } from "../hooks/useCached";
 
@@ -10,16 +9,13 @@ export const MaybeLink: React.FC<
   React.PropsWithChildren<{
     style?: React.CSSProperties;
     to: string;
-    className: string;
+    className?: string;
   }>
-> = ({ to, children, className, style }) =>
-  to ? (
-    <Link style={style} to={to} className={className}>
-      {children}
-    </Link>
-  ) : (
-    <div className={className}>{children}</div>
-  );
+> = ({ to, children, className, style }) => (
+  <Link style={style} to={to} className={className}>
+    {children}
+  </Link>
+);
 
 export const PostWidget: NLView<{
   post: PostReadResponse;
@@ -34,7 +30,7 @@ export const PostWidget: NLView<{
     <>
       {p.contentType === "text/plain" ? (
         <div className="text-container">
-          <p className="text-mood">
+          <p className="text-left paragraph-2r">
             "{/* @ts-ignore */}
             {p.content?.length > 17 ? p?.content?.substring(0, 12) + "..." : p.content || ""}"
           </p>

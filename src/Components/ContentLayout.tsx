@@ -1,7 +1,9 @@
-import { Col, Row } from "antd";
-import { ReactElement } from "react";
+import { Col, Drawer, Row } from "antd";
+import { IOView } from "../types";
+import { ReactElement, useRef } from "react";
 import { Spin } from "./Spin";
 import { useAppState } from "../overmind";
+import Title from "../Pages/Explore/Title";
 
 type LayedOutContent = {
   header?: ReactElement | string | undefined;
@@ -100,7 +102,6 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
           xs={24}
           lg={isVote ? 5 : isPost ? 7 : isMood ? 1 : 4}
           className={isVote ? "text-left post-notification-column" : "text-left"}
-          style={isVote ? { display: "flex", padding: 0, marginTop: 10 } : {}}
         >
           {header}
         </Col>
@@ -108,14 +109,10 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
       <Col
         xs={24}
         lg={isPost || isVote ? 18 - extrasSpan : isMood ? 27 - extrasSpan : 24 - extrasSpan}
-        className={`${customClass}`}
+        className={`${customClass} ${isVote ? "app-content-vote-layout" : ""}`}
         style={
-          isVote
-            ? {
-                width: "100%",
-                padding: 0,
-                display: "flex",
-              }
+          extrasSpan && state.flows.rating.value !== 100
+            ? { display: "flex", height: "100%" }
             : extrasSpan
             ? { display: "flex" }
             : {
@@ -125,12 +122,16 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
               }
         }
       >
-        <div className={`app-main-full-height ${customPosition}`}>{children}</div>
+        <div className={`app-main-full-height ${customPosition} ${isVote ? "app-content-vote" : ""}`}>{children}</div>
       </Col>
       {info ? (
         <Col xs={24} lg={isVote ? 9 : isPost ? 7 : 4} style={isVote ? { display: "flex", padding: 0 } : { display: "flex" }}>
           <div
-            style={isVote ? { width: "100%", display: "flex", justifyContent: "end" } : { width: "100%" }}
+            style={
+              isVote
+                ? { width: "100%", display: "flex", justifyContent: "end", height: "100%" }
+                : { width: "100%", height: "100%" }
+            }
             className="text-left"
           >
             {info}
@@ -139,6 +140,27 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
       ) : (
         ""
       )}
+    </Row>
+  );
+};
+
+export const ContentLayoutDeepLike: IOView<{ children: React.ReactChild; containerDeeplike: React.MutableRefObject<any> }> = ({
+  children,
+  containerDeeplike,
+}) => {
+  return (
+    <Row style={{ width: "100%" }}>
+      <Col
+        xs={24}
+        lg={20}
+        ref={containerDeeplike}
+        style={{ position: "relative", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "end" }}
+      >
+        {children}
+      </Col>
+      <Col xs={24} lg={4} style={{ zIndex: -1 }}>
+        &nbsp;
+      </Col>
     </Row>
   );
 };

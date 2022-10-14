@@ -9,7 +9,7 @@ import { useCallback, useEffect } from "react";
 import FolderClosed from "./Icons/Folder/Closed";
 import InfiniteScroll from "react-infinite-scroller";
 import Title from "../Pages/Explore/Title";
-const MAX_ALLOWED_POSTS = 5;
+const MAX_POSTS_TO_SHOW = 5;
 export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, wrap }) => {
     const postsList = mood.posts?.slice(0, maxPosts);
     const actions = useActions();
@@ -23,7 +23,7 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
                 display: "flex",
                 justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
                 flexWrap: "wrap",
-            }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-five" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
+            }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-responzive" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
                             justifyContent: "center",
                             flexDirection: "column",
                             aspectRatio: "1/1",
@@ -41,7 +41,7 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
                                     aspectRatio: "1/1",
                                     height: "100%",
                                     flex: 1,
-                                }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }))) }) })) : (postsList?.map((p) => (_jsx(MaybeLink
+                                }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }, p.id))) }) })) : (postsList?.map((p) => (_jsx(MaybeLink
                 // style={}
                 , { 
                     // style={}
@@ -97,7 +97,7 @@ const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToSh
                                 : {
                                     justifyContent: "start",
                                     alignItems: "center",
-                                }, children: _jsx(TopFoldersGrid, { mood: m, maxPosts: maxPostsToShow || MAX_ALLOWED_POSTS, title: title }) }))) })] })] }));
+                                }, children: _jsx(TopFoldersGrid, { mood: m, maxPosts: maxPostsToShow || MAX_POSTS_TO_SHOW, title: title }) }))) })] })] }));
 };
 export default TopFolders;
 //# sourceMappingURL=TopFolders.js.map

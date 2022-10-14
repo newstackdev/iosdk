@@ -1,3 +1,4 @@
+import { ContentType } from "../../types";
 import { aestheticList } from "./SearchCreative/aestheticList";
 import { debounce, json, pipe } from "overmind";
 import { fischerYates } from "../../utils/random";
@@ -45,7 +46,7 @@ const creativeSearch = pipe(debounce(500), async ({ state }, query) => {
     }
 });
 const listTopMoods = pipe(debounce(300), async ({ state, actions, effects }, { requestedPage }) => {
-    const page = requestedPage ?? state.lists.top.moods.page ?? 0;
+    const page = requestedPage ?? state.lists.top.moods.page;
     const r = await state.api.client.mood.listTopList({
         page: page.toString(),
     }); // Math.floor(20 + (Math.random() * 20)).toString()
@@ -79,21 +80,29 @@ export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects
     });
     state.lists.top.users.page++;
 });
-export const listTopPosts = pipe(debounce(300), async ({ state, actions, effects }) => {
-    const page = state.lists.top.posts.page ?? 0;
+export const listTopPosts = pipe(debounce(300), async ({ state }, contentType) => {
+    const topPostPage = state.lists.top.posts.page ?? 0;
+    const topVideoPostPage = state.lists.top.videoPosts.page ?? 0;
     state.lists.top.isNextPostsAvailable = true;
     const r = await state.api.client.post.listTopList({
-        page: page.toString(),
+        page: contentType === ContentType.video ? topVideoPostPage.toString() : topPostPage.toString(),
+        contentType,
     });
     if (_.isEmpty(r.data?.value)) {
         state.lists.top.isNextPostsAvailable = false;
         return;
     }
     r.data?.value?.forEach((v) => {
-        state.api.cache.posts[v.id || ""] = v;
-        state.lists.top.posts.items.push(v);
+        if (contentType === ContentType.video) {
+            state.api.cache.videoPosts[v.id || ""] = v;
+            state.lists.top.videoPosts.items.push(v);
+        }
+        else {
+            state.api.cache.posts[v.id || ""] = v;
+            state.lists.top.posts.items.push(v);
+        }
     });
-    state.lists.top.posts.page++;
+    contentType === ContentType.video ? state.lists.top.videoPosts.page++ : state.lists.top.posts.page++;
 });
 export const searchUsers = pipe(debounce(300), async ({ state, actions, effects }, { query }) => {
     // const page = state.lists.search.users.results ? state.lists.top.users.page + 1 : 0;
@@ -200,12 +209,12 @@ const actions = {
         posts: listTopPosts,
     },
 };
-const newListState = ({ sortKey } = { sortKey: "updated" }) => ({
+const newListState = (page, { sortKey } = { sortKey: "updated" }) => ({
     _items: {},
     items: [],
     sortKey: sortKey,
     startItem: 0,
-    page: 0,
+    page: page || 0,
 });
 export default {
     state: {
@@ -217,9 +226,10 @@ export default {
         },
         postsSearch: {},
         top: {
-            moods: newListState(),
+            moods: newListState(Math.floor(20 + Math.random() * 20)),
             users: newListState(),
-            posts: newListState(),
+            posts: newListState(Math.floor(50 + Math.random() * 50)),
+            videoPosts: newListState(Math.floor(10 + Math.random() * 10)),
             isNextMoodsAvailable: true,
             isNextPostsAvailable: true,
         },

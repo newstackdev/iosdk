@@ -1,5 +1,4 @@
 import { Col, Row } from "antd";
-
 import { Link } from "react-router-dom";
 import { MaybeLink, PostWidget } from "./PostWidget";
 import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
@@ -12,7 +11,7 @@ import FolderClosed from "./Icons/Folder/Closed";
 import InfiniteScroll from "react-infinite-scroller";
 import Title from "../Pages/Explore/Title";
 
-const MAX_ALLOWED_POSTS = 5;
+const MAX_POSTS_TO_SHOW = 5;
 
 export const TopFoldersGrid: NLView<{
   mood: MoodReadResponse;
@@ -46,7 +45,7 @@ export const TopFoldersGrid: NLView<{
         }}
         wrap={true}
         className={`${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${
-          title === "Moods" ? "nl-mood-grid-row-five" : ""
+          title === "Moods" ? "nl-mood-grid-row-responzive" : ""
         }`}
       >
         {/* // folder */}
@@ -83,6 +82,7 @@ export const TopFoldersGrid: NLView<{
             <Row>
               {postsList?.map((p) => (
                 <MaybeLink
+                  key={p.id}
                   to={
                     !p.id
                       ? ""
@@ -238,7 +238,11 @@ const TopFolders: NLView<{
                     }
               }
             >
-              <TopFoldersGrid mood={m} maxPosts={maxPostsToShow || MAX_ALLOWED_POSTS} title={title} />
+              {/**
+               * MAX_POSTS_TO_SHOW is necessary; otherwise, top folder will render all of the posts
+               * containing in the moods which will overload the DOM and the experience super laggy.
+               */}
+              <TopFoldersGrid mood={m} maxPosts={maxPostsToShow || MAX_POSTS_TO_SHOW} title={title} />
             </Row>
           ))}
         </InfiniteScroll>

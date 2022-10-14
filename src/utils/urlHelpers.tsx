@@ -9,14 +9,27 @@ export const findFirstUrl = (content?: string) => {
   return firstUrl;
 };
 
-export const urlify = (text: string) => {
+// pick internal URL or first that comes up
+
+export const urlify = (text?: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.split(urlRegex).map((part) => {
-    if (part.match(urlRegex)) {
-      return <a href={part}>{part}</a>;
+  const urls = text?.match(urlRegex)?.toString().split(",");
+
+  let url: string | undefined = undefined;
+
+  if (urls) {
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i].includes("https://www.newlife.io")) {
+        url = urls[i];
+        break;
+      }
     }
-    return part;
-  });
+    if (url === undefined) {
+      url = urls[0];
+    }
+  }
+
+  return url;
 };
 
 export const validUrl = (str: string) => {

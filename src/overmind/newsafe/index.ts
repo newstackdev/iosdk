@@ -7,13 +7,14 @@ const authorize: Action<{ jwt: string }> = async ({ state, effects, actions }, {
   state.newsafe.token = newsafeJwt;
 
   window.localStorage.setItem("newsafe-auth-token", jwt);
+  actions.api.auth.authorize({ token: newsafeJwt });
 };
 
 const signOut: Action = async ({ state, effects, actions }) => {
   //   actions.api.auth.logout();
   //   actions.firebcdse.logout();
   state.newsafe.token = "";
-  window.localStorage.setItem("newsafe-auth-token", "");
+  window.localStorage.removeItem("newsafe-auth-token");
 };
 
 const authHosts = {

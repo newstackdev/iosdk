@@ -175,6 +175,7 @@ export declare const standardModules: {
                 };
                 powerups: import("./api/state").PowerupsCache;
                 posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                videoPosts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                 moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                     promise?: Promise<any> | null | undefined;
                 }>;
@@ -252,6 +253,12 @@ export declare const standardModules: {
                     sortKey: string;
                     page: number;
                 };
+                videoPosts: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
                 isNextMoodsAvailable: boolean;
                 isNextPostsAvailable: boolean;
             };
@@ -316,7 +323,7 @@ export declare const standardModules: {
                     requestedPage?: number | undefined;
                 }, void>;
                 users: import("../types").Action<undefined, void>;
-                posts: import("../types").Action<undefined, void>;
+                posts: import("../types").Action<import("../types").ContentType | undefined, void>;
             };
         };
         effects: {};

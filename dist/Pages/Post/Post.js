@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Col, Row } from "antd";
+import { Avatar, Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import { SelectMoodForm } from "../../Components/SelectMood";
 import { Spin } from "../../Components/Spin";
@@ -14,15 +14,18 @@ import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
 import { BlockExplorerLink, blockExplorerUrl } from "../../Components/Links";
 import { ContentImage } from "../../Components/Image";
+import { ContentLayoutDeepLike } from "../../Components/ContentLayout";
 import { EyeClosed } from "../../Components/Icons/EyeClosed";
 import { EyeOpen } from "../../Components/Icons/EyeOpen";
 import { LargeArrowBack } from "../../Components/Icons/LargeArrowBack";
 import { Share } from "../../Components/Share";
+import { Tags } from "./components/Tags";
 import { VerifiedIcon } from "../../Components/Icons/VerifiedIcon";
 import { Vote } from "../../Components/Vote";
 import { fischerYates } from "../../utils/random";
 import { isEmpty } from "lodash";
 import { useVerified } from "../../hooks/useVerified";
+import useMediaQuery from "../../hooks/useMediaQuery";
 export const useVotingStreamMood = () => {
     const { moodId, postId, id } = useParams();
     const state = useAppState();
@@ -44,7 +47,10 @@ export const useVotingStreamMood = () => {
     useEffect(() => {
         if (!isEmpty(cachedMoods)) {
             const randomizedMoods = fischerYates(Object.values(cachedMoods));
-            const currentMood = randomizedMoods.find((mood) => mood?.id === moodId);
+            const currentMood = randomizedMoods.find(async (mood) => {
+                const randomizedMoodId = (await mood).id;
+                return randomizedMoodId === moodId;
+            });
             setAvailableMoods(randomizedMoods);
             setCurrMood(currentMood);
             setMoodPosts(currentMood?.posts || []);
@@ -111,14 +117,15 @@ const useVotingStreamTags = () => {
         contextValue: tags,
     };
 };
-const round = (n) => Math.round(n * 10000) / 10000;
-const sumScore = (tagRels) => {
+//TODO move funcitons to separate file
+export const round = (n) => Math.round(n * 10000) / 10000;
+export const sumScore = (tagRels) => {
     if (!(tagRels instanceof Array))
         return 0;
     const w = 1 / tagRels.length;
     return round(tagRels.reduce((r, c) => r + w * (c.score || 0), 0));
 };
-const bySumScore = (a, b) => sumScore(b["_rel"]) - sumScore(a["_rel"]);
+export const bySumScore = (a, b) => sumScore(b["_rel"]) - sumScore(a["_rel"]);
 const SvgPolygons = ({ visionTags }) => !visionTags ? (_jsx(_Fragment, {})) : (_jsx("div", { style: {
         position: "absolute",
         left: 0,
@@ -136,9 +143,13 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
     const actions = useActions();
     const [copyToClipboard, setCopyToClipboard] = useState(false);
     const [isEyeOpened, setIsEyeOpened] = useState(false);
+    const [isEyeOpenedResponzive, setIsEyeOpenedResponzive] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const isResponzive = useMediaQuery("(max-width: 1024px)");
     // const moodsToAttach = (state.api.auth.moods || []).filter((m) => m.id); // current users's moods
     const nextInStream = useVotingStreamHook(); //useVotingStreamTags();
     const ref = useRef();
+    const containerDeeplike = useRef();
     const { contextType, contextValue, currPost, nextPath, index } = nextInStream;
     const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
     const username = author?.username || author?.displayName;
@@ -179,7 +190,7 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
             if (e.keyCode === 32 && e.target === document.body && rating === 100) {
                 e.preventDefault();
                 window.scrollTo(0, 500);
-                setIsEyeOpened(true);
+                !isResponzive && setIsEyeOpened(true);
             }
         });
         // if at 100 the mood will show itself
@@ -207,7 +218,7 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
             // useVotingStream={useVotingStreamMood}
             , { 
                 // useVotingStream={useVotingStreamMood}
-                votingEnabled: !!contextType, onDoneVoting: doneVoting, onLongDoneVoting: () => {
+                votingEnabled: !!contextType, setVisible: setVisible, visible: visible, visionTags: visionTags, nonVisionTags: nonVisionTags, setHilightTag: setHilightTag, isEyeOpenedResponzive: isEyeOpenedResponzive, setIsEyeOpenedResponzive: setIsEyeOpenedResponzive, addToMoods: addToMoods, onDoneVoting: doneVoting, containerDeeplike: containerDeeplike, onLongDoneVoting: () => {
                     const eh = (e) => {
                         if (e.which !== 32)
                             return;
@@ -219,25 +230,19 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
                     return () => {
                         window.removeEventListener("keyup", eh);
                     };
-                }, info: _jsxs(Row, { className: "nl-post-info-column", children: [currPost.title && (_jsx(Col, { children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: currPost.title }) })), _jsxs(Col, { style: { flex: 0.3, overflow: "overlay" }, className: "text-right", children: [_jsxs(Link, { to: `/user/${username}`, className: "nl-post-info-column__user-info", children: [_jsxs("span", { className: "paragraph-2b u-margin-bottom-medium", children: [username, isVerifiedUser && _jsx(VerifiedIcon, { style: { marginRight: 20 } })] }), _jsx("span", { className: "paragraph-2r", children: currPost.description })] }), currPost.author?.newcoinPoolTx && (_jsxs(Row, { className: "paragraph-2u u-margin-top-medium", align: "bottom", children: [_jsx("a", { href: "https://explorer-dev.newcoin.org/account/" + currPost.author?.username, target: "_blank", rel: "noreferrer", children: "Creator pool" }), _jsx(Ebene, {})] })), currPost?.author?.newcoinPoolTx && (_jsx(Row, { className: "u-margin-top-medium text-left", children: currPost.newcoinMintTx === "REQUESTED" ? (
+                }, info: _jsxs(Row, { className: "nl-post-info-column", children: [isResponzive && (_jsxs(Row, { className: "nl-post-fake-drawer__username", children: [_jsx(Avatar, { src: _jsx(ContentImage, { ...author }), className: "u-margin-right-small" }), username && (_jsx(Link, { to: `/user/${username}`, className: "nl-post-info-column__user-info", children: _jsx("p", { className: "paragraph-1r", children: username }) }))] })), _jsx(Row, { justify: "space-between", children: _jsx("p", { className: "header-2", children: currPost.title || "Folder name" }) }), _jsxs(Col, { style: { flex: 0.3, overflow: "overlay" }, className: "text-right", children: [_jsxs(Link, { to: `/user/${username}`, className: "nl-post-info-column__user-info", children: [_jsxs("span", { className: "paragraph-2b u-margin-bottom-medium", children: [username, isVerifiedUser && _jsx(VerifiedIcon, { style: { marginRight: 20 } })] }), _jsx("span", { className: "paragraph-2r", children: currPost.description })] }), currPost.author?.newcoinPoolTx && (_jsxs(Row, { className: "paragraph-2u u-margin-top-medium", align: "bottom", children: [_jsx("a", { href: "https://explorer-dev.newcoin.org/account/" + currPost.author?.username, target: "_blank", rel: "noreferrer", children: "Creator pool" }), _jsx(Ebene, {})] })), currPost?.author?.newcoinPoolTx && (_jsx(Row, { className: "u-margin-top-medium text-left", children: currPost.newcoinMintTx === "REQUESTED" ? (
                                     /* + currPost.newcoinMintTx || ""*/
-                                    _jsx("p", { className: "paragraph-2b", children: "Minting NFT..." })) : currPost.newcoinMintTx === "FAILED" ? (_jsx("p", { className: "paragraph-2b", children: "NFT Minting failed, please contact us for more details" })) : (_jsxs(_Fragment, { children: [_jsx(BlockExplorerLink, { explorer: "newcoin", id: currPost.newcoinMintTx, children: "See minted NFT" }), _jsx(NFTIcon, {})] })) }))] }), isEyeOpened && currPost.tags?.length ? (_jsx(Row, { className: "nl-post-info-column__tags-wrapper", children: [
-                                ...visionTags?.sort(bySumScore),
-                                ...nonVisionTags
-                                    // 	?.sort(bySumScore)
-                                    .slice(0, Math.max(0, 20 - visionTags.length)),
-                            ]
-                                // ?.slice(0, 10)
-                                ?.map((t) => {
-                                const tag = t.value;
-                                const score = (sumScore(t["_rel"]) * 100).toFixed(0);
-                                return (_jsxs(Row, { onMouseOver: () => setHilightTag(visionTags.filter((s) => s.value === t.value)), onMouseOut: () => setHilightTag([]), className: "paragraph-3b nl-post-info-column__infobox-wrapper__col__tag", style: {
-                                        backgroundColor: t.polygons?.length ? "#c9fd50" : "#fcfcf3",
-                                    }, children: [_jsxs("div", { className: "u-margin-right-xs", children: [score, "%"] }), _jsx("p", { children: tag })] }));
-                            }) })) : (_jsx(Row, { style: { flex: 0.4 } })), isEyeOpened && currPost.tags?.length === undefined && _jsx("p", { className: "paragraph-2b", children: "no tags found." }), _jsx(Row, { className: "nl-post-info-column__infobox-wrapper", children: _jsxs(Col, { className: "nl-post-info-column__infobox-wrapper__col", children: [_jsx(LargeArrowBack, {}), currPost.tags?.length ? (isEyeOpened ? (_jsx("span", { className: "u-margin-left-small cursor-pointer", onClick: () => {
+                                    _jsx("p", { className: "paragraph-2b", children: "Minting NFT..." })) : currPost.newcoinMintTx === "FAILED" ? (_jsx("p", { className: "paragraph-2b", children: "NFT Minting failed, please contact us for more details" })) : (_jsxs(_Fragment, { children: [_jsx(BlockExplorerLink, { explorer: "newcoin", id: currPost.newcoinMintTx, children: "See minted NFT" }), _jsx(NFTIcon, {})] })) }))] }), _jsx(Tags, { isEyeOpened: isEyeOpened, visionTags: visionTags, nonVisionTags: nonVisionTags, setHilightTag: setHilightTag, children: _jsx(Row, { style: { flex: 0.4 } }) }), _jsx(Row, { className: "nl-post-info-column__infobox-wrapper", children: _jsxs(Col, { className: "nl-post-info-column__infobox-wrapper__col", children: [_jsx(LargeArrowBack, {}), currPost.tags?.length ? (isEyeOpened ? (_jsx("span", { className: "u-margin-left-small cursor-pointer", onClick: () => {
                                             setHilightTag([]);
                                             setIsEyeOpened(false);
-                                        }, onMouseOver: () => setHilightTag(visionTags), onMouseOut: () => setHilightTag([]), children: _jsx(EyeOpen, {}) })) : (_jsx("span", { className: "cursor-pointer", onClick: () => setIsEyeOpened(true), children: _jsx(EyeClosed, {}) }))) : (_jsx(_Fragment, {})), _jsx(Share, { currentPostProps: currPost }), _jsx(PostReportModal, {})] }) })] }), children: [/PROCESSING/i.test(currPost.contentUrl || "") ? (_jsx(Spin, { title: "Processing media..." })) : (_jsx(ContentImage, { ref: ref, ...currPost, thumbnail: false })), hilightTag?.length ? _jsx(SvgPolygons, { visionTags: hilightTag }) : _jsx(_Fragment, {})] }), _jsx("div", { hidden: state.flows.rating.value !== 100, className: "app-main-full-width", children: _jsx(SelectMoodForm, { onFinish: addToMoods, title: "Add a folder" }) })] }));
+                                        }, onMouseOver: () => setHilightTag(visionTags), onMouseOut: () => setHilightTag([]), children: _jsx(EyeOpen, {}) })) : (_jsx("span", { className: "cursor-pointer", onClick: () => {
+                                            if (isResponzive) {
+                                                setIsEyeOpenedResponzive(true);
+                                                setVisible((p) => !p);
+                                            }
+                                            else
+                                                setIsEyeOpened(true);
+                                        }, children: _jsx(EyeClosed, {}) }))) : (_jsx(_Fragment, {})), _jsx(Share, { currentPostProps: currPost }), _jsx(PostReportModal, {})] }) })] }), children: [/PROCESSING/i.test(currPost.contentUrl || "") ? (_jsx(Spin, { title: "Processing media..." })) : (_jsx(ContentImage, { ref: ref, ...currPost, thumbnail: false })), hilightTag?.length ? _jsx(SvgPolygons, { visionTags: hilightTag }) : _jsx(_Fragment, {})] }), _jsx("div", { hidden: state.flows.rating.value !== 100, style: { position: "fixed", bottom: 0, width: "100%" }, children: _jsx("div", { className: "nl-post-deeplike-desktop-wrapper", children: _jsx(ContentLayoutDeepLike, { containerDeeplike: containerDeeplike, children: _jsx(SelectMoodForm, { onFinish: () => addToMoods(), title: "Save to a folder", deeplikeActions: true, setVisible: setVisible, visible: visible }) }) }) })] }));
 };
 export const Post = postBase(useVotingStreamMood, false);
 export const PostInMood = postBase(useVotingStreamMood);

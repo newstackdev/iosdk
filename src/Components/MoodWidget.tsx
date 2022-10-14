@@ -33,9 +33,7 @@ export const MoodFolderWidget: NLView<{
       }}
       className={selected ? "selected-folder bg-selected-folder" : "selectable-folder bg-hover"}
     >
-      <div style={{ width: "90%", margin: "0 auto" }}>
-        <FolderClosed />
-      </div>
+      <FolderClosed />
       <p className="folder-name">
         {/* @ts-ignore */}
         {m.title?.length > 10 ? m.title?.substring(0, 3) + "..." : m?.title || ""}

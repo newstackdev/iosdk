@@ -113,7 +113,7 @@ const AppShell: NLView = ({ children }) => {
 						state.api.auth.user.status: {state.api.auth.user?.status} <br />
 					</pre> */}
         <state.config.components.layout.Layout>
-          {state.config.routes.useDefaultRoutes ? DEFAULT_ROUTES : <></>}
+          {state.config.routes.useDefaultRoutes ? DEFAULT_ROUTES(state) : <></>}
           {children}
         </state.config.components.layout.Layout>
       </div>

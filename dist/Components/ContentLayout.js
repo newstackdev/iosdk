@@ -30,19 +30,20 @@ const ContentLayoutHorizontal3col = ({ header, info, children, isWorking, custom
     // const spanSum = (header ? 4 : 0) + (info ? 4 : 0);
     // const mainSpan = 24 - spanSum
     const extrasSpan = (header ? 4 : 0) + (info ? 4 : 0);
-    return (_jsxs(Row, { justify: "space-between", gutter: 16, className: isVote ? layoutWrapperClassName + " " + "app-post-page-layout" : layoutWrapperClassName, style: { margin: 0, height: "100%" }, children: [header && (_jsx(Col, { xs: 24, lg: isVote ? 5 : isPost ? 7 : isMood ? 1 : 4, className: isVote ? "text-left post-notification-column" : "text-left", style: isVote ? { display: "flex", padding: 0, marginTop: 10 } : {}, children: header })), _jsx(Col, { xs: 24, lg: isPost || isVote ? 18 - extrasSpan : isMood ? 27 - extrasSpan : 24 - extrasSpan, className: `${customClass}`, style: isVote
-                    ? {
-                        width: "100%",
-                        padding: 0,
-                        display: "flex",
-                    }
+    return (_jsxs(Row, { justify: "space-between", gutter: 16, className: isVote ? layoutWrapperClassName + " " + "app-post-page-layout" : layoutWrapperClassName, style: { margin: 0, height: "100%" }, children: [header && (_jsx(Col, { xs: 24, lg: isVote ? 5 : isPost ? 7 : isMood ? 1 : 4, className: isVote ? "text-left post-notification-column" : "text-left", children: header })), _jsx(Col, { xs: 24, lg: isPost || isVote ? 18 - extrasSpan : isMood ? 27 - extrasSpan : 24 - extrasSpan, className: `${customClass} ${isVote ? "app-content-vote-layout" : ""}`, style: extrasSpan && state.flows.rating.value !== 100
+                    ? { display: "flex", height: "100%" }
                     : extrasSpan
                         ? { display: "flex" }
                         : {
                             width: "100%",
                             padding: 0,
                             display: "flex",
-                        }, children: _jsx("div", { className: `app-main-full-height ${customPosition}`, children: children }) }), info ? (_jsx(Col, { xs: 24, lg: isVote ? 9 : isPost ? 7 : 4, style: isVote ? { display: "flex", padding: 0 } : { display: "flex" }, children: _jsx("div", { style: isVote ? { width: "100%", display: "flex", justifyContent: "end" } : { width: "100%" }, className: "text-left", children: info }) })) : ("")] }));
+                        }, children: _jsx("div", { className: `app-main-full-height ${customPosition} ${isVote ? "app-content-vote" : ""}`, children: children }) }), info ? (_jsx(Col, { xs: 24, lg: isVote ? 9 : isPost ? 7 : 4, style: isVote ? { display: "flex", padding: 0 } : { display: "flex" }, children: _jsx("div", { style: isVote
+                        ? { width: "100%", display: "flex", justifyContent: "end", height: "100%" }
+                        : { width: "100%", height: "100%" }, className: "text-left", children: info }) })) : ("")] }));
+};
+export const ContentLayoutDeepLike = ({ children, containerDeeplike, }) => {
+    return (_jsxs(Row, { style: { width: "100%" }, children: [_jsx(Col, { xs: 24, lg: 20, ref: containerDeeplike, style: { position: "relative", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "end" }, children: children }), _jsx(Col, { xs: 24, lg: 4, style: { zIndex: -1 }, children: "\u00A0" })] }));
 };
 export const ContentLayout = ContentLayoutHorizontal3col;
 //# sourceMappingURL=ContentLayout.js.map

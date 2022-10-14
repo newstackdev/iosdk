@@ -6,7 +6,7 @@ import { capFirst } from "../../utils/capFirst";
 const toggleWebSocket = pipe(debounce(500), async ({ state, effects, actions }) => {
     if (!state.api.auth.authorized)
         return;
-    const token = state.firebase?.token;
+    const token = state.newsafe?.token || state.firebase?.token;
     if (!token)
         return;
     effects.websockets.newlife.toggle(state.config.settings.newgraph.websocketsServer, token);

@@ -6,8 +6,7 @@ export const logout = async ({ state, actions, effects }, { noRouting } = {}) =>
     state.auth.timers.timeToRefreshCancel();
     await actions.api.auth.logout();
     Object.values(state.auth.tokens).forEach((t) => t.logout());
-    // await effects.firebase.logout();
-    // actions.routing.historyPush({ location: "/" });
+    await actions.newsafe.signOut();
     if (!noRouting)
         window.location.replace("/");
 };

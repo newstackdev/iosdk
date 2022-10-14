@@ -12,7 +12,9 @@ export const onInitializeOvermind: Action<undefined> = async ({ effects, state, 
 
   setTimeout(() => (state.auth.initialized = true), 700);
 
-  auth.onAuthStateChanged((u) => actions.firebase.handleAuthChange(u));
+  auth.onAuthStateChanged((u) => {
+    actions.firebase.handleAuthChange(u);
+  });
 };
 
 export const logout: Action = async ({ effects, state }) => {

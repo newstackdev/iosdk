@@ -88,14 +88,25 @@
   padding-bottom: 120px;
 }
 
+.app-content-vote-layout {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  height: 50%;
+
+  @media screen and (max-width: 1024px) {
+    height: 50% !important;
+  }
+}
+
 .app-content-layout {
   min-height: 65vh;
 
-  @media screen and (max-width: 428px) {
-    & > div:not(:last-child) {
-      margin-bottom: 40px;
-    }
-  }
+  // @media screen and (max-width: 428px) {
+  //   & > div:not(:last-child) {
+  //     margin-bottom: 40px;
+  //   }
+  // }
 
   // .app-main-full-height {
   // 	min-height: 100%;
@@ -135,10 +146,6 @@ ul.app-ul-simple {
 .app-post-page-layout {
   height: 100vh !important;
   margin: 0 !important;
-
-  @media screen and (max-width: 768px) {
-    height: 100% !important;
-  }
 }
 
 .app-layout-wrapper {
@@ -151,4 +158,14 @@ ul.app-ul-simple {
   // max-width: 1250px;
   max-width: 92.7%;
   overflow: hidden;
+}
+
+.app-content-vote {
+  // max-height: 50%;
+  margin-top: 10px;
+
+  @media screen and (max-width: 468px) {
+    max-height: 100%;
+    margin-top: 0px;
+  }
 }

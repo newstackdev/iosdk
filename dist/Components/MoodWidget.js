@@ -14,7 +14,7 @@ export const MoodFolderWidget = ({ mood, onClick, selected, force }) => {
             color: "white",
             width: "100%",
             border: "none",
-        }, className: selected ? "selected-folder bg-selected-folder" : "selectable-folder bg-hover", children: [_jsx("div", { style: { width: "90%", margin: "0 auto" }, children: _jsx(FolderClosed, {}) }), _jsx("p", { className: "folder-name", children: m.title?.length > 10 ? m.title?.substring(0, 3) + "..." : m?.title || "" })] }));
+        }, className: selected ? "selected-folder bg-selected-folder" : "selectable-folder bg-hover", children: [_jsx(FolderClosed, {}), _jsx("p", { className: "folder-name", children: m.title?.length > 10 ? m.title?.substring(0, 3) + "..." : m?.title || "" })] }));
 };
 export const MoodWidget = ({ mood, onClick, selected, force }) => {
     const state = useAppState();

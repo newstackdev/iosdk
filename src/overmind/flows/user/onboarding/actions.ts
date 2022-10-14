@@ -47,7 +47,6 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
     legacyToken: string;
     updated: number;
   } = JSON.parse(window.localStorage.getItem("legacyAuthToken") || "{}");
-
   if (legacy.updated && Date.now() - (legacy.updated || 0) < 30 * 60000) {
     // const cf = state.flows.user.create;
     // cf.form = legacy.form;
@@ -58,16 +57,19 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
     await actions.api.auth.authorize();
     await actions.flows.user.create.startLegacyImport();
   }
-
   if (!state.auth.authenticated && !state.api.auth.authorized && !isEmpty(state.firebase?.token)) {
     actions.routing.historyPush({ location: "/" });
   }
 
   reaction(reduceState, actions.flows.user.create._wizardReact);
   reaction(
-    (s) => ({ auth: s.api.auth, username: s.flows.user.create.form.username }),
-    ({ username, auth }) => {
-      if (!auth.authorized) actions.flows.user.create.checkAvailability({ username });
+    (s) => ({
+      auth: s.api.auth,
+      username: s.flows.user.create.form.username,
+      legacyImportOngoing: s.flows.user.create.isLegacyUpdateOngoing,
+    }),
+    ({ username, auth, legacyImportOngoing }) => {
+      if (!auth.authorized || legacyImportOngoing) actions.flows.user.create.checkAvailability({ username });
     },
   );
 };
@@ -102,7 +104,6 @@ export const startLegacyImport: Action = //({ state }, val) =>
       ...user,
       username,
     });
-
     state.flows.user.create = {
       ...state.flows.user.create,
       legacyToken: legacyToken,
@@ -110,8 +111,10 @@ export const startLegacyImport: Action = //({ state }, val) =>
       isLegacyUpdateOngoing: true,
     };
 
-    actions.auth.logout({ noRouting: true });
+    await actions.auth.logout({ noRouting: true });
     actions.routing.historyPush({ location: "/signup/domain" });
+
+    if (window.sessionStorage.getItem("e2eTestMode") === "true") await actions.api.auth.authorize({ token: legacyToken });
 
     window.localStorage.setItem("legacyAuthToken", JSON.stringify({ legacyToken, updated: Date.now() }));
   };
@@ -144,7 +147,11 @@ export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: Wiza
     state.flows.user.create.wizard.send("UPDATE", i);
 
     const subscription = (state.api.auth.user.subscriptionStatus || "").split(/_/);
-    if (subscription[0] === "io-domain-sale" && state.flows.user.create.form.username != subscription[1]) {
+    if (
+      subscription[0] === "io-domain-sale" &&
+      state.flows.user.create.form.username != subscription[1] &&
+      isEmpty(state.api.auth.user.username)
+    ) {
       actions.flows.user.create.updateForm({ username: subscription[1] });
       if (!state.flows.user.create.isLegacyUpdateOngoing && !state.api.auth.authorized) {
         actions.routing.historyPush({ location: "/signup/create" });
@@ -205,7 +212,10 @@ export const checkAvailability: Action<{ username?: string }> = pipe(
 
     const currUser = state.api.auth.user;
     const isOpenSeaOffer = !isEmpty(r.data?.offer);
-    const availableOnNewlife = r.data?.available || (currUser?.username === username && currUser.status === "imported");
+    const availableOnNewlife =
+      r.data?.available ||
+      (currUser?.username === username && currUser.status === "imported") ||
+      state.api.auth.user.newcoinAccTx;
     // const availableOnNewcoin = nc?.statusCode === 500;
 
     state.flows.user.create.formUsernameIsAvailable = availableOnNewlife

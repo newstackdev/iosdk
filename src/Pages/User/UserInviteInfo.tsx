@@ -2,6 +2,7 @@
 import { Button, Col, FormInstance, Input, Modal, Row } from "antd";
 import { Clipboard } from "../../Components/Icons/Clipboard";
 import { ContentLayout } from "../../Components/ContentLayout";
+import { CopyClipboardHashInput } from "../../Components/CopyClipboardHashInput";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { QRCodeSVG } from "qrcode.react";
@@ -21,11 +22,14 @@ const UserInviteInfo = ({
 }) => {
   const state = useAppState();
   const [visible, setVisible] = useState<boolean>(true);
-  const [showCopyText, setShowCopyText] = useState<boolean>(false);
+
+  if (hash) {
+    navigator.clipboard.writeText(window.location.origin + `?invite=${hash}`);
+  }
 
   const user = state.api.auth.user;
 
-  const numberOfInvites = (user as any).availableInvites || 6;
+  const numberOfInvites = user.availableInvites || 0;
 
   return (
     <Modal
@@ -40,48 +44,27 @@ const UserInviteInfo = ({
       }}
     >
       <ContentLayout>
-        <Row className="text-center user-invite-info_modal-root-row">
-          <Row style={{ flexDirection: "column-reverse" }}>
-            <Col className="user-invite-info_modal-center-text-col">
-              {invitedUsername && <p className="header-1 text-center">you invited {invitedUsername}</p>}
-            </Col>
+        <Row className="user-invite-info_modal-root-row">
+          <Row style={{ flexDirection: "column", justifyContent: "start" }} className="u-margin-top-medium">
             <Col className="user-invite-info_modal-center-text-col">
               <p className="header-1b text-center">{numberOfInvites} invites left</p>
             </Col>
+            <Col className="user-invite-info_modal-center-text-col">
+              {invitedUsername && (
+                <p className="paragraph-1r text-center">
+                  you invited <span className="paragraph-1b">{invitedUsername}</span>
+                </p>
+              )}
+            </Col>
+            <Col>
+              <p className="paragraph-1r text-left u-margin-top-large">
+                Copy your unique invite code to send to {invitedUsername}. This code is a one-off and can be used on sign up.
+              </p>
+            </Col>
           </Row>
+
           <Col className="user-invite-info_modal-footer-col">
-            {hash && showCopyText ? (
-              <div style={{ position: "relative", cursor: "pointer" }}>
-                <Row>
-                  <Input
-                    type="primary"
-                    className="nl-user-unvite-input-hash"
-                    // @ts-ignore
-                    placeholder={hash}
-                  />
-                  <span style={{ position: "absolute", bottom: "11px", right: "0px" }}>
-                    <Clipboard fill={"#d7ff65"} />
-                  </span>
-                  <div style={{ position: "absolute", top: "43px" }}>
-                    <p className="paragraph-3r" style={{ color: "#d7ff65" }}>
-                      Copied to clipboard!
-                    </p>
-                  </div>
-                </Row>
-              </div>
-            ) : (
-              <CopyToClipboard text={window.location.origin + `?invite=${hash}`}>
-                <Button
-                  type="primary"
-                  className="u-margin-top-large"
-                  onClick={() => {
-                    setShowCopyText(true);
-                  }}
-                >
-                  Get an invite link
-                </Button>
-              </CopyToClipboard>
-            )}
+            {hash && <CopyClipboardHashInput hash={hash} highlight />}
             <Button
               type="primary"
               className="u-margin-top-large"
@@ -91,7 +74,7 @@ const UserInviteInfo = ({
                 form.resetFields();
               }}
             >
-              Invite a friend
+              Invite more friends
             </Button>
             <p className="text-left paragraph-2b u-margin-top-large">
               Need help? <span className="paragraph-2u">Join our telegram group</span>

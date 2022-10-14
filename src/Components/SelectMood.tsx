@@ -1,5 +1,5 @@
 import { Callback, NLView } from "../types";
-import { Col, Form } from "antd";
+import { Col, Drawer, Form } from "antd";
 import { ItemGrid } from "./ItemGrid";
 import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 import { MoodCreateModal } from "../Pages/Mood/MoodCreate";
@@ -10,7 +10,7 @@ import { ProgressButton } from "./ProgressButton";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { omit } from "lodash";
 import { useAppState } from "../overmind";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Title from "../Pages/Explore/Title";
 
 export const SelectMood: NLView<{
@@ -19,7 +19,9 @@ export const SelectMood: NLView<{
   value?: MoodReadResponse[];
   limit?: number;
   title?: string;
-}> = ({ moods, onChange, limit, title }) => {
+  deeplikeActions?: boolean;
+  deepLikeContainer?: React.MutableRefObject<null>;
+}> = ({ moods, onChange, limit, title, deeplikeActions, deepLikeContainer }) => {
   const [_value, _setValue] = useState<Record<string, MoodReadResponse>>({});
   const state = useAppState();
 
@@ -47,12 +49,10 @@ export const SelectMood: NLView<{
         color: "white",
         width: "100%",
         border: "none",
-        padding: "10px",
       }}
+      className="selectable-folder bg-hover"
     >
-      <div style={{ width: "90%", margin: "0 auto" }}>
-        <MoodCreateModal onCreated={(v) => v?.id && toggle(v)} />
-      </div>
+      <MoodCreateModal onCreated={(v) => v?.id && toggle(v)} />
     </div>
   );
 
@@ -60,8 +60,10 @@ export const SelectMood: NLView<{
     <ItemGrid
       items={[{}, ...checkMoods]}
       limit={limit}
+      deepLikeContainer={deepLikeContainer}
       // titleLink="/save-folder"
       title={title}
+      deeplikeActions
       // setSelectedFolder={setSelectedFolder}
       // selectedFolder={selectedFolder}
       render={(m, index) => {
@@ -94,16 +96,27 @@ export const SelectMood: NLView<{
   // </ScrollMenu>
 };
 
-export const SelectMoodForm: NLView<{ title?: string; onFinish: Callback }> = ({ title, onFinish }) => (
-  <Form className="app-main-full-width" onFinish={onFinish}>
-    <Form.Item name="moods" style={{ marginBottom: "40px" }}>
-      {title ? <SelectMood title={title} /> : <SelectMood />}
-    </Form.Item>
-
-    <Form.Item label="" wrapperCol={{ offset: 0, span: 24 }} className="text-right">
+export const SelectMoodForm: NLView<{
+  title?: string;
+  onFinish: Callback;
+  deeplikeActions?: boolean;
+  setVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  visible?: boolean;
+}> = ({ title, onFinish, deeplikeActions, setVisible, visible }) => {
+  return (
+    <div className="nl-post-deeplike-container">
+      <Form className="app-main-full-width" onFinish={onFinish}>
+        <Title title={"Save to a folder"} deeplikeActions setVisible={setVisible} visible={visible} />
+        <Form.Item name="moods" style={{ margin: 0 }}>
+          <SelectMood title={title} deeplikeActions={deeplikeActions} limit={6} />
+        </Form.Item>
+        {/* //TODO uncomment - needed action to finish the process*/}
+        {/* <Form.Item label="" wrapperCol={{ offset: 0, span: 24 }} className="text-right">
       <ProgressButton actionName="api.post.attachToMoods" type="primary" htmlType="submit" progressText="Adding to moods...">
         Share
       </ProgressButton>
-    </Form.Item>
-  </Form>
-);
+    </Form.Item> */}
+      </Form>
+    </div>
+  );
+};

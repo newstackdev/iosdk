@@ -1,3 +1,4 @@
+import { IOView } from "../types";
 import { ReactElement } from "react";
 declare type LayedOutContent = {
     header?: ReactElement | string | undefined;
@@ -10,5 +11,9 @@ declare type LayedOutContent = {
     isVote?: boolean;
     position?: "top";
 };
+export declare const ContentLayoutDeepLike: IOView<{
+    children: React.ReactChild;
+    containerDeeplike: React.MutableRefObject<any>;
+}>;
 export declare const ContentLayout: import("react").FunctionComponent<import("react").PropsWithChildren<LayedOutContent>>;
 export {};

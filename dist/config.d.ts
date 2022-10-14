@@ -112,6 +112,7 @@ export declare const config: {
                         };
                         powerups: import("./overmind/api/state").PowerupsCache;
                         posts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                        videoPosts: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                         moods: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse & {
                             promise?: Promise<any> | null | undefined;
                         }>;
@@ -182,6 +183,12 @@ export declare const config: {
                             page: number;
                         };
                         posts: {
+                            _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                            items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                            sortKey: string;
+                            page: number;
+                        };
+                        videoPosts: {
                             _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
                             items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
                             sortKey: string;

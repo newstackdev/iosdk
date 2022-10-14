@@ -2,6 +2,9 @@ const uuid = () => Cypress._.random(0, 1e6);
 const text = uuid();
 
 describe("Edit profile", () => {
+  before(() => {
+    cy.bypassRegisteredUserAuth();
+  });
   it("Can Navigate to update profile page", () => {
     cy.visit("/my/profile/update");
   });

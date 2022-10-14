@@ -1,4 +1,4 @@
-import { Action } from "../../types";
+import { Action, ContentType } from "../../types";
 import { Context } from "../overmind";
 import {
   CreativeSearchResponse,
@@ -10,7 +10,7 @@ import {
   UserReadPublicResponse,
 } from "@newstackdev/iosdk-newgraph-client-js";
 import { aestheticList } from "./SearchCreative/aestheticList";
-import { debounce, derived, filter, json, pipe } from "overmind";
+import { debounce, json, pipe } from "overmind";
 import { fischerYates } from "../../utils/random";
 import _ from "lodash";
 
@@ -66,7 +66,7 @@ const creativeSearch: Action<{ tags: string; aesthetics: string }> = pipe(deboun
 const listTopMoods: Action<{ requestedPage?: number }> = pipe(
   debounce(300),
   async ({ state, actions, effects }: Context, { requestedPage }) => {
-    const page = requestedPage ?? state.lists.top.moods.page ?? 0;
+    const page = requestedPage ?? state.lists.top.moods.page;
     const r = await state.api.client.mood.listTopList({
       page: page.toString(),
     }); // Math.floor(20 + (Math.random() * 20)).toString()
@@ -104,22 +104,34 @@ export const listTopUsers: Action = pipe(debounce(300), async ({ state, actions,
   state.lists.top.users.page++;
 });
 
-export const listTopPosts: Action = pipe(debounce(300), async ({ state, actions, effects }: Context) => {
-  const page = state.lists.top.posts.page ?? 0;
-  state.lists.top.isNextPostsAvailable = true;
-  const r = await state.api.client.post.listTopList({
-    page: page.toString(),
-  });
-  if (_.isEmpty(r.data?.value)) {
-    state.lists.top.isNextPostsAvailable = false;
-    return;
-  }
-  r.data?.value?.forEach((v) => {
-    state.api.cache.posts[v.id || ""] = v;
-    state.lists.top.posts.items.push(v);
-  });
-  state.lists.top.posts.page++;
-});
+export const listTopPosts: Action<ContentType | undefined, void> = pipe(
+  debounce(300),
+  async ({ state }: Context, contentType) => {
+    const topPostPage = state.lists.top.posts.page ?? 0;
+    const topVideoPostPage = state.lists.top.videoPosts.page ?? 0;
+    state.lists.top.isNextPostsAvailable = true;
+    const r = await state.api.client.post.listTopList({
+      page: contentType === ContentType.video ? topVideoPostPage.toString() : topPostPage.toString(),
+      contentType,
+    });
+
+    if (_.isEmpty(r.data?.value)) {
+      state.lists.top.isNextPostsAvailable = false;
+      return;
+    }
+
+    r.data?.value?.forEach((v) => {
+      if (contentType === ContentType.video) {
+        state.api.cache.videoPosts[v.id || ""] = v;
+        state.lists.top.videoPosts.items.push(v);
+      } else {
+        state.api.cache.posts[v.id || ""] = v;
+        state.lists.top.posts.items.push(v);
+      }
+    });
+    contentType === ContentType.video ? state.lists.top.videoPosts.page++ : state.lists.top.posts.page++;
+  },
+);
 
 export const searchUsers: Action<{ query: string }> = pipe(
   debounce(300),
@@ -252,13 +264,13 @@ type ListState<T> = {
   page: number;
 };
 
-const newListState = <T>({ sortKey }: { sortKey: string } = { sortKey: "updated" }) =>
+const newListState = <T>(page?: number, { sortKey }: { sortKey: string } = { sortKey: "updated" }) =>
   ({
     _items: {} as Record<string, T>,
     items: [],
     sortKey: sortKey,
     startItem: 0,
-    page: 0,
+    page: page || 0,
   } as ListState<T>);
 
 export default {
@@ -271,9 +283,10 @@ export default {
     },
     postsSearch: {},
     top: {
-      moods: newListState<MoodReadResponse>(),
+      moods: newListState<MoodReadResponse>(Math.floor(20 + Math.random() * 20)),
       users: newListState<UserReadPublicResponse>(),
-      posts: newListState<PostReadResponse>(),
+      posts: newListState<PostReadResponse>(Math.floor(50 + Math.random() * 50)),
+      videoPosts: newListState<PostReadResponse>(Math.floor(10 + Math.random() * 10)),
       isNextMoodsAvailable: true,
       isNextPostsAvailable: true,
     },

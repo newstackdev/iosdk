@@ -48,7 +48,7 @@ export const Mood = () => {
         actions.ux.setLayout({ headerShown: false });
         actions.ux.setFooterVisibility({ footerShown: false });
         return () => {
-            actions.ux.setLayout({ headerShown: false });
+            actions.ux.setLayout({ headerShown: true });
             actions.ux.setFooterVisibility({ footerShown: true });
         };
     }, []);

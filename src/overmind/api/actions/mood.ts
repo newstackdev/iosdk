@@ -79,6 +79,7 @@ export const read: Action<{ id?: string }> = async ({ state, actions, effects },
   if (curr.promise) return; // await curr.promise;
 
   const promise = state.api.client.mood.moodList({ id });
+
   console.log(await promise, "moods");
 
   await actions.api.mood.cache({ moods: [{ id, promise }] });
