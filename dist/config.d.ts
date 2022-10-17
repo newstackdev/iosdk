@@ -196,6 +196,7 @@ export declare const config: {
                         };
                         isNextMoodsAvailable: boolean;
                         isNextPostsAvailable: boolean;
+                        isNextUsersAvailable: boolean;
                     };
                     selectedUser: {
                         moods: {

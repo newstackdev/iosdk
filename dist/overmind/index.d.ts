@@ -227,6 +227,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 };
                 isNextMoodsAvailable: boolean;
                 isNextPostsAvailable: boolean;
+                isNextUsersAvailable: boolean;
             };
             selectedUser: {
                 moods: {

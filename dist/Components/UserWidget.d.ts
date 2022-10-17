@@ -6,11 +6,11 @@ import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/io
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 export declare const SOCIAL_MEDIA: UserSocials[];
 export declare const badgeIcons: {
-    daoVotedProposal: JSX.Element;
-    daoCreated: JSX.Element;
-    daoCreatedProposal: JSX.Element;
-    daoJoinedCount: JSX.Element;
-    staked: JSX.Element;
+    daoVotedProposal: string;
+    daoCreated: string;
+    daoCreatedProposal: string;
+    daoJoinedCount: string;
+    staked: string;
 };
 export interface IBadgeResponse {
     done: boolean;
@@ -55,6 +55,7 @@ export declare const UserWidgetHeading: NLView<{
     setActiveKey?: React.Dispatch<React.SetStateAction<UserFlowRoutes>>;
     setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
     activeKey?: UserFlowRoutes;
+    stakeMode?: boolean;
 }>;
 export declare const UserSocialInfo: NLView<{
     user?: UserReadPrivateResponse;

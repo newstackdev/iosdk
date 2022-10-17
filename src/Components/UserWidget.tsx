@@ -51,11 +51,11 @@ export const SOCIAL_MEDIA = [
 ];
 
 export const badgeIcons = {
-  ["daoVotedProposal"]: <VerifiedIcon />,
-  ["daoCreated"]: <VerifiedIcon />,
-  ["daoCreatedProposal"]: <VerifiedIcon />,
-  ["daoJoinedCount"]: <VerifiedIcon />,
-  ["staked"]: <VerifiedIcon />,
+  ["daoVotedProposal"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
+  ["daoCreated"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
+  ["daoCreatedProposal"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
+  ["daoJoinedCount"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
+  ["staked"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
 };
 
 export interface IBadgeResponse {
@@ -289,8 +289,8 @@ export const UserStake: NLView<{
             <p className="header-3 text-left">
               {membershipValue > 0 ? (
                 <>
-                  Your stake in {poolInfo.code || ""} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value}{" "}
-                  GNCO more to increase your membership value.
+                  Your stake in {poolInfo.code} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value} GNCO
+                  more to increase your membership value.
                 </>
               ) : (
                 <>Join {_user?.username || ""}'s DAO</>
@@ -576,7 +576,8 @@ export const UserWidgetHeading: NLView<{
   setActiveKey?: React.Dispatch<React.SetStateAction<UserFlowRoutes>>;
   setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
   activeKey?: UserFlowRoutes;
-}> = ({ user, setActiveKey, activeKey }) => {
+  stakeMode?: boolean;
+}> = ({ user, setActiveKey, stakeMode }) => {
   const u = useCachedUser({ username: user?.username }, true);
   const state = useAppState();
   const actions = useActions();
@@ -727,11 +728,11 @@ export const UserWidgetHeading: NLView<{
                       badges.value?.map((badge, index) => {
                         return (
                           <Tooltip trigger="hover" title={badge?.title} key={badge?.id}>
-                            <span
+                            <img
+                              src={badgeIcons[badge.name]}
                               className={`${index === 0 ? "u-margin-left-small" : ""} u-margin-right-small`}
-                              style={{ height: 40, width: 40, backgroundColor: "grey", borderRadius: "50%" }}
-                              //TODO: remove styling and replace it with available icons when available
-                            ></span>
+                              style={{ height: 40, width: 40, borderRadius: "50%" }}
+                            />
                           </Tooltip>
                         );
                       })}
@@ -753,17 +754,17 @@ export const UserWidgetHeading: NLView<{
               <Col onClick={() => setActiveKey && setActiveKey("Powered")} className="user-widget-heading__powerup-number">
                 <span>
                   <p className="header-1r">{poweredNumber}</p>
-                  <p className="paragraph-2r">powered by</p>
+                  <p className="paragraph-2r">{stakeMode ? "staked by" : "powered by"}</p>
                 </span>
               </Col>
               <Col onClick={() => setActiveKey && setActiveKey("Powering")} className="user-widget-heading__powerup-number">
                 <span>
                   <p className="header-1r">{poweringNumber}</p>
-                  <p className="paragraph-2r">powering</p>
+                  <p className="paragraph-2r">{stakeMode ? "staking" : "powering"}</p>
                 </span>
               </Col>
               <Col xs={24} sm={12} className="powerup text-right">
-                <UserPowerup user={u} />
+                {stakeMode ? <UserStake user={u} /> : <UserPowerup user={u} />}
                 <div className="user-widget-heading__powering-symbol">
                   {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
                   {poolInfo.total && <p className="paragraph-2r">{poolInfo.total.quantity} staked</p>}
@@ -1065,6 +1066,7 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({ us
   const state = useAppState();
   const { verifiedUsers } = useVerified([user.username || ""]);
   const isUserVerified = verifiedUsers && user.username && verifiedUsers.includes(user.username);
+  const poolInfo = useCachedPool({ owner: user?.username });
 
   return (
     <>
@@ -1083,7 +1085,7 @@ export const UserNewcoinInfo: NLView<{ user?: UserReadPrivateResponse }> = ({ us
         link={`https://explorer-dev.newcoin.org/account/${user.username}`}
         collapse={true}
       />
-      <DataRow title="newcoin ticker" value={(user as any).newcoinTicker.toUpperCase()} collapse={true} />
+      <DataRow title="newcoin ticker" value={poolInfo.code.toUpperCase()} collapse={true} />
       <DataRow title="account balance" value={state.newcoin.account.acc_balances} collapse={true} />
 
       <DataRow title="newcoin pool" value={<BlockExplorerLink id={user.newcoinPoolId} />} collapse={true} />

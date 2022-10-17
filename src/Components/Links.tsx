@@ -8,8 +8,7 @@ export const blockExplorerUrl = {
         "nodeUrl=http%3A%2F%2Ftestnet.newcoin.org&coreSymbol=NCO&systemDomain=eosio&" +
         "hyperionUrl=http%3A%2F%2Fhyperion-dev.newcoin.org",
 
-  newcoin: (id: string) => `https://explorer.newcoin.org/transaction/${id}`,
-  newscan: (id: string) => `https://newscan.live/transaction/${id}`,
+  newcoin: (id: string) => `https://newscan.live/transaction/${id}`,
   //  `https://explorer-dev.newcoin.org/transaction/${id}`,
 };
 

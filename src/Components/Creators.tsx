@@ -8,12 +8,8 @@ import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
 import { NLView } from "../types";
-import {
-  UserInvitationPagedListReadPublicResponse,
-  UserInvitationReadPublicResponse,
-  UserReadPublicResponse,
-} from "@newstackdev/iosdk-newgraph-client-js";
-import { UserPowerup } from "./UserWidget";
+import { UserInvitationReadPublicResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { UserPowerup, UserStake } from "./UserWidget";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
@@ -39,7 +35,8 @@ export const CreatorWidget: NLView<{
   buttonType?: string;
   setAddedUsers: React.Dispatch<any>;
   addedUsers: any;
-}> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers }) => {
+  stakeMode?: boolean;
+}> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, stakeMode = false }) => {
   const [activeButton, setActiveButton] = useState<boolean>(false);
   const user = useCachedUser(creator);
   const { verifiedUsers } = useVerified([user.username || ""]);
@@ -74,7 +71,8 @@ export const CreatorWidget: NLView<{
 
             {symbol && (
               <p className="paragraph-1r typography-overflow">
-                powering {creator.powering} ${symbol}
+                {stakeMode ? "staking" : "powering"}
+                {creator.powering} ${symbol}
               </p>
             )}
           </Col>
@@ -113,6 +111,10 @@ export const CreatorWidget: NLView<{
             >
               <span className="paragraph-2b">{buttonName}</span>
             </Button>
+          ) : stakeMode ? (
+            <div onClick={(e) => e.preventDefault()}>
+              <UserStake user={creator} />
+            </div>
           ) : (
             <div onClick={(e) => e.preventDefault()}>
               <UserPowerup user={creator} />

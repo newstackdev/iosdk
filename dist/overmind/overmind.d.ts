@@ -227,6 +227,7 @@ export declare const config: (cfg: PartialConfiguration) => {
                 };
                 isNextMoodsAvailable: boolean;
                 isNextPostsAvailable: boolean;
+                isNextUsersAvailable: boolean;
             };
             selectedUser: {
                 moods: {

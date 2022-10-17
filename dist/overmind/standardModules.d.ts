@@ -261,6 +261,7 @@ export declare const standardModules: {
                 };
                 isNextMoodsAvailable: boolean;
                 isNextPostsAvailable: boolean;
+                isNextUsersAvailable: boolean;
             };
             selectedUser: {
                 moods: {

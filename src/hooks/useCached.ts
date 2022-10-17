@@ -86,7 +86,7 @@ export const useCachedPool = (pool?: { owner?: string; code?: string }, force?: 
       actions.newcoin.getPoolInfo({ pool });
       console.log("Getting pool for ", id);
     } else console.log("NOT Getting pool for ", id);
-  }, [id, cache[id]]);
+  }, [id]);
 
   return cache[id] ? cache[id].rows[0] : { owner: "", code: "", total: { quantity: 0 } }; //cache[id] || { rows: [], more: false, next_key: "" };
 };

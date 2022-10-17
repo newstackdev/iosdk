@@ -51,6 +51,7 @@ declare const _default: {
             videoPosts: ListState<PostReadResponse>;
             isNextMoodsAvailable: boolean;
             isNextPostsAvailable: boolean;
+            isNextUsersAvailable: boolean;
         };
         selectedUser: {
             moods: ListState<MoodReadResponse>;

@@ -231,6 +231,7 @@ declare const _default: {
                         };
                         isNextMoodsAvailable: boolean;
                         isNextPostsAvailable: boolean;
+                        isNextUsersAvailable: boolean;
                     };
                     selectedUser: {
                         moods: {
@@ -891,6 +892,7 @@ declare const _default: {
                     };
                     isNextMoodsAvailable: boolean;
                     isNextPostsAvailable: boolean;
+                    isNextUsersAvailable: boolean;
                 };
                 selectedUser: {
                     moods: {

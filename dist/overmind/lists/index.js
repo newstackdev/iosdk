@@ -68,11 +68,16 @@ const resetMoodAndPostAvailability = ({ state }) => {
     state.lists.selectedUser.isNextMoodsAvailable = true;
     state.lists.selectedUser.isNextPostsAvailable = true;
 };
-export const listTopUsers = pipe(debounce(300), async ({ state, actions, effects }) => {
+export const listTopUsers = pipe(debounce(300), async ({ state }) => {
     const page = state.lists.top.users.page ? state.lists.top.users.page + 1 : Math.floor(Math.random() * 10);
+    state.lists.top.isNextUsersAvailable = true;
     const r = await state.api.client.user.listTopList({
         page: page.toString(),
     });
+    if (_.isEmpty(r.data?.value)) {
+        state.lists.top.isNextUsersAvailable = false;
+        return;
+    }
     r.data.value?.forEach((v) => {
         state.api.cache.users.byId[v.id || ""] = v;
         state.api.cache.users.byUsername[v.username || ""] = v;
@@ -232,6 +237,7 @@ export default {
             videoPosts: newListState(Math.floor(10 + Math.random() * 10)),
             isNextMoodsAvailable: true,
             isNextPostsAvailable: true,
+            isNextUsersAvailable: true,
         },
         selectedUser: {
             moods: newListState(),

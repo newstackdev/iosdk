@@ -42,9 +42,6 @@ export const NewcoinRecept: NLView<{
       <div className="nl-vertical-space">&nbsp;</div>
       <div className="text-center" style={{ marginTop: 20 }}>
         {/* <h1>{round(value - fee)} $GNCO</h1> */}
-        <Button className="nl-button-primary" onClick={() => openUrl(blockExplorerUrl.newscan(tx))}>
-          View on Newscan
-        </Button>
         <Button className="nl-button-primary" onClick={() => openUrl(blockExplorerUrl.newcoin(tx))}>
           View on Newcoin
         </Button>

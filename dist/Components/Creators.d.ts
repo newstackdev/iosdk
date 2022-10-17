@@ -16,6 +16,7 @@ export declare const CreatorWidget: NLView<{
     buttonType?: string;
     setAddedUsers: React.Dispatch<any>;
     addedUsers: any;
+    stakeMode?: boolean;
 }>;
 export declare const CreatorsList: NLView<ICreators>;
 export declare const Creators: NLView<ICreators>;
