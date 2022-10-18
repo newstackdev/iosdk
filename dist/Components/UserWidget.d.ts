@@ -6,11 +6,11 @@ import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/io
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 export declare const SOCIAL_MEDIA: UserSocials[];
 export declare const badgeIcons: {
-    daoVotedProposal: string;
-    daoCreated: string;
-    daoCreatedProposal: string;
-    daoJoinedCount: string;
-    staked: string;
+    daoVotedProposal: number;
+    daoCreated: number;
+    daoCreatedProposal: number;
+    daoJoinedCount: number;
+    staked: number;
 };
 export interface IBadgeResponse {
     done: boolean;

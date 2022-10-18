@@ -25,6 +25,7 @@ type ICreators = {
   setAddedUsers?: React.Dispatch<React.SetStateAction<string[]>>;
   addedUsers?: string[];
   to?: string;
+  stakeMode?: boolean;
 };
 
 // export const Creator: NLView
@@ -71,7 +72,7 @@ export const CreatorWidget: NLView<{
 
             {symbol && (
               <p className="paragraph-1r typography-overflow">
-                {stakeMode ? "staking" : "powering"}
+                {stakeMode ? "staking " : "powering "}
                 {creator.powering} ${symbol}
               </p>
             )}
@@ -126,7 +127,16 @@ export const CreatorWidget: NLView<{
   );
 };
 
-export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to }) => {
+export const CreatorsList: NLView<ICreators> = ({
+  title,
+  maxItems,
+  users,
+  buttonType,
+  addedUsers,
+  setAddedUsers,
+  to,
+  stakeMode,
+}) => {
   users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
 
   const t = users.find((creator) => creator.invitation) ? "My invited members" : "Explore top creators";
@@ -146,7 +156,13 @@ export const CreatorsList: NLView<ICreators> = ({ title, maxItems, users, button
         <div className="top-creators-wrapper" style={title ? { display: "flex", flexWrap: "wrap" } : {}}>
           {users?.map((creator) => (
             <div>
-              <CreatorWidget creator={creator} buttonType={buttonType} setAddedUsers={setAddedUsers!} addedUsers={addedUsers} />
+              <CreatorWidget
+                creator={creator}
+                buttonType={buttonType}
+                setAddedUsers={setAddedUsers!}
+                addedUsers={addedUsers}
+                stakeMode={stakeMode}
+              />
             </div>
           ))}
         </div>

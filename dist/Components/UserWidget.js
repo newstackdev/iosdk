@@ -21,6 +21,7 @@ import { SocialLink } from "../Components/SocialLink";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
+import { useBadges } from "../hooks/useBadges";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
@@ -44,11 +45,11 @@ export const SOCIAL_MEDIA = [
     UserSocials.DISCORD,
 ];
 export const badgeIcons = {
-    ["daoVotedProposal"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-    ["daoCreated"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-    ["daoCreatedProposal"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-    ["daoJoinedCount"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-    ["staked"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
+    ["daoVotedProposal"]: 1,
+    ["daoCreated"]: 2,
+    ["daoCreatedProposal"]: 3,
+    ["daoJoinedCount"]: 4,
+    ["staked"]: 5,
 };
 export const UserWidgetVertical = ({ user }) => {
     const u = useCachedUser({ id: user?.id || "" });
@@ -215,14 +216,7 @@ export const UserWidgetHeading = ({ user, setActiveKey, stakeMode }) => {
     const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
     const daoProposals = useCachedDaoProposals({ daoOwner });
     const poolInfo = useCachedPool({ owner: user?.username });
-    const [badges, setBadges] = useState();
-    useEffect(() => {
-        const getBadge = async () => {
-            const retrievedBadges = await actions.api.user.getBadges({ id: user?.id || "" });
-            setBadges(retrievedBadges);
-        };
-        getBadge();
-    }, []);
+    const { badges, isBadgesLoading, badgesError } = useBadges(user?.id || "");
     const symbol = poolInfo.code;
     const isDAOMember = ((state.newcoin.pools || {})[symbol] || 0) / 1000;
     if (!user)
@@ -264,8 +258,10 @@ export const UserWidgetHeading = ({ user, setActiveKey, stakeMode }) => {
             minHeight: 250,
             paddingTop: "10px",
         }, className: "app-main-full-width", children: [_jsx(Col, { xs: 24, xl: 14, className: "nl-avatar", children: _jsx(Row, { className: "user-widget__first-row", children: _jsx(Col, { xs: 24, xl: 22, className: "text-left", children: _jsxs(Row, { style: { flexWrap: "inherit" }, gutter: 64, children: [_jsx(Col, { span: 6, children: _jsx("span", { onClick: () => setActiveKey && setActiveKey("Folders"), style: { cursor: "pointer" }, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...u }), style: { width: "160px", height: "160px" } }) }) }), _jsx(Col, { children: _jsxs(Row, { style: { flexDirection: "column" }, children: [_jsx(Col, { children: _jsx(Row, { className: "u-margin-bottom-small", children: _jsxs(Row, { gutter: 12, style: { alignItems: "center" }, children: [_jsx(Col, { children: _jsx("span", { onClick: () => setActiveKey && setActiveKey("Folders"), style: { cursor: "pointer" }, children: _jsx("p", { className: "header-1r", children: u.username }) }) }), _jsx(Col, { children: isUserVerified && _jsx(VerifiedIcon, {}) }), _jsx(Col, { children: u.id === state.api.auth.user?.id && (_jsx(Link, { to: "/my/profile/update", className: "nl-userProfile-editBtn", style: { height: 30 }, children: _jsx(Edit, {}) })) }), _jsx(Col, { children: _jsx("p", { className: "header-3b", children: user.displayName }) })] }) }) }), _jsxs(Row, { className: "user__social-icons-wrapper", style: { flexWrap: "inherit", alignItems: "initial" }, gutter: [0, 18], children: [getSortedSocialMediaIcons(), _jsx("span", { style: { cursor: "pointer" }, children: _jsx("a", { href: `https://explorer-dev.newcoin.org/account/${user.username}`, target: "_blank", rel: "noreferrer", children: _jsx(Polygon, {}) }) })] }), _jsxs(Row, { className: "paragraph-2r text-left u-margin-top-small", gutter: 12, align: "bottom", children: [_jsx(Col, { children: _jsx("p", { className: "paragraph-2r", children: _jsx(ShowMoreText, { lines: 3, more: _jsx("span", { className: "paragraph-2u", children: "Show more" }), less: _jsx("span", { className: "paragraph-2u", children: "Show less" }), className: "content-css", anchorClass: "my-anchor-css-class", expanded: false, width: 280, truncatedEndingComponent: " ", children: user.description }) }) }), _jsx(Col, { children: _jsx("p", { className: "paragraph-3r ", style: { color: "#959595" }, children: joinedDate }) })] }), _jsx(Row, { className: "u-margin-top-small", gutter: 12, children: badges &&
-                                                    badges.value?.map((badge, index) => {
-                                                        return (_jsx(Tooltip, { trigger: "hover", title: badge?.title, children: _jsx("img", { src: badgeIcons[badge.name], className: `${index === 0 ? "u-margin-left-small" : ""} u-margin-right-small`, style: { height: 40, width: 40, borderRadius: "50%" } }) }, badge?.id));
+                                                    !isBadgesLoading &&
+                                                    !badgesError &&
+                                                    badges.map((badge, index) => {
+                                                        return (_jsx(Tooltip, { trigger: "hover", title: badge?.title, children: _jsx("img", { src: `/badges/${badgeIcons[badge.name]}.png`, className: `${index === 0 ? "u-margin-left-small" : ""} u-margin-right-small`, style: { height: 40, width: 40, borderRadius: "50%" } }) }, badge?.id));
                                                     }) })] }) })] }) }) }) }), _jsx(Col, { xs: 24, xl: 10, className: "user-widget-heading", children: _jsx(Row, { className: "user-widget-heading  user-widget__second-row", style: { width: "100%", textAlign: "left" }, justify: "start", children: _jsx(Col, { xs: 24, xl: 24, className: "username", children: _jsxs(Row, { className: "user-widget-heading__powering", style: { justifyContent: "space-between" }, children: [_jsx(Col, { onClick: () => setActiveKey && setActiveKey("Powered"), className: "user-widget-heading__powerup-number", children: _jsxs("span", { children: [_jsx("p", { className: "header-1r", children: poweredNumber }), _jsx("p", { className: "paragraph-2r", children: stakeMode ? "staked by" : "powered by" })] }) }), _jsx(Col, { onClick: () => setActiveKey && setActiveKey("Powering"), className: "user-widget-heading__powerup-number", children: _jsxs("span", { children: [_jsx("p", { className: "header-1r", children: poweringNumber }), _jsx("p", { className: "paragraph-2r", children: stakeMode ? "staking" : "powering" })] }) }), _jsxs(Col, { xs: 24, sm: 12, className: "powerup text-right", children: [stakeMode ? _jsx(UserStake, { user: u }) : _jsx(UserPowerup, { user: u }), _jsxs("div", { className: "user-widget-heading__powering-symbol", children: [symbol && _jsxs("p", { className: "paragraph-2r u-margin-top-medium", children: ["$", symbol] }), poolInfo.total && _jsxs("p", { className: "paragraph-2r", children: [poolInfo.total.quantity, " staked"] })] }), _jsxs(Row, { style: { justifyContent: "flex-end", alignItems: "center" }, className: "u-margin-top-medium", children: [_jsx(Share, { urlToShare: URL, user: user }), daoProposals.dao_id && (_jsx(Button, { className: "u-margin-left-medium", onClick: () => actions.routing.historyPush({
                                                         location: "/dao/" + u?.username,
                                                     }), children: "DAO" }))] })] })] }) }) }) })] }));

@@ -9,6 +9,7 @@ declare type ICreators = {
     setAddedUsers?: React.Dispatch<React.SetStateAction<string[]>>;
     addedUsers?: string[];
     to?: string;
+    stakeMode?: boolean;
 };
 export declare const CreatorWidget: NLView<{
     creator: UserInvitationReadPublicResponse;

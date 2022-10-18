@@ -19,12 +19,15 @@ import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { Share } from "../Components/Share";
 import { Smallinfo } from "../Components/Icons/Smallinfo";
 import { SocialLink } from "../Components/SocialLink";
+import { Spin } from "./Spin";
 import { UserFlowRoutes } from "../Pages/User/User";
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { VerifiedIconLight } from "../Components/Icons/VerifiedIconLight";
+import { isEmpty } from "lodash";
 import { useActions, useAppState } from "../overmind";
+import { useBadges } from "../hooks/useBadges";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
@@ -51,11 +54,11 @@ export const SOCIAL_MEDIA = [
 ];
 
 export const badgeIcons = {
-  ["daoVotedProposal"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-  ["daoCreated"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-  ["daoCreatedProposal"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-  ["daoJoinedCount"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
-  ["staked"]: `/badges/${Math.floor(Math.random() * 14) + 1}.png`,
+  ["daoVotedProposal"]: 1,
+  ["daoCreated"]: 2,
+  ["daoCreatedProposal"]: 3,
+  ["daoJoinedCount"]: 4,
+  ["staked"]: 5,
 };
 
 export interface IBadgeResponse {
@@ -591,15 +594,7 @@ export const UserWidgetHeading: NLView<{
   const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
   const daoProposals = useCachedDaoProposals({ daoOwner });
   const poolInfo = useCachedPool({ owner: user?.username });
-  const [badges, setBadges] = useState<IBadgeResponse>();
-
-  useEffect(() => {
-    const getBadge = async () => {
-      const retrievedBadges = await actions.api.user.getBadges({ id: user?.id || "" });
-      setBadges(retrievedBadges);
-    };
-    getBadge();
-  }, []);
+  const { badges, isBadgesLoading, badgesError } = useBadges(user?.id || "");
 
   const symbol = poolInfo.code;
 
@@ -725,11 +720,13 @@ export const UserWidgetHeading: NLView<{
                   </Row>
                   <Row className="u-margin-top-small" gutter={12}>
                     {badges &&
-                      badges.value?.map((badge, index) => {
+                      !isBadgesLoading &&
+                      !badgesError &&
+                      badges.map((badge, index) => {
                         return (
                           <Tooltip trigger="hover" title={badge?.title} key={badge?.id}>
                             <img
-                              src={badgeIcons[badge.name]}
+                              src={`/badges/${badgeIcons[badge.name]}.png`}
                               className={`${index === 0 ? "u-margin-left-small" : ""} u-margin-right-small`}
                               style={{ height: 40, width: 40, borderRadius: "50%" }}
                             />
