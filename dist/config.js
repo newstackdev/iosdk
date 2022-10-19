@@ -12,6 +12,8 @@ const stages = {
     "newlife.io": "eu-prod",
     "web-dev.unsid.org": "eu-dev",
     "dao.newmoon.ac": "eu-prod",
+    "www.newlink.page": "eu-prod",
+    "newlink.page": "eu-prod",
 };
 export const stage = stages[currentHost];
 const apiBaseUrls = {

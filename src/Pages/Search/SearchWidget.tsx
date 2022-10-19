@@ -136,6 +136,7 @@ export const SearchWidget: NLView<{
 
   const setInitialState = () => {
     setQuery("");
+    setVisible(false);
     // _setSelection && _setSelection("");
   };
 
@@ -195,20 +196,17 @@ export const SearchWidget: NLView<{
   };
 
   return (
-    <Row
-      align="bottom"
-      style={{ width: "100%", height: "48px" }}
-      onMouseOut={() => setMouseVisible(false)}
-      onMouseOver={() => setMouseVisible(true)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}
-    >
+    <Row align="bottom" style={{ width: "100%", height: "48px", cursor: "unset" }}>
       {/* {currVal} */}
       <div style={{ width: 30, margin: "16px 5px 0 5px" }} onClick={() => setVisible(!visible)}>
         <Searchicon />
       </div>
 
-      <div style={{ width: 300, height: "100%" }}>
+      <div
+        style={{ width: 300, height: "100%" }}
+        onMouseOut={() => setMouseVisible(false)}
+        onMouseOver={() => setMouseVisible(true)}
+      >
         {mouseVisible || visible ? (
           <Select
             className="search-widget"
@@ -240,6 +238,7 @@ export const SearchWidget: NLView<{
             style={{ marginTop: 12, width: "min(350px,80vw)" }}
             placeholder="Search..."
             onSearch={(query) => onSearch(query)}
+            onFocus={() => setVisible(true)}
             onBlur={() => setInitialState()}
             onSelect={(value: string) => onSelect(value)}
             // onDeselect={onDeselect}
