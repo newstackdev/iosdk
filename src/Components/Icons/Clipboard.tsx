@@ -1,4 +1,4 @@
-import { NLView } from "src/types";
+import { NLView } from "../../types";
 
 export const Clipboard: NLView<{ fill?: string }> = ({ fill }) => (
   <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">

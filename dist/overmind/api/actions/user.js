@@ -62,7 +62,7 @@ export const read = async ({ state, actions, effects }, { id, username }) => {
     const ur = await (known
         ? Promise.resolve({ data: known })
         : state.api.client.user.userList({ ...(id ? { id } : {}), username }));
-    id = id || ur.data.id || "";
+    id = id || ur?.data?.id || "";
     actions.api.user.cache({ user: ur.data });
     return ur.data;
 };

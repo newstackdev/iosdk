@@ -103,7 +103,7 @@ export const UserStake: NLView<{
 }> = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel }) => {
   // const [visible, setVisible] = useState(false);
   const actions = useActions();
-  const poolInfo = useCachedPool({ owner: user?.username });
+  const poolInfo = useCachedPool({ owner: user?.username, code: user?.newcoinTicker });
 
   const [preStakeValue, setPrestakeValue] = useState(0);
 
@@ -292,8 +292,8 @@ export const UserStake: NLView<{
             <p className="header-3 text-left">
               {membershipValue > 0 ? (
                 <>
-                  Your stake in {poolInfo.code} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value} GNCO
-                  more to increase your membership value.
+                  Your stake in {poolInfo.code || ""} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value}{" "}
+                  GNCO more to increase your membership value.
                 </>
               ) : (
                 <>Join {_user?.username || ""}'s DAO</>
@@ -764,7 +764,11 @@ export const UserWidgetHeading: NLView<{
                 {stakeMode ? <UserStake user={u} /> : <UserPowerup user={u} />}
                 <div className="user-widget-heading__powering-symbol">
                   {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
-                  {poolInfo.total && <p className="paragraph-2r">{poolInfo.total.quantity} staked</p>}
+                  {poolInfo.total && (
+                    <p className="paragraph-2r">
+                      TVL {Math.floor(+poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""))}
+                    </p>
+                  )}
                 </div>
                 {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
                 <Row style={{ justifyContent: "flex-end", alignItems: "center" }} className="u-margin-top-medium">

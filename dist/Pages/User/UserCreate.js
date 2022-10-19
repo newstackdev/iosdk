@@ -8,7 +8,7 @@ import { CrossCircle } from "../../Components/Icons/CrossCircle";
 import { ProgressButton } from "../../Components/ProgressButton";
 import { RowCheckbox } from "../../Components/RowCheckbox";
 import { useActions, useAppState, useEffects } from "../../overmind";
-import { useCachedPoolByCode } from "src/hooks/useCached";
+import { useCachedPoolByCode } from "../../hooks/useCached";
 import { useForm } from "antd/lib/form/Form";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";

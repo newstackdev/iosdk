@@ -200,6 +200,8 @@ export const SearchWidget: NLView<{
       style={{ width: "100%", height: "48px" }}
       onMouseOut={() => setMouseVisible(false)}
       onMouseOver={() => setMouseVisible(true)}
+      onFocus={() => setVisible(true)}
+      onBlur={() => setVisible(false)}
     >
       {/* {currVal} */}
       <div style={{ width: 30, margin: "16px 5px 0 5px" }} onClick={() => setVisible(!visible)}>
@@ -234,7 +236,6 @@ export const SearchWidget: NLView<{
             // tagRender={tagRender}
             searchValue={query}
             loading={loading}
-            autoFocus
             open={open}
             style={{ marginTop: 12, width: "min(350px,80vw)" }}
             placeholder="Search..."

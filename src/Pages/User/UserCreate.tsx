@@ -13,7 +13,7 @@ import { RowCheckbox } from "../../Components/RowCheckbox";
 import { User } from "@firebase/auth";
 import { assert } from "console";
 import { useActions, useAppState, useEffects } from "../../overmind";
-import { useCachedPoolByCode } from "src/hooks/useCached";
+import { useCachedPoolByCode } from "../../hooks/useCached";
 import { useForm } from "antd/lib/form/Form";
 import { useHistory } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";

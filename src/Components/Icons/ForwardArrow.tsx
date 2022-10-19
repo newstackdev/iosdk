@@ -1,4 +1,4 @@
-import { IOView } from "src/types";
+import { IOView } from "../../types";
 
 export const ForwardArrow: IOView<{
   style?: React.CSSProperties;

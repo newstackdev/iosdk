@@ -112,7 +112,7 @@ describe("User onboarding flow and login", () => {
 
   // TODO: Tests are unstable, for now disabled but will require in the future to be functioning
   // Test is failing because of 409, 504 errors, BE has old/non existing email.
-  it.only("Can onboard imported user", () => {
+  it("Can onboard imported user", () => {
     bypassImportedAuthFlow(false);
     cy.wait(2000);
     cy.get(".nl-domain-presale__masked-input").clear();

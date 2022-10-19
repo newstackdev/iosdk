@@ -18,7 +18,7 @@ import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
 import { BlockExplorerLink, blockExplorerUrl } from "../../Components/Links";
 import { ContentImage } from "../../Components/Image";
-import { ContentLayout } from "src/Components/ContentLayout";
+// import { ContentLayout } from "../Components/ContentLayout";
 import { ContentLayoutDeepLike } from "../../Components/ContentLayout";
 import { Edit } from "../../Components/Icons/Edit";
 import { EyeClosed } from "../../Components/Icons/EyeClosed";
@@ -270,7 +270,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           contextValue,
           messageWrapper: (msg: string, rating: any) =>
             rating.TxID_mintFile ? (
-              <a href={blockExplorerUrl.newcoin(rating.TxID_mintFile)} target="_blank" rel="noreferrer">
+              <a href={blockExplorerUrl.newscan(rating.TxID_mintFile)} target="_blank" rel="noreferrer">
                 {msg}
                 <br />
                 <small>click for a newscan receipt</small>
@@ -493,7 +493,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
           <div className="nl-post-deeplike-desktop-wrapper">
             <ContentLayoutDeepLike containerDeeplike={containerDeeplike}>
               <SelectMoodForm
-                onFinish={() => addToMoods()}
+                onFinish={addToMoods}
                 title="Save to a folder"
                 deeplikeActions
                 setVisible={setVisible}

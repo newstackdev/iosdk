@@ -112,14 +112,14 @@ export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onCh
                 onClose();
             }, children: label }));
     };
-    return (_jsxs(Row, { align: "bottom", style: { width: "100%", height: "48px" }, onMouseOut: () => setMouseVisible(false), onMouseOver: () => setMouseVisible(true), children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), children: _jsx(Searchicon, {}) }), _jsx("div", { style: { width: 300, height: "100%" }, children: mouseVisible || visible ? (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
+    return (_jsxs(Row, { align: "bottom", style: { width: "100%", height: "48px" }, onMouseOut: () => setMouseVisible(false), onMouseOver: () => setMouseVisible(true), onFocus: () => setVisible(true), onBlur: () => setVisible(false), children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), children: _jsx(Searchicon, {}) }), _jsx("div", { style: { width: 300, height: "100%" }, children: mouseVisible || visible ? (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
                             position: "absolute",
                             right: -10,
                             color: "white",
                         }, className: "paragraph-2b", onClick: () => setInitialState(), children: "Cancel" })) : (_jsx(_Fragment, {})), 
                     // value={selection ? undefined : []}
                     // tagRender={tagRender}
-                    searchValue: query, loading: loading, autoFocus: true, open: open, style: { marginTop: 12, width: "min(350px,80vw)" }, placeholder: "Search...", onSearch: (query) => onSearch(query), onBlur: () => setInitialState(), onSelect: (value) => onSelect(value), 
+                    searchValue: query, loading: loading, open: open, style: { marginTop: 12, width: "min(350px,80vw)" }, placeholder: "Search...", onSearch: (query) => onSearch(query), onBlur: () => setInitialState(), onSelect: (value) => onSelect(value), 
                     // onDeselect={onDeselect}
                     dropdownRender: (menu) => (_jsxs(_Fragment, { children: [_jsx(Row, { style: {
                                     backgroundColor: "#A5A1A1",

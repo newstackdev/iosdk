@@ -79,7 +79,8 @@ export const attachToMoods = async ({ state, actions, effects }, { moods, post }
     })));
     console.log(`attachToMoods: caching ${moods.length} moods`);
     await Promise.all(moods.map((m) => {
-        return actions.api.mood.cache({ moods: [m] });
+        const mood = { ...m, posts: [post, ...(m.posts || [])] };
+        return actions.api.mood.cache({ moods: [mood] });
     }));
     console.log(`attachToMoods: done caching ${moods.length} moods`);
     return Promise.resolve();

@@ -118,7 +118,8 @@ export const attachToMoods: Action<{
 
   await Promise.all(
     moods.map((m) => {
-      return actions.api.mood.cache({ moods: [m] });
+      const mood = { ...m, posts: [post, ...(m.posts || [])] };
+      return actions.api.mood.cache({ moods: [mood] });
     }),
   );
 

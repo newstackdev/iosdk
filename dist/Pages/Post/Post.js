@@ -14,6 +14,7 @@ import PostReportModal from "./components/PostModal";
 // import { NewcoinLink } from "../Profile";
 import { BlockExplorerLink, blockExplorerUrl } from "../../Components/Links";
 import { ContentImage } from "../../Components/Image";
+// import { ContentLayout } from "../Components/ContentLayout";
 import { ContentLayoutDeepLike } from "../../Components/ContentLayout";
 import { EyeClosed } from "../../Components/Icons/EyeClosed";
 import { EyeOpen } from "../../Components/Icons/EyeOpen";
@@ -179,7 +180,7 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
                 amount: rating,
                 contextType,
                 contextValue,
-                messageWrapper: (msg, rating) => rating.TxID_mintFile ? (_jsxs("a", { href: blockExplorerUrl.newcoin(rating.TxID_mintFile), target: "_blank", rel: "noreferrer", children: [msg, _jsx("br", {}), _jsx("small", { children: "click for a newscan receipt" })] })) : (_jsx(_Fragment, { children: msg })),
+                messageWrapper: (msg, rating) => rating.TxID_mintFile ? (_jsxs("a", { href: blockExplorerUrl.newscan(rating.TxID_mintFile), target: "_blank", rel: "noreferrer", children: [msg, _jsx("br", {}), _jsx("small", { children: "click for a newscan receipt" })] })) : (_jsx(_Fragment, { children: msg })),
                 // mood: currMood
             });
         }
@@ -242,7 +243,7 @@ export const postBase = (useVotingStreamHook, votingEnabled = true) => () => {
                                             }
                                             else
                                                 setIsEyeOpened(true);
-                                        }, children: _jsx(EyeClosed, {}) }))) : (_jsx(_Fragment, {})), _jsx(Share, { currentPostProps: currPost }), _jsx(PostReportModal, {})] }) })] }), children: [/PROCESSING/i.test(currPost.contentUrl || "") ? (_jsx(Spin, { title: "Processing media..." })) : (_jsx(ContentImage, { ref: ref, ...currPost, thumbnail: false })), hilightTag?.length ? _jsx(SvgPolygons, { visionTags: hilightTag }) : _jsx(_Fragment, {})] }), _jsx("div", { hidden: state.flows.rating.value !== 100, style: { position: "fixed", bottom: 0, width: "100%" }, children: _jsx("div", { className: "nl-post-deeplike-desktop-wrapper", children: _jsx(ContentLayoutDeepLike, { containerDeeplike: containerDeeplike, children: _jsx(SelectMoodForm, { onFinish: () => addToMoods(), title: "Save to a folder", deeplikeActions: true, setVisible: setVisible, visible: visible }) }) }) })] }));
+                                        }, children: _jsx(EyeClosed, {}) }))) : (_jsx(_Fragment, {})), _jsx(Share, { currentPostProps: currPost }), _jsx(PostReportModal, {})] }) })] }), children: [/PROCESSING/i.test(currPost.contentUrl || "") ? (_jsx(Spin, { title: "Processing media..." })) : (_jsx(ContentImage, { ref: ref, ...currPost, thumbnail: false })), hilightTag?.length ? _jsx(SvgPolygons, { visionTags: hilightTag }) : _jsx(_Fragment, {})] }), _jsx("div", { hidden: state.flows.rating.value !== 100, style: { position: "fixed", bottom: 0, width: "100%" }, children: _jsx("div", { className: "nl-post-deeplike-desktop-wrapper", children: _jsx(ContentLayoutDeepLike, { containerDeeplike: containerDeeplike, children: _jsx(SelectMoodForm, { onFinish: addToMoods, title: "Save to a folder", deeplikeActions: true, setVisible: setVisible, visible: visible }) }) }) })] }));
 };
 export const Post = postBase(useVotingStreamMood, false);
 export const PostInMood = postBase(useVotingStreamMood);

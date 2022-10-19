@@ -213,7 +213,8 @@ export const daoGetWhitelist = async ({ state }, props) => {
         dao_owner: u,
         limit: "1000",
     });
-    state.newcoin.daos[u] = daoState(state.newcoin.daos[u], { whitelist: { ...r.data, rows: r.data.rows || [] } });
+    if (r.data)
+        state.newcoin.daos[u] = daoState(state.newcoin.daos[u], { whitelist: { ...r.data, rows: r.data.rows || [] } });
 };
 export const daoExecuteWhitelistProposal = pipe(async ({ state, actions }, props) => {
     const executor = state.api.auth.user?.username;

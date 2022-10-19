@@ -52,8 +52,8 @@ export const cache: Action<{
     // const currPosts = m.posts;
 
     state.api.cache.moods[id] = {
-      ...curr,
       ...m,
+      ...curr,
       promise: m.promise || null,
       posts: uniqBy(((curr.posts && curr.posts.length) || 0) < ((m && m.posts?.length) || 0) ? m.posts : curr.posts, "id"),
     };

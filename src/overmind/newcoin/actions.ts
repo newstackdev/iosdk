@@ -270,7 +270,7 @@ export const daoGetWhitelist: Action<{ daoOwner?: string } | undefined, any> = a
     limit: "1000",
   });
 
-  state.newcoin.daos[u] = daoState(state.newcoin.daos[u], { whitelist: { ...r.data, rows: r.data.rows || [] } });
+  if (r.data) state.newcoin.daos[u] = daoState(state.newcoin.daos[u], { whitelist: { ...r.data, rows: r.data.rows || [] } });
 };
 
 export const daoExecuteWhitelistProposal: Action<{ dao_id: string; proposal_id: number; proposal_author: string }, any> = pipe(

@@ -95,7 +95,7 @@ export const read: Action<{ id?: string; username?: string }, UserReadPublicResp
     ? Promise.resolve({ data: known })
     : state.api.client.user.userList({ ...(id ? { id } : {}), username }));
 
-  id = id || ur.data.id || "";
+  id = id || ur?.data?.id || "";
 
   actions.api.user.cache({ user: ur.data });
   return ur.data;
