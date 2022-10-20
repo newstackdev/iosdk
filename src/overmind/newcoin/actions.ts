@@ -11,48 +11,48 @@ export const progressTest: Action = pipe(async () => {
   return await new Promise((res) => setTimeout(res, 1000));
 });
 
-export const getAccountBalance: Action<{ user?: { username?: string } } | undefined, any> = async (
-  { effects, state, actions },
-  props,
-) => {
-  const current = state.api.auth.user;
-  const user = props?.user || current;
+export const getAccountBalance: Action<{ user?: { username?: string } } | undefined, any> = pipe(
+  debounce(50),
+  async ({ effects, state, actions }, props) => {
+    const current = state.api.auth.user;
+    const user = props?.user || current;
 
-  if (!state.api.auth.admitted) return;
+    if (!state.api.auth.admitted) return;
 
-  try {
-    state.newcoin.account = await effects.newcoin.newcoin.getAccountBalance({
-      owner: user.username || "",
-      contract: "eosio.token",
-    });
+    try {
+      state.newcoin.account = await effects.newcoin.newcoin.getAccountBalance({
+        owner: user.username || "",
+        contract: "eosio.token",
+      });
 
-    state.newcoin.mainPool = await effects.newcoin.newcoin.getAccountBalance({
-      owner: user.username || "",
-      contract: "pool.nco",
-    });
+      state.newcoin.mainPool = await effects.newcoin.newcoin.getAccountBalance({
+        owner: user.username || "",
+        contract: "pool.nco",
+      });
 
-    const ps = await effects.newcoin.newcoin.getAccountBalance({
-      owner: user.username || "",
-      contract: "pools2.nco",
-    });
-    state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
-      const [total, symbol] = c.split(/ /);
-      return { ...r, [symbol]: total };
-    }, {});
-  } catch (e) {
-    if (!props?.user && current?.created && new Date(current.created).getTime() - Date.now() < 2 * 60 * 1000) return;
+      const ps = await effects.newcoin.newcoin.getAccountBalance({
+        owner: user.username || "",
+        contract: "pools2.nco",
+      });
+      state.newcoin.pools = ps?.acc_balances?.reduce((r, c) => {
+        const [total, symbol] = c.split(/ /);
+        return { ...r, [symbol]: total };
+      }, {});
+    } catch (e) {
+      if (!props?.user && current?.created && new Date(current.created).getTime() - Date.now() < 2 * 60 * 1000) return;
 
-    throw e;
-  }
+      throw e;
+    }
 
-  try {
-    await actions.newcoin.daoGetWhitelist();
-    await actions.newcoin.voterListVotes({ voter: user.username });
-  } catch (ex) {
-    console.warn(ex, (ex as any).message);
-    console.warn("Likely no DAO");
-  }
-};
+    try {
+      await actions.newcoin.daoGetWhitelist();
+      await actions.newcoin.voterListVotes({ voter: user.username });
+    } catch (ex) {
+      console.warn(ex, (ex as any).message);
+      console.warn("Likely no DAO");
+    }
+  },
+);
 
 export const getPoolInfo: Action<{ pool: { owner?: string; code?: string } }> = pipe(
   debounce(200),

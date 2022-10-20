@@ -39,14 +39,14 @@ export declare const useCachedDaoProposals: (params?: {
     daoOwner?: string;
 }) => {
     daoOwner: string;
-    more?: boolean | undefined;
+    more?: object | undefined;
     dao_id?: string | undefined;
     next_key?: string | undefined;
     rows?: {
         summary?: string | undefined;
         proposer?: string | undefined;
         vote_start?: string | undefined;
-        more?: boolean | undefined;
+        more?: object | undefined;
         next_key?: string | undefined;
         vote_end?: string | undefined;
         id?: number | undefined;
@@ -67,14 +67,14 @@ export declare const useCachedDaoWhitelistProposals: (params?: {
     daoOwner?: string;
 }) => {
     daoOwner: string;
-    more?: boolean | undefined;
+    more?: object | undefined;
     dao_id?: string | undefined;
     next_key?: string | undefined;
     rows?: {
         summary?: string | undefined;
         proposer?: string | undefined;
         vote_start?: string | undefined;
-        more?: boolean | undefined;
+        more?: object | undefined;
         next_key?: string | undefined;
         vote_end?: string | undefined;
         id?: number | undefined;
@@ -99,7 +99,7 @@ export declare const useCachedDaoProposal: ({ daoOwner, proposalId }: {
     proposalId?: string | undefined;
 }) => {
     daoOwner: string;
-    more?: boolean | undefined;
+    more?: object | undefined;
     dao_id?: string | undefined;
     next_key?: string | undefined;
     summary?: string | undefined;
@@ -124,7 +124,7 @@ export declare const useCachedDaoWhitelistProposal: ({ daoOwner, proposalId }: {
     proposalId?: string | undefined;
 }) => {
     daoOwner: string;
-    more?: boolean | undefined;
+    more?: object | undefined;
     dao_id?: string | undefined;
     next_key?: string | undefined;
     summary?: string | undefined;

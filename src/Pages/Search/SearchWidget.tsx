@@ -1,15 +1,15 @@
 import { Avatar, Button, Col, Dropdown, Input, Row, Select } from "antd";
 import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
-import type { SizeType } from "antd/es/config-provider/SizeContext";
 
-import { Callback, NLView } from "../../types";
+import { Callback, IOView, NLView } from "../../types";
 import { ContentImage } from "../../Components/Image";
 import { Searchicon } from "../../Components/Icons/Searchicon";
 import { Tag } from "antd-latest";
 import { UsersList } from "../../Components/UserWidget";
 import { VerifiedIcon } from "../..//Components/Icons/VerifiedIcon";
-import { isEmpty, map, uniqBy } from "lodash";
+import { VerifiedIconLight } from "../../Components/Icons/VerifiedIconLight";
 import { json } from "overmind";
+import { map, uniqBy, values } from "lodash";
 import { useActions, useAppState } from "../../overmind";
 import { useEffect, useMemo, useState } from "react";
 import { useVerified } from "../../hooks/useVerified";
@@ -92,24 +92,9 @@ export const SearchWidget: NLView<{
   showSearch?: boolean;
   setSelection?: React.Dispatch<React.SetStateAction<string>>;
   selection?: string;
-  visibleBar?: boolean;
-  hidePrefixIcon?: boolean;
-  searchSize?: SizeType;
   // search: boolean;
   // setSearch: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({
-  user,
-  searchUsers,
-  searchTags,
-  noNavigation,
-  onChange,
-  showSearch,
-  setSelection,
-  selection,
-  visibleBar,
-  hidePrefixIcon,
-  searchSize,
-}) => {
+}> = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch, setSelection, selection }) => {
   const state = useAppState();
   const actions = useActions();
   const [query, setQuery] = useState<string>("");
@@ -152,7 +137,6 @@ export const SearchWidget: NLView<{
   const setInitialState = () => {
     setQuery("");
     setVisible(false);
-    setOpen(false);
     // _setSelection && _setSelection("");
   };
 
@@ -212,19 +196,18 @@ export const SearchWidget: NLView<{
   };
 
   return (
-    <Row align="bottom" style={{ width: "100%", height: "48px", cursor: "unset" }} className="search-widget-container">
-      {!hidePrefixIcon && (
-        <div style={{ width: 30, margin: "16px 5px 0 5px" }} onClick={() => setVisible(!visible)}>
-          <Searchicon />
-        </div>
-      )}
+    <Row align="bottom" style={{ width: "100%", height: "48px", cursor: "unset" }}>
+      {/* {currVal} */}
+      <div style={{ width: 30, margin: "16px 5px 0 5px" }} onClick={() => setVisible(!visible)}>
+        <Searchicon />
+      </div>
 
       <div
         style={{ width: 300, height: "100%" }}
         onMouseOut={() => setMouseVisible(false)}
         onMouseOver={() => setMouseVisible(true)}
       >
-        {visibleBar || mouseVisible || visible ? (
+        {mouseVisible || visible ? (
           <Select
             className="search-widget"
             mode={noNavigation ? "multiple" : undefined}
@@ -238,7 +221,7 @@ export const SearchWidget: NLView<{
                     right: -10,
                     color: "white",
                   }}
-                  className="paragraph-2b search-widget-clear-icon"
+                  className="paragraph-2b"
                   onClick={() => setInitialState()}
                 >
                   Cancel
@@ -251,11 +234,11 @@ export const SearchWidget: NLView<{
             // tagRender={tagRender}
             searchValue={query}
             loading={loading}
-            open={open && !isEmpty(query)}
+            open={open}
+            style={{ marginTop: 12, width: "min(350px,80vw)" }}
             placeholder="Search..."
             onSearch={(query) => onSearch(query)}
             onFocus={() => setVisible(true)}
-            size={searchSize}
             onBlur={() => setInitialState()}
             onSelect={(value: string) => onSelect(value)}
             // onDeselect={onDeselect}
@@ -266,7 +249,6 @@ export const SearchWidget: NLView<{
                     backgroundColor: "#A5A1A1",
                     padding: 10,
                   }}
-                  className="search-widget-dropdown-bar"
                 >
                   {foundUsers.length > 0 && foundTags.length > 0 && searchTags && searchUsers ? (
                     <>

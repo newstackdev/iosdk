@@ -4,7 +4,7 @@ export const progressTest = pipe(async () => {
     console.log("test async");
     return await new Promise((res) => setTimeout(res, 1000));
 });
-export const getAccountBalance = async ({ effects, state, actions }, props) => {
+export const getAccountBalance = pipe(debounce(50), async ({ effects, state, actions }, props) => {
     const current = state.api.auth.user;
     const user = props?.user || current;
     if (!state.api.auth.admitted)
@@ -40,7 +40,7 @@ export const getAccountBalance = async ({ effects, state, actions }, props) => {
         console.warn(ex, ex.message);
         console.warn("Likely no DAO");
     }
-};
+});
 export const getPoolInfo = pipe(debounce(200), async ({ effects, state }, { pool }) => {
     if (!(pool.code || pool.owner))
         return;

@@ -47,7 +47,7 @@ const state = {
   history: history as History,
   backHistory: [] as { pathname: string; search: string }[],
   simpleHistory: [] as { pathname: string; search: string }[],
-  location: "",
+  location: [location.pathname, location.search].filter(Boolean).join(""),
   isAllowed: derived((st: any, gst: any) => {
     const _specificAccess = gst.config.settings.routing.routeAccessLevels[st.location.split(/\?/)[0]];
     const _wildcard = gst.config.settings.routing.routeAccessLevels["*"];
