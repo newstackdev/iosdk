@@ -192,7 +192,7 @@ export const TopCreators: NLView<ICreators> = ({ maxItems, title, buttonType, se
         addedUsers={addedUsers}
         to={to}
       />
-      {creators && (creators?.length || 0) < (maxItems || 100) && <LoadMore loadMore={() => actions.lists.top.users()} />}
+      {creators && (creators?.length || 0) < (maxItems || 100) && <LoadMore loadMore={() => actions.lists.top.users({})} />}
     </>
   );
 };

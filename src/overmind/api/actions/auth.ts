@@ -36,7 +36,7 @@ export const authorize: Action<{ token?: string } | undefined> = async ({ state,
 
   if (!state.lists.top.moods.items.length) {
     actions.lists.top.moods({});
-    actions.lists.top.users();
+    actions.lists.top.users({});
     actions.lists.top.posts();
   }
 

@@ -491,7 +491,9 @@ export declare const config: (cfg: PartialConfiguration) => {
                 moods: import("../types").Action<{
                     requestedPage?: number | undefined;
                 }, void>;
-                users: import("../types").Action<undefined, void>;
+                users: import("../types").Action<{
+                    requestedPage?: number | undefined;
+                }, void>;
                 posts: import("../types").Action<import("../types").ContentType | undefined, void>;
             };
         };

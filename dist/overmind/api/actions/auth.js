@@ -28,7 +28,7 @@ export const authorize = async ({ state, actions, effects }, params) => {
     actions.newcoin.getPoolInfo({ pool: { owner: user.username } });
     if (!state.lists.top.moods.items.length) {
         actions.lists.top.moods({});
-        actions.lists.top.users();
+        actions.lists.top.users({});
         actions.lists.top.posts();
     }
     state.auth.status = state.api.auth.user?.username ? AUTH_FLOW_STATUS.AUTHORIZED : AUTH_FLOW_STATUS.AUTHENTICATED;

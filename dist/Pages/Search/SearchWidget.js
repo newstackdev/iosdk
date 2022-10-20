@@ -5,8 +5,8 @@ import { Searchicon } from "../../Components/Icons/Searchicon";
 import { Tag } from "antd-latest";
 import { UsersList } from "../../Components/UserWidget";
 import { VerifiedIcon } from "../..//Components/Icons/VerifiedIcon";
+import { isEmpty, map, uniqBy } from "lodash";
 import { json } from "overmind";
-import { map, uniqBy } from "lodash";
 import { useActions, useAppState } from "../../overmind";
 import { useEffect, useState } from "react";
 import { useVerified } from "../../hooks/useVerified";
@@ -43,7 +43,7 @@ const SearchResultsByMode = {
     "@": UserSearchResultsWidget,
     "#": TagsAutosuggestWidget,
 };
-export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch, setSelection, selection }) => {
+export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onChange, showSearch, setSelection, selection, visibleBar, hidePrefixIcon, searchSize, }) => {
     const state = useAppState();
     const actions = useActions();
     const [query, setQuery] = useState("");
@@ -76,6 +76,7 @@ export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onCh
     const setInitialState = () => {
         setQuery("");
         setVisible(false);
+        setOpen(false);
         // _setSelection && _setSelection("");
     };
     const onSearch = (query) => {
@@ -113,19 +114,19 @@ export const SearchWidget = ({ user, searchUsers, searchTags, noNavigation, onCh
                 onClose();
             }, children: label }));
     };
-    return (_jsxs(Row, { align: "bottom", style: { width: "100%", height: "48px", cursor: "unset" }, children: [_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), children: _jsx(Searchicon, {}) }), _jsx("div", { style: { width: 300, height: "100%" }, onMouseOut: () => setMouseVisible(false), onMouseOver: () => setMouseVisible(true), children: mouseVisible || visible ? (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
+    return (_jsxs(Row, { align: "bottom", style: { width: "100%", height: "48px", cursor: "unset" }, className: "search-widget-container", children: [!hidePrefixIcon && (_jsx("div", { style: { width: 30, margin: "16px 5px 0 5px" }, onClick: () => setVisible(!visible), children: _jsx(Searchicon, {}) })), _jsx("div", { style: { width: 300, height: "100%" }, onMouseOut: () => setMouseVisible(false), onMouseOver: () => setMouseVisible(true), children: visibleBar || mouseVisible || visible ? (_jsxs(Select, { className: "search-widget", mode: noNavigation ? "multiple" : undefined, allowClear: true, showSearch: true, clearIcon: !loading ? (_jsx("div", { style: {
                             position: "absolute",
                             right: -10,
                             color: "white",
-                        }, className: "paragraph-2b", onClick: () => setInitialState(), children: "Cancel" })) : (_jsx(_Fragment, {})), 
+                        }, className: "paragraph-2b search-widget-clear-icon", onClick: () => setInitialState(), children: "Cancel" })) : (_jsx(_Fragment, {})), 
                     // value={selection ? undefined : []}
                     // tagRender={tagRender}
-                    searchValue: query, loading: loading, open: open, style: { marginTop: 12, width: "min(350px,80vw)" }, placeholder: "Search...", onSearch: (query) => onSearch(query), onFocus: () => setVisible(true), onBlur: () => setInitialState(), onSelect: (value) => onSelect(value), 
+                    searchValue: query, loading: loading, open: open && !isEmpty(query), placeholder: "Search...", onSearch: (query) => onSearch(query), onFocus: () => setVisible(true), size: searchSize, onBlur: () => setInitialState(), onSelect: (value) => onSelect(value), 
                     // onDeselect={onDeselect}
                     dropdownRender: (menu) => (_jsxs(_Fragment, { children: [_jsx(Row, { style: {
                                     backgroundColor: "#A5A1A1",
                                     padding: 10,
-                                }, children: foundUsers.length > 0 && foundTags.length > 0 && searchTags && searchUsers ? (_jsxs(_Fragment, { children: [_jsx(Col, { className: filterState === "Member" ? "filter-tag filter-tag__active" : "filter-tag", onClick: () => {
+                                }, className: "search-widget-dropdown-bar", children: foundUsers.length > 0 && foundTags.length > 0 && searchTags && searchUsers ? (_jsxs(_Fragment, { children: [_jsx(Col, { className: filterState === "Member" ? "filter-tag filter-tag__active" : "filter-tag", onClick: () => {
                                                 setFilterState("Member");
                                                 setVisible(true);
                                             }, children: _jsx("p", { className: "paragraph-2b", children: "Member" }) }), _jsx(Col, { className: filterState === "Tag" ? "filter-tag filter-tag__active" : "filter-tag", onClick: () => {

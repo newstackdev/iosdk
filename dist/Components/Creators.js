@@ -54,7 +54,7 @@ export const TopCreators = ({ maxItems, title, buttonType, setAddedUsers, addedU
     const state = useAppState();
     const actions = useActions();
     const creators = maxItems ? state.lists.top.users.items.slice(0, maxItems) : state.lists.top.users.items;
-    return (_jsxs(_Fragment, { children: [_jsx(CreatorsList, { users: creators, maxItems: maxItems, title: title, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, to: to }), creators && (creators?.length || 0) < (maxItems || 100) && _jsx(LoadMore, { loadMore: () => actions.lists.top.users() })] }));
+    return (_jsxs(_Fragment, { children: [_jsx(CreatorsList, { users: creators, maxItems: maxItems, title: title, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, to: to }), creators && (creators?.length || 0) < (maxItems || 100) && _jsx(LoadMore, { loadMore: () => actions.lists.top.users({}) })] }));
 };
 export default Creators;
 //# sourceMappingURL=Creators.js.map

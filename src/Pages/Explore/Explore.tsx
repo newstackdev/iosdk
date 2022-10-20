@@ -19,7 +19,7 @@ export const Explore: NLView = () => {
 
   useEffect(() => {
     const loadAll = async () => {
-      await Promise.all([actions.lists.top.moods({}), actions.lists.top.users(), actions.lists.top.posts()]);
+      await Promise.all([actions.lists.top.moods({}), actions.lists.top.users({}), actions.lists.top.posts()]);
       await actions.lists.top.posts(ContentType.video);
     };
     loadAll();

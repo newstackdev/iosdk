@@ -9,7 +9,7 @@ export const UserTop = () => {
     const actions = useActions();
     const users = state.lists.top.users.items;
     useEffect(() => {
-        !users.length && actions.lists.top.users();
+        !users.length && actions.lists.top.users({});
     }, []);
     // return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />
     return (_jsx("div", { className: "app-main-full-width", children: _jsx("h1", { children: "Top users today" }) }));

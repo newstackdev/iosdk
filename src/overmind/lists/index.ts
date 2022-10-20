@@ -91,25 +91,28 @@ const resetMoodAndPostAvailability: Action = ({ state }: Context) => {
   state.lists.selectedUser.isNextPostsAvailable = true;
 };
 
-export const listTopUsers: Action = pipe(debounce(300), async ({ state }: Context) => {
-  const page = state.lists.top.users.page ? state.lists.top.users.page + 1 : Math.floor(Math.random() * 10);
-  state.lists.top.isNextUsersAvailable = true;
-  const r = await state.api.client.user.listTopList({
-    page: page.toString(),
-  });
+export const listTopUsers: Action<{ requestedPage?: number }> = pipe(
+  debounce(300),
+  async ({ state }: Context, { requestedPage }) => {
+    const page = requestedPage ?? state.lists.top.users.page;
+    state.lists.top.isNextUsersAvailable = true;
+    const r = await state.api.client.user.listTopList({
+      page: page.toString(),
+    });
 
-  if (_.isEmpty(r.data?.value)) {
-    state.lists.top.isNextUsersAvailable = false;
-    return;
-  }
+    if (_.isEmpty(r.data?.value)) {
+      state.lists.top.isNextUsersAvailable = false;
+      return;
+    }
 
-  r.data.value?.forEach((v) => {
-    state.api.cache.users.byId[v.id || ""] = v;
-    state.api.cache.users.byUsername[v.username || ""] = v;
-    state.lists.top.users.items.push(v);
-  });
-  state.lists.top.users.page++;
-});
+    r.data.value?.forEach((v) => {
+      state.api.cache.users.byId[v.id || ""] = v;
+      state.api.cache.users.byUsername[v.username || ""] = v;
+      state.lists.top.users.items.push(v);
+    });
+    state.lists.top.users.page++;
+  },
+);
 
 export const listTopPosts: Action<ContentType | undefined, void> = pipe(
   debounce(300),
@@ -291,7 +294,7 @@ export default {
     postsSearch: {},
     top: {
       moods: newListState<MoodReadResponse>(Math.floor(20 + Math.random() * 20)),
-      users: newListState<UserReadPublicResponse>(),
+      users: newListState<UserReadPublicResponse>(Math.floor(20 + Math.random() * 20)),
       posts: newListState<PostReadResponse>(Math.floor(50 + Math.random() * 50)),
       videoPosts: newListState<PostReadResponse>(Math.floor(10 + Math.random() * 10)),
       isNextMoodsAvailable: true,

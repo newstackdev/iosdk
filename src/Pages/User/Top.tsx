@@ -13,7 +13,7 @@ export const UserTop: NLView = () => {
   const users = state.lists.top.users.items;
 
   useEffect(() => {
-    !users.length && actions.lists.top.users();
+    !users.length && actions.lists.top.users({});
   }, []);
 
   // return <ItemGrid items={moods} render={m => <MoodWidget mood={m} />} loadMore={actions.lists.top.moods} />

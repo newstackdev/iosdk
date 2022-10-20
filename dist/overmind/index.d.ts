@@ -491,7 +491,9 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 moods: import("../types").Action<{
                     requestedPage?: number | undefined;
                 }, void>;
-                users: import("../types").Action<undefined, void>;
+                users: import("../types").Action<{
+                    requestedPage?: number | undefined;
+                }, void>;
                 posts: import("../types").Action<import("../types").ContentType | undefined, void>;
             };
         };
@@ -834,7 +836,9 @@ export declare const useActions: () => {
             moods: (payload: {
                 requestedPage?: number | undefined;
             }) => void | Promise<void>;
-            users: (payload?: undefined) => void | Promise<void>;
+            users: (payload: {
+                requestedPage?: number | undefined;
+            }) => void | Promise<void>;
             posts: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
         };
     };
