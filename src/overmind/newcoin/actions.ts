@@ -55,7 +55,7 @@ export const getAccountBalance: Action<{ user?: { username?: string } } | undefi
 );
 
 export const getPoolInfo: Action<{ pool: { owner?: string; code?: string } }> = pipe(
-  debounce(200),
+  // debounce(200),
   async ({ effects, state }: Context, { pool }) => {
     if (!(pool.code || pool.owner)) return;
     try {

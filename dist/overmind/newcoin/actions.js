@@ -41,7 +41,9 @@ export const getAccountBalance = pipe(debounce(50), async ({ effects, state, act
         console.warn("Likely no DAO");
     }
 });
-export const getPoolInfo = pipe(debounce(200), async ({ effects, state }, { pool }) => {
+export const getPoolInfo = pipe(
+// debounce(200),
+async ({ effects, state }, { pool }) => {
     if (!(pool.code || pool.owner))
         return;
     try {
