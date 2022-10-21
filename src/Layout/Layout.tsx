@@ -16,9 +16,11 @@ import { Searchicon } from "../Components/Icons/Searchicon";
 import { Spin } from "../Components/Spin";
 import { ThreeDots } from "../Components/Icons/ThreeDots";
 import { WalletWidget } from "../Components/Wallet";
+import { showPopUp } from "src/utils/popup";
 import Explore from "../Components/Icons/Explore";
 import Logo from "../Components/Icons/Logo";
 import NavbarUpload from "../Components/Icons/NavbarUpload";
+import NewsafeLogo from "src/Components/Icons/NewsafeLogo";
 import Notifications from "../Components/Icons/Notifications";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Search from "../Components/Icons/Search";
@@ -228,8 +230,16 @@ export const TopMenu: NLView = () => {
             </Link>
           </Menu.Item>
           <Menu.Item key="8">
-            <WalletWidget />
-            <span className="paragraph-1r navbar-mobile-text">Wallet</span>
+            <a
+              href="javascript:null"
+              onClick={() =>
+                showPopUp(`https://auth${state.config.env.env == "dev" ? "-dev" : ""}.newsafe.org/wallet`, "__NEWSAFE__")
+              }
+            >
+              <NewsafeLogo />
+            </a>
+            {/* <WalletWidget />
+            <span className="paragraph-1r navbar-mobile-text">Wallet</span> */}
           </Menu.Item>
           {/* <Menu.Item>
 						<Link to="/notifications">

@@ -69,7 +69,8 @@ const mediaBuckets = {
     "eu-prod": `https://cdn.newlife.io`, //`https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
 };
 const websocketsServers = {
-    "eu-dev": `wss://wsapi-eu-dev.newlife.io/creator`,
+    // "eu-dev": `wss://wsapi-eu-dev.newlife.io/creator`,
+    "eu-dev": `wss://wsapi-eu-dev.newgra.ph/creator`,
     "eu-sit": `wss://wsapi-eu-sit.newlife.io/creator`,
     "eu-prod": `wss://wsapi-eu-prod.newlife.io/creator`,
 };

@@ -11,6 +11,7 @@ import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import { NLView } from "./types";
 import { NotInvited } from "./Pages/Onboarding/NotInvited";
 import { OnboardingTypeSelector } from "./Pages/Onboarding/OnboardingTypeSelector";
+import { OverridableRoute } from "./Components/OverridableRoute";
 import { Post, PostInTags } from "./Pages/Post/Post";
 import { PostCreate } from "./Pages/Post/components/PostCreate";
 import { Privacy } from "./Pages/Privacy";
@@ -27,6 +28,7 @@ import { UserStake } from "./Components/UserWidget";
 import { UserUpdate } from "./Pages/User/UserUpdate";
 import { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
 import { ViewWhitelistProposalPage } from "./Pages/Dao/Views/WhitelistProposalView/ViewWhitelistProposal";
+import { daoRoutes } from "./Pages/Dao";
 import { fischerYates } from "./utils/random";
 import { useActions, useAppState } from "./overmind";
 import { useEffect } from "react";
@@ -125,14 +127,6 @@ const HostBasedComponents =
 
 const View: NLView = (props) => <div {...props}>{props.children}</div>;
 const Topics = () => <h3>Topics</h3>;
-
-const OverridableRoute: React.FunctionComponent<any> = (props: any) => {
-  const state = useAppState();
-  const component = state.config.routes.overrides[props.path];
-  const _props = component ? { ...props, component } : props;
-  return <Route {..._props} />;
-};
-
 export const DEFAULT_ROUTES = (state: State) => [
   <OverridableRoute key="a" exact path="/auth" component={Auth} />,
   <OverridableRoute key="h" exact path="/" component={HostBasedComponents.Root} />,
@@ -171,12 +165,7 @@ export const DEFAULT_ROUTES = (state: State) => [
   <OverridableRoute key="st" exact path="/tags/:tags/:postId" component={PostInTags} />,
 
   // DAO
-  <OverridableRoute key="da" exact path="/dao/:daoOwner/proposal/:id" component={ViewProposalPage} />,
-  <OverridableRoute key="db" exact path="/dao/:daoOwner/member-proposal/:id" component={ViewWhitelistProposalPage} />,
-  <OverridableRoute key="dc" exact path="/dao/:daoOwner/proposals/:type?" component={ProposalsPage} />,
-  <OverridableRoute key="dd" exact path="/dao/:daoOwner/new-proposal" component={NewProposal} />,
-  <OverridableRoute key="de" exact path="/dao/create" component={DaoCreate} />,
-  <OverridableRoute key="df" exact path="/dao/:daoOwner" component={ProposalsPage} />,
+  ...daoRoutes,
 
   // Onboarding v2
   <OverridableRoute key="sulv" exact path="/signup/auth" component={Authenticate} />,

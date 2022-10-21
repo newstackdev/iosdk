@@ -13,12 +13,13 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import moment from "moment";
 
-const NewProposal = () => {
+export const NewProposal = () => {
   const state = useAppState();
   const [form] = useForm();
   const actions = useActions();
   const proposalType = Form.useWatch("proposal_type", form);
-  const { daoOwner } = useParams<{ daoOwner }>();
+  const { daoOwner: _daoOwner } = useParams<{ daoOwner }>();
+  const daoOwner = _daoOwner || state.config.settings.newcoin.daoDomain;
   const ownDao = state.api.auth.user?.username === daoOwner;
   const [proposalCreated, setProposalCreated] = useState(false);
   const [customTime, setCustomTime] = useState(false);

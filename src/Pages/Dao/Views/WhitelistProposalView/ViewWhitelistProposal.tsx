@@ -18,7 +18,7 @@ export const ViewWhitelistProposalPage = () => {
   return <ViewWhitelistProposal proposal={proposal} daoOwner={daoOwner} proposalId={id} />;
 };
 
-const ViewWhitelistProposal = (props: { proposal; daoOwner: string; proposalId: string }) => {
+export const ViewWhitelistProposal = (props: { proposal; daoOwner: string; proposalId: string }) => {
   const state = useAppState();
   const daoOwner = props.daoOwner || state.config.settings.newcoin.daoDomain;
   const proposalId = props.proposalId;

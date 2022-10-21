@@ -11,12 +11,11 @@ import { Mood } from "./Pages/Mood/Mood";
 import { MoodCreate } from "./Pages/Mood/MoodCreate";
 import { NotInvited } from "./Pages/Onboarding/NotInvited";
 import { OnboardingTypeSelector } from "./Pages/Onboarding/OnboardingTypeSelector";
+import { OverridableRoute } from "./Components/OverridableRoute";
 import { Post, PostInTags } from "./Pages/Post/Post";
 import { PostCreate } from "./Pages/Post/components/PostCreate";
 import { Privacy } from "./Pages/Privacy";
 import { Product } from "./Pages/Store/Product";
-import { ProposalsPage } from "./Pages/Dao/Views/Proposals/ProposalList";
-import { Route } from "react-router-dom";
 import { SearchCreativePost } from "./Pages/SearchCreativePost";
 import { SelectMoodForm } from "./Components/SelectMood";
 import { TOS } from "./Pages/TOS";
@@ -24,15 +23,12 @@ import { User } from "./Pages/User/User";
 import { UserCreate } from "./Pages/User/UserCreate";
 import { UserStake } from "./Components/UserWidget";
 import { UserUpdate } from "./Pages/User/UserUpdate";
-import { ViewProposalPage } from "./Pages/Dao/Views/ProposalView/ViewProposal";
-import { ViewWhitelistProposalPage } from "./Pages/Dao/Views/WhitelistProposalView/ViewWhitelistProposal";
-import { useActions, useAppState } from "./overmind";
+import { daoRoutes } from "./Pages/Dao";
+import { useActions } from "./overmind";
 import { useEffect } from "react";
 import Creators, { TopCreators } from "./Components/Creators";
-import DaoCreate from "./Pages/Dao/Views/DaoCreate/DaoCreate";
 import Explore from "./Pages/Explore/Explore";
 import MyMoods from "./Pages/Mood/MyMoods";
-import NewProposal from "./Pages/Dao/Views/NewProposal/NewProposal";
 import Notifications from "./Components/Icons/Notifications";
 import SearchCreative from "./Pages/SearchCreative";
 import SearchTag from "./Pages/Tag/TagSearch";
@@ -89,12 +85,6 @@ const currentHost = window.location.host.replace(/:\d+/, "");
 const HostBasedComponents = HostToDomain.find((htd) => htd.hosts.find((h) => h === currentHost))?.components || UnknownHost.components;
 const View = (props) => _jsx("div", { ...props, children: props.children });
 const Topics = () => _jsx("h3", { children: "Topics" });
-const OverridableRoute = (props) => {
-    const state = useAppState();
-    const component = state.config.routes.overrides[props.path];
-    const _props = component ? { ...props, component } : props;
-    return _jsx(Route, { ..._props });
-};
 export const DEFAULT_ROUTES = (state) => [
     _jsx(OverridableRoute, { exact: true, path: "/auth", component: Auth }, "a"),
     _jsx(OverridableRoute, { exact: true, path: "/", component: HostBasedComponents.Root }, "h"),
@@ -128,12 +118,7 @@ export const DEFAULT_ROUTES = (state) => [
     _jsx(OverridableRoute, { exact: true, path: "/search", component: SearchTag }, "st"),
     _jsx(OverridableRoute, { exact: true, path: "/tags/:tags/:postId", component: PostInTags }, "st"),
     // DAO
-    _jsx(OverridableRoute, { exact: true, path: "/dao/:daoOwner/proposal/:id", component: ViewProposalPage }, "da"),
-    _jsx(OverridableRoute, { exact: true, path: "/dao/:daoOwner/member-proposal/:id", component: ViewWhitelistProposalPage }, "db"),
-    _jsx(OverridableRoute, { exact: true, path: "/dao/:daoOwner/proposals/:type?", component: ProposalsPage }, "dc"),
-    _jsx(OverridableRoute, { exact: true, path: "/dao/:daoOwner/new-proposal", component: NewProposal }, "dd"),
-    _jsx(OverridableRoute, { exact: true, path: "/dao/create", component: DaoCreate }, "de"),
-    _jsx(OverridableRoute, { exact: true, path: "/dao/:daoOwner", component: ProposalsPage }, "df"),
+    ...daoRoutes,
     // Onboarding v2
     _jsx(OverridableRoute, { exact: true, path: "/signup/auth", component: Authenticate }, "sulv"),
     _jsx(OverridableRoute, { exact: true, path: "/signup/domain", component: DomainSelector }, "sud"),

@@ -31,7 +31,7 @@ export const ProposalsPage = () => {
   return <Proposals daoOwner={daoOwner} />;
 };
 
-const Proposals = (props: { daoOwner: string }) => {
+export const Proposals = (props: { daoOwner: string }) => {
   const state = useAppState();
   const actions = useActions();
 
