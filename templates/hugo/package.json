@@ -1,0 +1,27 @@
+{
+	"dependencies": {
+		"@newstackdev/iosdk": "^0.1.169"
+	},
+	"name": "iosdk-theme-hugo",
+	"version": "0.5.0",
+	"scripts": {
+		"start": "concurrently  \"overmind-devtools\" \"craco start --verbose\"",
+		"build": "craco build",
+		"test": "craco test",
+		"eject": "craco eject",
+		"postinstall": "rm -rf node_modules/@newstackdev/iosdk/node_modules/@types/",
+		"why is postinstall deleting some @types?": "@types/react version mismatch between some components causes iosdk to install the next version under its node_modules which confuses overmind. to be resolved by upgrading antd and some others"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

@@ -16,6 +16,9 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                     name: string;
                     currentHost: string;
                 };
+                newsafe: {
+                    currentHost: string;
+                };
                 newcoin: {
                     daoId: string;
                     daoDomain: string;

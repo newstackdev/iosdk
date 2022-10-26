@@ -2400,15 +2400,16 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@newfound8ion/newcoin-sdk@^1.1.2":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@newfound8ion/newcoin-sdk/-/newcoin-sdk-1.2.0.tgz#248c2856318eb6e49c3c7323fe79e15b1722a1bc"
-  integrity sha512-fGmAuIJv1TiP11iMoHnZ3Qm9I5Wu625L+xe/ZHNKc+Xq63GbNu5OjzDoRA783dVBRks1OWsodg8tUda7WgfgLg==
+"@newfound8ion/newcoin-sdk@^1.2.93":
+  version "1.2.93"
+  resolved "https://registry.yarnpkg.com/@newfound8ion/newcoin-sdk/-/newcoin-sdk-1.2.93.tgz#c4af54deee94497d0b9a535d32b505e001a5a566"
+  integrity sha512-hHSKPw6B0GxO8ur2eJLFSIMg2Mp+ec5qyEI/NoKwld4eHDmkR/ZOV5+6ZZNs/UH3SOouwW3j7VTX/keoPN7jLg==
   dependencies:
     "@eoscafe/hyperion" "^3.2.9"
     "@newfound8ion/newcoin.daos-js" "^2.0.4"
     "@newfound8ion/newcoin.pool-js" "^1.0.7"
     "@newfound8ion/newcoin.pools-js" "^2.0.3"
+    atomicassets "^1.4.2"
     cross-fetch "^3.1.4"
     eosjs "^22.1.0"
     eosjs-ecc-priveos "^4.0.8"
@@ -2434,26 +2435,26 @@
   dependencies:
     node-fetch "^2.6.1"
 
-"@newstackdev/iosdk-newgraph-client-js@^1.1.1":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk-newgraph-client-js/-/iosdk-newgraph-client-js-1.1.2.tgz#e43ef25d3d9bd66e03d01dcd3205cc142b816145"
-  integrity sha512-0Qs+DFihsRbo6QaNYK1NPnPYIlKMiszAItXeuZPt9XZGqwH9ghZpdGSEIkDBQFw+o+fo8PN8sL37L7o/I1VnKA==
+"@newstackdev/iosdk-newgraph-client-js@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk-newgraph-client-js/-/iosdk-newgraph-client-js-1.2.1.tgz#0f525ff64d1768dde155dc66dd53890511d7209b"
+  integrity sha512-0MYxAbWIiX2pM8G7ASYgIVejnMvFukcJZm6IsP+H6z/3gF4ARThFUhiEY6U726rqZZ5nttcqb906HSfcxcnNzg==
   dependencies:
     "@types/node-fetch" "^3.0.3"
     node-fetch "^3.0.0"
 
-"@newstackdev/iosdk@^0.9.75":
-  version "0.9.75"
-  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk/-/iosdk-0.9.75.tgz#e55ae1b25cb411c147e3dcafab21b3018bb64468"
-  integrity sha512-jQjiUdUcb0tNYUfVVMo1MjljUpwNAfMH9jR1hpf6s6ZfffEGk1IfJ9ZmAGLQvf6EWQV6LZdlD3BZI4rSiCliHw==
+"@newstackdev/iosdk@^0.9.114":
+  version "0.9.114"
+  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk/-/iosdk-0.9.114.tgz#d402fa7d747506439fb2ae5092614a6c58f625f9"
+  integrity sha512-publN01yWTCsA7I6tKP3AG8p/8zZwwLC2jFXLM2qMi1PWl0nQgS4oypGopzcrQRHc689ry2n9Y6WyIK2P4kOwQ==
   dependencies:
     "@babel/plugin-syntax-jsx" "^7.14.5"
     "@babel/preset-env" "^7.15.8"
     "@babel/preset-react" "^7.14.5"
     "@craco/craco" "^6.4.3"
     "@jackwilsdon/craco-use-babelrc" "^1.0.0"
-    "@newfound8ion/newcoin-sdk" "^1.1.2"
-    "@newstackdev/iosdk-newgraph-client-js" "^1.1.1"
+    "@newfound8ion/newcoin-sdk" "^1.2.93"
+    "@newstackdev/iosdk-newgraph-client-js" "^1.2.1"
     "@stripe/react-stripe-js" "^1.6.0"
     "@stripe/stripe-js" "^1.20.3"
     "@testing-library/jest-dom" "^5.11.4"
@@ -2509,6 +2510,7 @@
     react-dom "^17.0.2"
     react-firebase-hooks "^3.0.4"
     react-horizontal-scrolling-menu "^2.5.2"
+    react-infinite-scroller "^1.2.6"
     react-oembed-container "^1.0.1"
     react-outside-click-handler "^1.3.0"
     react-router-dom "5.2.0"
@@ -3346,6 +3348,13 @@
   integrity sha512-VjnqEmqGnasQKV0CWLevqMTXBYG9GbwuE6x3VetERLh0cq2LTptFE73MrQi2S7GkKXCf2GgwItB/melLnxfnsg==
   dependencies:
     "@types/react" "^17"
+
+"@types/react-infinite-scroller@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@types/react-infinite-scroller/-/react-infinite-scroller-1.2.3.tgz#b8dcb0e5762c3f79cc92e574d2c77402524cab71"
+  integrity sha512-l60JckVoO+dxmKW2eEG7jbliEpITsTJvRPTe97GazjF5+ylagAuyYdXl8YY9DQsTP9QjhqGKZROknzgscGJy0A==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-outside-click-handler@^1.3.1":
   version "1.3.1"
@@ -4295,6 +4304,13 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
+atomicassets@^1.4.2:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/atomicassets/-/atomicassets-1.5.1.tgz#89579bd4009e5dba34a41eca63302e9786cc353d"
+  integrity sha512-KZI/NghU68t2jEykR9KI6CVoDeErcMiNYMLHz3F7mrkFWlTXVjiJ6tbT3y2VDaF/tcDqmLd0szNnVl1/QgTTNw==
+  dependencies:
+    big-integer "^1.6.51"
+
 autoprefixer@^10.4.8:
   version "10.4.10"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.10.tgz#a1d8891d1516155eb13a772b1289efdc61de14ef"
@@ -4596,6 +4612,11 @@ bfj@^7.0.2:
     check-types "^11.1.1"
     hoopy "^0.1.4"
     tryer "^1.0.1"
+
+big-integer@^1.6.51:
+  version "1.6.51"
+  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
+  integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -12053,7 +12074,7 @@ prop-types-exact@^1.2.0:
     object.assign "^4.1.0"
     reflect.ownkeys "^0.2.0"
 
-prop-types@^15.5.4, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -12974,6 +12995,13 @@ react-horizontal-scrolling-menu@^2.5.2:
   integrity sha512-OmCQDONx/4TnyxQr+RoxP7AwSPQxdQGkFnWuCknF3s2pySNAogL4AB1LQv6bUrXIwFMXdrJBqxFeq3tZ24J7/w==
   dependencies:
     smooth-scroll-into-view-if-needed "^1.1.32"
+
+react-infinite-scroller@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.6.tgz#8b80233226dc753a597a0eb52621247f49b15f18"
+  integrity sha512-mGdMyOD00YArJ1S1F3TVU9y4fGSfVVl6p5gh/Vt4u99CJOptfVu/q5V/Wlle72TMgYlBwIhbxK5wF0C/R33PXQ==
+  dependencies:
+    prop-types "^15.5.8"
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0:
   version "16.13.1"

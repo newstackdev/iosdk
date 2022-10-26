@@ -1,0 +1,10 @@
+.text-modest {
+	color: #c0c0c0 !important;
+}
+
+.text-modest a:visited,
+.text-modest a:active,
+.text-modest a:link,
+.text-modest a:hover {
+	color: #c0c0c0 !important;
+}

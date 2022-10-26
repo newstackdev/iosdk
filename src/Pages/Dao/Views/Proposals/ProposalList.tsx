@@ -36,7 +36,9 @@ export const Proposals = (props: { daoOwner: string }) => {
   const actions = useActions();
 
   const currUser = state.api.auth.user?.username || "";
-  const daoOwner = props.daoOwner || state.config.settings.newcoin.daoDomain;
+
+  // crude fix below, refactor
+  const daoOwner = props.daoOwner && props.daoOwner !== "proposals" ? props.daoOwner : state.config.settings.newcoin.daoDomain;
   const ownDao = state.api.auth.user?.username === daoOwner;
 
   const daoProposals = useCachedDaoProposals({ daoOwner });

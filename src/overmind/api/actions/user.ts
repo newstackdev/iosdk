@@ -205,14 +205,16 @@ export const getMoods: Action<{ id?: string }> = pipe(debounce(300), async ({ st
   // const un = u?.username || "";
 
   if (state.api.cache.users.byId[id]) {
+    const moods = state.api.cache.users.byId[id].moods || [];
     state.api.cache.users.byId[id].moods = uniqBy(
-      [...state.api.cache.users.byId[id].moods, ...((r.data?.value || []) as MoodReadResponse[])],
+      [...moods, ...((r.data?.value || []) as MoodReadResponse[])],
       (mood: MoodReadResponse) => mood?.id,
     );
   }
   if (state.api.cache.users.byUsername[u?.username || ""]) {
+    const moods = state.api.cache.users.byUsername[u?.username || ""].moods || [];
     state.api.cache.users.byUsername[u.username || ""].moods = uniqBy(
-      [...state.api.cache.users.byUsername[u.username || ""].moods, ...((r.data?.value || []) as MoodReadResponse[])],
+      [...moods, ...((r.data?.value || []) as MoodReadResponse[])],
       (mood: MoodReadResponse) => mood?.id,
     );
   }

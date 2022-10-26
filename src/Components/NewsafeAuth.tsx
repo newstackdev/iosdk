@@ -11,7 +11,7 @@ export const NewsafeAuth: IOView<{
   const state = useAppState();
   const actions = useActions();
 
-  const hostname = state.config.settings.app.currentHost;
+  const hostname = state.config.settings.newsafe.currentHost || state.config.settings.app.currentHost;
   const params = {
     requestor: state.config.settings.newcoin.daoDomain,
     referer: hostname,

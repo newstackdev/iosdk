@@ -1,0 +1,18 @@
+.btn {
+	cursor: pointer;
+	width: 100%;
+	border-radius: 8px;
+	padding: 1rem;
+	outline: none;
+	border: 1px solid #c0c0c0;
+}
+
+.btn-black {
+	color: white;
+	background: black;
+	border: 1px solid black;
+}
+
+.oauth-buttons-wrapper > button:not(:last-child) {
+	margin-bottom: 20px;
+}

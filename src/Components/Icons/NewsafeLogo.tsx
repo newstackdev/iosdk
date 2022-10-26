@@ -1,4 +1,4 @@
-import { IOView } from "src/types";
+import { IOView } from "../../types";
 
 const NewsafeLogo: IOView<{ width?: string; height?: string }> = ({ width, height }) => (
   <svg width="30" height="30" version="1.1" viewBox="0 0 7.9375 7.9375" xmlns="http://www.w3.org/2000/svg">

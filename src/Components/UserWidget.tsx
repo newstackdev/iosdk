@@ -31,6 +31,7 @@ import { useBadges } from "../hooks/useBadges";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
+import Deferred from "./Deferred";
 import Paragraph from "antd/lib/typography/Paragraph";
 import ShowMoreText from "react-show-more-text";
 import usePreventBodyScroll from "../hooks/usePreventBodyScroll";
@@ -639,6 +640,8 @@ export const UserWidgetHeading: NLView<{
 
   const joinedDate = "Joined " + toMonthName(monthNumber) + " " + fullYear;
 
+  const isCurrentUserProfile = u.id === state.api.auth.user?.id;
+
   return (
     <Row
       wrap={true}
@@ -671,7 +674,7 @@ export const UserWidgetHeading: NLView<{
                         </Col>
                         <Col>{isUserVerified && <VerifiedIcon />}</Col>
                         <Col>
-                          {u.id === state.api.auth.user?.id && (
+                          {isCurrentUserProfile && (
                             <Link to="/my/profile/update" className="nl-userProfile-editBtn" style={{ height: 30 }}>
                               <Edit />
                             </Link>
@@ -773,7 +776,7 @@ export const UserWidgetHeading: NLView<{
                 {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
                 <Row style={{ justifyContent: "flex-end", alignItems: "center" }} className="u-margin-top-medium">
                   <Share urlToShare={URL} user={user} />
-                  {daoProposals.dao_id && (
+                  {daoProposals.dao_id ? (
                     <Button
                       className="u-margin-left-medium"
                       onClick={() =>
@@ -784,6 +787,17 @@ export const UserWidgetHeading: NLView<{
                     >
                       DAO
                     </Button>
+                  ) : (
+                    isCurrentUserProfile && (
+                      <Deferred deferTime={400} visible={true}>
+                        <Button
+                          style={{ marginLeft: 4 }}
+                          onClick={() => actions.routing.historyPush({ location: "/dao/create" })}
+                        >
+                          Create DAO
+                        </Button>
+                      </Deferred>
+                    )
                   )}
                 </Row>
               </Col>

@@ -16,6 +16,9 @@ export declare const config: (cfg: PartialConfiguration) => {
                     name: string;
                     currentHost: string;
                 };
+                newsafe: {
+                    currentHost: string;
+                };
                 newcoin: {
                     daoId: string;
                     daoDomain: string;

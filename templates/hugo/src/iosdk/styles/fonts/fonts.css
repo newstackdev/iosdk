@@ -1,0 +1,20 @@
+@font-face {
+	font-family: NewfoundationWhyte-Regular;
+	src: url("../fonts/Regular/NewfoundationWhyte-Regular.ttf");
+}
+@font-face {
+	font-family: NewfoundationWhyte-Medium;
+	src: url("../fonts/Medium/NewfoundationWhyte-Medium.ttf");
+}
+@font-face {
+	font-family: NewfoundationWhyte-Light;
+	src: url("../fonts/Light/NewfoundationWhyte-Light.ttf");
+}
+@font-face {
+	font-family: NewfoundationWhyte-Book;
+	src: url("../fonts/Book/NewfoundationWhyte-Book.ttf");
+}
+@font-face {
+	font-family: NewfoundationWhyte-Bold;
+	src: url("../fonts/Bold/NewfoundationWhyte-Bold.ttf");
+}

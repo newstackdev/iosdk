@@ -1,0 +1,117 @@
+@import "./typography.css";
+@import "./buttons.css";
+@import "./utils.css";
+@import "./colors.css";
+@import "./antd.css";
+
+*, input, textarea, .ant-input {
+	font-feature-settings: normal;
+	font-variant-numeric: normal;	
+}
+
+.App {
+	text-align: center;
+}
+
+.App-logo {
+	height: 40vmin;
+	
+	pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
+}
+
+.ant-layout {
+	background-color: white;
+}
+
+.ant-layout-header {
+	background-color: white;
+	color: black !important;
+}
+
+.App-header {
+	background-color: white;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.App-link {
+	color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.main-content {
+	padding: 24px;
+	max-width: min(800px, 60vw);
+	min-width: min(600px, 90vw);
+	min-height: 80vh;
+	font-size: 1em;
+	min-height: 80vh;
+	width: 800px;
+
+	background: white;
+	padding: 72px;
+	border: 1px solid lightgrey;
+	/* box-shadow: 3px 3px 30px grey; */
+	border-radius: 6px;
+	margin: 24px auto;
+}
+
+.card-wrapper>div:not(:last-child) {
+	margin-bottom: 20px;
+}
+
+input {
+	outline: none;
+	width: 100%;
+	border-radius: 8px;
+	border: 1px solid black;
+	padding: 1rem;
+}
+
+.instructions li {
+	margin-top: 20px;
+}
+
+.copyDotenv {
+	position: relative;
+	top: -40px;
+	left: -10px;
+	text-align: right;
+}
+
+.header-padding {
+	height: 42px;
+	width: 42px;
+	position: relative;
+}
+
+.logo {
+	min-width: 50px;
+}
+
+.text-center { 
+	text-align: center;
+}
+
+
+

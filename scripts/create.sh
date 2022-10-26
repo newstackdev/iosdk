@@ -21,7 +21,7 @@ echo Installing...
 
 yarn add @newstackdev/iosdk @types/react@17.0.44
 
-template=${2-plain}
+template=${2-hugo}
 
 rsync -av ./node_modules/@newstackdev/iosdk/templates/$template/ .
 

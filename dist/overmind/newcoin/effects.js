@@ -8,6 +8,8 @@ import { NCO_BlockchainAPI } from "@newfound8ion/newcoin-sdk";
 console.log(NCO_BlockchainAPI);
 export const newcoin = new NCO_BlockchainAPI(NCO_BlockchainAPI.defaults.devnet_urls, NCO_BlockchainAPI.defaults.devnet_services);
 export const newcoinProxy = new NCO_BlockchainAPI(NCO_BlockchainAPI.defaults.devnet_urls, NCO_BlockchainAPI.defaults.devnet_services, true, true);
+export const newcoinProxyProd = new NCO_BlockchainAPI(NCO_BlockchainAPI.defaults.devnet_urls_prod, // proxy is prod, devnet is same
+NCO_BlockchainAPI.defaults.devnet_services, true, true);
 const HyperionClient = (url) => {
     const get = (query) => {
         return fetch(url + query);

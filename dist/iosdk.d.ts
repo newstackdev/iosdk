@@ -20,6 +20,9 @@ declare const _default: {
                             name: string;
                             currentHost: string;
                         };
+                        newsafe: {
+                            currentHost: string;
+                        };
                         newcoin: {
                             daoId: string;
                             daoDomain: string;
@@ -557,6 +560,9 @@ declare const _default: {
                     name: string;
                     currentHost: string;
                 };
+                newsafe: {
+                    currentHost: string;
+                };
                 newcoin: {
                     daoId: string;
                     daoDomain: string;
@@ -616,6 +622,9 @@ declare const _default: {
         settings: {
             app: {
                 name: string;
+                currentHost: string;
+            };
+            newsafe: {
                 currentHost: string;
             };
             newcoin: {
@@ -681,6 +690,9 @@ declare const _default: {
                 settings: {
                     app: {
                         name: string;
+                        currentHost: string;
+                    };
+                    newsafe: {
                         currentHost: string;
                     };
                     newcoin: {

@@ -1,0 +1,24 @@
+/* @import "./fonts/fonts.css"; */
+@import './app.css';
+
+body {
+	margin: 0;
+	font-family: NewfoundationWhyte-Regular, -apple-system, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: NewfoundationWhyte-Regular, source-code-pro, Menlo, Monaco,
+		Consolas, "Courier New", monospace;
+}
+
+html {
+	--antd-wave-shadow-color: black;
+}
+
+html::selection {
+	background-color: black;
+}
