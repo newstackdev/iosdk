@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"@newstackdev/iosdk": "^0.1.169"
+		"@newstackdev/iosdk": "^0.9.117"
 	},
 	"name": "iosdk-theme-hugo",
 	"version": "0.5.0",

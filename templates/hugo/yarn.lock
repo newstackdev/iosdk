@@ -2430,10 +2430,10 @@
     "@types/node-fetch" "^3.0.3"
     node-fetch "^3.0.0"
 
-"@newstackdev/iosdk@^0.9.114":
-  version "0.9.114"
-  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk/-/iosdk-0.9.114.tgz#d402fa7d747506439fb2ae5092614a6c58f625f9"
-  integrity sha512-publN01yWTCsA7I6tKP3AG8p/8zZwwLC2jFXLM2qMi1PWl0nQgS4oypGopzcrQRHc689ry2n9Y6WyIK2P4kOwQ==
+"@newstackdev/iosdk@^0.9.117":
+  version "0.9.117"
+  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk/-/iosdk-0.9.117.tgz#015a6da80406c4778063d256fb13f41c83ee0458"
+  integrity sha512-+aJ3BWxV4/tofM2nu4qF0fq4Coib6pfLkimeX0sJf30agbhkWWp7/x5gpUYcX3CfuOZGvh9nO5OfWfK2C8nSFQ==
   dependencies:
     "@babel/plugin-syntax-jsx" "^7.14.5"
     "@babel/preset-env" "^7.15.8"
@@ -3356,15 +3356,6 @@
   version "18.0.21"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.21.tgz#b8209e9626bb00a34c76f55482697edd2b43cc67"
   integrity sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==
-  dependencies:
-    "@types/prop-types" "*"
-    "@types/scheduler" "*"
-    csstype "^3.0.2"
-
-"@types/react@17.0.44":
-  version "17.0.44"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.44.tgz#c3714bd34dd551ab20b8015d9d0dbec812a51ec7"
-  integrity sha512-Ye0nlw09GeMp2Suh8qoOv0odfgCoowfM/9MG6WeRD60Gq9wS90bdkdRtYbRkNhXOpG4H+YXGvj4wOWhAC0LJ1g==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"

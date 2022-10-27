@@ -1,1 +1,1 @@
-Keeping this directory intact will allow future upgrades of iosdk theme.
+Keeping this directory intact will allow future upgrades of iosdk themeu

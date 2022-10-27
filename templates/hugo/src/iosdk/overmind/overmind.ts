@@ -11,10 +11,11 @@ import { createStateHook, createActionsHook, createEffectsHook, createReactionHo
 
 import { config as appConfig } from "../../config";
 import { EventType, Execution } from 'overmind/lib/internalTypes';
+import { omit } from "lodash";
 
 const finalConfig = { state: merge({}, defaultConfig, appConfig) };
 const config = namespaced({
-    ...standardModules,
+    ...omit(standardModules, "app"),
     // ...omit(standardModules, ["flows"]),
     config: finalConfig,
     ...app
