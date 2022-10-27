@@ -17,7 +17,7 @@ declare const _default: {
                     };
                     settings: {
                         app: {
-                            name: string;
+                            name: string | undefined;
                             currentHost: string;
                         };
                         newsafe: {
@@ -557,7 +557,7 @@ declare const _default: {
             };
             settings: {
                 app: {
-                    name: string;
+                    name: string | undefined;
                     currentHost: string;
                 };
                 newsafe: {
@@ -621,7 +621,7 @@ declare const _default: {
         };
         settings: {
             app: {
-                name: string;
+                name: string | undefined;
                 currentHost: string;
             };
             newsafe: {
@@ -689,7 +689,7 @@ declare const _default: {
                 };
                 settings: {
                     app: {
-                        name: string;
+                        name: string | undefined;
                         currentHost: string;
                     };
                     newsafe: {

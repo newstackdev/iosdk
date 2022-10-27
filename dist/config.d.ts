@@ -14,7 +14,7 @@ export declare const config: {
     };
     settings: {
         app: {
-            name: string;
+            name: string | undefined;
             currentHost: string;
         };
         newsafe: {

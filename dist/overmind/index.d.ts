@@ -13,7 +13,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             };
             settings: {
                 app: {
-                    name: string;
+                    name: string | undefined;
                     currentHost: string;
                 };
                 newsafe: {

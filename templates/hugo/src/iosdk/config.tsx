@@ -7,7 +7,7 @@ import { get } from "lodash";
 
 const currentHost =
 	window.location.hostname === "localhost" ?
-		process.env.REACT_APP_IOSDK_APP_PROD_HlOST || "" :
+		process.env.REACT_APP_IOSDK_APP_PROD_HOST || "" :
 		window.location.hostname;
 
 const stages: Record<string, string> = {

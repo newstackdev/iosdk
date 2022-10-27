@@ -13,7 +13,7 @@ export declare const config: (cfg: PartialConfiguration) => {
             };
             settings: {
                 app: {
-                    name: string;
+                    name: string | undefined;
                     currentHost: string;
                 };
                 newsafe: {
