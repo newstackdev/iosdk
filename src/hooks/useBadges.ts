@@ -27,6 +27,7 @@ export const useBadges = (userId: string) => {
       setIsBadgesLoading(true);
       badgesReq();
       setIsBadgesLoading(false);
+      setBadgesError(undefined);
     } catch (e: any) {
       setIsBadgesLoading(false);
       setBadgesError(e.message);

@@ -37,6 +37,8 @@ export declare const UserWidgetHeading: NLView<{
     setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
     activeKey?: UserFlowRoutes;
     stakeMode?: boolean;
+    hideNewlifeSpecificInfo?: boolean;
+    disableBadges?: boolean;
 }>;
 export declare const UserSocialInfo: NLView<{
     user?: UserReadPrivateResponse;

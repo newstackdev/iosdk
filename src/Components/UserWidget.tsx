@@ -567,7 +567,9 @@ export const UserWidgetHeading: NLView<{
   setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
   activeKey?: UserFlowRoutes;
   stakeMode?: boolean;
-}> = ({ user, setActiveKey, stakeMode }) => {
+  hideNewlifeSpecificInfo?: boolean;
+  disableBadges?: boolean;
+}> = ({ user, setActiveKey, stakeMode, hideNewlifeSpecificInfo, disableBadges }) => {
   const u = useCachedUser({ username: user?.username }, true);
   const state = useAppState();
   const actions = useActions();
@@ -638,7 +640,7 @@ export const UserWidgetHeading: NLView<{
       }}
       className="app-main-full-width"
     >
-      <Col xs={24} xl={12} className="nl-avatar">
+      <Col xs={24} xl={14} className="nl-avatar">
         <Row className="user-widget__first-row">
           <Col xs={24} xl={22} className="text-left">
             <Row style={{ flexWrap: "inherit" }} gutter={64}>
@@ -735,9 +737,11 @@ export const UserWidgetHeading: NLView<{
                     </span>
                   </Col>
                 </Row>
-                <Row className="u-margin-top-medium" gutter={12} justify="center">
-                  <BadgeWidget user={user} className="user-widget-heading-badge-section" />
-                </Row>
+                {!disableBadges && (
+                  <Row className="u-margin-top-medium" gutter={12} justify="center">
+                    <BadgeWidget user={user} className="user-widget-heading-badge-section" />
+                  </Row>
+                )}
               </Col>
               <Col xs={24} sm={6} className="powerup text-right">
                 <Row>
@@ -753,8 +757,8 @@ export const UserWidgetHeading: NLView<{
                     </div>
                   </Col>
                   {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
-                  <Col xs={24} className="u-margin-top-medium">
-                    <Row justify="center">
+                  {!hideNewlifeSpecificInfo && (
+                    <Col xs={24} className="u-margin-top-medium user-widget-heading__share_dao">
                       <Share urlToShare={URL} user={user} />
                       {daoProposals.dao_id ? (
                         <Button
@@ -779,8 +783,8 @@ export const UserWidgetHeading: NLView<{
                           </Deferred>
                         )
                       )}
-                    </Row>
-                  </Col>
+                    </Col>
+                  )}
                 </Row>
               </Col>
             </Row>

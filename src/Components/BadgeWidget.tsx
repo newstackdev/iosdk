@@ -11,7 +11,7 @@ export const badgeIcons = {
   ["staked"]: 5,
 };
 
-const BadgeWidget: NLView<{ user: UserReadPublicResponse; className: string }> = ({ user, className }) => {
+const BadgeWidget: NLView<{ user: UserReadPublicResponse; className?: string }> = ({ user, className }) => {
   const { badges, isBadgesLoading, badgesError } = useBadges(user?.id || "");
   return (
     <>
