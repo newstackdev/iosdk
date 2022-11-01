@@ -150,12 +150,10 @@ export const getMoods = pipe(debounce(300), async ({ state, actions, effects }, 
     await actions.api.user.cache({ user: u });
     // const un = u?.username || "";
     if (state.api.cache.users.byId[id]) {
-        const moods = state.api.cache.users.byId[id].moods || [];
-        state.api.cache.users.byId[id].moods = uniqBy([...moods, ...(r.data?.value || [])], (mood) => mood?.id);
+        state.api.cache.users.byId[id].moods = uniqBy([...state.api.cache.users.byId[id].moods, ...(r.data?.value || [])], (mood) => mood?.id);
     }
     if (state.api.cache.users.byUsername[u?.username || ""]) {
-        const moods = state.api.cache.users.byUsername[u?.username || ""].moods || [];
-        state.api.cache.users.byUsername[u.username || ""].moods = uniqBy([...moods, ...(r.data?.value || [])], (mood) => mood?.id);
+        state.api.cache.users.byUsername[u.username || ""].moods = uniqBy([...state.api.cache.users.byUsername[u.username || ""].moods, ...(r.data?.value || [])], (mood) => mood?.id);
     }
     //   moods: (r.data?.value || []) as MoodReadResponse[],
     // };

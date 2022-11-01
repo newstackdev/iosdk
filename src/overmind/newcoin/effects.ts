@@ -16,12 +16,6 @@ export const newcoinProxy = new NCO_BlockchainAPI(
   true,
   true,
 );
-export const newcoinProxyProd = new NCO_BlockchainAPI(
-  NCO_BlockchainAPI.defaults.devnet_urls_prod, // proxy is prod, devnet is same
-  NCO_BlockchainAPI.defaults.devnet_services,
-  true,
-  true,
-);
 
 const HyperionClient = (url: string) => {
   const get = (query: string) => {

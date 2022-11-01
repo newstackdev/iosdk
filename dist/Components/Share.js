@@ -53,6 +53,6 @@ export const Share = ({ currentPostProps, urlToShare, user }) => {
                                                 setCopyToClipboard(true);
                                             }, children: _jsx(Clipboard, {}) }) }) }) })] })), _jsx(ShareModalContent, { style: { paddingBottom: "none", justifyContent: "center" }, children: _jsx(Button, { className: "ant-btn ant-btn-primary", onClick: () => {
                                 setViewQR(!viewQR);
-                            }, children: viewQR ? "Back" : "QR Code" }) })] })) : (false), _jsx("span", { onClick: () => setIsVisible(true), style: { cursor: "pointer", height: 30 }, children: _jsx(ShareIcon, {}) })] }));
+                            }, children: viewQR ? "Back" : "QR Code" }) })] })) : (false), _jsx("div", { onClick: () => setIsVisible(true), className: "nl-share-button-icon", children: _jsx(ShareIcon, {}) })] }));
 };
 //# sourceMappingURL=Share.js.map

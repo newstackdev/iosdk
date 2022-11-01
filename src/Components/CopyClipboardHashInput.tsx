@@ -27,12 +27,14 @@ export const CopyClipboardHashInput: IOView<{ hash: string; highlight?: boolean 
             placeholder={hash}
           /> */}
           <Col>
-            <p
-              className={highlight ? `header-1r` : "header-1r typography-overflow"}
-              style={showCopyText || highlight ? { color: "#d7ff65" } : { color: "#fff" }}
-            >
-              {hash}
-            </p>
+            {highlight && (
+              <p
+                className={highlight ? `header-1r` : "header-1r typography-overflow"}
+                style={showCopyText || highlight ? { color: "#d7ff65" } : { color: "#fff" }}
+              >
+                {hash}
+              </p>
+            )}
           </Col>
           <Col>
             <Clipboard fill={showCopyText || highlight ? "#d7ff65" : "#fff"} />

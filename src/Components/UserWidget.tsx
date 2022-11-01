@@ -27,10 +27,10 @@ import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { VerifiedIconLight } from "../Components/Icons/VerifiedIconLight";
 import { isEmpty } from "lodash";
 import { useActions, useAppState } from "../overmind";
-import { useBadges } from "../hooks/useBadges";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
+import BadgeWidget from "./BadgeWidget";
 import Deferred from "./Deferred";
 import Paragraph from "antd/lib/typography/Paragraph";
 import ShowMoreText from "react-show-more-text";
@@ -53,20 +53,6 @@ export const SOCIAL_MEDIA = [
   UserSocials.YOUTUBE,
   UserSocials.DISCORD,
 ];
-
-export const badgeIcons = {
-  ["daoVotedProposal"]: 1,
-  ["daoCreated"]: 2,
-  ["daoCreatedProposal"]: 3,
-  ["daoJoinedCount"]: 4,
-  ["staked"]: 5,
-};
-
-export interface IBadgeResponse {
-  done: boolean;
-  value: { id: string; created: string; updated: string; name: string; title: string; type: string; value: any }[];
-}
-
 export const UserWidgetVertical: NLView<{ user?: UserReadPublicResponse }> = ({ user }) => {
   const u = useCachedUser({ id: user?.id || "" });
   if (!u) return <></>;
@@ -595,7 +581,6 @@ export const UserWidgetHeading: NLView<{
   const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
   const daoProposals = useCachedDaoProposals({ daoOwner });
   const poolInfo = useCachedPool({ owner: user?.username });
-  const { badges, isBadgesLoading, badgesError } = useBadges(user?.id || "");
 
   const symbol = poolInfo.code;
 
@@ -653,7 +638,7 @@ export const UserWidgetHeading: NLView<{
       }}
       className="app-main-full-width"
     >
-      <Col xs={24} xl={14} className="nl-avatar">
+      <Col xs={24} xl={12} className="nl-avatar">
         <Row className="user-widget__first-row">
           <Col xs={24} xl={22} className="text-left">
             <Row style={{ flexWrap: "inherit" }} gutter={64}>
@@ -721,22 +706,6 @@ export const UserWidgetHeading: NLView<{
                       </p>
                     </Col>
                   </Row>
-                  <Row className="u-margin-top-small" gutter={12}>
-                    {badges &&
-                      !isBadgesLoading &&
-                      !badgesError &&
-                      badges.map((badge, index) => {
-                        return (
-                          <Tooltip trigger="hover" title={badge?.title} key={badge?.id}>
-                            <img
-                              src={`/badges/${badgeIcons[badge.name]}.png`}
-                              className={`${index === 0 ? "u-margin-left-small" : ""} u-margin-right-small`}
-                              style={{ height: 40, width: 40, borderRadius: "50%" }}
-                            />
-                          </Tooltip>
-                        );
-                      })}
-                  </Row>
                 </Row>
               </Col>
             </Row>
@@ -751,54 +720,67 @@ export const UserWidgetHeading: NLView<{
         >
           <Col xs={24} xl={24} className="username">
             <Row className="user-widget-heading__powering" style={{ justifyContent: "space-between" }}>
-              <Col onClick={() => setActiveKey && setActiveKey("Powered")} className="user-widget-heading__powerup-number">
-                <span>
-                  <p className="header-1r">{poweredNumber}</p>
-                  <p className="paragraph-2r">{stakeMode ? "staked by" : "powered by"}</p>
-                </span>
+              <Col sm={18}>
+                <Row gutter={20} justify="center">
+                  <Col onClick={() => setActiveKey && setActiveKey("Powered")} className="user-widget-heading__powerup-number">
+                    <span>
+                      <p className="header-1r">{poweredNumber}</p>
+                      <p className="paragraph-2r">{stakeMode ? "staked by" : "powered by"}</p>
+                    </span>
+                  </Col>
+                  <Col onClick={() => setActiveKey && setActiveKey("Powering")} className="user-widget-heading__powerup-number">
+                    <span>
+                      <p className="header-1r">{poweringNumber}</p>
+                      <p className="paragraph-2r">{stakeMode ? "staking" : "powering"}</p>
+                    </span>
+                  </Col>
+                </Row>
+                <Row className="u-margin-top-medium" gutter={12} justify="center">
+                  <BadgeWidget user={user} className="user-widget-heading-badge-section" />
+                </Row>
               </Col>
-              <Col onClick={() => setActiveKey && setActiveKey("Powering")} className="user-widget-heading__powerup-number">
-                <span>
-                  <p className="header-1r">{poweringNumber}</p>
-                  <p className="paragraph-2r">{stakeMode ? "staking" : "powering"}</p>
-                </span>
-              </Col>
-              <Col xs={24} sm={12} className="powerup text-right">
-                {stakeMode ? <UserStake user={u} /> : <UserPowerup user={u} />}
-                <div className="user-widget-heading__powering-symbol">
-                  {symbol && <p className="paragraph-2r u-margin-top-medium">${symbol}</p>}
-                  {poolInfo.total && (
-                    <p className="paragraph-2r">
-                      TVL {Math.floor(+poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""))}
-                    </p>
-                  )}
-                </div>
-                {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
-                <Row style={{ justifyContent: "flex-end", alignItems: "center" }} className="u-margin-top-medium">
-                  <Share urlToShare={URL} user={user} />
-                  {daoProposals.dao_id ? (
-                    <Button
-                      className="u-margin-left-medium"
-                      onClick={() =>
-                        actions.routing.historyPush({
-                          location: "/dao/" + u?.username,
-                        })
-                      }
-                    >
-                      DAO
-                    </Button>
-                  ) : (
-                    isCurrentUserProfile && (
-                      <Deferred deferTime={400} visible={true}>
+              <Col xs={24} sm={6} className="powerup text-right">
+                <Row>
+                  <Col xs={24}>{stakeMode ? <UserStake user={u} /> : <UserPowerup user={u} />}</Col>
+                  <Col xs={24} className="u-margin-top-medium">
+                    <div className="user-widget-heading__powering-symbol">
+                      {symbol && <p className="paragraph-2r">${symbol}</p>}
+                      {poolInfo.total && (
+                        <p className="paragraph-2r u-margin-top-medium">
+                          TVL {Math.floor(+poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""))}
+                        </p>
+                      )}
+                    </div>
+                  </Col>
+                  {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
+                  <Col xs={24} className="u-margin-top-medium">
+                    <Row justify="center">
+                      <Share urlToShare={URL} user={user} />
+                      {daoProposals.dao_id ? (
                         <Button
-                          style={{ marginLeft: 4 }}
-                          onClick={() => actions.routing.historyPush({ location: "/dao/create" })}
+                          className="u-margin-left-medium"
+                          onClick={() =>
+                            actions.routing.historyPush({
+                              location: "/dao/" + u?.username,
+                            })
+                          }
                         >
-                          Create DAO
+                          DAO
                         </Button>
-                      </Deferred>
-                    )
-                  )}
+                      ) : (
+                        isCurrentUserProfile && (
+                          <Deferred deferTime={400} visible={true}>
+                            <Button
+                              style={{ marginLeft: 4 }}
+                              onClick={() => actions.routing.historyPush({ location: "/dao/create" })}
+                            >
+                              Create DAO
+                            </Button>
+                          </Deferred>
+                        )
+                      )}
+                    </Row>
+                  </Col>
                 </Row>
               </Col>
             </Row>

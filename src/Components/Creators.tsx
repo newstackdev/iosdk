@@ -1,10 +1,7 @@
 import { Avatar, Col, Row } from "antd";
 import { Button } from "antd/lib/radio";
-import { Clipboard } from "./Icons/Clipboard";
 import { ContentImage } from "./Image";
-import { ContentLayout } from "./ContentLayout";
 import { CopyClipboardHashInput } from "./CopyClipboardHashInput";
-import { LargeArrowBack } from "./Icons/LargeArrowBack";
 import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
 import { NLView } from "../types";
@@ -15,6 +12,7 @@ import { useActions, useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
 import { useState } from "react";
 import { useVerified } from "../hooks/useVerified";
+import BadgeWidget from "./BadgeWidget";
 import Title from "../Pages/Explore/Title";
 
 type ICreators = {
@@ -38,6 +36,7 @@ export const CreatorWidget: NLView<{
   addedUsers: any;
   stakeMode?: boolean;
 }> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, stakeMode = false }) => {
+  const state = useAppState();
   const [activeButton, setActiveButton] = useState<boolean>(false);
   const user = useCachedUser(creator);
   const { verifiedUsers } = useVerified([user.username || ""]);
@@ -57,25 +56,33 @@ export const CreatorWidget: NLView<{
         </Col>
         <Row align="bottom" style={{ overflow: "hidden" }}>
           <Col className="top-creators-username" style={{ overflow: "hidden" }}>
-            <Link to={`/user/${user.username || user.fullName}`} style={{ width: "100%" }}>
-              <p className="top-creators-username__paragraph typography-overflow">
-                {user.username || user.fullName}
-                {isUserVerified ? (
-                  <span className="u-margin-left-medium">
-                    <VerifiedIcon />
-                  </span>
-                ) : (
-                  false
-                )}
-              </p>
-            </Link>
-
-            {symbol && (
-              <p className="paragraph-1r typography-overflow">
-                {stakeMode ? "staking " : "powering "}
-                {creator.powering} ${symbol}
-              </p>
+            <Row justify="center">
+              <Link to={`/user/${user.username || user.fullName}`} style={{ width: "100%" }}>
+                <p className="top-creators-username__paragraph typography-overflow">
+                  {user.username || user.fullName}
+                  {isUserVerified ? (
+                    <span className="u-margin-left-medium">
+                      <VerifiedIcon />
+                    </span>
+                  ) : (
+                    false
+                  )}
+                </p>
+              </Link>
+            </Row>
+            {state.routing.location === "/user/invite" && (
+              <Row justify="center">
+                <BadgeWidget user={user} className="nl-badges-creators" />
+              </Row>
             )}
+            <Row justify="center">
+              {symbol && (
+                <p className="paragraph-1r typography-overflow">
+                  {stakeMode ? "staking " : "powering "}
+                  {creator.powering} ${symbol}
+                </p>
+              )}
+            </Row>
           </Col>
         </Row>
       </Col>
@@ -140,9 +147,6 @@ export const CreatorsList: NLView<ICreators> = ({
   users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
 
   const t = users.find((creator) => creator.invitation) ? "My invited members" : "Explore top creators";
-
-  // const creators =
-  // 	!users ? state.lists.top.users.items : maxUsers;
 
   return (
     <>

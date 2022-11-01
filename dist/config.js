@@ -63,7 +63,7 @@ const firebaseConfigs = {
         measurementId: "G-YMT320RGLJ",
     },
 };
-export const mediaBuckets = {
+const mediaBuckets = {
     "eu-dev": `https://eu-dev-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
     "eu-sit": `https://eu-sit-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
     "eu-prod": `https://cdn.newlife.io`, //`https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
@@ -95,14 +95,11 @@ export const config = {
     settings: {
         app: {
             // the current app
-            name: process.env.REACT_APP_IOSDK_APP_NAME,
-            currentHost: currentHost,
-        },
-        newsafe: {
+            name: "newlife",
             currentHost: currentHost,
         },
         newcoin: {
-            daoId: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "204" : "206") : "43",
+            daoId: "43",
             daoDomain: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "testaaab1.io") : "dx.io",
             displayDaoDomain: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "life.nco") : "test-net-main-dao-dx.io",
             poolId: "",

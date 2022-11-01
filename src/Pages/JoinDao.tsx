@@ -1,3 +1,4 @@
+import { APP_DOMAIN } from "../config";
 import { CrossCircle } from "../Components/Icons/CrossCircle";
 import { EmbeddableControl } from "../types";
 import { Link } from "react-router-dom";
@@ -9,12 +10,9 @@ import Modal from "antd/lib/modal/Modal";
 export const JoinDaoWidget = ({ embedded, setNext }: React.PropsWithChildren<EmbeddableControl>) => {
   const state = useAppState();
   const actions = useActions();
-
-  const DAO_DOMAIN = state.config.settings.newcoin.daoDomain;
-
-  const justStaked = [...state.api.cache.stakeHistory].reverse().find((h) => h.user.username === DAO_DOMAIN);
+  const justStaked = [...state.api.cache.stakeHistory].reverse().find((h) => h.user.username === APP_DOMAIN);
   const isStaking = state.indicators.specific["api.user.stake"];
-  const APP_USER = { username: DAO_DOMAIN };
+  const APP_USER = { username: APP_DOMAIN };
   const [visible, setVisible] = useState<boolean>(true);
 
   // const [staking, setStaking] = useState(false);
@@ -68,7 +66,7 @@ export const JoinDaoWidget = ({ embedded, setNext }: React.PropsWithChildren<Emb
         <>
           <h2 className="text-left text-bold">You are a member of the Newlife DAO</h2>
           <div style={{ textAlign: "left" }}>
-            You may increase your stake or visit the <Link to={`/user/${DAO_DOMAIN}`}>{DAO_DOMAIN}</Link> home page.
+            You may increase your stake or visit the <Link to={`/user/${APP_DOMAIN}`}>${APP_DOMAIN}</Link> home page.
           </div>
         </>
       ) : (

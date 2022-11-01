@@ -1,7 +1,6 @@
 import { FirebaseConfig, GenericComponent } from "./types";
 import { PartialDeep } from "type-fest";
 export declare const stage: string;
-export declare const mediaBuckets: Record<string, any>;
 export declare const APP_DOMAIN = "life.nco";
 export declare const firebaseConfig: FirebaseConfig;
 export declare const apiBaseUrl: string;
@@ -14,10 +13,7 @@ export declare const config: {
     };
     settings: {
         app: {
-            name: string | undefined;
-            currentHost: string;
-        };
-        newsafe: {
+            name: string;
             currentHost: string;
         };
         newcoin: {

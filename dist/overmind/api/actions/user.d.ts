@@ -1,6 +1,17 @@
 import { Action } from "../../../types";
 import { MoodReadResponse, UserCreateRequest, UserInviteRequest, UserReadPublicResponse, UserUpdateRequest } from "@newstackdev/iosdk-newgraph-client-js";
-import { IBadgeResponse } from "../../../Components/UserWidget";
+export interface IBadgeResponse {
+    done: boolean;
+    value: {
+        id: string;
+        created: string;
+        updated: string;
+        name: string;
+        title: string;
+        type: string;
+        value: any;
+    }[];
+}
 export declare const cache: Action<{
     user: UserReadPublicResponse & {
         moods?: MoodReadResponse[];

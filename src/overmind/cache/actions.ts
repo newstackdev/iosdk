@@ -1,4 +1,4 @@
-import { Action } from "../../types";
+import { Action } from "src/types";
 import { PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { json } from "overmind";
 import Dexie from "dexie";

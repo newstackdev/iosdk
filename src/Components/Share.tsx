@@ -182,9 +182,9 @@ export const Share: NLView<{
       ) : (
         false
       )}
-      <span onClick={() => setIsVisible(true)} style={{ cursor: "pointer", height: 30 }}>
+      <div onClick={() => setIsVisible(true)} className="nl-share-button-icon">
         <ShareIcon />
-      </span>
+      </div>
     </>
   );
 };

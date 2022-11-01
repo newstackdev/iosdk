@@ -11,9 +11,11 @@ import { useActions, useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
 import { useState } from "react";
 import { useVerified } from "../hooks/useVerified";
+import BadgeWidget from "./BadgeWidget";
 import Title from "../Pages/Explore/Title";
 // export const Creator: NLView
 export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, stakeMode = false }) => {
+    const state = useAppState();
     const [activeButton, setActiveButton] = useState(false);
     const user = useCachedUser(creator);
     const { verifiedUsers } = useVerified([user.username || ""]);
@@ -23,7 +25,7 @@ export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUs
     const buttonName = activeButton ? "Added!" : "Add";
     const poolInfo = useCachedPool({ owner: user?.username });
     const symbol = poolInfo.code;
-    return (_jsxs(Row, { className: "bg-hover app-full-width", style: { alignItems: "center", justifyContent: "space-between" }, children: [_jsxs(Col, { className: "top-creators-first-col u-margin-left-medium", xs: 13, children: [_jsx(Col, { children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: avatarClassName }) }), _jsx(Row, { align: "bottom", style: { overflow: "hidden" }, children: _jsxs(Col, { className: "top-creators-username", style: { overflow: "hidden" }, children: [_jsx(Link, { to: `/user/${user.username || user.fullName}`, style: { width: "100%" }, children: _jsxs("p", { className: "top-creators-username__paragraph typography-overflow", children: [user.username || user.fullName, isUserVerified ? (_jsx("span", { className: "u-margin-left-medium", children: _jsx(VerifiedIcon, {}) })) : (false)] }) }), symbol && (_jsxs("p", { className: "paragraph-1r typography-overflow", children: [stakeMode ? "staking " : "powering ", creator.powering, " $", symbol] }))] }) })] }), _jsxs(Col, { className: "top-creators-second-col", xl: 10, children: [creator.invitation && creator.invitation.hash && _jsx(CopyClipboardHashInput, { hash: creator.invitation.hash }), _jsx(Col, { className: "top-creators-number", children: _jsx("p", { className: "header-1r top-creators-powered", style: {
+    return (_jsxs(Row, { className: "bg-hover app-full-width", style: { alignItems: "center", justifyContent: "space-between" }, children: [_jsxs(Col, { className: "top-creators-first-col u-margin-left-medium", xs: 13, children: [_jsx(Col, { children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: avatarClassName }) }), _jsx(Row, { align: "bottom", style: { overflow: "hidden" }, children: _jsxs(Col, { className: "top-creators-username", style: { overflow: "hidden" }, children: [_jsx(Row, { justify: "center", children: _jsx(Link, { to: `/user/${user.username || user.fullName}`, style: { width: "100%" }, children: _jsxs("p", { className: "top-creators-username__paragraph typography-overflow", children: [user.username || user.fullName, isUserVerified ? (_jsx("span", { className: "u-margin-left-medium", children: _jsx(VerifiedIcon, {}) })) : (false)] }) }) }), state.routing.location === "/user/invite" && (_jsx(Row, { justify: "center", children: _jsx(BadgeWidget, { user: user, className: "nl-badges-creators" }) })), _jsx(Row, { justify: "center", children: symbol && (_jsxs("p", { className: "paragraph-1r typography-overflow", children: [stakeMode ? "staking " : "powering ", creator.powering, " $", symbol] })) })] }) })] }), _jsxs(Col, { className: "top-creators-second-col", xl: 10, children: [creator.invitation && creator.invitation.hash && _jsx(CopyClipboardHashInput, { hash: creator.invitation.hash }), _jsx(Col, { className: "top-creators-number", children: _jsx("p", { className: "header-1r top-creators-powered", style: {
                                 margin: "0",
                                 display: "flex",
                                 minWidth: "64px",
@@ -43,8 +45,6 @@ export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUs
 export const CreatorsList = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to, stakeMode, }) => {
     users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
     const t = users.find((creator) => creator.invitation) ? "My invited members" : "Explore top creators";
-    // const creators =
-    // 	!users ? state.lists.top.users.items : maxUsers;
     return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: t }) })), _jsxs("div", { style: { width: "100%" }, children: [maxItems ? _jsx(Title, { title: title, href: to }) : _jsx(_Fragment, {}), _jsx("div", { className: "top-creators-wrapper", style: title ? { display: "flex", flexWrap: "wrap" } : {}, children: users?.map((creator) => (_jsx("div", { children: _jsx(CreatorWidget, { creator: creator, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, stakeMode: stakeMode }) }))) })] })] }));
 };
 export const Creators = (props) => {

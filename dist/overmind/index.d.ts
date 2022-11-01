@@ -13,10 +13,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             };
             settings: {
                 app: {
-                    name: string | undefined;
-                    currentHost: string;
-                };
-                newsafe: {
+                    name: string;
                     currentHost: string;
                 };
                 newcoin: {
@@ -744,7 +741,7 @@ export declare const useActions: () => {
             }) => void | Promise<void>;
             readonly getBadges: (payload: {
                 id: string;
-            }) => Promise<import("../Components/UserWidget").IBadgeResponse> | Promise<Promise<import("../Components/UserWidget").IBadgeResponse>>;
+            }) => Promise<import("./api/actions/user").IBadgeResponse> | Promise<Promise<import("./api/actions/user").IBadgeResponse>>;
             readonly stake: (payload: {
                 user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: string;

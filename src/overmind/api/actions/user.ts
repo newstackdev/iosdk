@@ -12,10 +12,15 @@ import {
   UserReadPublicResponse,
   UserUpdateRequest,
 } from "@newstackdev/iosdk-newgraph-client-js";
-import { IBadgeResponse } from "../../../Components/UserWidget";
 import { debounce, json, pipe, throttle } from "overmind";
 import { fischerYates } from "../../../utils/random";
 import { get, isEmpty, uniqBy } from "lodash";
+
+export interface IBadgeResponse {
+  done: boolean;
+  value: { id: string; created: string; updated: string; name: string; title: string; type: string; value: any }[];
+}
+
 export const cache: Action<{
   user: UserReadPublicResponse & { moods?: MoodReadResponse[] };
   force?: boolean;
@@ -205,16 +210,14 @@ export const getMoods: Action<{ id?: string }> = pipe(debounce(300), async ({ st
   // const un = u?.username || "";
 
   if (state.api.cache.users.byId[id]) {
-    const moods = state.api.cache.users.byId[id].moods || [];
     state.api.cache.users.byId[id].moods = uniqBy(
-      [...moods, ...((r.data?.value || []) as MoodReadResponse[])],
+      [...state.api.cache.users.byId[id].moods, ...((r.data?.value || []) as MoodReadResponse[])],
       (mood: MoodReadResponse) => mood?.id,
     );
   }
   if (state.api.cache.users.byUsername[u?.username || ""]) {
-    const moods = state.api.cache.users.byUsername[u?.username || ""].moods || [];
     state.api.cache.users.byUsername[u.username || ""].moods = uniqBy(
-      [...moods, ...((r.data?.value || []) as MoodReadResponse[])],
+      [...state.api.cache.users.byUsername[u.username || ""].moods, ...((r.data?.value || []) as MoodReadResponse[])],
       (mood: MoodReadResponse) => mood?.id,
     );
   }
