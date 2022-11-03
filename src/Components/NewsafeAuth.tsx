@@ -28,7 +28,7 @@ export const NewsafeAuth: IOView<{
           <h2 className="text-center">
             This service is using NEWSAFE
             <br />
-            the distributed identity and access management service.
+            the decentralized identity and access management service.
           </h2>
 
           <br />

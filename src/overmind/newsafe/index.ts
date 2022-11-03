@@ -23,11 +23,11 @@ const authHosts = {
 };
 
 const newsafeAuthUrl: Action<{ redirectUrl?: string; redirectPath: string } | undefined, string> = ({ state }, _params) => {
-  const hostname = state.config.settings.app.currentHost;
+  const hostname = `${location.protocol}//${location.host}`; // || state.config.settings.newsafe.currentHost || state.config.settings.app.currentHost;
   const params = {
     requestor: state.config.settings.newcoin.daoDomain,
     referer: hostname,
-    redirectUrl: _params?.redirectUrl || _params?.redirectPath || `https://${hostname}`,
+    redirectUrl: _params?.redirectUrl || _params?.redirectPath || hostname,
   };
 
   const _env = state.config.env;
