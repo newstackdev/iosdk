@@ -4,9 +4,12 @@
 @import "./colors.css";
 @import "./antd.css";
 
-*, input, textarea, .ant-input {
+*,
+input,
+textarea,
+.ant-input {
 	font-feature-settings: normal;
-	font-variant-numeric: normal;	
+	font-variant-numeric: normal;
 }
 
 .App {
@@ -15,7 +18,7 @@
 
 .App-logo {
 	height: 40vmin;
-	
+
 	pointer-events: none;
 }
 
@@ -69,14 +72,21 @@
 	width: 800px;
 
 	background: white;
-	padding: 72px;
 	border: 1px solid lightgrey;
 	/* box-shadow: 3px 3px 30px grey; */
 	border-radius: 6px;
 	margin: 24px auto;
+	/* overflow: hidden;
+	overflow-y: scroll; */
 }
 
-.card-wrapper>div:not(:last-child) {
+@media screen and (min-width: 600px) {
+	.main-content {
+		padding: 72px;
+	}
+}
+
+.card-wrapper > div:not(:last-child) {
 	margin-bottom: 20px;
 }
 
@@ -101,7 +111,6 @@ input {
 
 .header-padding {
 	height: 42px;
-	width: 42px;
 	position: relative;
 }
 
@@ -109,9 +118,13 @@ input {
 	min-width: 50px;
 }
 
-.text-center { 
+.text-center {
 	text-align: center;
 }
 
-
-
+a {
+	font-family: NewfoundationWhyte-Light;
+}
+.main-layout {
+	margin: 0;
+}

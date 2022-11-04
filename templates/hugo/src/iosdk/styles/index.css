@@ -22,3 +22,15 @@ html {
 html::selection {
 	background-color: black;
 }
+
+.word-break-all {
+	word-break: break-all;
+}
+
+.reveal-on-active {
+	visibility: hidden;
+}
+
+.reveal-on-active {
+	visibility: visible;
+}

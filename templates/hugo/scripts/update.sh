@@ -2,5 +2,5 @@
 $template=hugo
 
 yarn add @newstackdev/iosdk
-rsync ./node_modules/@newstackdev/iosdk/templates/$template/iosdk ./iosdk
+rsync ./node_modules/@newstackdev/iosdk/templates/$template/iosdk ./src/iosdk
 rsync ./node_modules/@newstackdev/iosdk/templates/$template/scripts/update.sh ./scripts/update.sh

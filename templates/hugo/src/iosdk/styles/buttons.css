@@ -1,16 +1,25 @@
-.btn {
+.ant-btn {
 	cursor: pointer;
 	width: 100%;
-	border-radius: 8px;
+	border-radius: 4px;
 	padding: 1rem;
 	outline: none;
-	border: 1px solid #c0c0c0;
+	border: 1px solid #a7a7a7 !important;
+	background: white;
+	height: auto;
 }
 
-.btn-black {
-	color: white;
-	background: black;
-	border: 1px solid black;
+.ant-btn:active,
+.ant-btn:focus,
+.ant-btn:hover {
+	color: black !important;
+	border: 1px solid #a7a7a7;
+}
+
+.btn-grey {
+	color: black;
+	background: #e4e4e4 !important;
+	border: 1px solid #e4e4e4 !important;
 }
 
 .oauth-buttons-wrapper > button:not(:last-child) {
