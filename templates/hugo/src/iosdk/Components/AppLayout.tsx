@@ -11,7 +11,7 @@ import { Hamburger } from "../Icons/Hamburger";
 import { CloseIcon } from "../Icons/CloseIcon";
 
 import { useEffect, useState } from "react";
-import LogoIcon from "../../Icons/LogoIcon";
+import LogoIcon from "../Icons/LogoIcon";
 import { Link } from "react-router-dom";
 import { authorize } from "@newstackdev/iosdk/dist/overmind/api/actions/auth";
 

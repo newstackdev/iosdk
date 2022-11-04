@@ -6,7 +6,7 @@ import { merge } from 'lodash';
 import { config as defaultConfig, Configuration, PartialConfiguration } from "@newstackdev/iosdk/dist/config";
 import { standardModules } from '@newstackdev/iosdk/dist/overmind/standardModules';
 
-import { app } from "../../overmind/app";
+import app from "../../overmind/app";
 import { createStateHook, createActionsHook, createEffectsHook, createReactionHook } from 'overmind-react';
 
 import { config as appConfig } from "../../config";
