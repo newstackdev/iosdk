@@ -20,7 +20,7 @@ export const useCurrentUserStakeEligibility = (poolOwner?: UserReadPublicRespons
 
   const _stakeInfo = {
     toAccess: stakeToAccess || 0,
-    currentUserStake: (state.newcoin.pools[pool.code] || 0) / 10000,
+    currentUserStake: state.newcoin.pools[pool.code] || 0,
   };
   return {
     ..._stakeInfo,

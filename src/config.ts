@@ -75,7 +75,7 @@ const firebaseConfigs: Record<string, FirebaseConfig> = {
   },
 };
 
-const mediaBuckets: Record<string, any> = {
+export const mediaBuckets: Record<string, any> = {
   "eu-dev": `https://eu-dev-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
   "eu-sit": `https://eu-sit-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
   "eu-prod": `https://cdn.newlife.io`, //`https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
@@ -113,11 +113,14 @@ export const config = {
   settings: {
     app: {
       // the current app
-      name: "newlife",
+      name: process.env.REACT_APP_IOSDK_APP_NAME,
+      currentHost: currentHost,
+    },
+    newsafe: {
       currentHost: currentHost,
     },
     newcoin: {
-      daoId: "43",
+      daoId: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "204" : "206") : "43",
       daoDomain: stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "testaaab1.io") : "dx.io", //"testaaagt.io", //has a proposal -> "jnidjeaor.io",
       displayDaoDomain:
         stage === "eu-prod" ? (currentHost === "dao.newmoon.ac" ? "newmoon.io" : "life.nco") : "test-net-main-dao-dx.io",

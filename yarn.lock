@@ -2443,10 +2443,10 @@
     "@types/node-fetch" "^3.0.3"
     node-fetch "^3.0.0"
 
-"@newstackdev/iosdk@^0.9.114":
-  version "0.9.114"
-  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk/-/iosdk-0.9.114.tgz#d402fa7d747506439fb2ae5092614a6c58f625f9"
-  integrity sha512-publN01yWTCsA7I6tKP3AG8p/8zZwwLC2jFXLM2qMi1PWl0nQgS4oypGopzcrQRHc689ry2n9Y6WyIK2P4kOwQ==
+"@newstackdev/iosdk@^0.9.130":
+  version "0.9.130"
+  resolved "https://registry.yarnpkg.com/@newstackdev/iosdk/-/iosdk-0.9.130.tgz#6e2047aac221473a59cc974ebd2a9131ec6c9b8b"
+  integrity sha512-D24XkAGBAUynJMFjyNge9lAYDfxvnRQdwZogljby/2VVcUf6cpe+Y68AXgp1O8oMnZKyml4vBJNNfnOmfN/f7A==
   dependencies:
     "@babel/plugin-syntax-jsx" "^7.14.5"
     "@babel/preset-env" "^7.15.8"

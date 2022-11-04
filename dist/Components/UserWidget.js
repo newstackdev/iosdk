@@ -20,6 +20,7 @@ import { Smallinfo } from "../Components/Icons/Smallinfo";
 import { SocialLink } from "../Components/SocialLink";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
+import { showPopUp } from "../utils/popup";
 import { useActions, useAppState } from "../overmind";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
@@ -57,7 +58,7 @@ const round = (v) => Math.round(v * 1000) / 1000;
  * @param
  * @returns
  */
-export const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel }) => {
+export const UserStake = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel, stakeInNewsafe }) => {
     // const [visible, setVisible] = useState(false);
     const actions = useActions();
     const poolInfo = useCachedPool({ owner: user?.username, code: user?.newcoinTicker });
@@ -123,7 +124,7 @@ export const UserStake = ({ user, mode, value, minValue, hideButton, buttonText,
                     _mode === STAKE_STEPS.DONE ? onDone && onDone() : onCancel && onCancel();
                     setMode(STAKE_STEPS.DISABLED);
                 }, className: "nl-white-box-modal", closeIcon: _jsx(CrossCircle, {}), children: _jsxs(Row, { align: "middle", className: "text-center nl-row-vertical-space", children: [_jsx(Col, { span: 24, className: "nl-avatar", children: _jsx(Avatar, { size: "large", src: _jsx(ContentImage, { size: "medium", ..._user }) }) }), _jsx(Col, { span: 24, children: _jsx("p", { className: "header-3 text-left", children: membershipValue > 0 ? (_jsxs(_Fragment, { children: ["Your stake in ", poolInfo.code || "", " is $", displayMembershipValue, " $", poolInfo.owner.toUpperCase(), ". Stake ", _value, " ", "GNCO more to increase your membership value."] })) : (_jsxs(_Fragment, { children: ["Join ", _user?.username || "", "'s DAO"] })) }) }), _jsx(Col, { span: 24, children: _jsx(Input, { onChange: (e) => setValue(Number(e.target.value)), value: _value, suffix: "$GNCO", className: "gnco_input" }) }), _jsx(Col, { span: 24, children: _jsx("div", { children: _jsx(Slider, { className: "nl-slider", value: _value, tooltipVisible: false, style: { width: "100%" }, onChange: updateValue, marks: {
-                                        100: "0%",
+                                        0: "0%",
                                         [(ncoBalance / 100) * 25]: "25%",
                                         [(ncoBalance / 100) * 50]: "50%",
                                         [(ncoBalance / 100) * 75]: "75%",
@@ -138,7 +139,7 @@ export const UserStake = ({ user, mode, value, minValue, hideButton, buttonText,
                             stakeValue: _value,
                             stakeDelta,
                         });
-                }, children: [_jsxs("div", { className: "text-left", children: [_jsx("br", {}), _jsx("h2", { className: "header-2", children: "Congratulations" }), preStakeValue ? (_jsxs(_Fragment, { children: ["Your stake in ", _user?.username, "'s DAO increased by ", stakeDelta, " ", poolInfo.code, "."] })) : (_jsxs(_Fragment, { children: ["You are now a member of the ", _user?.username, "'s DAO with all the rights and duties associated."] })), _jsx("br", {}), _jsx("br", {}), _jsxs("p", { children: [_value, " $GNCO", _jsx("br", {}), "\u2014 ", round((fee * 5) / 8), " $GNCO (5%) creator fee", _jsx("br", {}), "\u2014 ", round((fee * 3) / 8), " $GNCO (3%) DAO fee", _jsx("br", {}), _jsx("br", {})] })] }), _jsxs("h1", { children: [round(_value - fee), " $GNCO"] })] }), hideButton ? ("") : (_jsx(ProgressButton, { actionName: "api.user.stake", onClick: () => {
+                }, children: [_jsxs("div", { className: "text-left", children: [_jsx("br", {}), _jsx("h2", { className: "header-2", children: "Congratulations" }), preStakeValue ? (_jsxs(_Fragment, { children: ["Your stake in ", _user?.username, "'s DAO increased by ", stakeDelta, " ", poolInfo.code, "."] })) : (_jsxs(_Fragment, { children: ["You are now a member of the ", _user?.username, "'s DAO with all the rights and duties associated."] })), _jsx("br", {}), _jsx("br", {}), _jsxs("p", { children: [_value, " $GNCO", _jsx("br", {}), "\u2014 ", round((fee * 5) / 8), " $GNCO (5%) creator fee", _jsx("br", {}), "\u2014 ", round((fee * 3) / 8), " $GNCO (3%) DAO fee", _jsx("br", {}), _jsx("br", {})] })] }), _jsxs("h1", { children: [round(_value - fee), " $GNCO"] })] }), hideButton ? ("") : stakeInNewsafe ? (_jsx(Button, { onClick: () => showPopUp(`https://auth${state.config.env.env == "dev" ? "-dev" : ""}.newsafe.org/swap/GNCO/${user?.newcoinTicker?.toUpperCase()}`, "__NEWSAFE__"), children: buttonText || "Stake" })) : (_jsx(ProgressButton, { actionName: "api.user.stake", onClick: () => {
                     closeWallet();
                     startStaking();
                 }, progressText: "Staking...", type: "primary", children: buttonText || "Stake" }))] }));
@@ -314,17 +315,18 @@ export const UserSocialInfoRow = ({ user }) => (_jsx(_Fragment, { children: "ins
         .split(/,/)
         .filter((k) => user[k])
         .map((k) => (_jsx(DataRow, { title: k, value: user[k], link: `https://www.${k}.com/${user[k]}` }))) }));
-export const PoolInfoDataRow = ({ pool, verifyIconLight = false, noLink }) => {
+export const PoolInfoDataRow = ({ pool, verifyIconLight = false, noLink, stakeInNewsafe }) => {
     const poolInfo = useCachedPool(pool);
     const myPools = useAppState().newcoin.pools;
     const user = useCachedUser({ username: poolInfo.owner });
     const { verifiedUsers } = useVerified([user.username || ""]);
     const isUserVerified = verifiedUsers && user.username && verifiedUsers.includes(user.username);
+    const state = useAppState();
     const row = (_jsxs(Row, { style: {
             padding: "20px",
             alignItems: "center",
             justifyContent: "center",
-        }, className: "bg-transition-box", children: [_jsx(Col, { span: 5, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: "avatar-image-small" }) }), _jsxs(Col, { span: 13, style: { width: "100%" }, children: [_jsxs("div", { className: "u-margin-bottom-small", style: { display: "flex", textAlign: "center" }, children: [user.username, isUserVerified ? (verifyIconLight ? (_jsx(VerifiedIcon, { style: { marginLeft: 20 } })) : (_jsx(VerifiedIcon, { style: { marginLeft: 20 } }))) : (false)] }), _jsxs("div", { children: ["$", poolInfo.code?.toUpperCase(), "\u00A0", _jsx("b", { children: ~~myPools[poolInfo?.code] })] }), _jsxs("small", { style: { padding: 0, margin: 0 }, children: ["TVL: ", poolInfo.total.quantity] })] }), _jsx(Col, { span: 6, children: _jsx(UserStake, { user: user }) })] }));
+        }, className: "bg-transition-box", children: [_jsx(Col, { span: 5, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: "avatar-image-small" }) }), _jsxs(Col, { span: 13, style: { width: "100%" }, children: [_jsxs("div", { className: "u-margin-bottom-small", style: { display: "flex", textAlign: "center" }, children: [user.username, isUserVerified ? (verifyIconLight ? (_jsx(VerifiedIcon, { style: { marginLeft: 20 } })) : (_jsx(VerifiedIcon, { style: { marginLeft: 20 } }))) : (false)] }), _jsxs("div", { children: ["$", poolInfo.code?.toUpperCase(), "\u00A0", _jsx("b", { children: ~~myPools[poolInfo?.code] })] }), _jsxs("small", { style: { padding: 0, margin: 0 }, children: ["TVL: ", poolInfo.total.quantity] })] }), _jsx(Col, { span: 6, children: _jsx(UserStake, { user: user, stakeInNewsafe: stakeInNewsafe }) })] }));
     return noLink ? _jsx(_Fragment, { children: row }) : _jsx(Link, { to: `/user/${user.username}`, children: row });
     // <div>
     // 			<CreatorWidget avatarClassName="avatar-image-small" creator={{ username: poolInfo.owner }} />

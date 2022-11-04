@@ -133,7 +133,12 @@ export const VoteModal: NLView<{
               <p>Lock a minimum of 1 ${pool.code} to confirm your vote!</p>
 
               <Form.Item name="quantity">
-                <Input placeholder={"100"} suffix={`$${ticker}`} onChange={(e) => setQuantityState(e.target.value)} />
+                <Input
+                  placeholder={"100"}
+                  suffix={`$${ticker}`}
+                  onBlur={(e) => setQuantityState(e.target.value)}
+                  onChange={(e) => setQuantityState(e.target.value)}
+                />
               </Form.Item>
 
               <Button

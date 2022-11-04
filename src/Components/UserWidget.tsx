@@ -26,6 +26,7 @@ import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { VerifiedIconLight } from "../Components/Icons/VerifiedIconLight";
 import { isEmpty } from "lodash";
+import { showPopUp } from "../utils/popup";
 import { useActions, useAppState } from "../overmind";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
@@ -87,7 +88,8 @@ export const UserStake: NLView<{
   closeOnDone?: boolean;
   onDone?: Callback;
   onCancel?: Callback;
-}> = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel }) => {
+  stakeInNewsafe?: boolean;
+}> = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel, stakeInNewsafe }) => {
   // const [visible, setVisible] = useState(false);
   const actions = useActions();
   const poolInfo = useCachedPool({ owner: user?.username, code: user?.newcoinTicker });
@@ -299,7 +301,7 @@ export const UserStake: NLView<{
                 style={{ width: "100%" }}
                 onChange={updateValue}
                 marks={{
-                  100: "0%",
+                  0: "0%",
                   [(ncoBalance / 100) * 25]: "25%",
                   [(ncoBalance / 100) * 50]: "50%",
                   [(ncoBalance / 100) * 75]: "75%",
@@ -370,6 +372,19 @@ export const UserStake: NLView<{
       </NewcoinRecept>
       {hideButton ? (
         ""
+      ) : stakeInNewsafe ? (
+        <Button
+          onClick={() =>
+            showPopUp(
+              `https://auth${
+                state.config.env.env == "dev" ? "-dev" : ""
+              }.newsafe.org/swap/GNCO/${user?.newcoinTicker?.toUpperCase()}`,
+              "__NEWSAFE__",
+            )
+          }
+        >
+          {buttonText || "Stake"}
+        </Button>
       ) : (
         <ProgressButton
           actionName="api.user.stake"
@@ -968,12 +983,14 @@ export const PoolInfoDataRow: NLView<{
   pool?: { code: string };
   verifyIconLight?: boolean;
   noLink?: boolean;
-}> = ({ pool, verifyIconLight = false, noLink }) => {
+  stakeInNewsafe?: boolean;
+}> = ({ pool, verifyIconLight = false, noLink, stakeInNewsafe }) => {
   const poolInfo = useCachedPool(pool);
   const myPools = useAppState().newcoin.pools;
   const user = useCachedUser({ username: poolInfo.owner });
   const { verifiedUsers } = useVerified([user.username || ""]);
   const isUserVerified = verifiedUsers && user.username && verifiedUsers.includes(user.username);
+  const state = useAppState();
 
   const row = (
     <Row
@@ -1011,7 +1028,7 @@ export const PoolInfoDataRow: NLView<{
       </Col>
 
       <Col span={6}>
-        <UserStake user={user} />
+        <UserStake user={user} stakeInNewsafe={stakeInNewsafe} />
       </Col>
     </Row>
   );

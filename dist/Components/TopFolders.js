@@ -17,47 +17,47 @@ export const TopFoldersGrid = ({ mood, maxPosts, title, noFolder, noFullWidth, w
     const getPostsHandler = useCallback((page) => {
         actions.api.mood.getPosts({ id: mood.id });
     }, [mood]);
-    return (_jsx(PremiumContent, { stakeToAccess: mood.stakeToAccess, owner: mood?.author, style: { width: "100%" }, link: "/folder/" + mood.id, children: _jsxs(Row, { style: {
-                width: "100%",
-                height: "auto",
-                display: "flex",
-                justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
-                flexWrap: "wrap",
-            }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-responzive" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            aspectRatio: "1/1",
-                            height: "100%",
-                            flex: 1,
-                        }, children: [_jsx(FolderClosed, { className: "text-center folder" }), _jsx("small", { className: "folder-name", style: { paddingTop: "5px" }, children: mood.title?.length > 10 ? mood.title?.substring(0, 3) + "..." : mood?.title || "" })] }) })), !postsList?.length && _jsx(Col, { style: { aspectRatio: "1/1" } }), window.location.pathname.includes("folder/") ? (_jsx(InfiniteScroll, { pageStart: 0, loadMore: getPostsHandler, loader: _jsx(Spin, {}), hasMore: state.lists.top.isNextPostsAvailable && state.lists.selectedUser.isNextPostsAvailable, children: _jsx(Row, { children: postsList?.map((p) => (_jsx(MaybeLink, { to: !p.id
-                                ? ""
-                                : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
-                                    ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
-                                    : !mood
-                                        ? `/post/${p.id}`
-                                        : `/folder/${mood.id}/${p.id}`, className: p.contentType === "text/plain" ? "maybelink ant-col" : "ant-col", children: _jsx(Col, { className: "bg-hover", style: {
-                                    justifyContent: "center",
-                                    flexDirection: "column",
-                                    aspectRatio: "1/1",
-                                    height: "100%",
-                                    flex: 1,
-                                }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }, p.id))) }) })) : (postsList?.map((p) => (_jsx(MaybeLink
-                // style={}
-                , { 
+    return (_jsx(_Fragment, { children: _jsx(PremiumContent, { stakeToAccess: mood.stakeToAccess, owner: mood?.author, style: { width: "100%" }, link: "/folder/" + mood.id, children: _jsxs(Row, { style: {
+                    width: "100%",
+                    height: "auto",
+                    display: "flex",
+                    justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
+                    flexWrap: "wrap",
+                }, wrap: true, className: `${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${title === "Moods" ? "nl-mood-grid-row-responzive" : ""}`, children: [!noFolder && (_jsx(Link, { to: `/folder/${mood.id}`, className: "ant-col", children: _jsxs(Col, { className: "bg-hover", style: {
+                                justifyContent: "center",
+                                flexDirection: "column",
+                                aspectRatio: "1/1",
+                                height: "100%",
+                                flex: 1,
+                            }, children: [_jsx(FolderClosed, { className: "text-center folder" }), _jsx("small", { className: "folder-name", style: { paddingTop: "5px" }, children: mood.title?.length > 10 ? mood.title?.substring(0, 3) + "..." : mood?.title || "" })] }) })), !postsList?.length && _jsx(Col, { style: { aspectRatio: "1/1" } }), window.location.pathname.includes("folder/") ? (_jsx(InfiniteScroll, { pageStart: 0, loadMore: getPostsHandler, loader: _jsx(Spin, {}), hasMore: state.lists.top.isNextPostsAvailable && state.lists.selectedUser.isNextPostsAvailable, children: _jsx(Row, { children: postsList?.map((p) => (_jsx(MaybeLink, { to: !p.id
+                                    ? ""
+                                    : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                                        ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                                        : !mood
+                                            ? `/post/${p.id}`
+                                            : `/folder/${mood.id}/${p.id}`, className: p.contentType === "text/plain" ? "maybelink ant-col min-widget-size" : "ant-col", children: _jsx(Col, { className: "bg-hover", style: {
+                                        justifyContent: "center",
+                                        flexDirection: "column",
+                                        aspectRatio: "1/1",
+                                        height: "100%",
+                                        flex: 1,
+                                    }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }, p.id))) }) })) : (postsList?.map((p) => (_jsx(MaybeLink
                     // style={}
-                    to: !p.id
-                        ? ""
-                        : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
-                            ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
-                            : !mood
-                                ? `/post/${p.id}`
-                                : `/folder/${mood.id}/${p.id}`, className: p.contentType === "text/plain" ? "maybelink ant-col" : "ant-col", children: _jsx(Col, { className: "bg-hover", style: {
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            aspectRatio: "1/1",
-                            height: "100%",
-                            flex: 1,
-                        }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }))))] }) }));
+                    , { 
+                        // style={}
+                        to: !p.id
+                            ? ""
+                            : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                                ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                                : !mood
+                                    ? `/post/${p.id}`
+                                    : `/folder/${mood.id}/${p.id}`, className: p.contentType === "text/plain" ? "maybelink ant-col min-widget-height" : "ant-col", children: _jsx(Col, { className: "bg-hover", style: {
+                                justifyContent: "center",
+                                flexDirection: "column",
+                                aspectRatio: "1/1",
+                                height: "100%",
+                                flex: 1,
+                            }, children: _jsx(PostWidget, { mood: mood, post: p, aspectRatio: p.aspectRatio }) }) }))))] }) }) }));
 };
 const TopFolders = ({ maxItems, title, posts, userMoods, skipItems, maxPostsToShow, filterToSameNumberPosts, enableScrollForMoreMoods = true, randomizeMoods = true, loadMoreMoodsHandler, }) => {
     const state = useAppState();

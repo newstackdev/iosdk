@@ -17,7 +17,10 @@ declare const _default: {
                     };
                     settings: {
                         app: {
-                            name: string;
+                            name: string | undefined;
+                            currentHost: string;
+                        };
+                        newsafe: {
                             currentHost: string;
                         };
                         newcoin: {
@@ -554,7 +557,10 @@ declare const _default: {
             };
             settings: {
                 app: {
-                    name: string;
+                    name: string | undefined;
+                    currentHost: string;
+                };
+                newsafe: {
                     currentHost: string;
                 };
                 newcoin: {
@@ -615,7 +621,10 @@ declare const _default: {
         };
         settings: {
             app: {
-                name: string;
+                name: string | undefined;
+                currentHost: string;
+            };
+            newsafe: {
                 currentHost: string;
             };
             newcoin: {
@@ -680,7 +689,10 @@ declare const _default: {
                 };
                 settings: {
                     app: {
-                        name: string;
+                        name: string | undefined;
+                        currentHost: string;
+                    };
+                    newsafe: {
                         currentHost: string;
                     };
                     newcoin: {

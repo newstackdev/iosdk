@@ -11,7 +11,7 @@ export const NewsafeAuth: IOView<{
   const state = useAppState();
   const actions = useActions();
 
-  const hostname = state.config.settings.app.currentHost;
+  const hostname = state.config.settings.newsafe.currentHost || state.config.settings.app.currentHost;
   const params = {
     requestor: state.config.settings.newcoin.daoDomain,
     referer: hostname,
@@ -58,7 +58,7 @@ export const NewsafeAuth: IOView<{
                     <ul>
                       <li>
                         Have you created your app entry yet? If not create it at&nbsp;
-                        <a href={newstackConsoleUrl}>${newstackConsoleUrl}</a>&nbsp;. It only takes a few minutes.
+                        <a href={newstackConsoleUrl}>{newstackConsoleUrl}</a>&nbsp;. It only takes a few minutes.
                         <br />
                         <br />
                       </li>
@@ -66,7 +66,7 @@ export const NewsafeAuth: IOView<{
                       <li>
                         Got an app created? You are likely missing just a tiny bit of config. Please follow the instructions
                         at&nbsp;
-                        <a href={`${newstackConsoleUrl}/instructions`}>${newstackConsoleUrl}</a>&nbsp;.
+                        <a href={`${newstackConsoleUrl}/instructions`}>{newstackConsoleUrl}</a>&nbsp;.
                         <br />
                         <br />
                       </li>
