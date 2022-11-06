@@ -66,7 +66,7 @@ const firebaseConfigs = {
 export const mediaBuckets = {
     "eu-dev": `https://eu-dev-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
     "eu-sit": `https://eu-sit-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
-    "eu-prod": `https://cdn.newlife.io`, //`https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
+    "eu-prod": `https://eu-prod-creator-api-cdn.s3.eu-west-1.amazonaws.com`,
 };
 const websocketsServers = {
     // "eu-dev": `wss://wsapi-eu-dev.newlife.io/creator`,

@@ -24,7 +24,6 @@ export declare const UserStake: NLView<{
     closeOnDone?: boolean;
     onDone?: Callback;
     onCancel?: Callback;
-    stakeInNewsafe?: boolean;
 }>;
 export declare const UserPowerup: NLView<{
     user?: UserReadPrivateResponse;
@@ -71,7 +70,6 @@ export declare const PoolInfoDataRow: NLView<{
     };
     verifyIconLight?: boolean;
     noLink?: boolean;
-    stakeInNewsafe?: boolean;
 }>;
 export declare const UserNewcoinPoolsParticipation: IOView<{
     user?: UserReadPrivateResponse;
