@@ -876,6 +876,9 @@ export declare const useActions: () => {
                 }) => void | Promise<void>;
                 readonly startMetamaskFlow: (payload: {}) => void | Promise<void>;
                 readonly stopMetamaskFlow: (payload?: undefined) => void | Promise<void>;
+                readonly bypassInviteFlow: (payload: {
+                    couponCode: string;
+                }) => void | Promise<void>;
             };
         };
         rating: {

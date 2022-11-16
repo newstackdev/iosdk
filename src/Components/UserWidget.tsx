@@ -317,7 +317,7 @@ export const UserStake: NLView<{
                 setMode(STAKE_STEPS.CONFIRM);
               }}
             >
-              Stake
+              {buttonText || "Stake"}
             </Button>
           </Col>
           <Col span={24} className="text-left">

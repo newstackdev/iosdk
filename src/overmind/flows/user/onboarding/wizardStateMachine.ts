@@ -170,11 +170,16 @@ export const Wizard = statemachine<States, Events, BaseState>({
     },
   },
   SELECT_DOMAIN: {
-    NEXT: ({ authenticated, subscribed, isLegacyUpdateOngoing, formUsername, authorized, metamaskFlow }) => {
+    NEXT: ({ authenticated, subscribed, isLegacyUpdateOngoing, formUsername, authorized, metamaskFlow, couponCode }) => {
       return authenticated
         ? metamaskFlow
           ? defaults.CREATE_USER()
-          : subscribed || isLegacyUpdateOngoing || formUsername.replace(/\.io$/, "").length > 5
+          : subscribed ||
+            isLegacyUpdateOngoing ||
+            formUsername.replace(/\.io$/, "").length > 5 ||
+            couponCode === "NEWFORUM-100-DROP1307" ||
+            couponCode === "LONDONX" ||
+            couponCode === "LONDON22"
           ? defaults.CREATE_USER()
           : defaults.SUBSCRIBE()
         : authorized
@@ -191,6 +196,7 @@ export const Wizard = statemachine<States, Events, BaseState>({
       subscribed,
       isLegacyUpdateOngoing,
       metamaskFlow,
+      couponCode,
     }) => {
       return authorized && !["imported"].includes(user?.status || "") && !isLegacyUpdateOngoing
         ? defaults.DONE()
@@ -200,12 +206,22 @@ export const Wizard = statemachine<States, Events, BaseState>({
             ...defaults.SELECT_DOMAIN(),
             hasNext:
               // (formUsername.length === 12) &&
-              (featureFlags.onboarding.premiumDomains || formUsername.replace(/\.io$/, "").length > 5) &&
+              (featureFlags.onboarding.premiumDomains ||
+                formUsername.replace(/\.io$/, "").length > 5 ||
+                couponCode === "NEWFORUM-100-DROP1307" ||
+                couponCode === "LONDONX" ||
+                couponCode === "LONDON22") &&
               formUsernameIsAvailable === "available",
             nextLink:
               (isLegacyUpdateOngoing && !(authorized && authenticated)) || !(authorized || authenticated)
                 ? "/signup/auth"
-                : subscribed || isLegacyUpdateOngoing || formUsername.replace(/\.io$/, "").length > 5 || metamaskFlow
+                : subscribed ||
+                  isLegacyUpdateOngoing ||
+                  formUsername.replace(/\.io$/, "").length > 5 ||
+                  metamaskFlow ||
+                  couponCode === "NEWFORUM-100-DROP1307" ||
+                  couponCode === "LONDONX" ||
+                  couponCode === "LONDON22"
                 ? "/signup/create"
                 : "/signup/subscribe",
           } as States);
@@ -220,7 +236,9 @@ export const Wizard = statemachine<States, Events, BaseState>({
           ? defaults.DONE()
           : subscribed ||
             (user?.id && (!featureFlags.onboarding.premiumDomains || formUsername.replace(/\.io$/, "").length > 5)) ||
-            couponCode === "NEWFORUM-100-DROP1307"
+            couponCode === "NEWFORUM-100-DROP1307" ||
+            couponCode === "LONDONX" ||
+            couponCode === "LONDON22"
           ? defaults.CREATE_USER()
           : defaults.SUBSCRIBE()
       ) as States;

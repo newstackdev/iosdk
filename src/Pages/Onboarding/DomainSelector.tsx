@@ -31,7 +31,13 @@ export const DomainSelector: IOView = () => {
 
   const isPaidUsername = () => {
     const len = username.replace(/\.io/, "").length;
-    return len > 1 && len <= 5 && !state.api.auth.user?.subscriptionStatus?.startsWith("io-domain-sale");
+    const couponCode = state.flows.user.create.form.couponCode;
+    return (
+      len > 1 &&
+      len <= 5 &&
+      !state.api.auth.user?.subscriptionStatus?.startsWith("io-domain-sale") &&
+      !(couponCode === "NEWFORUM-100-DROP1307" || couponCode === "LONDONX" || couponCode === "LONDON22")
+    );
   };
   const isOneChar = () => {
     const len = username.replace(/\.io/, "").length;
@@ -39,7 +45,14 @@ export const DomainSelector: IOView = () => {
   };
   return (
     <ContentLayout>
-      <div className="nl-onboarding-title" />
+      <div className="nl-onboarding-title nl-domain-selector">
+        <div className="nl-domain-selector-infobox">
+          <p className="paragraph-2r">
+            Choose a name for your new life. It will be your account and wallet ID to receive crypto payments. This cannot be
+            changed or deleted, and you own it. 9 characters max: a-z and 1-5.
+          </p>
+        </div>
+      </div>
       <div className="nl-onboarding-form">
         <MaskedInput
           ref={el as any}
@@ -142,8 +155,6 @@ export const DomainSelector: IOView = () => {
                   ""
                 )}
               </Paragraph>
-              Welcome to newlife.IO! Choose your permanent domain name. This cannot be changed or deleted, and you own it. 9
-              characters max: a-z and 1-5
             </>
           )
         }

@@ -201,7 +201,8 @@ export const UserCreate: NLView<
             {
               required: true,
               pattern: /^[a-z]{3,7}$/,
-              message: "3 - 7 characters, latin alphabet only",
+              message:
+                "Choose a name for your social currency. Lowercase, 3 - 7 characters, latin alphabet only. This is only a testnet token on the beta app and cannot be edited. When the mainnet launches, you will be able to make a social token with this, or another available ticker name.",
             },
             {
               validator: () => {
@@ -322,7 +323,7 @@ export const UserCreate: NLView<
         <Form.Item name="consentTestgroup" valuePropName="checked" wrapperCol={{ offset: 0, span: 24 }}>
           <RowCheckbox>
             <p className="paragraph-2r" style={{ margin: 0 }}>
-              I'd like to join the beta group!
+              I want to help the team improve the app
             </p>
           </RowCheckbox>
         </Form.Item>

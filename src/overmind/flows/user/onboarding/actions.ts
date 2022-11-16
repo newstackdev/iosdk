@@ -255,3 +255,9 @@ export const startMetamaskFlow: Action<{}> = pipe(async ({ state, actions }: Con
 export const stopMetamaskFlow: Action = pipe(async ({ state }: Context) => {
   state.flows.user.create.metamaskFlow = false;
 });
+
+export const bypassInviteFlow: Action<{ couponCode: string }> = pipe(async ({ state, actions }, { couponCode }) => {
+  actions.flows.user.create.updateForm({ couponCode });
+  state.flows.user.create.inviteHashVerified = true;
+  actions.flows.user.create.wizardStepNext();
+});

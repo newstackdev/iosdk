@@ -136,7 +136,7 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
                             {
                                 required: true,
                                 pattern: /^[a-z]{3,7}$/,
-                                message: "3 - 7 characters, latin alphabet only",
+                                message: "Choose a name for your social currency. Lowercase, 3 - 7 characters, latin alphabet only. This is only a testnet token on the beta app and cannot be edited. When the mainnet launches, you will be able to make a social token with this, or another available ticker name.",
                             },
                             {
                                 validator: () => {
@@ -161,6 +161,6 @@ export const UserCreate = ({ hideUsername, noRouing, embedded, setNext }) => {
                                 required: true,
                                 message: "please confirm",
                             },
-                        ], children: _jsx(RowCheckbox, { children: _jsxs("p", { className: "paragraph-2r", style: { margin: 0 }, children: ["I agree to Newlife's", " ", _jsx("span", { className: "paragraph-2u", children: _jsx("a", { href: "/privacy_policy", target: "_blank", children: "privacy policy" }) })] }) }) }), _jsx(Form.Item, { name: "consentEmail", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, children: _jsx(RowCheckbox, { children: _jsx("p", { className: "paragraph-2r", style: { margin: 0 }, children: "I consent to email communications" }) }) }), _jsx(Form.Item, { name: "consentTestgroup", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, children: _jsx(RowCheckbox, { children: _jsx("p", { className: "paragraph-2r", style: { margin: 0 }, children: "I'd like to join the beta group!" }) }) }), _jsx(Form.Item, { hidden: embedded, wrapperCol: { offset: 8, span: 16 }, children: _jsx(ProgressButton, { actionName: "api.user.create", type: "primary", htmlType: "submit", progressText: "Creating user...", children: "Submit" }) })] })] }));
+                        ], children: _jsx(RowCheckbox, { children: _jsxs("p", { className: "paragraph-2r", style: { margin: 0 }, children: ["I agree to Newlife's", " ", _jsx("span", { className: "paragraph-2u", children: _jsx("a", { href: "/privacy_policy", target: "_blank", children: "privacy policy" }) })] }) }) }), _jsx(Form.Item, { name: "consentEmail", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, children: _jsx(RowCheckbox, { children: _jsx("p", { className: "paragraph-2r", style: { margin: 0 }, children: "I consent to email communications" }) }) }), _jsx(Form.Item, { name: "consentTestgroup", valuePropName: "checked", wrapperCol: { offset: 0, span: 24 }, children: _jsx(RowCheckbox, { children: _jsx("p", { className: "paragraph-2r", style: { margin: 0 }, children: "I want to help the team improve the app" }) }) }), _jsx(Form.Item, { hidden: embedded, wrapperCol: { offset: 8, span: 16 }, children: _jsx(ProgressButton, { actionName: "api.user.create", type: "primary", htmlType: "submit", progressText: "Creating user...", children: "Submit" }) })] })] }));
 };
 //# sourceMappingURL=UserCreate.js.map

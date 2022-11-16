@@ -130,7 +130,7 @@ export const UserStake = ({ user, mode, value, minValue, hideButton, buttonText,
                                         [ncoBalance]: "100%",
                                     }, min: minValue / minValue, max: ncoBalance }) }) }), _jsx(Col, { span: 24, className: "u-margin-top-large", children: _jsx(Button, { className: "stake-button-modal", onClick: () => {
                                     setMode(STAKE_STEPS.CONFIRM);
-                                }, children: "Stake" }) }), _jsxs(Col, { span: 24, className: "text-left", children: [_jsxs("span", { className: "paragraph-2r", children: [Math.round(fee * 100) / 100, " $GNCO Fee"] }), _jsxs("p", { className: "paragraph-2r ", children: ["This is only on Testnet! Need help?", _jsx("br", {}), _jsx("span", { className: "paragraph-2u", children: "Join our telegram group!" })] })] })] }) }), _jsxs(NewcoinRecept, { tx: tx, visible: _mode == STAKE_STEPS.DONE, onDone: () => {
+                                }, children: buttonText || "Stake" }) }), _jsxs(Col, { span: 24, className: "text-left", children: [_jsxs("span", { className: "paragraph-2r", children: [Math.round(fee * 100) / 100, " $GNCO Fee"] }), _jsxs("p", { className: "paragraph-2r ", children: ["This is only on Testnet! Need help?", _jsx("br", {}), _jsx("span", { className: "paragraph-2u", children: "Join our telegram group!" })] })] })] }) }), _jsxs(NewcoinRecept, { tx: tx, visible: _mode == STAKE_STEPS.DONE, onDone: () => {
                     setMode(STAKE_STEPS.DISABLED);
                     onDone &&
                         onDone({

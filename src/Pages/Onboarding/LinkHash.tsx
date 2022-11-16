@@ -16,8 +16,13 @@ export const LinkHash: IOView = () => {
   const [isErrorSubmit, setIsErrorSubmit] = useState(false);
 
   const done = () => {
+    const code = state.flows.user.create.form.inviteHash;
     try {
-      actions.flows.user.create.verifyHash({ inviteHash: state.flows.user.create.form.inviteHash || "" });
+      if (code === "LONDONX" || code === "LONDON22") {
+        actions.flows.user.create.bypassInviteFlow({ couponCode: code });
+        return;
+      }
+      actions.flows.user.create.verifyHash({ inviteHash: code || "" });
     } catch (e) {
       setIsErrorSubmit(true);
     }
