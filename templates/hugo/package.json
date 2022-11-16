@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@newstackdev/iosdk": "^0.9.117"
 	},
-	"name": "iosdk-theme-hugo",
+	"name": "iosdk-hugo",
 	"version": "0.5.0",
 	"scripts": {
 		"start": "concurrently  \"overmind-devtools\" \"craco start --verbose\"",

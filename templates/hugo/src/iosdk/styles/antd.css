@@ -4,8 +4,10 @@
 	margin: 25px;
 }
 
-.ant-layout-sider {
-	position: fixed !important;
+@media screen and (max-width: 768px) {
+	.ant-layout {
+		margin: 10px;
+	}
 }
 
 .ant-layout-has-sider {
@@ -20,10 +22,11 @@
 .ant-layout-header {
 	padding: 0px;
 	background: #fff;
+	line-height: initial;
 }
 
 .ant-layout-sider {
-	position: fixed;
+	position: fixed !important;
 	color: white;
 	padding-left: 6px;
 	min-height: 85vh;
@@ -190,7 +193,7 @@ a:hover {
 	width: 0%;
 	height: 1px;
 	display: block;
-	background-color: #e4e4e4;
+	background-color: black;
 	top: 42px;
 	position: absolute;
 }
@@ -252,4 +255,25 @@ a:hover {
 .ant-input:hover {
 	border-color: #c4f634 !important;
 	box-shadow: none;
+}
+
+a.ant-btn {
+	line-height: initial;
+	padding: 1rem !important;
+}
+
+/* Progress bar */
+
+.ant-progress-bg {
+	background: black !important;
+}
+
+/* DAO */
+
+.ant-dropdown-trigger {
+	flex: 1;
+}
+
+.dao-tabs-ctn {
+	margin: 40px 0;
 }

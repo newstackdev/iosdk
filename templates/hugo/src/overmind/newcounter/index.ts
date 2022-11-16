@@ -16,4 +16,4 @@ export const newcounter = {
         counter: 0
     },
     effects: {}
-}
+};

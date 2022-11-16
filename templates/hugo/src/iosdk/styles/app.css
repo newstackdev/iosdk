@@ -64,12 +64,12 @@ textarea,
 
 .main-content {
 	padding: 24px;
-	max-width: min(800px, 60vw);
-	min-width: min(600px, 90vw);
+	/* max-width: min(800px, 60vw);
+	min-width: min(600px, 90vw); */
 	min-height: 80vh;
 	font-size: 1em;
 	min-height: 80vh;
-	width: 800px;
+	width: 100%;
 
 	background: white;
 	border: 1px solid lightgrey;
@@ -127,4 +127,37 @@ a {
 }
 .main-layout {
 	margin: 0;
+}
+
+/* DAO */
+
+.dao-details-btns > button:not(:last-child) {
+	margin-bottom: 10px;
+}
+.std-row-wrapper {
+	width: 300px;
+}
+.toggle-wrapper {
+	justify-content: space-between;
+}
+.toggle-wrapper > .member-row-wrapper {
+	margin-bottom: 20px;
+}
+.toggle-wrapper > .member-row-wrapper:not(:nth-child(5n)) {
+	margin-right: 40px;
+}
+.toggle-wrapper > .member-row-wrapper:last-child {
+	margin-right: 0px;
+}
+.dao-tabs-ctn {
+	flex-wrap: wrap;
+}
+.dao-tabs-ctn > .sort {
+	background: grey;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.dao-tabs-ctn > .sort > svg {
+	width: 20px;
+	height: 20px;
 }

@@ -1,5 +1,5 @@
 import app from "src/overmind/app";
-import Logo from "../iosdk/Icons/LogoIcon";
+import Logo from "../Icons/LogoIcon";
 import { useAppState } from "../overmind/overmind";
 import { Link } from "react-router-dom";
 // import { AUTH_ FLOW_STATUS } from "@newstackdev/iosdk/dist/overmind/auth/state"; // refer to AUTH_FLOW_STATUS for more details

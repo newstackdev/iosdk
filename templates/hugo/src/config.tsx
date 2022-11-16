@@ -25,7 +25,7 @@ export const config = {
 			isWatchable: (actionName: string) => /^(api|lists|auth|newgraphApplication|newsafe)/.test(actionName),
 		},
 		app: {
-			name: process.env.REACT_APP_IOSDK_APP_NAME || process.env.REACT_APP_IOSDK_APP_DOMAIN_PROD || ""
+			name: process.env.REACT_APP_IOSDK_APP_NAME || process.env.REACT_APP_IOSDK_APP_DOMAIN_PROD || process.env.REACT_APP_IOSDK_APP_DOMAIN_PROD || ""
 		}
 	},
 	routes: {
