@@ -727,13 +727,13 @@ export const UserWidgetHeading: NLView<{
                   <Col onClick={() => setActiveKey && setActiveKey("Powered")} className="user-widget-heading__powerup-number">
                     <span>
                       <p className="header-1r">{poweredNumber}</p>
-                      <p className="paragraph-2r">{stakeMode ? "staked by" : "powered by"}</p>
+                      <p className="paragraph-2r">powered by</p>
                     </span>
                   </Col>
                   <Col onClick={() => setActiveKey && setActiveKey("Powering")} className="user-widget-heading__powerup-number">
                     <span>
                       <p className="header-1r">{poweringNumber}</p>
-                      <p className="paragraph-2r">{stakeMode ? "staking" : "powering"}</p>
+                      <p className="paragraph-2r">powering</p>
                     </span>
                   </Col>
                 </Row>
@@ -745,7 +745,7 @@ export const UserWidgetHeading: NLView<{
               </Col>
               <Col xs={24} sm={6} className="powerup text-right">
                 <Row>
-                  <Col xs={24}>{stakeMode ? <UserStake user={u} /> : <UserPowerup user={u} />}</Col>
+                  <Col xs={24}>{stakeMode ? <UserStake user={u} buttonText="Power up" /> : <UserPowerup user={u} />}</Col>
                   <Col xs={24} className="u-margin-top-medium">
                     <div className="user-widget-heading__powering-symbol">
                       {symbol && <p className="paragraph-2r">${symbol}</p>}

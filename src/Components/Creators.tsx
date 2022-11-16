@@ -78,7 +78,7 @@ export const CreatorWidget: NLView<{
             <Row justify="center">
               {symbol && (
                 <p className="paragraph-1r typography-overflow">
-                  {stakeMode ? "staking " : "powering "}
+                  powering
                   {creator.powering} ${symbol}
                 </p>
               )}
@@ -121,7 +121,7 @@ export const CreatorWidget: NLView<{
             </Button>
           ) : stakeMode ? (
             <div onClick={(e) => e.preventDefault()}>
-              <UserStake user={creator} />
+              <UserStake user={creator} buttonText="Power up" />
             </div>
           ) : (
             <div onClick={(e) => e.preventDefault()}>
