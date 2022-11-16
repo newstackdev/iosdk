@@ -26,7 +26,7 @@
 }
 
 .ant-layout-sider {
-	position: fixed !important;
+	/* position: fixed !important; */
 	color: white;
 	padding-left: 6px;
 	min-height: 85vh;

@@ -1,0 +1,48 @@
+import { Action } from "../../../../types"
+import { DOMAIN_PRESALE_STEPS } from "./state";
+import { Context } from "../../../../overmind/overmind";
+
+type StepProcessorsCollection<STEPSENUM extends number | string, T> = Record<STEPSENUM, T>;
+
+
+
+type WizardStepsProcessor = (authorized: boolean, authenticated: boolean, formUsername?: string) => DOMAIN_PRESALE_STEPS;
+type WizardStepsProcessors = StepProcessorsCollection<DOMAIN_PRESALE_STEPS, WizardStepsProcessor>;
+
+// const forwAuthorized = (authorized: boolean, step: DOMAIN_PRESALE_STEPS) => authorized ? DOMAIN_PRESALE_STEPS.DONE : step;
+// const forwAuthenticated = (authenticated: boolean, step: DOMAIN_PRESALE_STEPS) => authenticated ? DOMAIN_PRESALE_STEPS.CREATE_USER : step;
+// const forward = (authorized: boolean, authenticated: boolean, otherwise: DOMAIN_PRESALE_STEPS) =>
+//     forwAuthorized(authorized, forwAuthenticated(authenticated, otherwise));
+
+// const stepNext: WizardStepsProcessors = {
+//     [DOMAIN_PRESALE_STEPS.SELECT_DOMAIN]: (authorized, authenticated) => forward(authorized, authenticated, DOMAIN_PRESALE_STEPS.MAYBE_AUTHENTICATE),
+//     [DOMAIN_PRESALE_STEPS.MAYBE_AUTHENTICATE]: (authorized, authenticated) =>  forward(authorized, authenticated, DOMAIN_PRESALE_STEPS.MAYBE_AUTHENTICATE),
+//     [DOMAIN_PRESALE_STEPS.CREATE_USER]: (authorized, authenticated) =>  forward(authorized, authenticated, DOMAIN_PRESALE_STEPS.DONE),
+//     [DOMAIN_PRESALE_STEPS.DONE]: () => DOMAIN_PRESALE_STEPS.DONE
+// }
+
+// const backAuthorized = (authorized: boolean, step: DOMAIN_PRESALE_STEPS) => authorized ? DOMAIN_PRESALE_STEPS.DONE : step;
+
+// const stepPrev: WizardStepsProcessors = {
+//     [DOMAIN_PRESALE_STEPS.SELECT_DOMAIN]: () => DOMAIN_PRESALE_STEPS.SELECT_DOMAIN,
+//     [DOMAIN_PRESALE_STEPS.MAYBE_AUTHENTICATE]: () => DOMAIN_PRESALE_STEPS.SELECT_DOMAIN,
+//     [DOMAIN_PRESALE_STEPS.CREATE_USER]: (authorized, authenticated) => backAuthorized(authorized, authenticated ? DOMAIN_PRESALE_STEPS.SELECT_DOMAIN : DOMAIN_PRESALE_STEPS.MAYBE_AUTHENTICATE),
+//     [DOMAIN_PRESALE_STEPS.DONE]: () => DOMAIN_PRESALE_STEPS.DONE
+// }
+// export const deriveStep : Action<{ processors: WizardStepsProcessors }, DOMAIN_PRESALE_STEPS> = ({ state }, { processors }) => {
+//     const { authorized, authenticated, user } = state.auth;
+//     const { username } = user;
+
+//     const currentStep = state.flows.user.create.wizard.step.current;
+//     const processor = processors[currentStep];
+
+//     return processor(authorized, authenticated, username);
+// }
+
+// export const wizardStepPrev : Action<undefined, boolean> = (context, _x = undefined) => {
+//     return deriveStep(context, { processors: stepNext })
+// }
+
+// export const wizardStepNext = Action<undefined, boolean> = (context, _x = undefined) => {
+//     return deriveStep(context, { processors: stepPrev })
+// }

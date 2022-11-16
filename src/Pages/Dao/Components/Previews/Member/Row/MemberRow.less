@@ -1,0 +1,27 @@
+.member-row-wrapper {
+  .std-row-wrapper;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  @media(max-width: 800px) {
+    flex-direction: column;
+  }
+}
+
+.member-row-wrapper:hover {
+  background-color: #272626;
+  border-radius: 8px;
+}
+
+.member-row-avi {
+  .avi;
+}
+
+.member-row-p {
+  .u-dao-header-2r;
+  @media(max-width: 800px) {
+    font-size: 20px;
+  }
+
+}

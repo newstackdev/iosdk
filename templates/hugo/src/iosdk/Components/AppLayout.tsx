@@ -100,6 +100,7 @@ const MobileDrawer = () => {
 				placement="left"
 				onClose={onClose}
 				visible={open}
+
 				closable
 				destroyOnClose
 				closeIcon={<CloseIcon />}

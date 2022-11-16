@@ -1,0 +1,39 @@
+.user-widget-heading {
+  text-align: center;
+  // padding-right: 24px;
+
+  @media screen and (max-width: 720px) {
+    padding-right: min(24px, 5vw);
+    .username,
+    .powerup {
+      // text-align: right;
+    }
+  }
+
+  .ant-row .ant-row-middle {
+    margin-left: 0;
+    margin-top: 0;
+  }
+}
+
+.nl-avatar .ant-avatar-image {
+  width: clamp(120px, 10vw, 120px);
+  height: clamp(120px, 10vw, 120px);
+}
+
+.powerup {
+  @media screen and (max-width: 428px) {
+    margin-top: 20px;
+    text-align: center;
+  }
+}
+
+.user-widget-heading__powering-symbol {
+  width: 100px;
+  text-align: center;
+  margin-left: auto;
+
+  @media screen and (max-width: 428px) {
+    margin: 0 auto;
+  }
+}

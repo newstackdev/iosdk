@@ -1,0 +1,189 @@
+@import "./Colors.less";
+
+.nl-grid-row {
+  // margin-top: 63px;
+  padding: 4px;
+  .ant-col {
+    &:nth-child(3n) {
+      right: -4px;
+    }
+    &:nth-child(3n + 1) {
+      left: -4px;
+    }
+
+    // padding-left: 4px;
+    // padding-right: 4px;
+    @media screen and (min-width: 720px) {
+      &:nth-child(3n) {
+        right: -18px;
+      }
+      &:nth-child(3n + 2) {
+        left: 7px;
+      }
+    }
+
+    .ant-image-size {
+      margin-bottom: 4px;
+
+      @media screen and (min-width: 720px) {
+        margin-bottom: 14px;
+      }
+    }
+    .ant-image,
+    .ant-image-size {
+      width: 100%;
+      // aspect-ratio: 1;
+      overflow: hidden;
+      max-width: 293px;
+    }
+  }
+}
+
+.nl-mood-grid-row-height {
+  max-height: 250px;
+  &,
+  .ant-image,
+  .ant-image-size,
+  .ant-image,
+  .ant-image-img,
+  > a {
+    max-height: 250px;
+    height: 100%;
+  }
+}
+
+.nl-mood-grid-row-margin-left(@flexbase, @margin,@containerWidth) {
+  flex: 0 0 calc(@containerWidth - @flexbase);
+  margin-left: @margin;
+}
+.nl-mood-grid-row-margin-right(@flexbase, @margin, @containerWidth) {
+  flex: 0 0 calc(@containerWidth - @flexbase);
+  margin-right: @margin;
+}
+.nl-mood-grid-row-margin-left-spotlight(@flexbase, @margin) {
+  flex: 0 0 calc(30% - @flexbase);
+  margin-left: @margin;
+}
+.nl-mood-grid-row-margin-right-spotlight(@flexbase, @margin) {
+  // should be 20%
+  flex: 0 0 calc(30% - @flexbase);
+  margin-right: @margin;
+}
+
+.nl-grid-row(@flexbase-xs, @flexbase-md, @flexbase-xl, @margin-md,@margin-xl, @containerWidth) {
+  text-align: center;
+  align-items: baseline;
+
+  .ant-col {
+    overflow: hidden;
+    // border: 1px solid blue;
+
+    flex: 0 0 calc(20% - 4px);
+
+    display: flex;
+    align-items: center;
+
+    .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md,@containerWidth);
+
+    &.wrap {
+      .nl-mood-grid-row-margin-left(@flexbase-xs, @margin-md,@containerWidth);
+      .nl-mood-grid-row-margin-right(@flexbase-xs, @margin-md,@containerWidth);
+      margin-bottom: 8px;
+    }
+
+    @media screen and (min-width: 720px) {
+      width: calc(20% - 9px);
+      .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md,@containerWidth);
+      &.wrap {
+        .nl-mood-grid-row-margin-left(@flexbase-xl, @margin-xl,@containerWidth);
+        .nl-mood-grid-row-margin-right(@flexbase-xl, @margin-xl,@containerWidth);
+        margin-bottom: 18px;
+      }
+    }
+
+    > a {
+      display: block;
+    }
+    .ant-image,
+    .ant-image-size,
+    .ant-image,
+    .ant-image-img,
+    > a {
+      overflow: hidden;
+      vertical-align: center;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ant-image,
+    &:first-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .ant-image-img {
+      flex: none;
+    }
+  }
+
+  .spotlight {
+    > a {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.nl-mood-grid-row {
+  .nl-grid-row(-18px,23px,18.1px,23px,9px,16.6%);
+  .ant-col:last-child {
+    margin-right: 0 !important;
+  }
+
+  @media screen and (max-width: 428px) {
+    .nl-grid-row(-18px,8px,18.1px,4px,9px,20%);
+    & > div > div > div:last-child {
+      display: none !important;
+    }
+  }
+}
+
+.nl-mood-grid-row-two {
+  .nl-grid-row(-18px,6px,18.1px,6px,9px,50%);
+  .ant-col:nth-child(2n) {
+    margin-right: 0 !important;
+  }
+}
+
+.nl-mood-grid-row-three {
+  .nl-grid-row(-18px,8px,18.1px,8px,9px,33.3%);
+  .ant-col:nth-child(3n) {
+    margin-right: 0 !important;
+  }
+}
+
+.nl-mood-grid-row-four {
+  .nl-grid-row(-18px,8px,18.1px,4px,9px,25%);
+}
+
+.nl-mood-grid-row-five {
+  .nl-grid-row(-18px,8px,18.1px,4px,9px,17%);
+}
+
+.nl-mood-grid-row-responzive {
+  & > div {
+    margin-bottom: 10px;
+  }
+  @media screen and (min-width: 320px) {
+    .nl-mood-grid-row-two() !important;
+  }
+  @media screen and (min-width: 768px) {
+    .nl-mood-grid-row-three() !important;
+  }
+  @media screen and (min-width: 992px) {
+    .nl-mood-grid-row-four() !important;
+  }
+  @media screen and (min-width: 1200px) {
+    .nl-mood-grid-row() !important;
+  }
+}
