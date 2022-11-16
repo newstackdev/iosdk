@@ -87,7 +87,20 @@ export const UserStake: NLView<{
   closeOnDone?: boolean;
   onDone?: Callback;
   onCancel?: Callback;
-}> = ({ user, mode, value, minValue, hideButton, buttonText, hideSelect, closeOnDone, onDone, onCancel }) => {
+  usePowerupTerminology?: boolean;
+}> = ({
+  user,
+  mode,
+  value,
+  minValue,
+  hideButton,
+  buttonText,
+  hideSelect,
+  closeOnDone,
+  onDone,
+  onCancel,
+  usePowerupTerminology = false,
+}) => {
   // const [visible, setVisible] = useState(false);
   const actions = useActions();
   const poolInfo = useCachedPool({ owner: user?.username, code: user?.newcoinTicker });
@@ -279,8 +292,9 @@ export const UserStake: NLView<{
             <p className="header-3 text-left">
               {membershipValue > 0 ? (
                 <>
-                  Your stake in {poolInfo.code || ""} is ${displayMembershipValue} ${poolInfo.owner.toUpperCase()}. Stake {_value}{" "}
-                  GNCO more to increase your membership value.
+                  Your {usePowerupTerminology ? "powerup" : "stake"} in {poolInfo.code || ""} is ${displayMembershipValue} $
+                  {poolInfo.owner.toUpperCase()}. {usePowerupTerminology ? "Powerup" : "Stake"} {_value} GNCO more to increase
+                  your membership value.
                 </>
               ) : (
                 <>Join {_user?.username || ""}'s DAO</>

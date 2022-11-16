@@ -24,6 +24,7 @@ export declare const UserStake: NLView<{
     closeOnDone?: boolean;
     onDone?: Callback;
     onCancel?: Callback;
+    usePowerupTerminology?: boolean;
 }>;
 export declare const UserPowerup: NLView<{
     user?: UserReadPrivateResponse;
