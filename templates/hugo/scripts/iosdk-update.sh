@@ -2,5 +2,7 @@
 template=hugo
 
 yarn add @newstackdev/iosdk
-rsync ./node_modules/@newstackdev/iosdk/templates/$template/src/iosdk ./iosdk
+
+echo copying $template template updates...
+rsync -av ./node_modules/@newstackdev/iosdk/templates/$template/src/iosdk/ ./src/iosdk
 rsync ./node_modules/@newstackdev/iosdk/templates/$template/scripts/iosdk-update.sh ./scripts/iosdk-update.sh
