@@ -2,7 +2,6 @@ import { AviLinkRegular } from "../../../AviLink";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
 import { VoteBar } from "../../../VoteBar";
-import { defaultDao } from "../../../../Utils/defaultDao";
 import { getLocalTimeData, useGetAuthorizedActions } from "../../../../Utils/Helpers";
 import { useAppState } from "../../../../../../overmind";
 import { useCachedDaoProposal, useCachedUser } from "../../../../../../hooks/useCached";
@@ -10,7 +9,7 @@ import { useCachedDaoProposal, useCachedUser } from "../../../../../../hooks/use
 export const ProposalRow = (props: { daoOwner; buttonType; proposalId; proposal; wrapperClass; embedded? }) => {
   const state = useAppState();
   const currUser = state.api.auth.user?.username || "";
-  const daoOwner = props.daoOwner || defaultDao(state); //state.config.settings.newcoin.daoDomain;
+  const daoOwner = props.daoOwner || state.config.settings.newcoin.daoDomain;
   const proposalId = props.proposal.id;
   const proposal = useCachedDaoProposal({
     daoOwner,

@@ -18,24 +18,21 @@ export const NewsafeAuth: IOView<{
     redirectUrl: redirectUrl || redirectPath || `https://${hostname}`,
   };
 
-  const { stage, env } = state.config.env;
+  const env = state.config.env.env;
   const newstackConsoleUrl = maybeWithEnv("https://console", env) + ".newstack.dev";
-
-  const isConfigured = params.requestor && stage;
-
   return (
     <>
       {children || (
         <>
-          {isConfigured && <h1 className="text-center">{`Welcome to ${state.config.settings.app.name}`}</h1>}
+          {params.requestor && <h1 className="text-center">{`Welcome to ${state.config.settings.app.name}`}</h1>}
           <h2 className="text-center">
-            This application is using NEWSAFE
+            This service is using NEWSAFE
             <br />
             the decentralized identity and access management service.
           </h2>
 
           <br />
-          {isConfigured ? (
+          {params.requestor ? (
             <>
               <h2 className="text-center">Please sign in using your account at auth.newsafe.org</h2>
               <div className="text-center">
@@ -58,8 +55,6 @@ export const NewsafeAuth: IOView<{
                     If you are the developer of the app:
                     <br />
                     <br />
-                    For more details check <a href="https://newstack.dev/instructions">newstack.dev/instructions</a>
-                    <br />
                     <ul>
                       <li>
                         Have you created your app entry yet? If not create it at&nbsp;
@@ -67,6 +62,7 @@ export const NewsafeAuth: IOView<{
                         <br />
                         <br />
                       </li>
+
                       <li>
                         Got an app created? You are likely missing just a tiny bit of config. Please follow the instructions
                         at&nbsp;

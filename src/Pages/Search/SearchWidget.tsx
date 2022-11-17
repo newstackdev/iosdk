@@ -11,7 +11,7 @@ import { VerifiedIcon } from "../..//Components/Icons/VerifiedIcon";
 import { isEmpty, map, uniqBy } from "lodash";
 import { json } from "overmind";
 import { useActions, useAppState } from "../../overmind";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useVerified } from "../../hooks/useVerified";
 
 export const UserSearchResultsWidget: NLView<{ query: string }> = ({ query }) => {
@@ -96,6 +96,8 @@ export const SearchWidget: NLView<{
   hidePrefixIcon?: boolean;
   searchSize?: SizeType;
   noAutoHide?: boolean;
+  disablePlaceholder?: boolean;
+  suffixIcon?: React.ReactNode;
   // search: boolean;
   // setSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
@@ -111,6 +113,8 @@ export const SearchWidget: NLView<{
   hidePrefixIcon,
   searchSize,
   noAutoHide,
+  disablePlaceholder = false,
+  suffixIcon,
 }) => {
   const state = useAppState();
   const actions = useActions();
@@ -258,8 +262,9 @@ export const SearchWidget: NLView<{
             searchValue={query}
             loading={loading}
             open={open && !isEmpty(query)}
-            placeholder="Search..."
+            placeholder={disablePlaceholder ? "" : "Search..."}
             onSearch={(query) => onSearch(query)}
+            suffixIcon={suffixIcon}
             onFocus={() => setVisible(true)}
             size={searchSize}
             onBlur={() => setInitialState()}

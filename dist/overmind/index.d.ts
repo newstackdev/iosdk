@@ -20,9 +20,10 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                     currentHost: string;
                 };
                 newcoin: {
-                    daoDomain: any;
-                    displayDaoDomain: any;
-                    defaultToOwnDao: boolean;
+                    daoId: string;
+                    daoDomain: string;
+                    displayDaoDomain: string;
+                    poolId: string;
                 };
                 firebaseConfig: import("../types").FirebaseConfig;
                 newgraph: {
