@@ -16,7 +16,6 @@ import { SearchWidget } from "../Pages/Search/SearchWidget";
 import { Spin } from "../Components/Spin";
 import { showPopUp } from "../utils/popup";
 
-import { Searchicon } from "src/Components/Icons/Searchicon";
 import Explore from "../Components/Icons/Explore";
 import Logo from "../Components/Icons/Logo";
 import NavbarUpload from "../Components/Icons/NavbarUpload";
@@ -205,7 +204,7 @@ export const TopMenu: NLView = () => {
       {isAuthorized ? (
         <>
           <Menu.Item className="searchbar-properties" style={!isAuthorized ? { width: "92%" } : { width: "70%" }}>
-            <SearchWidget searchUsers searchTags setSelection={setSelection} suffixIcon={<Searchicon fillColor="black" />} />
+            <SearchWidget searchUsers searchTags setSelection={setSelection} />
           </Menu.Item>
 
           <Menu.Item key="4" hidden={!isAuthorized}>

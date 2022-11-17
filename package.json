@@ -1,6 +1,6 @@
 {
 	"name": "@newstackdev/iosdk",
-	"version": "0.9.336",
+	"version": "0.9.337",
 	"private": false,
 	"main": "dist/iosdk.js",
 	"types": "dist/iosdk.d.ts",
