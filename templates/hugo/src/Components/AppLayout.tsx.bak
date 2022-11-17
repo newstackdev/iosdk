@@ -59,7 +59,7 @@ export const AppLayout: NLView = ({ children }) => {
 						<MainMenu />
 					</Sider>
 				)}
-				<Content className={`main-content ${isLoggedIn ? "" : "full-width-focused"}`}>
+				<Content className="main-content">
 					{state.indicators.specific[
 						"newgraphApplication.authWithUnsid"
 					] ? (

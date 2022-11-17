@@ -13,6 +13,7 @@ import { UserStake } from "../../../../Components/UserWidget";
 import { WhitelistCard } from "../../Components/Previews/Whitelist/Card/WhitelistCard";
 import { WhitelistProposalRow } from "../../Components/Previews/Whitelist/Row/WhitelistProposalRow";
 import { convertDaoProposalsForUI } from "../../Utils/Helpers";
+import { defaultDao } from "../../Utils/defaultDao";
 import { useActions, useAppState } from "../../../../overmind";
 import {
   useCachedDaoProposals,
@@ -33,12 +34,13 @@ export const ProposalsPage = () => {
 
 export const Proposals = (props: { daoOwner: string }) => {
   const state = useAppState();
+
   const actions = useActions();
 
   const currUser = state.api.auth.user?.username || "";
 
   // crude fix below, refactor
-  const daoOwner = props.daoOwner && props.daoOwner !== "proposals" ? props.daoOwner : state.config.settings.newcoin.daoDomain;
+  const daoOwner = props.daoOwner && props.daoOwner !== "proposals" ? props.daoOwner : defaultDao(state); //state.config.settings.newcoin.daoDomain;
   const ownDao = state.api.auth.user?.username === daoOwner;
 
   const daoProposals = useCachedDaoProposals({ daoOwner });

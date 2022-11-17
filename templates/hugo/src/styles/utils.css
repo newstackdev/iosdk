@@ -108,7 +108,3 @@
 .full-width {
 	width: 100%;
 }
-
-.full-width-focused {
-	max-width: min(800px, 100%);
-}
