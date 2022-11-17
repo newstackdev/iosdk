@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Modal } from "antd";
 
 export const Explore = () => <div>
-    <div>Explore top content or features from here</div>
+    <h2>Explore top content or features from here</h2>
     <ul>
         <li>
             <Link to="home">Home</Link>

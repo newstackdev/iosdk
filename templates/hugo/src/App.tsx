@@ -12,10 +12,10 @@ import {
   useHistory,
   Switch
 } from "react-router-dom";
-import { Explore } from './iosdk/Pages/Explore';
+import { Explore } from './Pages/Explore';
 import { AppLayout } from "./iosdk/Components/AppLayout";
 import { Home } from "./Pages/Home";
-import { SignOut } from "./iosdk/Pages/SignOut";
+import { SignOut } from "./Pages/SignOut";
 import { Landing } from "./Pages/Landing";
 
 

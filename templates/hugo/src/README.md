@@ -1,1 +1,0 @@
-Keeping this directory intact will allow future upgrades of iosdk themeu

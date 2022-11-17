@@ -1,7 +1,14 @@
 @import "./fonts/fonts.css";
+h1 {
+	font-size: 2.66rem;
+}
 
 h2 {
 	font-size: 2rem;
+}
+
+h3 {
+	font-size: 1.5rem;
 }
 
 .bold {

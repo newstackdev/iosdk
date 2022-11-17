@@ -6,12 +6,15 @@ import { Link } from "react-router-dom";
 
 export const Landing = () => {
     const state = useAppState();
+    const loggedIn = state.api.auth.user?.username;
+
     return <div className="text-center">
         <div className="wobble"><Logo /></div>
         <div className="vertical-space" />
         <h2>Welcome to {state.config.settings.app.name}.</h2>
-        <h1>We hope you enjoy this service.</h1>
         <div className="vertical-space" />
-        <Link to="/SignIn">Sign in</Link>
+        <div className="vertical-space" />
+        {loggedIn ? <></> : <Link to="/SignIn">Sign in</Link>}
+        <p>This is a demo landing page</p>
     </div>;
 };

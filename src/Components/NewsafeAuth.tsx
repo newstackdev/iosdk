@@ -33,18 +33,13 @@ export const NewsafeAuth: IOView<{
             <br />
             the decentralized identity and access management service.
           </h2>
-
           <br />
           {isConfigured ? (
             <>
               <h2 className="text-center">Please sign in using your account at auth.newsafe.org</h2>
+              <br />
               <div className="text-center">
-                <Button
-                  style={{ fontSize: 30, height: 60, marginTop: 60 }}
-                  onClick={() => actions.newsafe.navigateToNewsafeAuthUrl()}
-                >
-                  Sign In
-                </Button>
+                <Button onClick={() => actions.newsafe.navigateToNewsafeAuthUrl()}>Sign In</Button>
               </div>
             </>
           ) : (
@@ -55,21 +50,26 @@ export const NewsafeAuth: IOView<{
                     <br />
                     <h3 className="text-center">This application had not been configured correctly.</h3>
                     <br />
-                    <br />
                     If you are the developer of the app:
                     <br />
                     <br />
                     <ul className="text-left">
                       <li>
                         Have you created your app entry yet? If not create it at&nbsp;
-                        <a href={newstackConsoleUrl}>{newstackConsoleUrl}</a>. It only takes a few minutes.
+                        <a href={newstackConsoleUrl} target="_new">
+                          {newstackConsoleUrl}
+                        </a>
+                        . It only takes a few minutes.
                         <br />
                         <br />
                       </li>
                       <li>
                         Got an app created? You are likely missing just a tiny bit of config. Please follow the instructions
                         at&nbsp;
-                        <a href={`${newstackConsoleUrl}/instructions`}>{newstackConsoleUrl}</a>.
+                        <a href={`${newstackConsoleUrl}/instructions`} target="_new">
+                          {newstackConsoleUrl}
+                        </a>
+                        . Remember to restart the app for the configuration to take effect.
                         <br />
                       </li>
                     </ul>

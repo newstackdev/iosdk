@@ -32,7 +32,7 @@ export const AppLayout: NLView = ({ children }) => {
 			<Header>
 				<Row justify="space-between" style={{ alignItems: "center" }}>
 					<Row align="middle">
-						<Col className="logo header-padding">
+						<Col className="logo">
 							<Link to="/">
 								<LogoIcon />
 							</Link>
@@ -46,7 +46,7 @@ export const AppLayout: NLView = ({ children }) => {
 							<span>{isLoggedIn || "not authenticated"}</span>
 						</Row>
 						{isMobile && isLoggedIn && (
-							<Col className="text-right header-padding">
+							<Col className="text-right">
 								<MobileDrawer />
 							</Col>
 						)}

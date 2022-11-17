@@ -8,10 +8,10 @@ export const Home = () => {
         {state.api?.auth?.user?.username ?
             <>
                 <h2>Hello, {state.api.auth.user.username}</h2>
-                <h1>Welcome to {state.config.settings.app.name}.</h1>
+                <h3>Welcome to {state.config.settings.app.name}.</h3>
                 <p>We hope you enjoy this service.</p>
             </>
             : "please sign in"}
-        
+        <p>This is a demo user home</p>
     </div>;
 };
