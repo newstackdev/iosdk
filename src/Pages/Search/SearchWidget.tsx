@@ -264,7 +264,7 @@ export const SearchWidget: NLView<{
             open={open && !isEmpty(query)}
             placeholder={disablePlaceholder ? "" : "Search..."}
             onSearch={(query) => onSearch(query)}
-            suffixIcon={suffixIcon}
+            suffixIcon={suffixIcon && isEmpty(query) ? suffixIcon : null}
             onFocus={() => setVisible(true)}
             size={searchSize}
             onBlur={() => setInitialState()}
