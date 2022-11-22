@@ -38,7 +38,7 @@ export declare const UserWidgetHeading: NLView<{
     setActiveKey?: React.Dispatch<React.SetStateAction<UserFlowRoutes>>;
     setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
     activeKey?: UserFlowRoutes;
-    stakeMode?: boolean;
+    newPowerup?: boolean;
     hideNewlifeSpecificInfo?: boolean;
     disableBadges?: boolean;
 }>;

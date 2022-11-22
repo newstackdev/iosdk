@@ -1,6 +1,6 @@
 import { NLView } from "../../types";
 
-export const VerifiedIcon: NLView<{ style?: React.CSSProperties }> = ({ style }) => (
+export const VerifiedIcon: NLView<{ style?: React.CSSProperties; fillColor?: string }> = ({ style, fillColor }) => (
   <svg
     version="1.1"
     id="Ebene_1"
@@ -9,10 +9,10 @@ export const VerifiedIcon: NLView<{ style?: React.CSSProperties }> = ({ style })
     y="0px"
     viewBox="0 0 619 461"
     xmlSpace="preserve"
-    style={{ width: "40px", height: "30px" }}
+    style={style ?? { width: "40px", height: "30px" }}
   >
     <path
-      fill="#fff"
+      fill={fillColor ?? "#fff"}
       className="st0"
       d="M390.5,238.7C450.9,184,511,129.5,571.3,74.9c15.9,18.1,31.7,36,47.7,54.2c-77.5,69.6-154.8,139-232.4,208.6
 		c-48.1-53.5-96.1-106.8-144.2-160.3c16.8-14.6,33.4-29.1,50.2-43.7C325.2,168.6,357.7,203.5,390.5,238.7L390.5,238.7z M360.8,350.1

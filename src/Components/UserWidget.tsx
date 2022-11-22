@@ -19,13 +19,10 @@ import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { Share } from "../Components/Share";
 import { Smallinfo } from "../Components/Icons/Smallinfo";
 import { SocialLink } from "../Components/SocialLink";
-import { Spin } from "./Spin";
 import { UserFlowRoutes } from "../Pages/User/User";
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
-import { VerifiedIconLight } from "../Components/Icons/VerifiedIconLight";
-import { isEmpty } from "lodash";
 import { showPopUp } from "../utils/popup";
 import { useActions, useAppState } from "../overmind";
 import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
@@ -34,6 +31,7 @@ import { useVerified } from "../hooks/useVerified";
 import BadgeWidget from "./BadgeWidget";
 import Deferred from "./Deferred";
 import Paragraph from "antd/lib/typography/Paragraph";
+import PowerupDialog from "../Components/PowerupDialog";
 import ShowMoreText from "react-show-more-text";
 import usePreventBodyScroll from "../hooks/usePreventBodyScroll";
 
@@ -596,10 +594,10 @@ export const UserWidgetHeading: NLView<{
   setActiveKey?: React.Dispatch<React.SetStateAction<UserFlowRoutes>>;
   setShowSocials?: React.Dispatch<React.SetStateAction<boolean>>;
   activeKey?: UserFlowRoutes;
-  stakeMode?: boolean;
+  newPowerup?: boolean;
   hideNewlifeSpecificInfo?: boolean;
   disableBadges?: boolean;
-}> = ({ user, setActiveKey, stakeMode, hideNewlifeSpecificInfo, disableBadges }) => {
+}> = ({ user, setActiveKey, newPowerup, hideNewlifeSpecificInfo, disableBadges }) => {
   const u = useCachedUser({ username: user?.username }, true);
   const state = useAppState();
   const actions = useActions();
@@ -775,7 +773,7 @@ export const UserWidgetHeading: NLView<{
               </Col>
               <Col xs={24} sm={6} className="powerup text-right">
                 <Row>
-                  <Col xs={24}>{stakeMode ? <UserStake user={u} buttonText="Power up" /> : <UserPowerup user={u} />}</Col>
+                  <Col xs={24}>{newPowerup ? <PowerupDialog user={user} /> : <UserPowerup user={u} />}</Col>
                   <Col xs={24} className="u-margin-top-medium">
                     <div className="user-widget-heading__powering-symbol">
                       {symbol && <p className="paragraph-2r">${symbol}</p>}

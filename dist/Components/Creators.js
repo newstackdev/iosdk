@@ -5,16 +5,17 @@ import { ContentImage } from "./Image";
 import { CopyClipboardHashInput } from "./CopyClipboardHashInput";
 import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
-import { UserPowerup, UserStake } from "./UserWidget";
+import { UserPowerup } from "./UserWidget";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
 import { useState } from "react";
 import { useVerified } from "../hooks/useVerified";
 import BadgeWidget from "./BadgeWidget";
+import PowerupDialog from "../Components/PowerupDialog";
 import Title from "../Pages/Explore/Title";
 // export const Creator: NLView
-export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, stakeMode = false }) => {
+export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, newPowerup = false }) => {
     const state = useAppState();
     const [activeButton, setActiveButton] = useState(false);
     const user = useCachedUser(creator);
@@ -40,12 +41,12 @@ export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUs
                                     setAddedUsers((p) => [...p, user.username]);
                                 }
                                 setActiveButton(!activeButton);
-                            }, className: `${buttonClassName} u-margin-bottom-medium`, children: _jsx("span", { className: "paragraph-2b", children: buttonName }) })) : stakeMode ? (_jsx("div", { onClick: (e) => e.preventDefault(), children: _jsx(UserStake, { user: creator, buttonText: "Power up" }) })) : (_jsx("div", { onClick: (e) => e.preventDefault(), children: _jsx(UserPowerup, { user: creator }) })) })] })] }));
+                            }, className: `${buttonClassName} u-margin-bottom-medium`, children: _jsx("span", { className: "paragraph-2b", children: buttonName }) })) : newPowerup ? (_jsx("div", { onClick: (e) => e.preventDefault(), children: _jsx(PowerupDialog, { user: creator }) })) : (_jsx("div", { onClick: (e) => e.preventDefault(), children: _jsx(UserPowerup, { user: creator }) })) })] })] }));
 };
-export const CreatorsList = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to, stakeMode, }) => {
+export const CreatorsList = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to, newPowerup, }) => {
     users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
     const t = users.find((creator) => creator.invitation) ? "My invited members" : "Explore top creators";
-    return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: t }) })), _jsxs("div", { style: { width: "100%" }, children: [maxItems ? _jsx(Title, { title: title, href: to }) : _jsx(_Fragment, {}), _jsx("div", { className: "top-creators-wrapper", style: title ? { display: "flex", flexWrap: "wrap" } : {}, children: users?.map((creator) => (_jsx("div", { children: _jsx(CreatorWidget, { creator: creator, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, stakeMode: stakeMode }) }))) })] })] }));
+    return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: t }) })), _jsxs("div", { style: { width: "100%" }, children: [maxItems ? _jsx(Title, { title: title, href: to }) : _jsx(_Fragment, {}), _jsx("div", { className: "top-creators-wrapper", style: title ? { display: "flex", flexWrap: "wrap" } : {}, children: users?.map((creator) => (_jsx("div", { children: _jsx(CreatorWidget, { creator: creator, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, newPowerup: newPowerup }) }))) })] })] }));
 };
 export const Creators = (props) => {
     return _jsx(CreatorsList, { ...props });

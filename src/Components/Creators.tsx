@@ -6,13 +6,14 @@ import { Link } from "react-router-dom";
 import { LoadMore } from "./LoadMore";
 import { NLView } from "../types";
 import { UserInvitationReadPublicResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
-import { UserPowerup, UserStake } from "./UserWidget";
+import { UserPowerup } from "./UserWidget";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
 import { useState } from "react";
 import { useVerified } from "../hooks/useVerified";
 import BadgeWidget from "./BadgeWidget";
+import PowerupDialog from "../Components/PowerupDialog";
 import Title from "../Pages/Explore/Title";
 
 type ICreators = {
@@ -23,7 +24,7 @@ type ICreators = {
   setAddedUsers?: React.Dispatch<React.SetStateAction<string[]>>;
   addedUsers?: string[];
   to?: string;
-  stakeMode?: boolean;
+  newPowerup?: boolean;
 };
 
 // export const Creator: NLView
@@ -34,8 +35,8 @@ export const CreatorWidget: NLView<{
   buttonType?: string;
   setAddedUsers: React.Dispatch<any>;
   addedUsers: any;
-  stakeMode?: boolean;
-}> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, stakeMode = false }) => {
+  newPowerup?: boolean;
+}> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, newPowerup = false }) => {
   const state = useAppState();
   const [activeButton, setActiveButton] = useState<boolean>(false);
   const user = useCachedUser(creator);
@@ -119,9 +120,9 @@ export const CreatorWidget: NLView<{
             >
               <span className="paragraph-2b">{buttonName}</span>
             </Button>
-          ) : stakeMode ? (
+          ) : newPowerup ? (
             <div onClick={(e) => e.preventDefault()}>
-              <UserStake user={creator} buttonText="Power up" />
+              <PowerupDialog user={creator} />
             </div>
           ) : (
             <div onClick={(e) => e.preventDefault()}>
@@ -142,7 +143,7 @@ export const CreatorsList: NLView<ICreators> = ({
   addedUsers,
   setAddedUsers,
   to,
-  stakeMode,
+  newPowerup,
 }) => {
   users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
 
@@ -165,7 +166,7 @@ export const CreatorsList: NLView<ICreators> = ({
                 buttonType={buttonType}
                 setAddedUsers={setAddedUsers!}
                 addedUsers={addedUsers}
-                stakeMode={stakeMode}
+                newPowerup={newPowerup}
               />
             </div>
           ))}
