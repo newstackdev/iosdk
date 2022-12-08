@@ -142,7 +142,7 @@
 
   @media screen and (max-width: 428px) {
     .nl-grid-row(-18px,8px,18.1px,4px,9px,20%);
-    & > a:last-child {
+    & > div > div > div:last-child {
       display: none !important;
     }
   }
@@ -151,14 +151,14 @@
 .nl-mood-grid-row-two {
   .nl-grid-row(-18px,6px,18.1px,6px,9px,50%);
   .ant-col:nth-child(2n) {
-    margin-right: 0px;
+    margin-right: 0 !important;
   }
 }
 
 .nl-mood-grid-row-three {
   .nl-grid-row(-18px,8px,18.1px,8px,9px,33.3%);
-  .ant-col:nth-child(3) {
-    margin-right: 0px !important;
+  .ant-col:nth-child(3n) {
+    margin-right: 0 !important;
   }
 }
 

@@ -116,11 +116,9 @@ export const Vote: NLView<{
       isVote={true}
       header={
         <div className="post-header-wrapper">
-          <Link to={state.api.auth.admitted ? "/explore" : "/"}>
-            <div className="logo-left-top">
-              <state.config.components.icons.Logo />
-            </div>
-          </Link>
+          <div className="logo-left-top">
+            <LargeArrowBack />
+          </div>
           {state.flows.rating.value === 100 && (
             <AppearingComponent seconds={5} onShow={onLongDoneVoting}>
               <div ref={divAppearingMessage} className="post-notification-wrapper ant-message-notice-content">

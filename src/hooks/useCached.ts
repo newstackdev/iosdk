@@ -54,7 +54,7 @@ export const useCachedPowerups = (user?: { id?: string }, force?: boolean) => {
   useEffect(() => {
     id && state.auth.authenticated && (force || !state.api.cache.powerups[id]) && actions.api.user.getPowerups({ user: { id } });
   }, [current.id, id, targetPu, currentPu]);
-  return id && ((state.api.cache.powerups[id] ? json(state.api.cache.powerups[id]) : {}) as PowerupsCacheItem);
+  return (state.api.cache.powerups[id] ? json(state.api.cache.powerups[id]) : {}) as PowerupsCacheItem;
 };
 
 export const useCachedNewconAccountHistory = (user: { username?: string }, force?: boolean) => {

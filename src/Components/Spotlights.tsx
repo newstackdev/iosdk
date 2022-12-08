@@ -51,7 +51,7 @@ const SpotlightListCarousel: IOView<{
           spaceBetween: 30,
         },
         640: {
-          slidesPerView: 4,
+          slidesPerView: 3,
           spaceBetween: 40,
         },
       }}
@@ -67,17 +67,12 @@ const Spotlight: IOView<{
   title?: string;
   verifiedUsers: (string | undefined)[] | undefined;
 }> = ({ post, title, verifiedUsers }) => {
-  const state = useAppState();
-
   const url = urlify(post?.description);
   const actions = useActions();
 
   useEffect(() => {
     actions.lists.resetMoodAndPostAvailability();
   }, []);
-
-  //@ts-ignore
-  const spotlightDetailContentUrl = !post.id ? "" : !post ? `/post/${post.id}` : `/folder/${post.moods.id}/${post.id}`;
 
   return (
     <>
@@ -90,7 +85,7 @@ const Spotlight: IOView<{
         }}
         className="bg-hover"
       >
-        <Col className="spotlight" onClick={() => !state.auth.authenticated && window.scrollTo(0, 0)}>
+        <Col className="spotlight">
           {url && (
             <a
               style={{
@@ -111,7 +106,7 @@ const Spotlight: IOView<{
           )}
           <MaybeLink
             //@ts-ignore
-            to={state.auth.authenticated && spotlightDetailContentUrl}
+            to={!post.id ? "" : !post ? `/post/${post.id}` : `/folder/${post.moods.id}/${post.id}`}
             className={post.contentType === "text/plain" ? "maybelink" : ""}
           >
             <PostWidget post={post} username={post.author?.username} aspectRatio={post.aspectRatio} isSpotlight={true} />
@@ -205,7 +200,13 @@ const Spotlights: NLView<{
   return (
     <>
       <div>
-        <Title title={title} href={href} navigationPrevRef={navigationPrevRef} navigationNextRef={navigationNextRef} />
+        {state.routing.location === "/explore" ? (
+          <Title title={title} href={href} navigationPrevRef={navigationPrevRef} navigationNextRef={navigationNextRef} />
+        ) : (
+          <Row>
+            <p className="header-2 u-margin-bottom-medium">{title}</p>
+          </Row>
+        )}
         <div className="spotlight-flex-container">
           <Row className="nl-mood-grid-row-four spotlight-row">
             <SpotlightGrid

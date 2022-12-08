@@ -2,7 +2,9 @@ import { Button, Col, Modal, Row } from "antd";
 import { ImageComponent } from "../../Components/MediaComponents/ImageMediaComponent";
 import { UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { VerifiedIcon } from "../Icons/VerifiedIcon";
+import { showPopUp } from "../../utils/popup";
 import { useAppState } from "../../overmind";
+import { useCachedPool } from "../../hooks/useCached";
 import { usePowerup } from "../../hooks/usePowerup";
 import { useVerified } from "../../hooks/useVerified";
 import EightTimesIcon from "../Icons/EightTimesIcon";
@@ -13,35 +15,29 @@ import isEmpty from "lodash/isEmpty";
 const Powerup: React.FC<{ user: UserReadPublicResponse }> = ({ user }) => {
   const { powerup } = usePowerup(user);
   const [open, setOpen] = useState(false);
+  const poolInfo = useCachedPool({ owner: user?.username });
   const state = useAppState();
   const { verifiedUsers } = useVerified([user.username || ""]);
   const isUserVerified = verifiedUsers && user.username && verifiedUsers.includes(user.username);
 
   const showModal = () => {
     setOpen(true);
-    if (!isEmpty(user.newcoinTicker)) powerup(1);
+    if (!isEmpty(user.newcoinTicker || !isEmpty(poolInfo?.code))) powerup(1);
   };
 
   const powerup8x = () => {
     powerup(8);
     setOpen(false);
   };
-
-  const redirectToSwap = (ticker?: string) => {
-    if (isEmpty(ticker)) return;
-    window.location.href =
-      state.config.env.stage === "eu-prod"
-        ? `https://auth.newsafe.org/swap/GNCO/${ticker}`
-        : `https://auth-dev.newsafe.org/swap/GNCO/${ticker}`;
-  };
-
   const handleCancel = () => {
     setOpen(false);
   };
 
   return (
     <>
-      <Button onClick={showModal}>Power up</Button>
+      <Button onClick={showModal} className="power-up-btn">
+        <p className="paragraph-2b power-up-btn-label">Power up</p>
+      </Button>
       <Modal
         className="nl-powerup-dialog"
         visible={open}
@@ -67,13 +63,13 @@ const Powerup: React.FC<{ user: UserReadPublicResponse }> = ({ user }) => {
                   <div className="nl-powerup-dialog-username">{user.username}</div>
                 </Col>
                 <Col>{isUserVerified ? <VerifiedIcon fillColor="#000" /> : false}</Col>
-                {!isEmpty(user.newcoinTicker) && (
+                {!isEmpty(user.newcoinTicker || poolInfo?.code) && (
                   <Col className="nl-powerup-dialog-ticker" xs={24} sm={5}>
-                    ${user.newcoinTicker}
+                    ${user.newcoinTicker || poolInfo?.code}
                   </Col>
                 )}
               </Row>
-              {isEmpty(user.newcoinTicker) ? (
+              {isEmpty(user.newcoinTicker || poolInfo?.code) ? (
                 <Row justify="center" className="nl-powerup-dialog-noDaoMsg">
                   has not created their DAO yet. Please check this profile later.
                 </Row>
@@ -91,7 +87,12 @@ const Powerup: React.FC<{ user: UserReadPublicResponse }> = ({ user }) => {
                     className="nl-powerup-dialog-btn"
                     align="middle"
                     onClick={() => {
-                      redirectToSwap(user.newcoinTicker);
+                      showPopUp(
+                        `https://auth${
+                          state.config.env.env == "dev" ? "-dev" : ""
+                        }.newsafe.org/swap/GNCO/${user?.newcoinTicker?.toUpperCase()}`,
+                        "__NEWSAFE__",
+                      );
                     }}
                   >
                     <Col className="nl-powerup-dialog-btn-text" xs={14}>

@@ -25,6 +25,7 @@ type ICreators = {
   addedUsers?: string[];
   to?: string;
   newPowerup?: boolean;
+  columns?: boolean;
 };
 
 // export const Creator: NLView
@@ -36,7 +37,7 @@ export const CreatorWidget: NLView<{
   setAddedUsers: React.Dispatch<any>;
   addedUsers: any;
   newPowerup?: boolean;
-}> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, newPowerup = false }) => {
+}> = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, newPowerup = true }) => {
   const state = useAppState();
   const [activeButton, setActiveButton] = useState<boolean>(false);
   const user = useCachedUser(creator);
@@ -51,7 +52,7 @@ export const CreatorWidget: NLView<{
 
   return (
     <Row className="bg-hover app-full-width" style={{ alignItems: "center", justifyContent: "space-between" }}>
-      <Col className="top-creators-first-col" xs={13}>
+      <Col className="top-creators-first-col u-margin-left-medium" xs={13}>
         <Col>
           <Avatar src={<ContentImage {...user} />} className={avatarClassName} />
         </Col>
@@ -76,14 +77,14 @@ export const CreatorWidget: NLView<{
                 <BadgeWidget user={user} className="nl-badges-creators" />
               </Row>
             )}
-            <Row justify="center">
+            {/* <Row justify="center">
               {symbol && (
                 <p className="paragraph-1r typography-overflow">
                   powering
                   {creator.powering} ${symbol}
                 </p>
               )}
-            </Row>
+            </Row> */}
           </Col>
         </Row>
       </Col>
@@ -144,6 +145,7 @@ export const CreatorsList: NLView<ICreators> = ({
   setAddedUsers,
   to,
   newPowerup,
+  columns,
 }) => {
   users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
 
@@ -158,7 +160,7 @@ export const CreatorsList: NLView<ICreators> = ({
       )}
       <div style={{ width: "100%" }}>
         {maxItems ? <Title title={title} href={to} /> : <></>}
-        <div className="top-creators-wrapper" style={title ? { display: "flex", flexWrap: "wrap" } : {}}>
+        <div className={columns ? "top-creators-columns" : ""} style={title ? { display: "flex", flexWrap: "wrap" } : {}}>
           {users?.map((creator) => (
             <div>
               <CreatorWidget
@@ -196,6 +198,7 @@ export const TopCreators: NLView<ICreators> = ({ maxItems, title, buttonType, se
         setAddedUsers={setAddedUsers}
         addedUsers={addedUsers}
         to={to}
+        columns={true}
       />
       {creators && (creators?.length || 0) < (maxItems || 100) && <LoadMore loadMore={() => actions.lists.top.users({})} />}
     </>

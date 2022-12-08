@@ -5,10 +5,12 @@ import { Callback, IOView, NLView } from "../types";
 import { ContentImage } from "../Components/Image";
 import { CrossCircle } from "../Components/Icons/CrossCircle";
 import { DataRow } from "../Components/DataRow";
+import { DAO as DetailsIcon } from "../Components/Icons/DAO";
 import { Edit } from "../Components/Icons/Edit";
 import { HashDisplay } from "../Components/CryptoEntities";
+import { IBadge } from "../hooks/useBadges";
 import { ItemGrid } from "../Components/ItemGrid";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { NewcoinRecept } from "../Components/Recepts";
 import { Polygon } from "../Components/Icons/Polygon";
 import { PowerupsCacheItem } from "../overmind/api/state";
@@ -16,7 +18,6 @@ import { ProgressButton } from "../Components/ProgressButton";
 import { RevealInfo } from "../Components/RevealInfo";
 import { STAKE_STEPS, STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
-import { Share } from "../Components/Share";
 import { Smallinfo } from "../Components/Icons/Smallinfo";
 import { SocialLink } from "../Components/SocialLink";
 import { UserFlowRoutes } from "../Pages/User/User";
@@ -25,14 +26,15 @@ import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { showPopUp } from "../utils/popup";
 import { useActions, useAppState } from "../overmind";
-import { useCachedDaoProposals, useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
+import { useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
 import BadgeWidget from "./BadgeWidget";
-import Deferred from "./Deferred";
+import CountUp from "react-countup";
 import Paragraph from "antd/lib/typography/Paragraph";
 import PowerupDialog from "../Components/PowerupDialog";
 import ShowMoreText from "react-show-more-text";
+import isFinite from "lodash/isFinite";
 import usePreventBodyScroll from "../hooks/usePreventBodyScroll";
 
 const ellipsisStyle = {
@@ -597,39 +599,40 @@ export const UserWidgetHeading: NLView<{
   newPowerup?: boolean;
   hideNewlifeSpecificInfo?: boolean;
   disableBadges?: boolean;
-}> = ({ user, setActiveKey, newPowerup, hideNewlifeSpecificInfo, disableBadges }) => {
+  isBadgesLoading?: boolean;
+  badgesError?: string;
+  badges?: IBadge[];
+}> = ({
+  user,
+  setActiveKey,
+  newPowerup = true,
+  hideNewlifeSpecificInfo,
+  disableBadges,
+  isBadgesLoading,
+  badgesError,
+  badges,
+}) => {
   const u = useCachedUser({ username: user?.username }, true);
   const state = useAppState();
-  const actions = useActions();
-  const params = useParams<{ username: string; id: string }>();
   const { verifiedUsers } = useVerified([user?.username || ""]);
   const isUserVerified = verifiedUsers && u.username && verifiedUsers.includes(u.username);
-  const URL =
-    process.env.NODE_ENV === "production"
-      ? `https://www.newlife.io/user/${user?.username}`
-      : `https://web-dev.newlife.io${user?.username}`;
-  const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
-  const daoProposals = useCachedDaoProposals({ daoOwner });
+
   const poolInfo = useCachedPool({ owner: user?.username });
-
-  const symbol = poolInfo.code;
-
-  const isDAOMember = ((state.newcoin.pools || {})[symbol] || 0) / 1000;
-
+  const [newScore, setNewScore] = useState(0);
   if (!user) return <></>;
-  // return <Card title={""}
-  // cover={<ContentImage width="100%" src={user.contentUrl} />}
-  // >
 
-  let poweredNumber: string | number = u.powered || 0;
-  let poweringNumber: string | number = u.powering || 0;
-
-  if (poweredNumber >= 1000) {
-    poweredNumber = (poweredNumber / 1000).toFixed(2) + "K";
-  }
-  if (poweringNumber >= 1000) {
-    poweringNumber = (poweringNumber / 1000).toFixed(2) + "K";
-  }
+  useEffect(() => {
+    if (!isBadgesLoading && !badgesError && user) {
+      setNewScore(
+        Math.floor(
+          Math.log(
+            (800 * (badges?.length || 0) + (u?.powered || 0)) *
+              +poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""),
+          ) || 0,
+        ),
+      );
+    }
+  }, [isBadgesLoading, user, badges, u, poolInfo]);
 
   const toMonthName = (monthNumber: number) => {
     const date = new Date();
@@ -749,72 +752,33 @@ export const UserWidgetHeading: NLView<{
           justify="start"
         >
           <Col xs={24} xl={24} className="username">
-            <Row className="user-widget-heading__powering" style={{ justifyContent: "space-between" }}>
-              <Col sm={18}>
-                <Row gutter={20} justify="center">
-                  <Col onClick={() => setActiveKey && setActiveKey("Powered")} className="user-widget-heading__powerup-number">
-                    <span>
-                      <p className="header-1r">{poweredNumber}</p>
-                      <p className="paragraph-2r">powered by</p>
-                    </span>
-                  </Col>
-                  <Col onClick={() => setActiveKey && setActiveKey("Powering")} className="user-widget-heading__powerup-number">
-                    <span>
-                      <p className="header-1r">{poweringNumber}</p>
-                      <p className="paragraph-2r">powering</p>
-                    </span>
-                  </Col>
-                </Row>
-                {!disableBadges && (
-                  <Row className="u-margin-top-medium" gutter={12} justify="center">
-                    <BadgeWidget user={user} className="user-widget-heading-badge-section" />
-                  </Row>
-                )}
-              </Col>
-              <Col xs={24} sm={6} className="powerup text-right">
-                <Row>
-                  <Col xs={24}>{newPowerup ? <PowerupDialog user={user} /> : <UserPowerup user={u} />}</Col>
-                  <Col xs={24} className="u-margin-top-medium">
-                    <div className="user-widget-heading__powering-symbol">
-                      {symbol && <p className="paragraph-2r">${symbol}</p>}
-                      {poolInfo.total && (
-                        <p className="paragraph-2r u-margin-top-medium">
-                          TVL {Math.floor(+poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""))}
-                        </p>
-                      )}
-                    </div>
-                  </Col>
-                  {/* <Button onClick={() => actions.routing.historyPush({ location: `/user/stake/${u.id}` })}>Power up</Button> */}
-                  {!hideNewlifeSpecificInfo && (
-                    <Col xs={24} className="u-margin-top-medium user-widget-heading__share_dao">
-                      <Share urlToShare={URL} user={user} />
-                      {daoProposals.dao_id ? (
-                        <Button
-                          className="u-margin-left-medium"
-                          onClick={() =>
-                            actions.routing.historyPush({
-                              location: "/dao/" + u?.username,
-                            })
-                          }
-                        >
-                          DAO
-                        </Button>
-                      ) : (
-                        isCurrentUserProfile && (
-                          <Deferred deferTime={400} visible={true}>
-                            <Button
-                              style={{ marginLeft: 4 }}
-                              onClick={() => actions.routing.historyPush({ location: "/dao/create" })}
-                            >
-                              Create DAO
-                            </Button>
-                          </Deferred>
-                        )
-                      )}
-                    </Col>
+            <Row className="user-widget-heading__powering" justify="end">
+              <Row className="user-widget-heading__newscore u-margin-bottom-medium" gutter={[20, 20]}>
+                <Col onClick={() => setActiveKey && setActiveKey("UserDetail")} className="user-widget-heading__powerup-number">
+                  <span>
+                    <p className="header-1r user-widget-heading-newscore-num">
+                      <CountUp delay={5} end={isBadgesLoading || badgesError || !isFinite(newScore) ? 0 : newScore} />
+                    </p>
+                    <p className="paragraph-2r">Newscore</p>
+                  </span>
+                </Col>
+                <Col
+                  onClick={() => setActiveKey && setActiveKey("UserDetail")}
+                  className="user-widget-heading__powerup-number u-margin-right-small"
+                >
+                  {!disableBadges && (
+                    <Row gutter={12} justify="center">
+                      <BadgeWidget user={user} badges={badges} className="user-widget-heading-badge-section" badgeLimit={3} />
+                    </Row>
                   )}
-                </Row>
-              </Col>
+                </Col>
+                <Col>{newPowerup ? <PowerupDialog user={user} /> : <UserPowerup user={u} />}</Col>
+                <Col>
+                  <Button onClick={() => setActiveKey && setActiveKey("UserDetail")} className="user-widget-heading-details-btn">
+                    <DetailsIcon />
+                  </Button>
+                </Col>
+              </Row>
             </Row>
           </Col>
         </Row>

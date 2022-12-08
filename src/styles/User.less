@@ -1,14 +1,5 @@
 .user-widget-heading {
   text-align: center;
-  // padding-right: 24px;
-
-  @media screen and (max-width: 720px) {
-    padding-right: min(24px, 5vw);
-    .username,
-    .powerup {
-      // text-align: right;
-    }
-  }
 
   .ant-row .ant-row-middle {
     margin-left: 0;
@@ -36,4 +27,23 @@
   @media screen and (max-width: 428px) {
     margin: 0 auto;
   }
+}
+
+.user-widget-heading__newscore {
+  justify-content: end !important;
+  text-align: center;
+
+  @media screen and (max-width: 800px) {
+    justify-content: center !important;
+  }
+}
+
+.user-widget-heading-newscore-num {
+  text-align: center;
+}
+
+.user-widget-heading-details-btn {
+  padding: 30px 20px;
+  align-items: center;
+  display: flex;
 }

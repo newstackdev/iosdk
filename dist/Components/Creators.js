@@ -15,7 +15,7 @@ import BadgeWidget from "./BadgeWidget";
 import PowerupDialog from "../Components/PowerupDialog";
 import Title from "../Pages/Explore/Title";
 // export const Creator: NLView
-export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, newPowerup = false }) => {
+export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUsers, addedUsers, newPowerup = true }) => {
     const state = useAppState();
     const [activeButton, setActiveButton] = useState(false);
     const user = useCachedUser(creator);
@@ -26,7 +26,7 @@ export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUs
     const buttonName = activeButton ? "Added!" : "Add";
     const poolInfo = useCachedPool({ owner: user?.username });
     const symbol = poolInfo.code;
-    return (_jsxs(Row, { className: "bg-hover app-full-width", style: { alignItems: "center", justifyContent: "space-between" }, children: [_jsxs(Col, { className: "top-creators-first-col", xs: 13, children: [_jsx(Col, { children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: avatarClassName }) }), _jsx(Row, { align: "bottom", style: { overflow: "hidden" }, children: _jsxs(Col, { className: "top-creators-username", style: { overflow: "hidden" }, children: [_jsx(Row, { justify: "center", children: _jsx(Link, { to: `/user/${user.username || user.fullName}`, style: { width: "100%" }, children: _jsxs("p", { className: "top-creators-username__paragraph typography-overflow", children: [user.username || user.fullName, isUserVerified ? (_jsx("span", { className: "u-margin-left-medium", children: _jsx(VerifiedIcon, {}) })) : (false)] }) }) }), state.routing.location === "/user/invite" && (_jsx(Row, { justify: "center", children: _jsx(BadgeWidget, { user: user, className: "nl-badges-creators" }) })), _jsx(Row, { justify: "center", children: symbol && (_jsxs("p", { className: "paragraph-1r typography-overflow", children: ["powering", creator.powering, " $", symbol] })) })] }) })] }), _jsxs(Col, { className: "top-creators-second-col", xl: 10, children: [creator.invitation && creator.invitation.hash && _jsx(CopyClipboardHashInput, { hash: creator.invitation.hash }), _jsx(Col, { className: "top-creators-number", children: _jsx("p", { className: "header-1r top-creators-powered", style: {
+    return (_jsxs(Row, { className: "bg-hover app-full-width", style: { alignItems: "center", justifyContent: "space-between" }, children: [_jsxs(Col, { className: "top-creators-first-col u-margin-left-medium", xs: 13, children: [_jsx(Col, { children: _jsx(Avatar, { src: _jsx(ContentImage, { ...user }), className: avatarClassName }) }), _jsx(Row, { align: "bottom", style: { overflow: "hidden" }, children: _jsxs(Col, { className: "top-creators-username", style: { overflow: "hidden" }, children: [_jsx(Row, { justify: "center", children: _jsx(Link, { to: `/user/${user.username || user.fullName}`, style: { width: "100%" }, children: _jsxs("p", { className: "top-creators-username__paragraph typography-overflow", children: [user.username || user.fullName, isUserVerified ? (_jsx("span", { className: "u-margin-left-medium", children: _jsx(VerifiedIcon, {}) })) : (false)] }) }) }), state.routing.location === "/user/invite" && (_jsx(Row, { justify: "center", children: _jsx(BadgeWidget, { user: user, className: "nl-badges-creators" }) }))] }) })] }), _jsxs(Col, { className: "top-creators-second-col", xl: 10, children: [creator.invitation && creator.invitation.hash && _jsx(CopyClipboardHashInput, { hash: creator.invitation.hash }), _jsx(Col, { className: "top-creators-number", children: _jsx("p", { className: "header-1r top-creators-powered", style: {
                                 margin: "0",
                                 display: "flex",
                                 minWidth: "64px",
@@ -43,10 +43,10 @@ export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUs
                                 setActiveButton(!activeButton);
                             }, className: `${buttonClassName} u-margin-bottom-medium`, children: _jsx("span", { className: "paragraph-2b", children: buttonName }) })) : newPowerup ? (_jsx("div", { onClick: (e) => e.preventDefault(), children: _jsx(PowerupDialog, { user: creator }) })) : (_jsx("div", { onClick: (e) => e.preventDefault(), children: _jsx(UserPowerup, { user: creator }) })) })] })] }));
 };
-export const CreatorsList = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to, newPowerup, }) => {
+export const CreatorsList = ({ title, maxItems, users, buttonType, addedUsers, setAddedUsers, to, newPowerup, columns, }) => {
     users = maxItems ? users?.slice(0, Math.min(users?.length, maxItems)) : users;
     const t = users.find((creator) => creator.invitation) ? "My invited members" : "Explore top creators";
-    return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: t }) })), _jsxs("div", { style: { width: "100%" }, children: [maxItems ? _jsx(Title, { title: title, href: to }) : _jsx(_Fragment, {}), _jsx("div", { className: "top-creators-wrapper", style: title ? { display: "flex", flexWrap: "wrap" } : {}, children: users?.map((creator) => (_jsx("div", { children: _jsx(CreatorWidget, { creator: creator, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, newPowerup: newPowerup }) }))) })] })] }));
+    return (_jsxs(_Fragment, { children: [title === undefined && (_jsx(Row, { style: { width: "100%" }, children: _jsx("p", { className: "header-2 u-margin-bottom-medium", children: t }) })), _jsxs("div", { style: { width: "100%" }, children: [maxItems ? _jsx(Title, { title: title, href: to }) : _jsx(_Fragment, {}), _jsx("div", { className: columns ? "top-creators-columns" : "", style: title ? { display: "flex", flexWrap: "wrap" } : {}, children: users?.map((creator) => (_jsx("div", { children: _jsx(CreatorWidget, { creator: creator, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, newPowerup: newPowerup }) }))) })] })] }));
 };
 export const Creators = (props) => {
     return _jsx(CreatorsList, { ...props });
@@ -55,7 +55,7 @@ export const TopCreators = ({ maxItems, title, buttonType, setAddedUsers, addedU
     const state = useAppState();
     const actions = useActions();
     const creators = maxItems ? state.lists.top.users.items.slice(0, maxItems) : state.lists.top.users.items;
-    return (_jsxs(_Fragment, { children: [_jsx(CreatorsList, { users: creators, maxItems: maxItems, title: title, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, to: to }), creators && (creators?.length || 0) < (maxItems || 100) && _jsx(LoadMore, { loadMore: () => actions.lists.top.users({}) })] }));
+    return (_jsxs(_Fragment, { children: [_jsx(CreatorsList, { users: creators, maxItems: maxItems, title: title, buttonType: buttonType, setAddedUsers: setAddedUsers, addedUsers: addedUsers, to: to, columns: true }), creators && (creators?.length || 0) < (maxItems || 100) && _jsx(LoadMore, { loadMore: () => actions.lists.top.users({}) })] }));
 };
 export default Creators;
 //# sourceMappingURL=Creators.js.map

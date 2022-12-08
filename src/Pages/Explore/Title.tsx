@@ -36,7 +36,7 @@ const Title: NLView<ITitle> = ({
       )}
       <Row>
         {navigationPrevRef && navigationNextRef && (
-          <Row style={{ alignItems: "end" }}>
+          <Row>
             <div style={{ cursor: "pointer" }} className="u-margin-right-medium" ref={navigationPrevRef}>
               <BackArrow />
             </div>

@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import { Callback, IOView, NLView } from "../types";
+import { IBadge } from "../hooks/useBadges";
 import { STAKE_STEPS_TYPE } from "../overmind/flows/stake/state";
 import { UserFlowRoutes } from "../Pages/User/User";
 import { UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
@@ -41,6 +42,9 @@ export declare const UserWidgetHeading: NLView<{
     newPowerup?: boolean;
     hideNewlifeSpecificInfo?: boolean;
     disableBadges?: boolean;
+    isBadgesLoading?: boolean;
+    badgesError?: string;
+    badges?: IBadge[];
 }>;
 export declare const UserSocialInfo: NLView<{
     user?: UserReadPrivateResponse;

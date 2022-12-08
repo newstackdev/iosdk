@@ -231,20 +231,6 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 isNextPostsAvailable: boolean;
                 isNextUsersAvailable: boolean;
             };
-            public: {
-                posts: {
-                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
-                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
-                    sortKey: string;
-                    page: number;
-                };
-                moods: {
-                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
-                    items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
-                    sortKey: string;
-                    page: number;
-                };
-            };
             selectedUser: {
                 moods: {
                     _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
@@ -511,10 +497,6 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                     requestedPage?: number | undefined;
                 }, void>;
                 posts: import("../types").Action<import("../types").ContentType | undefined, void>;
-            };
-            public: {
-                posts: import("../types").Action<import("../types").ContentType | undefined, void>;
-                moods: import("../types").Action<import("../types").ContentType | undefined, void>;
             };
         };
         flows: import("overmind/lib/internalTypes").SubType<{
@@ -860,10 +842,6 @@ export declare const useActions: () => {
                 requestedPage?: number | undefined;
             }) => void | Promise<void>;
             posts: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
-        };
-        public: {
-            posts: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
-            moods: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
         };
     };
     flows: {

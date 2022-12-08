@@ -1,6 +1,6 @@
 {
 	"name": "@newstackdev/iosdk",
-	"version": "0.9.362",
+	"version": "0.9.363",
 	"private": false,
 	"main": "dist/iosdk.js",
 	"types": "dist/iosdk.d.ts",
@@ -64,6 +64,7 @@
 		"react": "^17.0.2",
 		"react-blurhash": "^0.1.3",
 		"react-copy-to-clipboard": "^5.0.4",
+		"react-countup": "^6.4.0",
 		"react-dom": "^17.0.2",
 		"react-firebase-hooks": "^3.0.4",
 		"react-horizontal-scrolling-menu": "^2.5.2",

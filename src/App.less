@@ -12,6 +12,8 @@
 @import "./styles/User.less";
 @import "./styles/FullscreenImage.less";
 @import "./styles/Footer.less";
+@import "./styles/PowerupDialog.less";
+@import "./styles/UserDetailDialog.less";
 
 @import "Pages/Dao/Components/Previews/Member/Row/MemberRow";
 @import "Pages/Dao/Components/Previews/Standard/Row/ProposalRow";
@@ -163,14 +165,6 @@ p {
   // @media screen and (min-width: 720px) {
   //   display: block;
   // }
-}
-
-.header {
-  padding: 0 20px;
-
-  @media screen and (max-width: 468px) {
-    padding: 0px 8px;
-  }
 }
 
 .logo-left-top {
@@ -385,6 +379,11 @@ p {
   padding: 30px 20px;
 }
 
+.power-up-btn-label {
+  line-height: 0;
+  margin: 0;
+}
+
 .avatar-image-header {
   width: 100%;
   height: 34px;
@@ -451,11 +450,6 @@ p {
   &:hover {
     background: #272626;
   }
-
-  @media screen and (max-width: 468px) {
-    padding: 0;
-    margin-bottom: 20px;
-  }
 }
 
 .bg-selected-folder {
@@ -511,25 +505,30 @@ p {
   margin-right: auto;
 }
 
-.top-creators-wrapper {
-  justify-content: space-between;
+
+.top-creators-columns>div {
+  width: 100%;
 
   &>div {
-    width: 100%;
+    margin-top: 20px;
   }
 
-  @media screen and (max-width: 1024px) {
-    &>div {
-      width: 100%;
+  .u-margin-left-medium {
+    margin-left: 0;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .top-creators-columns {
+    justify-content: space-between;
+
+    &>div:first-child {
+      margin-top: 0;
     }
-  }
 
-  // & > div:not(:first-child) {
-  //   margin-top: 20px;
-  // }
-
-  @media screen and (max-width: 428px) {
-    display: block !important;
+    >div {
+      width: 50%;
+    }
   }
 }
 
@@ -537,11 +536,9 @@ p {
   display: flex;
   flex: 0.6;
   align-items: center;
-  margin-left: 20px;
 
-  @media screen and (max-width: 428px) {
+  @media screen and (max-width: 580px) {
     flex: 1;
-    margin: 0;
     // & > div {
     // 	flex: 1;
     // }
@@ -587,9 +584,7 @@ p {
 }
 
 .top-creators-number {
-  margin: 0 10px;
-
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 468px) {
     display: none;
   }
 }
@@ -815,6 +810,7 @@ textarea {
   display: flex;
   padding: 0;
   padding-left: 10px;
+  margin-top: 10px;
 }
 
 .post-notification-wrapper {}
@@ -991,6 +987,7 @@ textarea {
   height: 30px;
   width: 30px;
   text-align: center;
+  margin-left: auto;
 
   @media screen and (max-width: 428px) {
     margin: 0;
