@@ -42,22 +42,10 @@ export const TopFoldersGrid: NLView<{
         style={{ width: "100%" }}
         link={"/folder/" + mood.id}
       >
-        <Row
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "flex",
-            justifyContent: `${postsList && postsList.length > 4 ? "space-between" : ""}`,
-            flexWrap: "wrap",
-          }}
-          wrap={true}
-          className={`${noFullWidth ? "nl-mood-grid-row-height" : "app-main-full-width"} ${
-            title === "Moods" ? "nl-mood-grid-row-responzive" : ""
-          }`}
-        >
+        <>
           {/* // folder */}
           {!noFolder && (
-            <Link to={`/folder/${mood.id}`} className="ant-col">
+            <Link to={state.auth.authenticated ? `/folder/${mood.id}` : ""} className="ant-col">
               <Col
                 className="bg-hover"
                 style={{
@@ -86,68 +74,69 @@ export const TopFoldersGrid: NLView<{
               loader={<Spin />}
               hasMore={state.lists.top.isNextPostsAvailable && state.lists.selectedUser.isNextPostsAvailable}
             >
-              <Row>
-                {postsList?.map((p) => (
-                  <MaybeLink
-                    key={p.id}
-                    to={
-                      !p.id
-                        ? ""
-                        : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
-                        ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
-                        : !mood
-                        ? `/post/${p.id}`
-                        : `/folder/${mood.id}/${p.id}`
-                    }
-                    className={p.contentType === "text/plain" ? "maybelink ant-col min-widget-size" : "ant-col"}
-                  >
-                    <Col
-                      className={"bg-hover"}
-                      style={{
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        aspectRatio: "1/1",
-                        height: "100%",
-                        flex: 1,
-                      }}
+              <Row onClick={() => !state.auth.authenticated && window.scrollTo(0, 0)} className="nl-mood-grid-row">
+                {postsList?.map((p) => {
+                  return (
+                    <MaybeLink
+                      to={
+                        !p.id
+                          ? ""
+                          : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                          ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                          : !mood
+                          ? `/post/${p.id}`
+                          : `/folder/${mood.id}/${p.id}`
+                      }
+                      className={p.contentType === "text/plain" ? "maybelink ant-col min-widget-size" : "ant-col"}
                     >
-                      <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
-                    </Col>
-                  </MaybeLink>
-                ))}
+                      <Col
+                        className={"bg-hover"}
+                        style={{
+                          justifyContent: "center",
+                          flexDirection: "column",
+                          aspectRatio: "1/1",
+                          height: "100%",
+                          flex: 1,
+                        }}
+                      >
+                        <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
+                      </Col>
+                    </MaybeLink>
+                  );
+                })}
               </Row>
             </InfiniteScroll>
           ) : (
-            postsList?.map((p) => (
-              <MaybeLink
-                // style={}
-                to={
-                  !p.id
-                    ? ""
-                    : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
-                    ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
-                    : !mood
-                    ? `/post/${p.id}`
-                    : `/folder/${mood.id}/${p.id}`
-                }
-                className={p.contentType === "text/plain" ? "maybelink ant-col min-widget-height" : "ant-col"}
-              >
-                <Col
-                  className={"bg-hover"}
-                  style={{
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    aspectRatio: "1/1",
-                    height: "100%",
-                    flex: 1,
-                  }}
+            postsList?.map((p) => {
+              const topFolderLinkClickUrl = !p.id
+                ? ""
+                : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]
+                ? ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1] || ""
+                : !mood
+                ? `/post/${p.id}`
+                : `/folder/${mood.id}/${p.id}`;
+              return (
+                <MaybeLink
+                  to={state.auth.authenticated ? topFolderLinkClickUrl : ""}
+                  className={p.contentType === "text/plain" ? "maybelink min-widget-size ant-col" : "ant-col"}
                 >
-                  <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
-                </Col>
-              </MaybeLink>
-            ))
+                  <Col
+                    className={"bg-hover"}
+                    style={{
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      aspectRatio: "1/1",
+                      height: "100%",
+                      flex: 1,
+                    }}
+                  >
+                    <PostWidget mood={mood} post={p} aspectRatio={p.aspectRatio} />
+                  </Col>
+                </MaybeLink>
+              );
+            })
           )}
-        </Row>
+        </>
       </PremiumContent>
     </>
   );

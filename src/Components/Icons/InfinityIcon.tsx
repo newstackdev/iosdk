@@ -1,4 +1,4 @@
-import { IOView } from "@newstackdev/iosdk/dist/types";
+import { IOView } from "../../types";
 
 const InfinityIcon: IOView<{
   width?: string;

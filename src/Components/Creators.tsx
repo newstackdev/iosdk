@@ -51,7 +51,7 @@ export const CreatorWidget: NLView<{
 
   return (
     <Row className="bg-hover app-full-width" style={{ alignItems: "center", justifyContent: "space-between" }}>
-      <Col className="top-creators-first-col u-margin-left-medium" xs={13}>
+      <Col className="top-creators-first-col" xs={13}>
         <Col>
           <Avatar src={<ContentImage {...user} />} className={avatarClassName} />
         </Col>

@@ -1,4 +1,4 @@
-import { IOView } from "@newstackdev/iosdk/dist/types";
+import { IOView } from "../../types";
 
 const EightTimesIcon: IOView<{
   width?: string;

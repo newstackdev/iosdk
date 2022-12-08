@@ -102,6 +102,7 @@ const ContentLayoutHorizontal3col: React.FunctionComponent<React.PropsWithChildr
           xs={24}
           lg={isVote ? 5 : isPost ? 7 : isMood ? 1 : 4}
           className={isVote ? "text-left post-notification-column" : "text-left"}
+          style={{ padding: 0 }}
         >
           {header}
         </Col>

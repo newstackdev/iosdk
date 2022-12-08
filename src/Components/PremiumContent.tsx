@@ -76,24 +76,26 @@ export const PremiumContent: IOView<
 
   const onClick = () => link && actions.routing.historyPush({ location: link });
 
-  return (
-    <>
-      <div
-        className="iosdk-premium-content"
-        {...(blur
-          ? {
-              onClickCapture: (e) => {
-                e.preventDefault();
-                onClick();
-              },
-            }
-          : {})}
-        {...rest}
-        style={style}
-      >
-        {children}
-      </div>
-      {blur ? <PrivateContentView stakeInfo={stakeInfo} onClick={onClick} /> : <></>}
-    </>
-  );
+  if (!blur) return <>{children}</>;
+  else
+    return (
+      <>
+        <div
+          className="iosdk-premium-content"
+          {...(blur
+            ? {
+                onClickCapture: (e) => {
+                  e.preventDefault();
+                  onClick();
+                },
+              }
+            : {})}
+          {...rest}
+          style={style}
+        >
+          {children}
+        </div>
+        {blur ? <PrivateContentView stakeInfo={stakeInfo} onClick={onClick} /> : <></>}
+      </>
+    );
 };

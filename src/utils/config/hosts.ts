@@ -14,13 +14,13 @@ export const replaceHost = (host?: string) =>
   `https://${host || window.location.host}${window.location.pathname}${window.location.search ? "?" + window.location.search : ""
   }`;
 
-if (window.location.protocol != "https:" && !isLocalhost) (window.location as any) = replaceHost();
+// if (window.location.protocol != "https:" && !isLocalhost) (window.location as any) = replaceHost();
 // `https://${window.location.host}${window.location.pathname}${window.location.search ? "?" + window.location.search : ""}`;
 
 export const ensureCanonicalHost = (canonicalHosts: Record<string, string | undefined> = {}, stage) => {
   const canonicalHostsForStage: string[] = (canonicalHosts[stage] || "").split(/,/);
   if (!isLocalhost && canonicalHostsForStage.length && !canonicalHostsForStage.includes(actualCurrentHost))
-    (window.location as any) = `httpges://${canonicalHostsForStage[0]}${window.location.pathname}${
+    (window.location as any) = `https://${canonicalHostsForStage[0]}${window.location.pathname}${
       window.location.search ? "?" + window.location.search : ""
     }`;
 };

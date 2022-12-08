@@ -75,7 +75,7 @@ const Powerup: React.FC<{ user: UserReadPublicResponse }> = ({ user }) => {
               </Row>
               {isEmpty(user.newcoinTicker) ? (
                 <Row justify="center" className="nl-powerup-dialog-noDaoMsg">
-                  had not created their DAO yet. Please check this profile later.
+                  has not created their DAO yet. Please check this profile later.
                 </Row>
               ) : (
                 <>

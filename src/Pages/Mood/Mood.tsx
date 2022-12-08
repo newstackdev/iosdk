@@ -75,7 +75,7 @@ export const Mood: NLView = () => {
       isWorking={!mood?.posts?.length}
       header={
         <Link to={"/explore"}>
-          <div className="logo-left-top" style={{ padding: "0px 20px" }}>
+          <div className="header logo-left-top">
             <state.config.components.icons.Logo />
           </div>
         </Link>

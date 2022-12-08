@@ -200,7 +200,7 @@ export const UserStake: NLView<{
           <Col span={24} className="nl-avatar">
             <h2>{_user.username}</h2>
             <div className="section-divider" />
-            had not created their DAO yet.
+            has not created their DAO yet.
             <div className="section-divider" />
             Please check this profile later.
           </Col>
