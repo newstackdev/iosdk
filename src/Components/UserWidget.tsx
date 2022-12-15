@@ -389,14 +389,17 @@ export const UserStake: NLView<{
         ""
       ) : stakeInNewsafe ? (
         <Button
-          onClick={() =>
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             showPopUp(
               `https://auth${
                 state.config.env.env == "dev" ? "-dev" : ""
               }.newsafe.org/swap/GNCO/${user?.newcoinTicker?.toUpperCase()}`,
               "__NEWSAFE__",
-            )
-          }
+            );
+          }}
         >
           {buttonText || "Stake"}
         </Button>
