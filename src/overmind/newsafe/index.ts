@@ -2,12 +2,12 @@ import { Action } from "../../types";
 import auth from "../auth";
 
 const authorize: Action<{ jwt: string }> = async ({ state, effects, actions }, { jwt }) => {
-  const newsafeJwt = `newsafe ${jwt}`;
+  const newsafeJwt = `newsafe ${jwt.replace(/^newsafe /, "")}`;
 
   state.newsafe.token = newsafeJwt;
 
   window.localStorage.setItem("newsafe-auth-token", jwt);
-  actions.api.auth.authorize({ token: newsafeJwt });
+  await actions.api.auth.authorize({ token: newsafeJwt });
 };
 
 const signOut: Action = async ({ state, effects, actions }) => {
@@ -56,6 +56,10 @@ const onInitializeOvermind: Action = ({ actions, state, effects, reaction }) => 
   if (newsafeJwt) {
     actions.newsafe.authorize({ jwt: newsafeJwt });
   }
+};
+
+const refreshApiToken: Action<{ token?: string }> = ({ actions, state, effects, reaction }, params) => {
+  const old = params.token || state.newsafe.token;
 };
 
 const newsafeApplication = {

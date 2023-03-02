@@ -41,8 +41,8 @@ export default {
   cache: {
     accountHistory: {} as Record<string, HyperionAccountHistory>,
     pools: {
-      byCode: {} as Record<string, NCPoolsInfo>,
-      byOwner: {} as Record<string, NCPoolsInfo>,
+      byCode: {} as Record<string, NCPoolsInfo & { promise?: Promise<NCPoolsInfo> }>,
+      byOwner: {} as Record<string, NCPoolsInfo & { promise?: Promise<NCPoolsInfo> }>,
     },
     votes: {} as Record<string, BcDaoProposalVoteResponse>,
   },

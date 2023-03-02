@@ -3,8 +3,10 @@ import { EventHandler, IOView } from "../types";
 import { Link } from "react-router-dom";
 import { UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { UserStake } from "./UserWidget";
+import { round } from "lodash";
 import { useActions } from "../overmind";
 import { useCurrentUserStakeEligibility } from "../hooks/useBlockchainInfo";
+import React from "react";
 
 const DefaultPrivateContentView: IOView<{
   stakeInfo: ReturnType<typeof useCurrentUserStakeEligibility>;
@@ -15,8 +17,9 @@ const DefaultPrivateContentView: IOView<{
     style={{
       position: "absolute",
       left: 0,
-
+      top: 1,
       width: "100%",
+      height: "calc(100% - 2px)",
       padding: 15,
       borderRadius: 30,
       textAlign: "center",
@@ -25,6 +28,19 @@ const DefaultPrivateContentView: IOView<{
     }}
   >
     <div
+      style={{
+        backdropFilter: "blur(10px)",
+        opacity: 1,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      {/* xyz */}
+    </div>
+    <div
       onClick={(e) => onClick && e.stopPropagation()} // if the onClick above needs to take us to details this will prevent it from getting the event so that
       // we can stake from the list of folders directly
       className="iosdk-premium-content-notification"
@@ -32,16 +48,21 @@ const DefaultPrivateContentView: IOView<{
         background: "rgba(0,0,0,.3)",
         padding: "20px",
         borderRadius: "8px",
-        width: "auto",
-        maxWidth: "min(100vw,600px)",
+        width: "90%",
+        maxWidth: "min(100vw,800px)",
         marginLeft: "auto",
         marginRight: "auto",
+        // height: "100%",
+        top: "10%",
+        left: "50%",
+        transform: "translate(-50%, 0)",
+        position: "absolute",
       }}
     >
-      Premium content: stake {stakeInfo.currentUserNeeds} ${stakeInfo.currency} to access.
+      Premium content: stake {round(stakeInfo.currentUserNeeds, 2)} ${stakeInfo.currency} to access.
       <br />
       <br />
-      <UserStake onDone={() => {}} user={stakeInfo.owner} />
+      <UserStake stakeInNewsafe={true} onDone={() => {}} user={stakeInfo.owner} />
     </div>
   </div>
 );
@@ -67,7 +88,7 @@ export const PremiumContent: IOView<
     ...style,
     ...(blur
       ? {
-          filter: "blur(7px)",
+          filter: "blur(2px)",
         }
       : {}),
   };
@@ -76,24 +97,30 @@ export const PremiumContent: IOView<
 
   const onClick = () => link && actions.routing.historyPush({ location: link });
 
-  return (
-    <>
-      <div
-        className="iosdk-premium-content"
-        {...(blur
-          ? {
-              onClickCapture: (e) => {
-                e.preventDefault();
-                onClick();
-              },
-            }
-          : {})}
-        {...rest}
-        style={style}
-      >
-        {children}
-      </div>
-      {blur ? <PrivateContentView stakeInfo={stakeInfo} onClick={onClick} /> : <></>}
-    </>
-  );
+  if (!blur) return <>{children}</>;
+  else
+    return (
+      <>
+        {/* <div
+          className="iosdk-premium-content"
+          {...(blur
+            ? {
+                onClickCapture: (e) => {
+                  e.preventDefault();
+                  onClick();
+                },
+              }
+            : {})}
+          {...rest}
+          style={style}
+        >
+    
+        </div> */}
+        {React.Children.map(children, (c: React.ReactNode) => {
+          return React.cloneElement(c as any, { onClick });
+        })}
+        {/* {children} */}
+        {blur ? <PrivateContentView stakeInfo={stakeInfo} onClick={onClick} /> : <></>}
+      </>
+    );
 };

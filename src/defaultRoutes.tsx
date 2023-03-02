@@ -1,4 +1,5 @@
 import { About } from "./Pages/About";
+import { ActivityStream } from "./Components/ActivityStream";
 import { Auth } from "./Pages/Auth/Auth";
 import { Authenticate } from "./Pages/Onboarding/Authenticate";
 import { CreateUser } from "./Pages/Onboarding/CreateUser";
@@ -199,4 +200,5 @@ export const DEFAULT_ROUTES = (state: State) => [
     path="/top/videos"
     component={() => <Spotlights title="Top Videos" posts={state.lists.top.videoPosts.items} />}
   />,
+  <OverridableRoute key="as" exact path="/activity/stream" component={ActivityStream} />,
 ];

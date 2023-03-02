@@ -41,7 +41,7 @@ export const Explore: NLView = () => {
       <TopFolders
         title={"Explore top folders"}
         maxItems={3}
-        maxPostsToShow={5}
+        maxPostsToShow={7}
         posts={"full"}
         filterToSameNumberPosts
         enableScrollForMoreMoods={false}
@@ -57,7 +57,7 @@ export const Explore: NLView = () => {
       <TopFolders
         title={"Explore more folders"}
         maxItems={3}
-        maxPostsToShow={5}
+        maxPostsToShow={7}
         skipItems={3}
         filterToSameNumberPosts
         posts={"full"}

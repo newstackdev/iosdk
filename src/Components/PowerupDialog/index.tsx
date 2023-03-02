@@ -22,7 +22,8 @@ const Powerup: React.FC<{ user: UserReadPublicResponse }> = ({ user }) => {
 
   const showModal = () => {
     setOpen(true);
-    if (!isEmpty(user.newcoinTicker || !isEmpty(poolInfo?.code))) powerup(1);
+    // if (!isEmpty(user.newcoinTicker || !isEmpty(poolInfo?.code)))
+    powerup(1);
   };
 
   const powerup8x = () => {

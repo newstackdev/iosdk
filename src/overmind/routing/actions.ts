@@ -75,6 +75,8 @@ export const onRouteChange: Action<{
   location: { pathname: string; search: string };
 }> = async ({ state, actions }, { location: { pathname, search } }) => {
   if (pathname === "/signout") {
+    if (!state.config.settings.routing.useDefaultSignout) return;
+
     await actions.firebase.logout();
     await actions.auth.logout();
     actions.routing.historyPush({ location: "/" });
@@ -95,8 +97,12 @@ export const onRouteChange: Action<{
       currPath.length <= 3 ||
       prevPath.length != currPath.length ||
       currPath.slice(0, currPath.length - 2).join("") != prevPath.slice(0, currPath.length - 2).join("")
-    )
-      state.routing.backHistory.push({ pathname, search });
+    ) {
+      const nextBh = { pathname, search };
+      console.log(`routing: ${JSON.stringify(lastBh)} => ${JSON.stringify(nextBh)}`);
+
+      state.routing.backHistory.push(nextBh);
+    }
   } else {
     state.routing.backHistory.push({ ...state.routing.history.location });
   }

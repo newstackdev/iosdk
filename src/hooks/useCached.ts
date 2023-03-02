@@ -88,7 +88,9 @@ export const useCachedPool = (pool?: { owner?: string; code?: string }, force?: 
     } else console.log("NOT Getting pool for ", id);
   }, [id]);
 
-  return cache[id] ? cache[id].rows[0] : { owner: "", code: "", total: { quantity: 0 } }; //cache[id] || { rows: [], more: false, next_key: "" };
+  const cached = cache[id];
+
+  return cached && !cached.promise ? cache[id].rows[0] : { owner: "", code: "", total: { quantity: 0 } }; //cache[id] || { rows: [], more: false, next_key: "" };
 };
 
 export const useCachedPoolByCode = (pool: { code?: string }, force?: boolean) => {

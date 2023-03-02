@@ -8,11 +8,14 @@ import { state } from "../auth/state";
 import websocket, { WSState } from "./effects";
 // import { newlifeWebsocketsServer } from "../../config";
 import { capFirst } from "../../utils/capFirst";
+import EventEmitter from "events";
 
 const toggleWebSocket: Action = pipe(debounce(500), async ({ state, effects, actions }: Context) => {
   if (!state.api.auth.authorized) return;
 
   const token = state.newsafe?.token || state.firebase?.token;
+
+  console.log(token);
 
   if (!token) return;
 
@@ -25,7 +28,6 @@ const toggleWebSocket: Action = pipe(debounce(500), async ({ state, effects, act
   };
 
   const items = [...(((res.data || {}) as any).Items || [])].reverse();
-  items.forEach((ev: any) => actions.websockets.processIncoming({ msg: JSON.stringify(ev) }));
 
   effects.websockets.newlife.socket!.addEventListener("message", (ev) => {
     if (ev.data === "pong") return;
@@ -34,6 +36,10 @@ const toggleWebSocket: Action = pipe(debounce(500), async ({ state, effects, act
     // state.websockets.messages.incoming.push(ev.data);
     // effects.ux.notification.open({ message: ev.data });
   });
+
+  await Promise.allSettled(
+    items.map((ev: any) => actions.websockets.processIncoming({ msg: JSON.stringify({ ...ev, backlog: true }) })),
+  );
 });
 
 type WsEvent =
@@ -71,7 +77,7 @@ type NewcoinEvent = {
 
 const processIncomingNewcoin: Action<{ event: WsEvent }> = //({ reaction, actions, state }, { msg })
   pipe(
-    filter((_, { event: { type } }) => type === "newcoin"),
+    filter((_, ev) => ev?.event?.type === "newcoin"),
     // filter((_, { event: { payload } }) => (get(payload, "inbound.0.value.label") != "session")),
     ({ state, effects }, { event }) => {
       const msg = event.payload.message;
@@ -94,9 +100,14 @@ const modelProcessors = {
   user: ({ state, actions }: Context, u: UserReadPrivateResponse) => {
     const curr = state.api.cache.users.byId[u.id ?? ""];
 
-    if (Object.keys(omit(u, ["id", "label"])).length) {
-      actions.api.user.cache({ user: { ...curr, ...u } });
+    if (u.id == state.api.auth.user.id) {
+      state.api.auth.user = { ...json(state.api.auth.user), ...u };
     }
+    // } else if (Object.keys(omit(u, ["id", "label"])).length) {
+
+    actions.api.user.cache({ user: u });
+
+    // }
     // state.api.cache.users.byId[u.id ?? ""] = { ...state.api.cache.users.byId[u.id ?? ""], ...u };
     // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
   },
@@ -113,11 +124,11 @@ const processIncomingModelUpdated: Action<{
   event: WsEvent & { type: "modelUpdated" };
 }> = //({ reaction, actions, state }, { msg })
   pipe(
-    filter((_, { event: { type } }) => type === "modelUpdated"),
+    filter((_, ev) => ev?.event?.type === "modelUpdated"),
     // filter((_, { event: { payload } }) => (get(payload, "inbound.0.value.label") != "session")),
     (ctx, { event }) => {
       const { state } = ctx;
-      const model = event.model === "user" ? "profile" : event.model;
+      const model = event.model; //"user" ? "profile" : event.model;
       const what = capFirst(model);
 
       modelProcessors[event.model] && modelProcessors[event.model](ctx, event.payload.value);
@@ -144,7 +155,7 @@ const processIncomingModelUpdated: Action<{
     },
   );
 
-const processIncoming: Action<{ msg: any }> = ({ reaction, actions, state }, { msg }) => {
+const processIncoming: Action<{ msg: any }> = ({ reaction, actions, effects }, { msg }) => {
   try {
     const ev = JSON.parse(msg);
 
@@ -153,6 +164,8 @@ const processIncoming: Action<{ msg: any }> = ({ reaction, actions, state }, { m
     //   actions.firebase.refreshApiToken();
     //   return;
     // }
+
+    effects.websockets.emitter.emit(ev.type, ev);
 
     // state.websockets.messages.incoming.unshift(ev)
     actions.websockets.processIncomingModelUpdated({ event: ev });
@@ -194,6 +207,7 @@ type WebsocketsState = {
   actions: typeof actions;
   effects: {
     newlife: WSState;
+    emitter: EventEmitter;
   };
 };
 
@@ -209,6 +223,7 @@ export default {
   },
   actions,
   effects: {
-    newlife: websocket((wsServer, token) => `${wsServer}?token=${token}`),
+    newlife: websocket((wsServer, token) => `${wsServer}?token=${encodeURIComponent(token)}`),
+    emitter: new EventEmitter(),
   },
 } as WebsocketsState;

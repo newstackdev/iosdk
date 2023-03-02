@@ -33,7 +33,40 @@ export const read: Action<{ id: string }> = async ({ state, actions, effects }, 
   await actions.api.mood.cache({ moods: r.data.moods });
 };
 
-export const create: Action<{ postForm: PostCreateRequest & { file: any } }, PostReadResponse | void> = pipe(
+export const create: Action<{ postForm: PostCreateRequest & { file: any } }, (PostReadResponse | string)[] | void> = pipe(
+  async ({ state, actions, effects }: Context, { postForm }) => {
+    const promises = postForm.file.map((f) =>
+      actions.api.post.createSingle({
+        postForm: {
+          ...postForm,
+          file: [f],
+        },
+      }),
+    );
+
+    const res: PromiseSettledResult<PostReadResponse>[] = await Promise.allSettled(promises);
+    const p = res[0];
+    console.log(res);
+
+    const successes = res.filter((r) => r.status != "rejected");
+
+    const whenDone = "files were uploaded successfully and are being processed.";
+    const message =
+      res.length == 1
+        ? successes.length
+          ? "File was uploaded successfully and is being processed."
+          : "File upload failed"
+        : successes.length == res.length
+        ? `All ${res.length} ${whenDone}`
+        : `${successes.length} out of ${res.length} ${whenDone}`;
+
+    effects.ux.notification.open({ message });
+
+    return res.map((r) => (r.status == "rejected" ? r.reason : r.value));
+  },
+);
+
+export const createSingle: Action<{ postForm: PostCreateRequest & { file: any } }, PostReadResponse | void> = pipe(
   async ({ state, actions, effects }, { postForm }) => {
     // await state.api.client.post.postCreate(post);
     const shouldUpload = postForm.contentType !== "text/plain";
@@ -76,7 +109,7 @@ export const create: Action<{ postForm: PostCreateRequest & { file: any } }, Pos
       });
 
       if (r.status == 200) {
-        effects.ux.notification.open({ message: "Success!" });
+        // effects.ux.notification.open({ message: "Success!" });
       } else
         effects.ux.notification.open({
           message: `The post was created but couldn't upload the file, error: ${await r.json()}`,
@@ -86,6 +119,8 @@ export const create: Action<{ postForm: PostCreateRequest & { file: any } }, Pos
     } catch (ex) {
       // setErrMsg(get(ex, "error.errorMessage.details") || get(ex, "message") || "unknown error");
       effects.ux.notification.open({ message: "Somethink wend wronk!" });
+
+      return ex;
     }
   },
 );

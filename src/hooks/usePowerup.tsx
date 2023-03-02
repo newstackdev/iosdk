@@ -1,7 +1,8 @@
 import { PowerupsCacheItem } from "../overmind/api/state";
 import { UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { blockExplorerUrl } from "../Components/Links";
 import { useActions, useAppState } from "../overmind";
-import { useCachedPool, useCachedPowerups } from "../hooks/useCached";
+import { useCachedPool, useCachedPowerups } from "./useCached";
 
 export const usePowerup = (user: UserReadPrivateResponse) => {
   const actions = useActions();
@@ -16,7 +17,21 @@ export const usePowerup = (user: UserReadPrivateResponse) => {
   const timeSince = rating?.rating?.created ? Date.now() - new Date(rating?.rating?.created).getDate() : -1;
 
   const powerup = async (amount: number) => {
-    !isPowering && user && (await actions.api.user.powerup({ user, amount: amount || 1 }));
+    // !isPowering &&
+    user &&
+      (await actions.api.user.powerup({
+        user,
+        amount: amount || 1,
+
+        messageWrapper: (msg: string, rating: any) =>
+          rating.TxID_mintFile ? (
+            <a href={blockExplorerUrl.newscan(rating.TxID_mintFile)} target="_blank" rel="noreferrer">
+              {msg}. Click to see a Newcoin receipt.
+            </a>
+          ) : (
+            <>{msg}</>
+          ),
+      }));
   };
 
   const isPoweringProcessing = state.indicators.specific["api.user.powerup"] && !(isPowering && timeSince > 60000);

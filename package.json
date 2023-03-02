@@ -1,6 +1,6 @@
 {
 	"name": "@newstackdev/iosdk",
-	"version": "0.9.368",
+	"version": "0.9.406",
 	"private": false,
 	"main": "dist/iosdk.js",
 	"types": "dist/iosdk.d.ts",
@@ -11,7 +11,7 @@
 		"@craco/craco": "^6.4.3",
 		"@jackwilsdon/craco-use-babelrc": "^1.0.0",
 		"@newfound8ion/newcoin-sdk": "^1.2.93",
-		"@newstackdev/iosdk-newgraph-client-js": "^1.2.91",
+		"@newstackdev/iosdk-newgraph-client-js": "^1.2.95",
 		"@stripe/react-stripe-js": "^1.6.0",
 		"@stripe/stripe-js": "^1.20.3",
 		"@testing-library/jest-dom": "^5.11.4",

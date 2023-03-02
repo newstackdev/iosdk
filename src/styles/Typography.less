@@ -4,12 +4,19 @@
   line-height: 156px;
   letter-spacing: -0.3px;
 
+  @media screen and (max-width: 992px) {
+    font-size: 90px;
+    text-align: center;
+    line-height: 65px;
+  }
+
   @media screen and (max-width: 428px) {
     font-size: 60px;
     text-align: center;
     line-height: 65px;
   }
 }
+
 .header-1b {
   font-family: @nlui-fontfam-ABC-favorit-bold;
   font-weight: 700;
@@ -18,6 +25,7 @@
   letter-spacing: -0.3px;
   color: @secondary;
 }
+
 .header-2 {
   font-family: @nlui-fontfam-ABC-favorit-bold;
   font-weight: bold;
@@ -30,6 +38,7 @@
     font-size: 20px;
   }
 }
+
 .header-4 {
   font-family: @nlui-fontfam-ABC-favorit-regular;
   font-size: 25px;
@@ -57,6 +66,7 @@
     font-size: 9px;
   }
 }
+
 .paragraph-1b,
 .header-5,
 .primary-button > span {
@@ -70,6 +80,7 @@
     font-size: 15px;
   }
 }
+
 .paragraph-2b {
   font-family: @nlui-fontfam-ABC-favorit-bold;
   font-weight: bold;
@@ -81,6 +92,7 @@
     font-size: 10px;
   }
 }
+
 .paragraph-3r,
 .ant-form-item-explain-error {
   font-family: @nlui-fontfam-ABC-favorit-regular;
@@ -88,6 +100,7 @@
   line-height: 15.6px;
   letter-spacing: 0px;
 }
+
 .paragraph-3b {
   font-family: @nlui-fontfam-ABC-favorit-bold;
   font-weight: bold;
@@ -95,6 +108,7 @@
   line-height: 15.6px;
   letter-spacing: 0px;
 }
+
 .paragraph-1r,
 .ant-list-split .ant-list-header,
 .ant-list-item-meta-description,
@@ -125,6 +139,7 @@
     line-height: 12.5px;
   }
 }
+
 .header-1r {
   font-family: @nlui-fontfam-ABC-favorit-regular;
   font-size: 50px;
@@ -147,6 +162,7 @@
     font-size: 35px;
   }
 }
+
 .header-3 {
   font-family: @nlui-fontfam-ABC-favorit-bold;
   font-weight: bold;
@@ -154,6 +170,7 @@
   line-height: 32.5px;
   letter-spacing: -0.3px;
 }
+
 .paragraph-1u {
   font-family: @nlui-fontfam-ABC-favorit-lining-bold;
   font-size: 20px;
@@ -170,6 +187,7 @@
     font-size: 13px;
   }
 }
+
 .paragraph-2u {
   font-family: @nlui-fontfam-ABC-favorit-lining-bold;
   font-size: 15px;
@@ -186,6 +204,7 @@
     font-size: 13px;
   }
 }
+
 .ant-row > div.ant-col {
   font-family: @nlui-fontfam-ABC-favorit-medium;
   font-size: 20px;
@@ -203,4 +222,5 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 90%;
 }

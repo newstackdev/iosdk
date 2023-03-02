@@ -18,7 +18,7 @@ export const AuthWidget: NLView = () => {
   const profileLink = () =>
     state.auth.authenticated ? (
       !state.api.auth.authorized ? (
-        <Button className="secondary-button" onClick={() => actions.auth.logout()}>
+        <Button className="secondary-button" onClick={() => actions.auth.logout({ noRouting: true })}>
           <span className="paragraph-2b">Sign out</span>
         </Button>
       ) : (

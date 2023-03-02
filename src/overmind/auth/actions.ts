@@ -3,12 +3,15 @@ import { AUTH_FLOW_STATUS, state } from "./state";
 import { Action } from "../../types";
 import { MoodReadResponse, UserReadPrivateResponse, UserReadPublicResponse } from "@newstackdev/iosdk-newgraph-client-js";
 
-export const logout: Action<{ noRouting?: boolean } | undefined> = async ({ state, actions, effects }, { noRouting } = {}) => {
+export const logout: Action<{ noRouting?: boolean; keepFbUser?: boolean } | undefined> = async (
+  { state, actions, effects },
+  { noRouting, keepFbUser } = {},
+) => {
   state.auth.status = AUTH_FLOW_STATUS.ANONYMOUS;
   state.auth.timers.authTimeoutCancel();
   state.auth.timers.timeToRefreshCancel();
 
-  await actions.api.auth.logout();
+  await actions.api.auth.logout({ keepFbUser });
 
   Object.values(state.auth.tokens).forEach((t) => t.logout());
 

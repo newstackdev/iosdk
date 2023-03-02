@@ -3,6 +3,7 @@ import { Action } from "../../types";
 import { BcCreateDaoProposal, BcCreateDaoRequest, BcCreateWhitelistDaoProposal } from "@newstackdev/iosdk-newgraph-client-js";
 import { Context } from "../overmind";
 import { DaoState } from "./state";
+import { NCPoolInfo } from "@newfound8ion/newcoin-sdk/dist/types";
 import { debounce, pipe } from "overmind";
 
 export const progressTest: Action = pipe(async () => {
@@ -58,11 +59,31 @@ export const getPoolInfo: Action<{ pool: { owner?: string; code?: string } }> = 
   // debounce(200),
   async ({ effects, state }: Context, { pool }) => {
     if (!(pool.code || pool.owner)) return;
+
+    const bo = state.newcoin.cache.pools.byOwner;
+    const bc = state.newcoin.cache.pools.byCode;
+
+    const prop = pool.code ? "code" : "owner";
+    const propVal = pool.code || pool.owner || "";
+    const propCache = pool.code ? bc : bo;
+
+    if (!propVal) return;
+
     try {
-      const r = await effects.newcoin.newcoin.getPoolInfo(pool);
+      let res: NCPoolInfo = {} as any;
+      const existingPromise = propCache[propVal] && propCache[propVal].promise;
+
+      const p = existingPromise || effects.newcoin.newcoin.getPoolInfo(pool);
+
+      if (!existingPromise) {
+        propCache[prop] = { promise: p } as any;
+      }
+
+      const r = await p;
       if (!r.rows?.length) return;
-      state.newcoin.cache.pools.byOwner[r.rows[0].owner] = r;
-      state.newcoin.cache.pools.byCode[r.rows[0].code] = r;
+
+      bo[r.rows[0].owner] = r;
+      bc[r.rows[0].code] = r;
     } catch (e) {
       debugger;
     }

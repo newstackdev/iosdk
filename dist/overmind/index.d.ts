@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { Context } from "./overmind";
 import { PartialConfiguration } from "../config";
 export declare const overmind: (cfg?: PartialConfiguration) => import("overmind").Overmind<{
@@ -32,6 +33,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 };
                 routing: {
                     routeAccessLevels: Record<string, (st: import("./auth/state").AUTH_FLOW_STATUS_TYPE, gst: import("overmind/lib/internalTypes").SubType<any, object>) => boolean>;
+                    useDefaultSignout: boolean;
                 };
                 stripe: {
                     publicKey: any;
@@ -231,6 +233,20 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 isNextPostsAvailable: boolean;
                 isNextUsersAvailable: boolean;
             };
+            public: {
+                posts: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+                moods: {
+                    _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
+                    items: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
+                    sortKey: string;
+                    page: number;
+                };
+            };
             selectedUser: {
                 moods: {
                     _items: Record<string, import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse>;
@@ -317,8 +333,12 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             cache: {
                 accountHistory: Record<string, import("./newcoin/types").HyperionAccountHistory>;
                 pools: {
-                    byCode: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
-                    byOwner: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo>;
+                    byCode: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo & {
+                        promise?: Promise<import("@newfound8ion/newcoin-sdk").NCPoolsInfo> | undefined;
+                    }>;
+                    byOwner: Record<string, import("@newfound8ion/newcoin-sdk").NCPoolsInfo & {
+                        promise?: Promise<import("@newfound8ion/newcoin-sdk").NCPoolsInfo> | undefined;
+                    }>;
                 };
                 votes: Record<string, import("@newstackdev/iosdk-newgraph-client-js").BcDaoProposalVoteResponse>;
             };
@@ -338,6 +358,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 edges: import("dexie").Dexie.Table<any, any>;
             };
         };
+        newlife: unknown;
     }, object>;
     effects: import("overmind/lib/internalTypes").SubType<{
         firebase: {
@@ -362,6 +383,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         routing: {};
         websockets: {
             newlife: import("./websockets/effects").WSState;
+            emitter: import("events");
         };
         payments: unknown;
         evm: typeof import("./evm/effects");
@@ -400,6 +422,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         newcoin: typeof import("./newcoin/effects");
         newsafe: {};
         cache: typeof import("./cache/effects");
+        newlife: unknown;
     }, object>;
     actions: import("overmind/lib/internalTypes").SubType<{
         firebase: typeof import("./firebase/actions");
@@ -498,6 +521,10 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
                 }, void>;
                 posts: import("../types").Action<import("../types").ContentType | undefined, void>;
             };
+            public: {
+                posts: import("../types").Action<import("../types").ContentType | undefined, void>;
+                moods: import("../types").Action<import("../types").ContentType | undefined, void>;
+            };
         };
         flows: import("overmind/lib/internalTypes").SubType<{
             user: import("overmind/lib/internalTypes").SubType<{
@@ -543,6 +570,9 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
             signOut: import("../types").Action<undefined, void>;
         };
         cache: typeof import("./cache/actions");
+        newlife: {
+            onInitializeOvermind: import("../types").Action<undefined, void>;
+        };
     }, object>;
 }>;
 export declare const useAppState: import("overmind-react").StateHook<Context>;
@@ -587,6 +617,7 @@ export declare const useActions: () => {
     auth: {
         readonly logout: (payload?: {
             noRouting?: boolean | undefined;
+            keepFbUser?: boolean | undefined;
         } | undefined) => void | Promise<void>;
         readonly resetAuthTimer: (payload?: undefined) => void | Promise<void>;
         readonly reduceTimer: (payload?: undefined) => void | Promise<void>;
@@ -755,6 +786,7 @@ export declare const useActions: () => {
             readonly powerup: (payload: {
                 user: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse;
                 amount: number;
+                messageWrapper?: ((string: any, RatingUpdateResponse: any) => any) | undefined;
             }) => void | Promise<void>;
             readonly powerUpMultiple: (payload: {
                 users: import("@newstackdev/iosdk-newgraph-client-js").UserReadPublicResponse[];
@@ -801,6 +833,11 @@ export declare const useActions: () => {
                 postForm: import("@newstackdev/iosdk-newgraph-client-js").PostCreateRequest & {
                     file: any;
                 };
+            }) => void | (string | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse)[] | Promise<void | (string | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse)[]>;
+            readonly createSingle: (payload: {
+                postForm: import("@newstackdev/iosdk-newgraph-client-js").PostCreateRequest & {
+                    file: any;
+                };
             }) => void | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse | Promise<void | import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse>;
             readonly attachToMoods: (payload: {
                 moods: import("@newstackdev/iosdk-newgraph-client-js").MoodReadResponse[];
@@ -843,11 +880,15 @@ export declare const useActions: () => {
             }) => void | Promise<void>;
             posts: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
         };
+        public: {
+            posts: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
+            moods: (payload?: import("../types").ContentType | undefined) => void | Promise<void>;
+        };
     };
     flows: {
         user: {
             create: {
-                readonly onInitializeOvermind: () => void | Promise<void>;
+                readonly onInitializeOnboardingWizard: () => void | Promise<void>;
                 readonly updateForm: (payload: Partial<import("@newstackdev/iosdk-newgraph-client-js").UserCreateRequest & {
                     couponCode?: string | undefined;
                     inviteHash?: string | undefined;
@@ -1000,6 +1041,9 @@ export declare const useActions: () => {
         } | undefined) => string | Promise<string>;
         signOut: (payload?: undefined) => void | Promise<void>;
     };
+    newlife: {
+        onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
+    };
 };
 export declare const useEffects: () => import("overmind/lib/internalTypes").SubType<{
     firebase: {
@@ -1024,6 +1068,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
     routing: {};
     websockets: {
         newlife: import("./websockets/effects").WSState;
+        emitter: import("events");
     };
     payments: unknown;
     evm: typeof import("./evm/effects");
@@ -1062,5 +1107,6 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
     newcoin: typeof import("./newcoin/effects");
     newsafe: {};
     cache: typeof import("./cache/effects");
+    newlife: unknown;
 }, object>;
 export declare const useReaction: () => import("overmind").IReaction<Context>;

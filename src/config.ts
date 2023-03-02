@@ -105,6 +105,7 @@ export const config = {
     },
     routing: {
       routeAccessLevels: ROUTE_ACCESS_LEVELS,
+      useDefaultSignout: true,
     },
     stripe: {
       publicKey: stripeKey,

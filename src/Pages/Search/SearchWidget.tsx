@@ -11,8 +11,10 @@ import { VerifiedIcon } from "../..//Components/Icons/VerifiedIcon";
 import { isEmpty, map, uniqBy } from "lodash";
 import { json } from "overmind";
 import { useActions, useAppState } from "../../overmind";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useVerified } from "../../hooks/useVerified";
+
+import OutsideClickHandler from "react-outside-click-handler";
 
 export const UserSearchResultsWidget: NLView<{ query: string }> = ({ query }) => {
   const state = useAppState();
@@ -98,6 +100,7 @@ export const SearchWidget: NLView<{
   noAutoHide?: boolean;
   disablePlaceholder?: boolean;
   suffixIcon?: React.ReactNode;
+  hideClearBtn?: boolean;
   // search: boolean;
   // setSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
@@ -115,6 +118,7 @@ export const SearchWidget: NLView<{
   noAutoHide,
   disablePlaceholder = false,
   suffixIcon,
+  hideClearBtn = false,
 }) => {
   const state = useAppState();
   const actions = useActions();
@@ -124,7 +128,13 @@ export const SearchWidget: NLView<{
   const maybeSetVisible = (visible: boolean) => (visible || !noAutoHide) && setVisible(visible);
 
   const [mouseVisible, setMouseVisible] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, _setOpen] = useState(true);
+
+  const setOpen = (v) => {
+    _setOpen(v);
+    console.log();
+  };
+
   const [loading, setLoading] = useState(false);
   const [filterState, setFilterState] = useState<"Member" | "Tag" | undefined>(undefined);
 
@@ -221,8 +231,30 @@ export const SearchWidget: NLView<{
     );
   };
 
+  const refWrapper = useRef<any>();
+  const refDropdown = useRef<any>();
+  useEffect(() => {
+    const outsideClick = (e) => {
+      let el = e.target;
+      const rs = [refWrapper.current, refDropdown.current];
+      while (el) {
+        if (rs.includes(el)) return;
+        el = el.parentNode;
+      }
+      setInitialState();
+    };
+    document.body.addEventListener("click", outsideClick);
+
+    return () => document.body.removeEventListener("click", outsideClick);
+  });
+
   return (
-    <Row align="bottom" style={{ width: "100%", height: "48px", cursor: "unset" }} className="search-widget-container">
+    <Row
+      ref={refWrapper}
+      align="bottom"
+      style={{ width: "100%", height: "48px", cursor: "unset" }}
+      className="search-widget-container"
+    >
       {!hidePrefixIcon && (
         <div style={{ width: 30, margin: "16px 5px 0 5px" }} onClick={() => maybeSetVisible(!visible)}>
           <Searchicon />
@@ -239,9 +271,11 @@ export const SearchWidget: NLView<{
             className="search-widget"
             mode={noNavigation ? "multiple" : undefined}
             allowClear
+            tabIndex={1}
+            notFoundContent={null}
             showSearch
             clearIcon={
-              !loading ? (
+              !loading && !hideClearBtn ? (
                 <div
                   style={{
                     position: "absolute",
@@ -267,12 +301,12 @@ export const SearchWidget: NLView<{
             suffixIcon={suffixIcon && isEmpty(query) ? suffixIcon : null}
             onFocus={() => setVisible(true)}
             size={searchSize}
-            onBlur={() => setInitialState()}
             onSelect={(value: string) => onSelect(value)}
             // onDeselect={onDeselect}
             dropdownRender={(menu) => (
               <>
                 <Row
+                  ref={refDropdown}
                   style={{
                     backgroundColor: "#A5A1A1",
                     padding: 10,

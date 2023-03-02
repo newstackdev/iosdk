@@ -75,7 +75,7 @@ export const Mood: NLView = () => {
       isWorking={!mood?.posts?.length}
       header={
         <Link to={"/explore"}>
-          <div className="logo-left-top" style={{ padding: "0px 20px" }}>
+          <div className="header logo-left-top">
             <state.config.components.icons.Logo />
           </div>
         </Link>
@@ -147,7 +147,7 @@ export const Mood: NLView = () => {
     >
       {/* <UserWidgetHeading user={mood.author || {}} /> */}
       {/* <MoodsGridRow mood={mood} noFolder={true} wrap={true} /> */}
-      <TopFoldersGrid mood={mood} noFolder={true} title="Moods" />
+      <TopFoldersGrid mood={mood} noFolder={true} title="Moods" wrap={false} />
       {/* <ItemGrid items={postList} render={p => <PostWidget post={p} mood={mood} />} /> */}
     </ContentLayout>
   );

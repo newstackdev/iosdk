@@ -8,6 +8,7 @@ import flows from "./flows";
 import indicators from "./indicators";
 import lists from "./lists";
 import newcoin from "./newcoin";
+import newlife from "./newlife";
 import newsafe from "./newsafe";
 import payments from "./payments";
 import routing from "./routing";
@@ -36,5 +37,6 @@ export const standardModules = {
 
   cache,
 
+  newlife,
   // ...(custom ? { custom } : {})
 };

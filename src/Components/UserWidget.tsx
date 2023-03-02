@@ -4,13 +4,13 @@ import { BlockExplorerLink } from "../Components/Links";
 import { Callback, IOView, NLView } from "../types";
 import { ContentImage } from "../Components/Image";
 import { CrossCircle } from "../Components/Icons/CrossCircle";
+import { DAO } from "../Components/Icons/DAO";
 import { DataRow } from "../Components/DataRow";
-import { DAO as DetailsIcon } from "../Components/Icons/DAO";
 import { Edit } from "../Components/Icons/Edit";
 import { HashDisplay } from "../Components/CryptoEntities";
 import { IBadge } from "../hooks/useBadges";
 import { ItemGrid } from "../Components/ItemGrid";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { NewcoinRecept } from "../Components/Recepts";
 import { Polygon } from "../Components/Icons/Polygon";
 import { PowerupsCacheItem } from "../overmind/api/state";
@@ -26,6 +26,7 @@ import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { showPopUp } from "../utils/popup";
 import { useActions, useAppState } from "../overmind";
+import { useCachedDaoProposals } from "../hooks/useCached";
 import { useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
@@ -609,7 +610,7 @@ export const UserWidgetHeading: NLView<{
   user,
   setActiveKey,
   newPowerup = true,
-  hideNewlifeSpecificInfo,
+  hideNewlifeSpecificInfo = false,
   disableBadges,
   isBadgesLoading,
   badgesError,
@@ -617,18 +618,22 @@ export const UserWidgetHeading: NLView<{
 }) => {
   const u = useCachedUser({ username: user?.username }, true);
   const state = useAppState();
+  const actions = useActions();
+  const params = useParams<{ username: string; id: string }>();
   const { verifiedUsers } = useVerified([user?.username || ""]);
   const isUserVerified = verifiedUsers && u.username && verifiedUsers.includes(u.username);
 
   const poolInfo = useCachedPool({ owner: user?.username });
-  const [newScore, setNewScore] = useState(0);
+  const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
+  const daoProposals = useCachedDaoProposals({ daoOwner });
+  const [watts, setWatts] = useState(0);
   if (!user) return <></>;
 
   useEffect(() => {
     if (!isBadgesLoading && !badgesError && user) {
-      setNewScore(
-        Math.floor(
-          Math.log(
+      setWatts(
+        Math.round(
+          Math.log10(
             (800 * (badges?.length || 0) + (u?.powered || 0)) *
               +poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""),
           ) || 0,
@@ -756,13 +761,13 @@ export const UserWidgetHeading: NLView<{
         >
           <Col xs={24} xl={24} className="username">
             <Row className="user-widget-heading__powering" justify="end">
-              <Row className="user-widget-heading__newscore u-margin-bottom-medium" gutter={[20, 20]}>
+              <Row className="user-widget-heading__Watts u-margin-bottom-medium" gutter={[20, 20]}>
                 <Col onClick={() => setActiveKey && setActiveKey("UserDetail")} className="user-widget-heading__powerup-number">
                   <span>
-                    <p className="header-1r user-widget-heading-newscore-num">
-                      <CountUp delay={5} end={isBadgesLoading || badgesError || !isFinite(newScore) ? 0 : newScore} />
+                    <p className="header-1r user-widget-heading-Watts-num">
+                      <CountUp delay={5} end={isBadgesLoading || badgesError || !isFinite(watts) ? 0 : watts} />
                     </p>
-                    <p className="paragraph-2r">Newscore</p>
+                    <p className="paragraph-2r">Watts</p>
                   </span>
                 </Col>
                 <Col
@@ -776,11 +781,24 @@ export const UserWidgetHeading: NLView<{
                   )}
                 </Col>
                 <Col>{newPowerup ? <PowerupDialog user={user} /> : <UserPowerup user={u} />}</Col>
-                <Col>
-                  <Button onClick={() => setActiveKey && setActiveKey("UserDetail")} className="user-widget-heading-details-btn">
-                    <DetailsIcon />
-                  </Button>
-                </Col>
+                {(daoProposals.dao_id || isCurrentUserProfile) && !hideNewlifeSpecificInfo && (
+                  <Col>
+                    <Button
+                      onClick={() => {
+                        if (daoProposals.dao_id) {
+                          actions.routing.historyPush({
+                            location: "/dao/" + user?.username,
+                          });
+                        } else if (isCurrentUserProfile) {
+                          actions.routing.historyPush({ location: "/dao/create" });
+                        }
+                      }}
+                      className="user-widget-heading-details-btn"
+                    >
+                      <DAO />
+                    </Button>
+                  </Col>
+                )}
               </Row>
             </Row>
           </Col>

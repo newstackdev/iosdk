@@ -81,10 +81,10 @@ export const cache: Action<{
     cache.byUsername[username] = { ...curr, ...user, moods };
   }
 
-  if (shouldUpdate) {
-    state.api.auth.user?.id === user.id &&
-      (state.api.auth.user = Object.assign({}, json(state.api.auth.user) || {}, cache.byId[id]));
-  } //state.api.auth.user, user));
+  // if (shouldUpdate) {
+  //   state.api.auth.user?.id === user.id &&
+  //     (state.api.auth.user = Object.assign({}, json(state.api.auth.user) || {}, cache.byId[id]));
+  // } //state.api.auth.user, user));
 };
 const inProgress: Record<string, any> = {};
 
@@ -110,6 +110,9 @@ export const create: Action<{
   noRouting?: boolean;
   user: UserCreateRequest;
   preregisterCreate?: boolean;
+  // legacyToken?: string;
+  // couponCode?: string; // coupons provide special conditions
+  // inviteHash?: string; // a personal or non-personal invite code (not always a hash)
 }> = pipe(throttle(3000), async ({ state, effects, actions }: Context, { noRouting, user, preregisterCreate }) => {
   try {
     const currUser = state.api.auth.user || {};
@@ -141,16 +144,19 @@ export const create: Action<{
     !preregisterCreate &&
       effects.ux.notification.open({
         message: "Success!",
-        description: "User was created successfully. Welcome to Newlife.IO!",
+        description: `User was created successfully. Welcome to ${state.config.settings.app.name}!`,
       });
     await actions.api.auth.logout({ keepFbUser: true });
     await actions.firebase.refreshApiToken();
     await actions.api.auth.authorize();
 
-    state.flows.user.create.justCreated = true;
-    state.flows.user.create.isLegacyUpdateOngoing = false;
-    state.flows.user.create.progressedSteps = [];
-    actions.routing.historyPush({ location: "/explore" });
+    if (state.flows.user.create) {
+      // state.flows.user.create = {};
+      state.flows.user.create.justCreated = true;
+      state.flows.user.create.isLegacyUpdateOngoing = false;
+      state.flows.user.create.progressedSteps = [];
+      actions.routing.historyPush({ location: "/explore" });
+    }
   } catch (ex) {
     effects.ux.message.error(JSON.stringify(get(ex, "error.errorMessage.details") || get(ex, "message")));
   }
@@ -319,24 +325,30 @@ export const getUserInvitesList: Action<any, void> = async ({ state, effects, ac
   }
 };
 
-export const powerup: Action<{ user: UserReadPublicResponse; amount: number }> = pipe(
-  debounce(300),
-  async ({ state, actions, effects }: Context, { user, amount }) => {
-    try {
-      const res = await state.api.client.user.userRateCreate({
-        targetId: user.id,
-        value: amount || 1,
-      });
-      effects.ux.message.info("Powerup successful");
-      await actions.api.user.getPowerups({
-        user: state.api.auth.user || {},
-      });
-      await actions.api.user.getPowerups({ user });
-    } catch (ex) {
-      effects.ux.message.error(((ex as any).error as ErrorResponse).errorMessage);
-    }
-  },
-);
+export const powerup: Action<{
+  user: UserReadPublicResponse;
+  amount: number;
+  messageWrapper?: (string, RatingUpdateResponse) => any;
+}> = pipe(debounce(300), async ({ state, actions, effects }: Context, { user, amount, messageWrapper }) => {
+  try {
+    const res = await state.api.client.user.userRateCreate({
+      targetId: user.id,
+      value: amount || 1,
+    });
+    const msgTxt = "Powerup successful";
+    const msg = messageWrapper ? messageWrapper(msgTxt, res.data) : msgTxt;
+
+    effects.ux.message.info(msg);
+
+    // effects.ux.message.info("Powerup successful");
+    await actions.api.user.getPowerups({
+      user: state.api.auth.user || {},
+    });
+    await actions.api.user.getPowerups({ user });
+  } catch (ex) {
+    effects.ux.message.error(((ex as any).error as ErrorResponse).errorMessage);
+  }
+});
 
 export const powerUpMultiple: Action<{
   users: UserReadPublicResponse[];

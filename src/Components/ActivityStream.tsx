@@ -15,7 +15,7 @@ export const ActivityStream: NLView<{ limit?: number }> = (props) => {
       header="Activity Stream"
       style={{
         minWidth: 300,
-        background: "black",
+        // background: "black",
         padding: 9,
         position: "relative",
       }}

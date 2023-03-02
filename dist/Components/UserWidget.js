@@ -4,12 +4,12 @@ import { Avatar, Button, Col, Input, List, Modal, Row, Slider, Tooltip } from "a
 import { BlockExplorerLink } from "../Components/Links";
 import { ContentImage } from "../Components/Image";
 import { CrossCircle } from "../Components/Icons/CrossCircle";
+import { DAO } from "../Components/Icons/DAO";
 import { DataRow } from "../Components/DataRow";
-import { DAO as DetailsIcon } from "../Components/Icons/DAO";
 import { Edit } from "../Components/Icons/Edit";
 import { HashDisplay } from "../Components/CryptoEntities";
 import { ItemGrid } from "../Components/ItemGrid";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { NewcoinRecept } from "../Components/Recepts";
 import { Polygon } from "../Components/Icons/Polygon";
 import { ProgressButton } from "../Components/ProgressButton";
@@ -22,6 +22,7 @@ import { UserSocials } from "../Pages/User/interfaces/IUser";
 import { VerifiedIcon } from "../Components/Icons/VerifiedIcon";
 import { showPopUp } from "../utils/popup";
 import { useActions, useAppState } from "../overmind";
+import { useCachedDaoProposals } from "../hooks/useCached";
 import { useCachedPool, useCachedPowerups, useCachedUser } from "../hooks/useCached";
 import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
@@ -204,18 +205,22 @@ export const UserWidgetTopFixed = ({ user }) => {
                     minHeight: "1.5em",
                 }, children: user?.username }) }) }));
 };
-export const UserWidgetHeading = ({ user, setActiveKey, newPowerup = true, hideNewlifeSpecificInfo, disableBadges, isBadgesLoading, badgesError, badges, }) => {
+export const UserWidgetHeading = ({ user, setActiveKey, newPowerup = true, hideNewlifeSpecificInfo = false, disableBadges, isBadgesLoading, badgesError, badges, }) => {
     const u = useCachedUser({ username: user?.username }, true);
     const state = useAppState();
+    const actions = useActions();
+    const params = useParams();
     const { verifiedUsers } = useVerified([user?.username || ""]);
     const isUserVerified = verifiedUsers && u.username && verifiedUsers.includes(u.username);
     const poolInfo = useCachedPool({ owner: user?.username });
-    const [newScore, setNewScore] = useState(0);
+    const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
+    const daoProposals = useCachedDaoProposals({ daoOwner });
+    const [watts, setWatts] = useState(0);
     if (!user)
         return _jsx(_Fragment, {});
     useEffect(() => {
         if (!isBadgesLoading && !badgesError && user) {
-            setNewScore(Math.floor(Math.log((800 * (badges?.length || 0) + (u?.powered || 0)) *
+            setWatts(Math.round(Math.log10((800 * (badges?.length || 0) + (u?.powered || 0)) *
                 +poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, "")) || 0));
         }
     }, [isBadgesLoading, user, badges, u, poolInfo]);
@@ -245,7 +250,16 @@ export const UserWidgetHeading = ({ user, setActiveKey, newPowerup = true, hideN
             textAlign: "center",
             minHeight: 250,
             paddingTop: "10px",
-        }, className: "app-main-full-width", children: [_jsx(Col, { xs: 24, xl: 14, className: "nl-avatar", children: _jsx(Row, { className: "user-widget__first-row", children: _jsx(Col, { xs: 24, xl: 22, className: "text-left", children: _jsxs(Row, { style: { flexWrap: "inherit" }, gutter: 64, children: [_jsx(Col, { span: 6, children: _jsx("span", { onClick: () => setActiveKey && setActiveKey("Folders"), style: { cursor: "pointer" }, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...u }), style: { width: "160px", height: "160px" } }) }) }), _jsx(Col, { children: _jsxs(Row, { style: { flexDirection: "column" }, children: [_jsx(Col, { children: _jsx(Row, { className: "u-margin-bottom-small", children: _jsxs(Row, { gutter: 12, style: { alignItems: "center" }, children: [_jsx(Col, { children: _jsx("span", { onClick: () => setActiveKey && setActiveKey("Folders"), style: { cursor: "pointer" }, children: _jsx("p", { className: "header-1r", children: u.username }) }) }), _jsx(Col, { children: isUserVerified && _jsx(VerifiedIcon, {}) }), _jsx(Col, { children: isCurrentUserProfile && (_jsx(Link, { to: "/my/profile/update", className: "nl-userProfile-editBtn", style: { height: 30 }, children: _jsx(Edit, {}) })) }), _jsx(Col, { children: _jsx("p", { className: "header-3b", children: user.displayName }) })] }) }) }), _jsxs(Row, { className: "user__social-icons-wrapper", style: { flexWrap: "inherit", alignItems: "initial" }, gutter: [0, 18], children: [getSortedSocialMediaIcons(), _jsx("span", { style: { cursor: "pointer" }, children: _jsx("a", { href: `https://explorer-dev.newcoin.org/account/${user.username}`, target: "_blank", rel: "noreferrer", children: _jsx(Polygon, {}) }) })] }), _jsxs(Row, { className: "paragraph-2r text-left u-margin-top-small", gutter: 12, align: "bottom", children: [_jsx(Col, { children: _jsx("p", { className: "paragraph-2r", children: _jsx(ShowMoreText, { lines: 3, more: _jsx("span", { className: "paragraph-2u", children: "Show more" }), less: _jsx("span", { className: "paragraph-2u", children: "Show less" }), className: "content-css", anchorClass: "my-anchor-css-class", expanded: false, width: 280, truncatedEndingComponent: " ", children: user.description }) }) }), _jsx(Col, { children: _jsx("p", { className: "paragraph-3r ", style: { color: "#959595" }, children: joinedDate }) })] })] }) })] }) }) }) }), _jsx(Col, { xs: 24, xl: 10, className: "user-widget-heading", children: _jsx(Row, { className: "user-widget-heading  user-widget__second-row", style: { width: "100%", textAlign: "left" }, justify: "start", children: _jsx(Col, { xs: 24, xl: 24, className: "username", children: _jsx(Row, { className: "user-widget-heading__powering", justify: "end", children: _jsxs(Row, { className: "user-widget-heading__newscore u-margin-bottom-medium", gutter: [20, 20], children: [_jsx(Col, { onClick: () => setActiveKey && setActiveKey("UserDetail"), className: "user-widget-heading__powerup-number", children: _jsxs("span", { children: [_jsx("p", { className: "header-1r user-widget-heading-newscore-num", children: _jsx(CountUp, { delay: 5, end: isBadgesLoading || badgesError || !isFinite(newScore) ? 0 : newScore }) }), _jsx("p", { className: "paragraph-2r", children: "Newscore" })] }) }), _jsx(Col, { onClick: () => setActiveKey && setActiveKey("UserDetail"), className: "user-widget-heading__powerup-number u-margin-right-small", children: !disableBadges && (_jsx(Row, { gutter: 12, justify: "center", children: _jsx(BadgeWidget, { user: user, badges: badges, className: "user-widget-heading-badge-section", badgeLimit: 3 }) })) }), _jsx(Col, { children: newPowerup ? _jsx(PowerupDialog, { user: user }) : _jsx(UserPowerup, { user: u }) }), _jsx(Col, { children: _jsx(Button, { onClick: () => setActiveKey && setActiveKey("UserDetail"), className: "user-widget-heading-details-btn", children: _jsx(DetailsIcon, {}) }) })] }) }) }) }) })] }));
+        }, className: "app-main-full-width", children: [_jsx(Col, { xs: 24, xl: 14, className: "nl-avatar", children: _jsx(Row, { className: "user-widget__first-row", children: _jsx(Col, { xs: 24, xl: 22, className: "text-left", children: _jsxs(Row, { style: { flexWrap: "inherit" }, gutter: 64, children: [_jsx(Col, { span: 6, children: _jsx("span", { onClick: () => setActiveKey && setActiveKey("Folders"), style: { cursor: "pointer" }, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...u }), style: { width: "160px", height: "160px" } }) }) }), _jsx(Col, { children: _jsxs(Row, { style: { flexDirection: "column" }, children: [_jsx(Col, { children: _jsx(Row, { className: "u-margin-bottom-small", children: _jsxs(Row, { gutter: 12, style: { alignItems: "center" }, children: [_jsx(Col, { children: _jsx("span", { onClick: () => setActiveKey && setActiveKey("Folders"), style: { cursor: "pointer" }, children: _jsx("p", { className: "header-1r", children: u.username }) }) }), _jsx(Col, { children: isUserVerified && _jsx(VerifiedIcon, {}) }), _jsx(Col, { children: isCurrentUserProfile && (_jsx(Link, { to: "/my/profile/update", className: "nl-userProfile-editBtn", style: { height: 30 }, children: _jsx(Edit, {}) })) }), _jsx(Col, { children: _jsx("p", { className: "header-3b", children: user.displayName }) })] }) }) }), _jsxs(Row, { className: "user__social-icons-wrapper", style: { flexWrap: "inherit", alignItems: "initial" }, gutter: [0, 18], children: [getSortedSocialMediaIcons(), _jsx("span", { style: { cursor: "pointer" }, children: _jsx("a", { href: `https://explorer-dev.newcoin.org/account/${user.username}`, target: "_blank", rel: "noreferrer", children: _jsx(Polygon, {}) }) })] }), _jsxs(Row, { className: "paragraph-2r text-left u-margin-top-small", gutter: 12, align: "bottom", children: [_jsx(Col, { children: _jsx("p", { className: "paragraph-2r", children: _jsx(ShowMoreText, { lines: 3, more: _jsx("span", { className: "paragraph-2u", children: "Show more" }), less: _jsx("span", { className: "paragraph-2u", children: "Show less" }), className: "content-css", anchorClass: "my-anchor-css-class", expanded: false, width: 280, truncatedEndingComponent: " ", children: user.description }) }) }), _jsx(Col, { children: _jsx("p", { className: "paragraph-3r ", style: { color: "#959595" }, children: joinedDate }) })] })] }) })] }) }) }) }), _jsx(Col, { xs: 24, xl: 10, className: "user-widget-heading", children: _jsx(Row, { className: "user-widget-heading  user-widget__second-row", style: { width: "100%", textAlign: "left" }, justify: "start", children: _jsx(Col, { xs: 24, xl: 24, className: "username", children: _jsx(Row, { className: "user-widget-heading__powering", justify: "end", children: _jsxs(Row, { className: "user-widget-heading__Watts u-margin-bottom-medium", gutter: [20, 20], children: [_jsx(Col, { onClick: () => setActiveKey && setActiveKey("UserDetail"), className: "user-widget-heading__powerup-number", children: _jsxs("span", { children: [_jsx("p", { className: "header-1r user-widget-heading-Watts-num", children: _jsx(CountUp, { delay: 5, end: isBadgesLoading || badgesError || !isFinite(watts) ? 0 : watts }) }), _jsx("p", { className: "paragraph-2r", children: "Watts" })] }) }), _jsx(Col, { onClick: () => setActiveKey && setActiveKey("UserDetail"), className: "user-widget-heading__powerup-number u-margin-right-small", children: !disableBadges && (_jsx(Row, { gutter: 12, justify: "center", children: _jsx(BadgeWidget, { user: user, badges: badges, className: "user-widget-heading-badge-section", badgeLimit: 3 }) })) }), _jsx(Col, { children: newPowerup ? _jsx(PowerupDialog, { user: user }) : _jsx(UserPowerup, { user: u }) }), (daoProposals.dao_id || isCurrentUserProfile) && !hideNewlifeSpecificInfo && (_jsx(Col, { children: _jsx(Button, { onClick: () => {
+                                                if (daoProposals.dao_id) {
+                                                    actions.routing.historyPush({
+                                                        location: "/dao/" + user?.username,
+                                                    });
+                                                }
+                                                else if (isCurrentUserProfile) {
+                                                    actions.routing.historyPush({ location: "/dao/create" });
+                                                }
+                                            }, className: "user-widget-heading-details-btn", children: _jsx(DAO, {}) }) }))] }) }) }) }) })] }));
 };
 export const UserSocialInfo = ({ user }) => (_jsx(List
 // header="Activity Stream"

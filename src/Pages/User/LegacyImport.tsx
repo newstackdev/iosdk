@@ -252,26 +252,27 @@ export const LegacyLogin: NLView = () => {
               >
                 <Input placeholder="e-mail" className="nl-onboarding-input nl-legacyImport-email-input" />
               </Form.Item>
-            </Form>
-            <div className="nl-onboarding-footer">
-              <div className="text-center">
-                <ProgressButton
-                  actionName="auth.firebaseRequestEmailLink"
-                  type="primary"
-                  htmlType="submit"
-                  progressText="Connecting..."
-                >
-                  Connect my account
-                </ProgressButton>
+              <div className="nl-onboarding-footer">
+                <div className="text-center">
+                  <ProgressButton
+                    actionName="auth.firebaseRequestEmailLink"
+                    type="primary"
+                    htmlType="submit"
+                    progressText="Connecting..."
+                  >
+                    Connect my account
+                  </ProgressButton>
+                </div>
               </div>
               <div>
                 <p className="paragraph-2b text-center">
+                  <br />
                   <Link to="/">I don't have an account yet!</Link>
                 </p>
                 <div className="section-divider" />
                 <SupportBox />
               </div>
-            </div>
+            </Form>
           </ContentLayout>
         </>
       ) : (

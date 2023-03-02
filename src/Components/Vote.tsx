@@ -117,7 +117,7 @@ export const Vote: NLView<{
       header={
         <div className="post-header-wrapper">
           <div className="logo-left-top">
-            <LargeArrowBack />
+            <LargeArrowBack href="/explore" />
           </div>
           {state.flows.rating.value === 100 && (
             <AppearingComponent seconds={5} onShow={onLongDoneVoting}>

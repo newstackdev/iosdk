@@ -15,7 +15,7 @@ export default (upd: (wsServer: string, token: string) => string) => {
   const processPong = (ev: any) => {
     if (ev.data === "pong") {
       pingCounter--;
-      console.log("pong, pingCounter == ", pingCounter);
+      console.log("pong, pingCounter == ", pingCounter, new Date().toISOString());
     }
   };
 
@@ -52,6 +52,9 @@ export default (upd: (wsServer: string, token: string) => string) => {
       //     startPing();
       // });
       state.socket.addEventListener("close", stopPing);
+      state.socket.addEventListener("error", (error) => {
+        console.log(error);
+      });
       //  (ev) => {
       //     // effects.ux.message.info('websockets close');
       //     stopPing();

@@ -29,6 +29,8 @@ export const authorize: Action<{ token?: string } | undefined> = async ({ state,
     return;
   }
 
+  state.auth.status = state.api.auth.user?.username ? AUTH_FLOW_STATUS.AUTHORIZED : AUTH_FLOW_STATUS.AUTHENTICATED;
+
   if (!user.username) return;
 
   actions.newcoin.getAccountBalance({ user });
@@ -39,8 +41,6 @@ export const authorize: Action<{ token?: string } | undefined> = async ({ state,
     actions.lists.top.users({});
     actions.lists.top.posts();
   }
-
-  state.auth.status = state.api.auth.user?.username ? AUTH_FLOW_STATUS.AUTHORIZED : AUTH_FLOW_STATUS.AUTHENTICATED;
 
   setTimeout(() => {
     actions.routing.routeAfterAuth();

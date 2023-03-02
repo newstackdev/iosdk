@@ -41,7 +41,7 @@ const reduceState: (st: State) => WizardInput = ({
   };
 };
 
-export const onInitializeOvermind: Action<any> = async ({ actions, effects, state, reaction }) => {
+export const onInitializeOnboardingWizard: Action<any> = async ({ actions, effects, state, reaction }) => {
   const legacy: {
     form: UserCreateRequest;
     legacyToken: string;
@@ -55,7 +55,7 @@ export const onInitializeOvermind: Action<any> = async ({ actions, effects, stat
     effects.api.updateToken(legacy.legacyToken);
     state.firebase.token = legacy.legacyToken;
     await actions.api.auth.authorize();
-    await actions.flows.user.create.startLegacyImport();
+    // await actions.flows.user.create.startLegacyImport();
   }
   if (!state.auth.authenticated && !state.api.auth.authorized && !isEmpty(state.firebase?.token)) {
     actions.routing.historyPush({ location: "/" });
@@ -146,7 +146,7 @@ export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: Wiza
 
     state.flows.user.create.wizard.send("UPDATE", i);
 
-    const subscription = (state.api.auth.user.subscriptionStatus || "").split(/_/);
+    const subscription = (state.api.auth.user?.subscriptionStatus || "").split(/_/);
     if (
       subscription[0] === "io-domain-sale" &&
       state.flows.user.create.form.username != subscription[1] &&
@@ -160,6 +160,8 @@ export const _wizardReact: Action<WizardInput> = // ({ state, actions }, i: Wiza
   });
 
 export const wizardStepNext: Action = ({ state, actions }) => {
+  if (state.config.settings.app.name != "newlife") return;
+
   const { nextLink, hasNext, current, hasPrev } = state.flows.user.create.wizard;
   if (!isEmpty(state.flows.user.create.wizard.nextLink)) {
     actions.routing.historyPush({ location: state.flows.user.create.wizard.nextLink as string });

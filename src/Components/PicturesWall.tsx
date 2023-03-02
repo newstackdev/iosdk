@@ -2,6 +2,7 @@ import { CrossCircle } from "./Icons/CrossCircle";
 import { Edit } from "./Icons/Edit";
 import { EventHandler, NLView } from "../types";
 import { FileOutlined } from "@ant-design/icons";
+import { ImageComponent } from "./MediaComponents/ImageMediaComponent";
 import { Input, Modal, Row, Upload, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { RcFile, UploadFile, UploadFileStatus } from "antd/lib/upload/interface";
@@ -68,6 +69,7 @@ export class PicturesWall extends React.Component<
   render() {
     const { previewVisible, previewImage, fileList, previewTitle } = this.state;
     const { contentType, placeholderImgSrc, uploadClassname } = this.props;
+
     return (
       <>
         {contentType === "text/plain" ? (
@@ -105,7 +107,14 @@ export class PicturesWall extends React.Component<
               //   onSuccess && onSuccess(() => ({ body: "ok", xhr: {} as XMLHttpRequest }));
 
               // }}
-              className={isEmpty(fileList) ? uploadClassname : null}
+              multiple={this.props.name != "avatar"}
+              maxCount={this.props.name === "avatar" ? 1 : undefined}
+              className={`${isEmpty(fileList) ? uploadClassname : null} upload-preview ${
+                fileList.length > 1 ? "upload-preview-multiple" : "upload-preview"
+              } ${fileList.length ? "ant-upload-with-image" : ""}`}
+              itemRender={(...args) => {
+                return <>{args[0]}</>;
+              }}
               openFileDialogOnClick
             >
               {fileList.length > 0 ? null : this.props.name === "avatar" ? (
@@ -118,10 +127,26 @@ export class PicturesWall extends React.Component<
                   </Row>
                 </>
               ) : (
-                <div className="paragraph-2b" style={{ fontSize: 17 }}>
-                  Drag and drop content here!{<br />} JPEG, PNG, GIF
-                </div>
+                <></>
               )}
+              <div className="paragraph-2b" style={{ fontSize: 17 }}>
+                Drag and drop content here!{<br />} JPEG, PNG, GIF
+                {fileList.length ? (
+                  <>
+                    <br />
+                    <br />
+                    Experimental multifile upload is enabled.
+                    <br />
+                    Multiple uploads in beta, try it out!
+                    <br />
+                    <br />
+                    <PlusOutlined />
+                    {/* Use at your own risk. */}
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
             </Upload>
             <Modal
               closeIcon={<CrossCircle />}

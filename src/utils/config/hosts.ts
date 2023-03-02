@@ -14,7 +14,7 @@ export const replaceHost = (host?: string) =>
   `https://${host || window.location.host}${window.location.pathname}${window.location.search ? "?" + window.location.search : ""
   }`;
 
-if (window.location.protocol != "https:" && !isLocalhost) (window.location as any) = replaceHost();
+// if (window.location.protocol != "https:" && !isLocalhost) (window.location as any) = replaceHost();
 // `https://${window.location.host}${window.location.pathname}${window.location.search ? "?" + window.location.search : ""}`;
 
 export const ensureCanonicalHost = (canonicalHosts: Record<string, string | undefined> = {}, stage) => {

@@ -2,6 +2,8 @@ import { Action, ContentType } from "../../types";
 import { Context } from "../overmind";
 import {
   CreativeSearchResponse,
+  ErrorResponse,
+  HttpResponse,
   MoodReadResponse,
   PostPagedListReadPublicResponse,
   PostReadResponse,
@@ -143,6 +145,30 @@ export const listTopPosts: Action<ContentType | undefined, void> = pipe(
   },
 );
 
+export const publicListPost: Action<ContentType | undefined, void> = pipe(
+  debounce(300),
+  async ({ state }: Context, contentType) => {
+    //@ts-ignore
+    const response: HttpResponse<PostPagedListReadPublicResponse, ErrorResponse> = await state.api.client.post.listPublicList();
+
+    response.data?.value?.forEach((v) => {
+      state.lists.public.posts.items.push(v);
+    });
+  },
+);
+
+export const publicListMoods: Action<ContentType | undefined, void> = pipe(
+  debounce(300),
+  async ({ state }: Context, contentType) => {
+    //@ts-ignore
+    const response: HttpResponse<MoodPagedListReadPublicResponse, ErrorResponse> = await state.api.client.mood.listPublicList();
+
+    response.data?.value.forEach((v) => {
+      state.lists.public.moods.items.push(v);
+    });
+  },
+);
+
 export const searchUsers: Action<{ query: string }> = pipe(
   debounce(300),
   async ({ state, actions, effects }: Context, { query }) => {
@@ -265,6 +291,10 @@ const actions = {
     users: listTopUsers,
     posts: listTopPosts,
   },
+  public: {
+    posts: publicListPost,
+    moods: publicListMoods,
+  },
 };
 
 type ListState<T> = {
@@ -300,6 +330,10 @@ export default {
       isNextMoodsAvailable: true,
       isNextPostsAvailable: true,
       isNextUsersAvailable: true,
+    },
+    public: {
+      posts: newListState<PostReadResponse>(),
+      moods: newListState<MoodReadResponse>(),
     },
     selectedUser: {
       moods: newListState<MoodReadResponse>(),

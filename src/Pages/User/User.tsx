@@ -88,7 +88,7 @@ export const User: NLView = () => {
             badgesError={badgesError}
             isBadgesLoading={isBadgesLoading}
           />
-          <UserDetail user={user} badges={badges} hideNewlifeSpecificInfo={false} />
+          <UserDetail user={user} badges={badges} />
         </>
       );
     default:

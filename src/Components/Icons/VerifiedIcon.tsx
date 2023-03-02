@@ -9,7 +9,7 @@ export const VerifiedIcon: NLView<{ style?: React.CSSProperties; fillColor?: str
     y="0px"
     viewBox="0 0 619 461"
     xmlSpace="preserve"
-    style={style ?? { width: "40px", height: "30px" }}
+    style={{ width: "40px", height: "30px", ...style }}
   >
     <path
       fill={fillColor ?? "#fff"}

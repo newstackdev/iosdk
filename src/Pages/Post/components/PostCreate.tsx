@@ -132,7 +132,12 @@ export const PostCreate: NLView = (props) => {
 
       !mintNFTswitch && setMoodMode(true);
 
-      setPost(p);
+      const whereToGo: PostReadResponse = p.find((p) => typeof p != "string") as any;
+      if (!whereToGo) {
+        return actions.ux.showNotification({ message: "All upload items failed" });
+      }
+
+      setPost(whereToGo);
     } catch (ex) {
       setErrMsg(get(ex, "error.errorMessage.details") || get(ex, "message") || "unknown error");
     }
