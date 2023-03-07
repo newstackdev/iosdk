@@ -45,7 +45,7 @@ const DefaultPrivateContentView: IOView<{
       // we can stake from the list of folders directly
       className="iosdk-premium-content-notification"
       style={{
-        background: "rgba(0,0,0,.3)",
+        background: "rgba(0,0,0,.05)",
         padding: "20px",
         borderRadius: "8px",
         width: "90%",
@@ -60,7 +60,6 @@ const DefaultPrivateContentView: IOView<{
       }}
     >
       Premium content: stake {round(stakeInfo.currentUserNeeds, 2)} ${stakeInfo.currency} to access.
-      <br />
       <br />
       <UserStake stakeInNewsafe={true} onDone={() => {}} user={stakeInfo.owner} />
     </div>

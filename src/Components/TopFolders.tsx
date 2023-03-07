@@ -1,7 +1,7 @@
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import { MaybeLink, PostWidget } from "./PostWidget";
-import { MoodReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { NLView } from "../types";
 import { PremiumContent } from "./PremiumContent";
 import { Spin } from "./Spin";
@@ -22,7 +22,15 @@ export const TopFoldersGrid: NLView<{
   noFullWidth?: boolean;
   blur?: boolean;
 }> = ({ mood, maxPosts, title, noFolder, noFullWidth, wrap }) => {
-  const postsList = mood.posts?.slice(0, maxPosts);
+  const relevant = mood.posts?.slice(0, maxPosts) || [];
+
+  const postsList = [
+    ...relevant,
+    ..."."
+      .repeat(Math.max(MAX_POSTS_TO_SHOW - relevant?.length, 0))
+      .split("")
+      .map(() => ({} as PostReadResponse)),
+  ];
   const actions = useActions();
   const state = useAppState();
 
@@ -32,6 +40,8 @@ export const TopFoldersGrid: NLView<{
     },
     [mood],
   );
+
+  // if (true) return <>{postsList.length}</>;
 
   return (
     <>
@@ -66,16 +76,18 @@ export const TopFoldersGrid: NLView<{
             </Link>
           )}
           {/* // image */}
-          {!postsList?.length && <Col style={{ aspectRatio: "1/1" }} />}
+          {!relevant?.length && <Col style={{ aspectRatio: "1/1" }}>Nothing here</Col>}
           {window.location.pathname.includes("folder/") ? (
             <InfiniteScroll
               pageStart={0}
               loadMore={getPostsHandler}
-              loader={<Spin />}
+              // loader={<Spin />}
               hasMore={state.lists.top.isNextPostsAvailable && state.lists.selectedUser.isNextPostsAvailable}
             >
               <Row onClick={() => !state.auth.authenticated && window.scrollTo(0, 0)} className="nl-mood-grid-row">
                 {postsList?.map((p) => {
+                  if (!p.id) return <Col></Col>;
+
                   return (
                     <MaybeLink
                       to={
@@ -108,6 +120,8 @@ export const TopFoldersGrid: NLView<{
             </InfiniteScroll>
           ) : (
             postsList?.map((p) => {
+              if (!p.id) return <Col></Col>;
+
               const topFolderLinkClickUrl = !p.id
                 ? ""
                 : ((p.description || "").match(/^https:\/\/[^.]+\.newlife\.io(\/\S+)$/) || "")[1]

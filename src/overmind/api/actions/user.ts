@@ -12,9 +12,11 @@ import {
   UserReadPublicResponse,
   UserUpdateRequest,
 } from "@newstackdev/iosdk-newgraph-client-js";
+import { blockExplorerUrl } from "../../../Components/Links";
 import { debounce, json, pipe, throttle } from "overmind";
 import { fischerYates } from "../../../utils/random";
 import { get, isEmpty, uniqBy } from "lodash";
+import { maxNTimes } from "../../../utils/maxNTimes";
 
 export interface IBadgeResponse {
   done: boolean;
@@ -335,10 +337,21 @@ export const powerup: Action<{
       targetId: user.id,
       value: amount || 1,
     });
-    const msgTxt = "Powerup successful";
+    const err = maxNTimes((res.data as any)?.error?.toString());
+    const msgTxt = `Powerup successful ${err ? `(${err})` : ""}`;
     const msg = messageWrapper ? messageWrapper(msgTxt, res.data) : msgTxt;
 
-    effects.ux.message.info(msg);
+    // effects.ux.message.info(msg, 10);
+
+    effects.ux.notification.info({
+      type: "info",
+      duration: 10,
+      message: msgTxt,
+      onClick: () => {
+        debugger;
+        window.open(blockExplorerUrl.newscan(res.data?.TxID_mintAsset || ""), "newscan");
+      },
+    });
 
     // effects.ux.message.info("Powerup successful");
     await actions.api.user.getPowerups({

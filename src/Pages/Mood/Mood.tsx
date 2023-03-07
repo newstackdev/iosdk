@@ -72,7 +72,7 @@ export const Mood: NLView = () => {
     <ContentLayout
       position="top"
       isMood
-      isWorking={!mood?.posts?.length}
+      // isWorking={!mood?.posts?.length}
       header={
         <Link to={"/explore"}>
           <div className="header logo-left-top">

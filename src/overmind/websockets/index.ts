@@ -1,6 +1,6 @@
 import { Action } from "../../types";
 import { Context } from "../overmind";
-import { PostReadResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
+import { MoodReadResponse, PostReadResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgraph-client-js";
 import { debounce, derived, filter, json, pipe } from "overmind";
 import { get, omit, uniq } from "lodash";
 import { message, notification } from "antd";
@@ -112,12 +112,11 @@ const modelProcessors = {
     // state.api.cache.users.byUsername[u.username ?? ""] = { ...state.api.cache.users.byUsername[u.username ?? ""], ...u };
   },
   post: ({ actions, state }: Context, p: PostReadResponse) => {
-    state.api.cache.posts[p.id ?? ""] = {
-      ...state.api.cache.posts[p.id ?? ""],
-      ...p,
-    };
+    actions.api.post.cache({ posts: p });
   },
-  mood: () => {},
+  mood: ({ actions, state }: Context, m: MoodReadResponse) => {
+    actions.api.user.getMoods(state.api.auth.user);
+  },
 };
 
 const processIncomingModelUpdated: Action<{

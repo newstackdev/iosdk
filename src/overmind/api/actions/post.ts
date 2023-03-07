@@ -9,6 +9,7 @@ import {
 } from "@newstackdev/iosdk-newgraph-client-js";
 import { castArray, omit } from "lodash";
 import { debounce, pipe } from "overmind";
+import { maxNTimes } from "../../../utils/maxNTimes";
 
 export const cache: Action<{
   posts: PostReadResponse | PostReadResponse[];
@@ -181,9 +182,12 @@ export const rate: Action<{
         value: amount || 1,
         ...(contextType ? { contextType, contextValue } : {}),
       });
-      const msgTxt = `You voted ${amount}%`;
+
+      const err = maxNTimes((res.data as any)?.error?.toString());
+
+      const msgTxt = `You voted ${amount}% ${err}`;
       const msg = messageWrapper ? messageWrapper(msgTxt, res.data) : msgTxt;
-      effects.ux.message.info(msg);
+      effects.ux.message.info(msg, 10);
     } catch (ex) {
       effects.ux.message.error(((ex as any).error as ErrorResponse).errorMessage);
     }

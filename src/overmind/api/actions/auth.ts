@@ -20,11 +20,12 @@ export const authorize: Action<{ token?: string } | undefined> = async ({ state,
     }
   }
   const user = state.api.auth.user;
+
+  state.api.auth.attempted = true;
+
   if (!user || !user.id) {
     state.auth.status = state.firebase.user ? AUTH_FLOW_STATUS.AUTHENTICATED : AUTH_FLOW_STATUS.ANONYMOUS;
     if (!state.routing.isAllowed) actions.routing.historyPush({ location: "/" });
-
-    state.api.auth.attempted = true;
 
     return;
   }

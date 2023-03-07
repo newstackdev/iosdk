@@ -394,6 +394,7 @@ export declare const overmind: (cfg?: PartialConfiguration) => import("overmind"
         chromeext: {};
         api: {
             initialize(baseUrl: string): import("../types").CreatorApi;
+            getCurrentToken(): string;
             updateToken(token: string): void;
             authorize(): Promise<import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse>;
         };
@@ -1079,6 +1080,7 @@ export declare const useEffects: () => import("overmind/lib/internalTypes").SubT
     chromeext: {};
     api: {
         initialize(baseUrl: string): import("../types").CreatorApi;
+        getCurrentToken(): string;
         updateToken(token: string): void;
         authorize(): Promise<import("@newstackdev/iosdk-newgraph-client-js").UserReadPrivateResponse>;
     };

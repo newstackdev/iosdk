@@ -39,7 +39,7 @@ export const useCachedMood = ({ id }: { id?: string }, force?: boolean) => {
   const actions = useActions();
   useEffect(() => {
     id &&
-      state.auth.authenticated &&
+      state.api.auth.admitted &&
       (force || !state.api.cache.moods[id]) && //|| !state.api.cache.moods[id].posts?.length) &&
       actions.api.mood.read({ id });
   }, [state.auth.authenticated, id]);

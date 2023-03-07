@@ -86,7 +86,7 @@
     overflow: hidden;
     // border: 1px solid blue;
 
-    flex: 0 0 calc(20% - 4px);
+    flex: 0 0 calc(@containerWidth - 4px);
 
     display: flex;
     align-items: center;
@@ -100,7 +100,7 @@
     }
 
     @media screen and (min-width: 720px) {
-      width: calc(20% - 9px);
+      width: calc(@containerWidth - 9px);
       .nl-mood-grid-row-margin-right(@flexbase-md, @margin-md, @containerWidth);
 
       &.wrap {

@@ -1,4 +1,4 @@
-import { FirebaseConfig } from "src/types";
+import { FirebaseConfig } from "../types";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export const firebaseConfigs: Record<string, FirebaseConfig> = {

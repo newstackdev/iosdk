@@ -5,6 +5,8 @@ import { ErrorResponse, UserReadPrivateResponse } from "@newstackdev/iosdk-newgr
 
 export default (() => {
   let api: CreatorApi;
+  let _token = "";
+
   return {
     initialize(baseUrl: string) {
       api = new CreatorApi({
@@ -15,7 +17,11 @@ export default (() => {
       });
       return api;
     },
+    getCurrentToken() {
+      return _token;
+    },
     updateToken(token: string) {
+      _token = token;
       api.setSecurityData({ token });
     },
     async authorize(): Promise<UserReadPrivateResponse> {

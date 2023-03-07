@@ -24,7 +24,7 @@ export const usePowerup = (user: UserReadPrivateResponse) => {
         amount: amount || 1,
 
         messageWrapper: (msg: string, rating: any) =>
-          rating.TxID_mintFile ? (
+          rating?.TxID_mintFile ? (
             <a href={blockExplorerUrl.newscan(rating.TxID_mintFile)} target="_blank" rel="noreferrer">
               {msg}. Click to see a Newcoin receipt.
             </a>

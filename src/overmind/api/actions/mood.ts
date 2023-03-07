@@ -57,16 +57,6 @@ export const cache: Action<{
       promise: m.promise || null,
       posts: uniqBy(((curr.posts && curr.posts.length) || 0) < ((m && m.posts?.length) || 0) ? m.posts : curr.posts, "id"),
     };
-
-    // if(
-    //     // !curr?.id ||
-    //     // curr.promise ||
-    //     // new Date(curr.updated || "").getDate() < new Date(m.updated || "").getDate(),
-    //     // overwrite ||
-
-    // ) {
-    //     state.api.cache.moods[id].posts = posts;
-    // }
   });
 };
 
