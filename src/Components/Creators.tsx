@@ -9,8 +9,9 @@ import { UserInvitationReadPublicResponse, UserReadPublicResponse } from "@newst
 import { UserPowerup } from "./UserWidget";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
+import { useBadges } from "../hooks/useBadges";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVerified } from "../hooks/useVerified";
 import BadgeWidget from "./BadgeWidget";
 import PowerupDialog from "../Components/PowerupDialog";
@@ -48,9 +49,24 @@ export const CreatorWidget: NLView<{
   avatarClassName = avatarClassName || "avatar-image-top-creators";
   const buttonClassName = activeButton ? "primary-green-btn" : "secondary-button";
   const buttonName = activeButton ? "Added!" : "Add";
+  const { badges, badgesError, isBadgesLoading } = useBadges(creator?.id || "");
 
   const poolInfo = useCachedPool({ owner: creator?.username });
   const symbol = poolInfo.code;
+  const [watts, setWatts] = useState(0);
+
+  useEffect(() => {
+    if (!isBadgesLoading && !badgesError && user) {
+      setWatts(
+        Math.round(
+          Math.log10(
+            (800 * (badges?.length || 0) + (creator?.powered || 0)) *
+              +poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""),
+          ) || 0,
+        ),
+      );
+    }
+  }, [isBadgesLoading, user, badges, creator, poolInfo]);
 
   return (
     <Row className="bg-hover app-full-width" style={{ alignItems: "center", justifyContent: "space-between" }}>
@@ -101,7 +117,7 @@ export const CreatorWidget: NLView<{
                 minWidth: "64px",
               }}
             >
-              {creator.powered}
+              {watts}
             </p>
           </Col>
           <Col style={{ display: "flex", justifyContent: "flex-end", zIndex: 9999 }}>

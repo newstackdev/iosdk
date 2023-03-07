@@ -115,7 +115,18 @@ const modelProcessors = {
     actions.api.post.cache({ posts: p });
   },
   mood: ({ actions, state }: Context, m: MoodReadResponse) => {
-    actions.api.user.getMoods(state.api.auth.user);
+    console.log(m);
+    // debugger;
+    // actions.api.user.getMoods(state.api.auth.user);
+    // const curr = state.api.cache.moods[m.id || ""];
+    // if (state.api.cache.moods[m.id || ""]) {
+    //   actions.api.mood.getPosts(m); // with indexeddb cache, can instead push posts to appropriate moods in post model processor
+    // } else {
+    //   const curr = state.api.auth.user;
+    //   actions.api.user.cache({ user: curr, moods:  })
+    //   state.api.cache.moods[m.id || ""] = m;
+    //   state.api.cache.users.byId[curr.id || ""] = ;
+    // }
   },
 };
 
