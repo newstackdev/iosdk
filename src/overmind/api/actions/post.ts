@@ -13,9 +13,12 @@ import { maxNTimes } from "../../../utils/maxNTimes";
 
 export const cache: Action<{
   posts: PostReadResponse | PostReadResponse[];
-}> = async ({ state, actions, effects }, { posts }) => {
-  posts = castArray(posts);
+}> = async ({ state, actions, effects }, { posts: _posts }) => {
+  const posts: PostReadResponse[] = castArray(_posts);
   await actions.cache.storeMultiple({ label: "post", value: posts });
+  const edges = posts.map((p) => ({ from: p.author || {}, to: p || {}, fromLabel: "user", toLabel: "post", label: "author" }));
+
+  await actions.cache.storeEdgeMultiple(edges);
 };
 
 export const read: Action<{ id: string }> = async ({ state, actions, effects }, { id }) => {

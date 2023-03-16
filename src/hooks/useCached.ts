@@ -6,7 +6,7 @@ import { omit } from "lodash";
 import { useActions, useAppState } from "../overmind";
 import { useCachedMood, useCachedMoodPosts, useCachedPost, useCachedUser } from "./useCached1";
 // import { useCachedMood, useCachedPost, useCachedUser } from "./useCached1";
-// import { useCachedMoodPosts } from "./useCached2";
+// import { useCachedUser } from "./useCached2";
 import { useEffect, useState } from "react";
 
 const useCachedFolder = useCachedMood;

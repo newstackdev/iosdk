@@ -626,22 +626,8 @@ export const UserWidgetHeading: NLView<{
   const poolInfo = useCachedPool({ owner: user?.username });
   const daoOwner = params.username || state.config.settings.newcoin.daoDomain;
   const daoProposals = useCachedDaoProposals({ daoOwner });
-  const [watts, setWatts] = useState(0);
+
   if (!user) return <></>;
-
-  useEffect(() => {
-    if (!isBadgesLoading && !badgesError && user) {
-      setWatts(
-        Math.round(
-          Math.log10(
-            (800 * (badges?.length || 0) + (u?.powered || 0)) *
-              +poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, ""),
-          ) || 0,
-        ),
-      );
-    }
-  }, [isBadgesLoading, user, badges, u, poolInfo]);
-
   const toMonthName = (monthNumber: number) => {
     const date = new Date();
     date.setMonth(monthNumber - 1);
@@ -765,7 +751,9 @@ export const UserWidgetHeading: NLView<{
                 <Col onClick={() => setActiveKey && setActiveKey("UserDetail")} className="user-widget-heading__powerup-number">
                   <span>
                     <p className="header-1r user-widget-heading-Watts-num">
-                      <CountUp delay={5} end={isBadgesLoading || badgesError || !isFinite(watts) ? 0 : watts} />
+                      {/**remove when interface has been updated */}
+                      {/**@ts-ignore*/}
+                      <CountUp delay={5} end={u.watts} />
                     </p>
                     <p className="paragraph-2r">Watts</p>
                   </span>

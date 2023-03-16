@@ -7,7 +7,7 @@ export const initStore: Action<{ name: string }> = (_, { name }) => {};
 
 const put = async (table: Dexie.Table, value: any) => {
   try {
-    // await table.put(json(value));
+    await table.put(json(value));
   } catch (ex) {
     console.log(ex);
     throw ex;
@@ -15,7 +15,7 @@ const put = async (table: Dexie.Table, value: any) => {
 };
 
 export const store: Action<{ label: string; value: any }> = async ({ state }, { label, value }) => {
-  return put(state.cache.db.nodes[label], value);
+  return put(state.cache.db.nodes[label], { value, cached: new Date().toISOString() });
 };
 
 export const storeMultiple: Action<{ label: string; value: any[] }> = async ({ state }, { label, value }) => {
@@ -26,40 +26,52 @@ export const storeMultiple: Action<{ label: string; value: any[] }> = async ({ s
 type IGraphObject = { id?: string };
 
 export const storeEdge: Action<{
-  fromLabel?: string;
+  fromLabel: string;
   toLabel: string;
-  from: IGraphObject;
-  to: IGraphObject;
+  from?: IGraphObject;
+  to?: IGraphObject;
   value?: any;
-}> = async ({ effects }, { fromLabel, toLabel, from, to, value }) => {
+  label: string;
+}> = async ({ effects }, { fromLabel, toLabel, label, from, to, value }) => {
+  if (!from || !to) {
+    console.warn("cache2: attempted to cache a bad edge, skipping");
+    return;
+  }
+
   return put(effects.cache.edges(), {
-    __outE: [fromLabel, from.id, toLabel, to.id].join("+"),
-    __inE: [toLabel, to.id, fromLabel, from.id].join("+"),
+    __outE: [fromLabel, from.id, label, toLabel, to.id].join("+"),
+    __inE: [toLabel, to.id, label, fromLabel, from.id].join("+"),
+    label,
     fromLabel,
-    from,
+    from: from.id,
     toLabel,
-    to,
+    to: to.id,
     value,
+    cached: new Date().toISOString(),
   });
 };
 
-export const storeEdgeMultiple: Action<{
-  fromLabel?: string;
-  toLabel?: string;
-  from: IGraphObject[];
-  to: IGraphObject[];
-  value?: any;
-}> = async ({ effects }, { fromLabel, toLabel, from, to, value }) => {
+export const storeEdgeMultiple: Action<
+  {
+    fromLabel: string;
+    toLabel: string;
+    from?: IGraphObject;
+    to?: IGraphObject;
+    label: string;
+    value?: any;
+  }[]
+> = async ({ actions, effects }, edges) => {
   const tbl = effects.cache.edges();
-  await Promise.all(
-    from.flatMap((f) =>
-      to.map((t) => {
-        const __outE = [fromLabel, f.id, toLabel, t.id].join("+");
-        const __inE = [toLabel, t.id, fromLabel, f.id].join("+");
-        return put(tbl, { __outE, __inE, value, fromLabel, fromId: f.id, toLabel, toId: t.id });
-      }),
-    ), //{ fromLabel, fromId: f.id, toLabel, toId: t.id, value: value || {} }))),
-  );
+  await Promise.all(edges.map((e) => actions.cache.storeEdge(e)));
+  // await Promise.all(
+  //   edges.flatMap((f) =>
+  //     to.map((t) => {
+  //       const __outE = [fromLabel, f.id, toLabel, t.id].join("+");
+  //       const __inE = [toLabel, t.id, fromLabel, f.id].join("+");
+  //       return put(tbl, { __outE, __inE, value, fromLabel, fromId: f.id, toLabel, toId: t.id });
+  //     }),
+  //   ), //{ fromLabel, fromId: f.id, toLabel, toId: t.id, value: value || {} }))),
+  // );
   return;
 };
 
@@ -84,7 +96,6 @@ export const onInitializeOvermind: Action = async ({ effects, state, actions, re
 
   // setTimeout(() => {
   state.cache._db = () => db;
-  // });
 
   // state.cache._edges = () => db[EDGES_TABLE_NAME];
 };

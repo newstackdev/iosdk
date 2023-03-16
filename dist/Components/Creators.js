@@ -8,11 +8,11 @@ import { LoadMore } from "./LoadMore";
 import { UserPowerup } from "./UserWidget";
 import { VerifiedIcon } from "./Icons/VerifiedIcon";
 import { useActions, useAppState } from "../overmind";
-import { useBadges } from "../hooks/useBadges";
 import { useCachedPool, useCachedUser } from "../hooks/useCached";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useVerified } from "../hooks/useVerified";
 import BadgeWidget from "./BadgeWidget";
+import CountUp from "react-countup";
 import PowerupDialog from "../Components/PowerupDialog";
 import Title from "../Pages/Explore/Title";
 // export const Creator: NLView
@@ -25,21 +25,13 @@ export const CreatorWidget = ({ creator, avatarClassName, buttonType, setAddedUs
     avatarClassName = avatarClassName || "avatar-image-top-creators";
     const buttonClassName = activeButton ? "primary-green-btn" : "secondary-button";
     const buttonName = activeButton ? "Added!" : "Add";
-    const { badges, badgesError, isBadgesLoading } = useBadges(creator?.id || "");
     const poolInfo = useCachedPool({ owner: creator?.username });
     const symbol = poolInfo.code;
-    const [watts, setWatts] = useState(0);
-    useEffect(() => {
-        if (!isBadgesLoading && !badgesError && user) {
-            setWatts(Math.round(Math.log10((800 * (badges?.length || 0) + (creator?.powered || 0)) *
-                +poolInfo.total.quantity.toString().replace(/[^0-9_-\s\.,]/gim, "")) || 0));
-        }
-    }, [isBadgesLoading, user, badges, creator, poolInfo]);
     return (_jsxs(Row, { className: "bg-hover app-full-width", style: { alignItems: "center", justifyContent: "space-between" }, children: [_jsxs(Col, { className: "top-creators-first-col", xs: 13, children: [_jsx(Col, { children: _jsx(Tooltip, { title: creator.username, children: _jsx(Link, { to: `/user/${creator.username || creator.fullName}`, children: _jsx(Avatar, { src: _jsx(ContentImage, { ...creator }), className: avatarClassName }) }) }) }), !thumbnailOnly && (_jsx(Row, { align: "bottom", style: { overflow: "hidden" }, children: _jsxs(Col, { className: "top-creators-username", style: { overflow: "hidden" }, children: [_jsx(Row, { justify: "center", children: _jsx(Link, { to: `/user/${creator.username || creator.fullName}`, style: { width: "100%" }, children: _jsxs("p", { className: "top-creators-username__paragraph typography-overflow", children: [creator.username || creator.fullName, isUserVerified ? (_jsx("span", { className: "u-margin-left-medium", children: _jsx(VerifiedIcon, {}) })) : (false)] }) }) }), state.routing.location === "/user/invite" && (_jsx(Row, { justify: "center", children: _jsx(BadgeWidget, { user: creator, className: "nl-badges-creators" }) }))] }) }))] }), !thumbnailOnly && (_jsxs(Col, { className: "top-creators-second-col", xl: 10, children: [creator.invitation && creator.invitation.hash && _jsx(CopyClipboardHashInput, { hash: creator.invitation.hash }), _jsx(Col, { className: "top-creators-number", children: _jsx("p", { className: "header-1r top-creators-powered", style: {
                                 margin: "0",
                                 display: "flex",
                                 minWidth: "64px",
-                            }, children: watts }) }), _jsx(Col, { style: { display: "flex", justifyContent: "flex-end", zIndex: 9999 }, children: buttonType === "addUser" ? (_jsx(Button, { onClick: () => {
+                            }, children: _jsx(CountUp, { delay: 1, end: creator.watts }) }) }), _jsx(Col, { style: { display: "flex", justifyContent: "flex-end", zIndex: 9999 }, children: buttonType === "addUser" ? (_jsx(Button, { onClick: () => {
                                 if (addedUsers.includes(creator.username)) {
                                     const arr = [...addedUsers];
                                     const index = arr.indexOf(creator.username);

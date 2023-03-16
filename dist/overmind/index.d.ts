@@ -591,27 +591,29 @@ export declare const useActions: () => {
             value: any[];
         }) => void | Promise<void>;
         readonly storeEdge: (payload: {
-            fromLabel?: string | undefined;
+            fromLabel: string;
             toLabel: string;
-            from: {
+            from?: {
                 id?: string | undefined;
-            };
-            to: {
+            } | undefined;
+            to?: {
                 id?: string | undefined;
-            };
+            } | undefined;
             value?: any;
+            label: string;
         }) => void | Promise<void>;
         readonly storeEdgeMultiple: (payload: {
-            fromLabel?: string | undefined;
-            toLabel?: string | undefined;
-            from: {
+            fromLabel: string;
+            toLabel: string;
+            from?: {
                 id?: string | undefined;
-            }[];
-            to: {
+            } | undefined;
+            to?: {
                 id?: string | undefined;
-            }[];
+            } | undefined;
+            label: string;
             value?: any;
-        }) => void | Promise<void>;
+        }[]) => void | Promise<void>;
         readonly getPost: (payload: import("@newstackdev/iosdk-newgraph-client-js").PostReadResponse) => void | Promise<void>;
         readonly onInitializeOvermind: (payload?: undefined) => void | Promise<void>;
     };

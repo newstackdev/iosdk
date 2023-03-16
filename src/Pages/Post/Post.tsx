@@ -236,7 +236,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
     const { contextType, contextValue, currPost, nextPath, index } = nextInStream;
 
     const author = useCachedUser({ id: currPost ? currPost?.author?.id : "" });
-    const username = author?.username || author?.displayName;
+    const username = currPost?.author?.username || author?.username || author?.displayName;
 
     const { verifiedUsers } = useVerified([username || ""]);
     const isVerifiedUser = verifiedUsers && username && verifiedUsers.includes(username);
@@ -366,12 +366,10 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
             <Row className="nl-post-info-column">
               {isResponzive && (
                 <Row className="nl-post-fake-drawer__username">
-                  <Avatar src={<ContentImage {...author} />} className="u-margin-right-small" />
-                  {username && (
-                    <Link to={`/user/${username}`} className="nl-post-info-column__user-info">
-                      <p className="paragraph-1r">{username}</p>
-                    </Link>
-                  )}
+                  <Link to={`/user/${username}`} className="nl-post-info-column__user-info">
+                    <Avatar src={<ContentImage {...author} />} className="u-margin-right-small" />
+                    {username && <p className="paragraph-1r">{username}</p>}
+                  </Link>
                 </Row>
               )}
               <Row justify="space-between">
@@ -387,11 +385,7 @@ export const postBase: (useVotingStreamHook: typeof useVotingStreamTags, votingE
                 </Link>
                 {currPost.author?.newcoinPoolTx && (
                   <Row className="paragraph-2u u-margin-top-medium" align="bottom">
-                    <a
-                      href={"https://explorer-dev.newcoin.org/account/" + currPost.author?.username}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a href={"https://explorer-dev.newcoin.org/account/" + username} target="_blank" rel="noreferrer">
                       Creator pool
                     </a>
                     <Ebene />

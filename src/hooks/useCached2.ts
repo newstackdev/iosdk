@@ -7,24 +7,32 @@ export const useCachedUser = (user?: { id?: string; username?: string }, force?:
   const state = useAppState();
   const actions = useActions();
 
-  const byIdOrUsername = (u?: { id?: string; username?: string }) => {
-    const cachedItem = u?.id
-      ? state.api.cache.users.byId[u?.id]
-      : u?.username
-      ? state.api.cache.users.byUsername[u?.username]
-      : {};
-    return cachedItem && cachedItem.id && (cachedItem.username || cachedItem.fullName) ? cachedItem : null;
-  };
+  const _cached = useLiveQuery(() => {
+    const prop = user?.id ? "id" : "username";
+    const val = user?.id || user?.username || "";
+    return state.cache.db.ready ? state.cache.db.nodes?.table("user").where(prop).equals(val).toArray() : [];
+  });
+
+  const cached = (_cached || [])[0];
+
+  // const byIdOrUsername = (u?: { id?: string; username?: string }) => {
+  //   const cachedItem = u?.id
+  //     ? state.cache.db.edges..users.byId[u?.id]
+  //     : u?.username
+  //     ? state.api.cache.users.byUsername[u?.username]
+  //     : {};
+  //   return cachedItem && cachedItem.id && (cachedItem.username || cachedItem.fullName) ? cachedItem : null;
+  // };
 
   useEffect(() => {
-    if ((user?.id || user?.username) && state.auth.authenticated && (force || !byIdOrUsername(user))) {
+    if ((user?.id || user?.username) && state.auth.authenticated && (force || !cached)) {
       actions.api.user.read(user);
       // if (force && !byIdOrUsername(user)?.moods?.length)
       //     actions.api.user.getMoods(user);
     }
   }, [state.auth.authenticated, user?.id || "", user?.username || ""]);
-  const u = byIdOrUsername(user);
-  return { ...(u || {}), moods: u?.moods };
+  // const u = byIdOrUsername(user);
+  return cached; //{ ...(u || {}), moods: u?.moods };
 };
 
 export const useCachedPost = ({ id }: { id?: string }, force?: boolean) => {
