@@ -60,10 +60,6 @@ const Title: NLView<ITitle> = ({
             <Button className="secondary-button" htmlType="submit">
               <span className="paragraph-2b">Next</span>
             </Button>
-            {/* <Drawer title="Basic Drawer" placement="bottom" onClose={() => setVisible(false)} visible={visible}>
-              sme tu
-              <SelectMoodForm onFinish={() => true} title="Save to a folder" deeplikeActions />
-            </Drawer> */}
           </Row>
         )}
       </Row>

@@ -200,7 +200,7 @@ export const Vote: NLView<{
             info
           )}
 
-          <div hidden={state.flows.rating.value !== 100} className="nl-post-deeplike-mobile-wrapper">
+          <div className="nl-post-deeplike-mobile-wrapper">
             <Drawer
               //@ts-ignore
               getContainer={isResponzive ? false : containerDeeplike?.current}

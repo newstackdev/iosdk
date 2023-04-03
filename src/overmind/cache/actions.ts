@@ -15,7 +15,7 @@ const put = async (table: Dexie.Table, value: any) => {
 };
 
 export const store: Action<{ label: string; value: any }> = async ({ state }, { label, value }) => {
-  return put(state.cache.db.nodes[label], { value, cached: new Date().toISOString() });
+  return put(state.cache.db.nodes[label], { ...value, cached: new Date().toISOString() });
 };
 
 export const storeMultiple: Action<{ label: string; value: any[] }> = async ({ state }, { label, value }) => {

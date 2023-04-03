@@ -135,9 +135,9 @@ const FormInviteFriend: IOView<{ form: FormInstance<any>; onFinish: (data: IUser
           name="phone"
           rules={[
             {
-              required: true,
-              message: "The phone number is invalid.",
-              pattern: new RegExp(phoneReg),
+              required: false,
+              // message: "The phone number is invalid.",
+              // pattern: new RegExp(phoneReg),
             },
           ]}
         >
