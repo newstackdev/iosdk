@@ -13,7 +13,7 @@ export const SocialMediaInputs: NLView<{ enableVerify?: boolean }> = ({ enableVe
 
   const onVerifySocial = (provider: string) => {
     window.open(
-      `https://api-${stage}.newlife.io/creator/auth/provider/${provider}?token=${state.firebase.token}&redirect_url=${window.location.href}`,
+      `https://api-${stage}.newlife.io/creator/auth/provider/${provider}?token=${state.firebase.token}&redirect_url=${window.location.href}?socialVerify=true`,
       "_self",
     );
   };
