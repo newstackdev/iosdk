@@ -15,6 +15,7 @@ const stages = {
     ...stageDomainsFromList(process.env.REACT_APP_IOSDK_APP_PROD_HOST || "", "eu-prod"),
     ...stageDomainsFromList(process.env.REACT_APP_IOSDK_APP_HOST || "", "eu-prod"),
 };
+//haha
 const appDomains = {
     "eu-dev": process.env.REACT_APP_IOSDK_APP_DOMAIN_DEV,
     "eu-prod": process.env.REACT_APP_IOSDK_APP_DOMAIN_PROD || process.env.REACT_APP_IOSDK_APP_DOMAIN,
